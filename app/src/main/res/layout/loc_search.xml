@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+    <include android:id="@+id/actionBar" layout="@layout/inc_actionbar" android:layout_alignParentTop="true"/>
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/actionBar"
+        >
+
+        <LinearLayout
+            android:id="@+id/searchBox"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp">
+
+                <ImageButton android:id="@+id/searchSubmit"
+                             android:layout_width="wrap_content"
+                             android:layout_height="wrap_content"
+                             android:layout_alignParentTop="true"
+                             android:layout_alignParentRight="true"
+                             android:padding="7dp"
+                             android:background="?buttonstate"
+                             android:src="@drawable/d_icn_loc_search"
+                        />
+
+                <EditText
+                        android:id="@+id/searchField"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_toLeftOf="@id/searchSubmit"
+                        android:layout_alignParentTop="true"
+                        android:textSize="24sp"
+                        android:inputType="text"
+                        android:layout_marginBottom="10dp"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:imeOptions="actionSearch"
+                        />
+
+                <TextView
+                        android:id="@+id/searchNotes"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/searchField"
+                        android:layout_marginTop="10dp"
+                        android:textColor="?body_text"
+                        android:textSize="18sp"
+                        android:text="Search for a town, city, zip code or post code."
+                        />
+
+                <TextView
+                        android:id="@+id/searchNotes2"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/searchNotes"
+                        android:layout_marginTop="5dp"
+                        android:textColor="?secondary_text"
+                        android:textSize="16sp"
+                        android:text="This feature uses Google location services, which usually return only one result even for common names. Use zip or postal code, or add state or country to make your search more specific."
+                        />
+
+            </RelativeLayout>
+
+
+
+
+            <ListView
+                android:id="@+id/searchList"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/searchField"
+                android:layout_marginTop="12dp"
+                android:footerDividersEnabled="false"
+                android:listSelector="@drawable/d_disclosure"
+                android:divider="?list_divider"
+                android:dividerHeight="1px"
+                android:cacheColorHint="?app_background_colour">
+            </ListView>
+
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

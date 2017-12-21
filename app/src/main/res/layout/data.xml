@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent">
+
+    <include android:id="@+id/actionBar" layout="@layout/inc_actionbar" android:layout_alignParentTop="true"/>
+	
+    <LinearLayout
+        android:id="@+id/dayDetailTabs"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/actionBar"
+        android:background="?tab_bar_bg"
+        android:orientation="horizontal">
+	    <TextView
+	        android:id="@+id/sunTabInactive"
+	        style="@style/tabInactive"
+            android:layout_marginRight="1px"
+	        android:text="SUN"/>
+	    <TextView
+	        android:id="@+id/sunTabActive"
+	        style="@style/tabActive"
+            android:layout_marginRight="1px"
+	        android:text="SUN"/>
+	    <TextView
+	        android:id="@+id/moonTabInactive"
+	        style="@style/tabInactive"
+            android:layout_marginRight="1px"
+	        android:text="MOON"/>
+	    <TextView
+	        android:id="@+id/moonTabActive"
+	        style="@style/tabActive"
+            android:layout_marginRight="1px"
+	        android:text="MOON"/>
+	    <TextView
+	        android:id="@+id/planetsTabInactive"
+	        style="@style/tabInactive"
+            android:layout_marginRight="1px"
+	        android:text="PLANETS"/>
+	    <TextView
+	        android:id="@+id/planetsTabActive"
+	        style="@style/tabActive"
+            android:layout_marginRight="1px"
+	        android:text="PLANETS"/>
+	    <TextView
+	        android:id="@+id/eventsTabInactive"
+	        style="@style/tabInactive"
+	        android:text="EVENTS"/>
+	    <TextView
+	        android:id="@+id/eventsTabActive"
+	        style="@style/tabActive"
+	        android:text="EVENTS"/>
+    </LinearLayout>
+    
+    <!--include
+        layout="@layout/inc_datebar"
+        android:id="@+id/incDateBar"
+        android:layout_alignParentBottom="true"/-->
+    
+    <LinearLayout
+        android:id="@+id/dataFragment"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/dayDetailTabs"/>
+        <!--android:layout_above="@id/incDateBar"/-->
+    
+</RelativeLayout>

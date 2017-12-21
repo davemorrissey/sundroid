@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+    <include android:id="@+id/actionBar" layout="@layout/inc_actionbar" android:layout_alignParentTop="true"/>
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/actionBar"
+       >
+        <LinearLayout
+            style="@style/listMenuBox"
+            android:orientation="vertical"
+            >
+            <LinearLayout
+                style="@style/listMenuIconButton"
+                android:id="@+id/locOptionMyLocation"
+                >
+                <ImageView
+                    style="@style/listMenuIconIcon"
+                    android:src="?icn_loc_mylocation"/>
+                <TextView
+                    style="@style/listMenuIconLabel"
+                    android:text="My location"/>
+            </LinearLayout>
+            <View style="@style/listMenuDivider"/>
+            <LinearLayout
+                    style="@style/listMenuIconButton"
+                    android:id="@+id/locOptionMap"
+                    >
+                <ImageView
+                        style="@style/listMenuIconIcon"
+                        android:src="?icn_loc_map"/>
+                <TextView
+                        style="@style/listMenuIconLabel"
+                        android:text="Map"/>
+            </LinearLayout>
+            <View style="@style/listMenuDivider"/>
+            <LinearLayout
+                style="@style/listMenuIconButton"
+                android:id="@+id/locOptionSearch"
+                >
+                <ImageView
+                    style="@style/listMenuIconIcon"
+                    android:src="?icn_loc_search"/>
+                <TextView
+                    style="@style/listMenuIconLabel"
+                    android:text="Search"/>
+            </LinearLayout>
+            <View style="@style/listMenuDivider"/>
+            <LinearLayout
+                style="@style/listMenuIconButton"
+                android:id="@+id/locOptionSavedPlaces"
+                >
+                <ImageView
+                    style="@style/listMenuIconIcon"
+                    android:src="?icn_loc_savedplaces"/>
+                <TextView
+                    style="@style/listMenuIconLabel"
+                    android:text="Saved locations"/>
+            </LinearLayout>
+            <View style="@style/listMenuDivider"/>
+            <LinearLayout
+                style="@style/listMenuIconButton"
+                android:id="@+id/locOptionCoords"
+                >
+                <ImageView
+                    style="@style/listMenuIconIcon"
+                    android:src="?icn_loc_coords"/>
+                <TextView
+                    style="@style/listMenuIconLabel"
+                    android:text="Enter coordinates"/>
+            </LinearLayout>
+        </LinearLayout>
+
+    </ScrollView>
+</RelativeLayout>

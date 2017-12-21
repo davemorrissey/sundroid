@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="themeKeys">
+        <item>DARK</item>
+        <item>LIGHT</item>
+    </string-array>
+    <string-array name="themeValues">
+        <item>Midnight</item>
+        <item>Daylight</item>
+    </string-array>
+	<string-array name="clockOptionKeys">
+		<item>DEFAULT</item>
+		<item>TWELVE</item>
+		<item>TWENTYFOUR</item>
+	</string-array>
+	<string-array name="clockOptionValues">
+		<item>Use device default</item>
+		<item>12-hour clock</item>
+		<item>24-hour clock</item>
+	</string-array>
+	<string-array name="firstWeekdayKeys">
+		<item>1</item>
+		<item>2</item>
+		<item>3</item>
+		<item>4</item>
+		<item>5</item>
+		<item>6</item>
+		<item>7</item>
+	</string-array>
+	<string-array name="firstWeekdayValues">
+		<item>Sunday</item>
+		<item>Monday</item>
+		<item>Tuesday</item>
+		<item>Wednesday</item>
+		<item>Thursday</item>
+		<item>Friday</item>
+		<item>Saturday</item>
+	</string-array>
+    <string-array name="locationTimeoutKeys">
+        <item>30</item>
+        <item>45</item>
+        <item>60</item>
+        <item>120</item>
+        <item>180</item>
+        <item>240</item>
+        <item>300</item>
+    </string-array>
+    <string-array name="locationTimeoutValues">
+        <item>30 seconds</item>
+        <item>45 seconds</item>
+        <item>1 minute</item>
+        <item>2 minutes</item>
+        <item>3 minutes</item>
+        <item>4 minutes</item>
+        <item>5 minutes</item>
+    </string-array>
+	<string-array name="timeZoneKeys">
+		<item>~ASK</item>
+		<item>~DEVICE</item>
+		<item>UTC</item>
+		<item>US/Samoa</item>
+		<item>America/Adak</item>
+		<item>US/Hawaii</item>
+		<item>US/Alaska</item>
+		<item>US/Pacific</item>
+		<item>America/Tijuana</item>
+		<item>US/Arizona</item>
+		<item>America/Chihuahua</item>
+		<item>US/Mountain</item>
+		<item>US/Central</item>
+		<item>America/Mexico_City</item>
+		<item>Canada/Saskatchewan</item>
+		<item>America/Bogota</item>
+		<item>US/Eastern</item>
+		<item>US/East-Indiana</item>
+		<item>Canada/Atlantic</item>
+		<item>America/La_Paz</item>
+		<item>America/Manaus</item>
+		<item>America/Santiago</item>
+		<item>Canada/Newfoundland</item>
+		<item>Brazil/East</item>
+		<item>America/Buenos_Aires</item>
+		<item>America/Godthab</item>
+		<item>America/Montevideo</item>
+		<item>Atlantic/South_Georgia</item>
+		<item>Atlantic/Azores</item>
+		<item>Atlantic/Cape_Verde</item>
+		<item>Atlantic/Reykjavik</item>
+		<item>Europe/London</item>
+		<item>Europe/Amsterdam</item>
+		<item>Europe/Belgrade</item>
+		<item>Europe/Paris</item>
+		<item>Europe/Sarajevo</item>
+		<item>Asia/Amman</item>
+		<item>Europe/Bucharest</item>
+		<item>Asia/Beirut</item>
+		<item>Africa/Cairo</item>
+		<item>Africa/Harare</item>
+		<item>Europe/Helsinki</item>
+		<item>Asia/Jerusalem</item>
+		<item>Europe/Minsk</item>
+		<item>Asia/Baghdad</item>
+		<item>Asia/Kuwait</item>
+		<item>Europe/Moscow</item>
+		<item>Africa/Nairobi</item>
+		<item>Asia/Tehran</item>
+		<item>Asia/Muscat</item>
+		<item>Asia/Baku</item>
+		<item>Asia/Yerevan</item>
+		<item>Asia/Kabul</item>
+		<item>Asia/Yekaterinburg</item>
+		<item>Asia/Tashkent</item>
+		<item>Asia/Calcutta</item>
+		<item>Asia/Katmandu</item>
+		<item>Asia/Novosibirsk</item>
+		<item>Asia/Dhaka</item>
+		<item>Asia/Rangoon</item>
+		<item>Asia/Jakarta</item>
+		<item>Asia/Krasnoyarsk</item>
+		<item>Asia/Hong_Kong</item>
+		<item>Asia/Ulaanbaatar</item>
+		<item>Asia/Kuala_Lumpur</item>
+		<item>Australia/Perth</item>
+		<item>Asia/Taipei</item>
+		<item>Asia/Tokyo</item>
+		<item>Asia/Seoul</item>
+		<item>Asia/Yakutsk</item>
+		<item>Australia/Adelaide</item>
+		<item>Australia/Darwin</item>
+		<item>Australia/Brisbane</item>
+		<item>Pacific/Port_Moresby</item>
+		<item>Australia/Sydney</item>
+		<item>Australia/Hobart</item>
+		<item>Asia/Vladivostok</item>
+		<item>Asia/Magadan</item>
+		<item>Pacific/Auckland</item>
+		<item>Pacific/Fiji</item>
+		<item>Pacific/Tongatapu</item>
+	</string-array>
+	<string-array name="timeZoneValues">
+		<item>Always ask</item>
+		<item>Use device zone</item>
+		<item>Coordinated Universal Time</item>
+		<item>Midway Island, Samoa</item>
+		<item>Aleutian Islands</item>
+		<item>Hawaii</item>
+		<item>Alaska</item>
+		<item>Pacific Time (US &amp; Canada)</item>
+		<item>Tijuana, Baja California</item>
+		<item>Arizona</item>
+		<item>Chihuahua, La Paz, Mazatlan</item>
+		<item>Mountain Time (US &amp; Canada)</item>
+		<item>Central Time (US &amp; Canada)</item>
+		<item>Guadalajara, Mexico City, Monterray</item>
+		<item>Saskatchewan</item>
+		<item>Bogota, Lima, Quito, Rio Branco</item>
+		<item>Eastern Time (US &amp; Canada)</item>
+		<item>Indiana (East)</item>
+		<item>Atlantic Time (Canada)</item>
+		<item>Caracas, La Paz</item>
+		<item>Manaus</item>
+		<item>Santiago</item>
+		<item>Newfoundland</item>
+		<item>Brasilia</item>
+		<item>Buenos Aires, Georgetown</item>
+		<item>Greenland</item>
+		<item>Montevideo</item>
+		<item>Mid-Atlantic</item>
+		<item>Azores</item>
+		<item>Cape Verde Is.</item>
+		<item>Casablanca, Monrovia, Reykjavik</item>
+		<item>Dublin, Edinburgh, Lisbon, London</item>
+		<item>Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna</item>
+		<item>Belgrade, Bratislava, Budapest, Ljubliana, Prague</item>
+		<item>Brussels, Copenhagen, Madrid, Paris</item>
+		<item>Sarajevo, Skopje, Warsaw, Zagreb</item>
+		<item>Amman</item>
+		<item>Athens, Bucharest, Istanbul</item>
+		<item>Beirut</item>
+		<item>Cairo</item>
+		<item>Harare, Pretoria</item>
+		<item>Helsinki, Kyiv, Riga, Sofia, Tallinn, Vilnius</item>
+		<item>Jerusalem</item>
+		<item>Minsk</item>
+		<item>Baghdad</item>
+		<item>Kuwait, Riyadh</item>
+		<item>Moscow, St. Petersburg, Volgograd</item>
+		<item>Nairobi</item>
+		<item>Tehran</item>
+		<item>Abu Dhabi, Muscat</item>
+		<item>Baku</item>
+		<item>Yerevan</item>
+		<item>Kabul</item>
+		<item>Ekaterinburg</item>
+		<item>Islamabad, Karachi, Tashkent</item>
+		<item>Chennai, Kolkata, Mumbai, New Delhi</item>
+		<item>Katmandu</item>
+		<item>Novosibirsk</item>
+		<item>Astana, Dhaka</item>
+		<item>Yangon (Rangoon)</item>
+		<item>Bangkok, Hanoi, Jakarta</item>
+		<item>Krasnoyarsk</item>
+		<item>Beijing, Chongqing, Hong Kong, Urumqi</item>
+		<item>Irkutsk, Ulaan Bataar</item>
+		<item>Kuala Lumpur, Singapore</item>
+		<item>Perth</item>
+		<item>Taipei</item>
+		<item>Osaka, Sapporo, Tokyo</item>
+		<item>Seoul</item>
+		<item>Yakutsk</item>
+		<item>Adelaide</item>
+		<item>Darwin</item>
+		<item>Brisbane</item>
+		<item>Guam, Port Moresby</item>
+		<item>Canberra, Melbourne, Sydney</item>
+		<item>Hobart</item>
+		<item>Vladivostok</item>
+		<item>Magadan, Solomon Is., New Caledonia</item>
+		<item>Auckland, Wellington</item>
+		<item>Fiji, Kamchatka, Marshall Is.</item>
+		<item>Nuku\'alofa</item>
+	</string-array>
+	
+	
+</resources>

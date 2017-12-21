@@ -1,0 +1,434 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="SundroidDark" parent="android:Theme.Holo">
+        <item name="app_background_colour">@color/d_app_background_start</item>
+        <item name="app_background">@drawable/d_app_bg</item>
+        <item name="header_background">@drawable/d_action_bar_bg</item>
+        <item name="body_text">#ffffff</item>
+        <item name="dialog_text">#ffffff</item>
+        <item name="secondary_text">#e3f6aa</item>
+        <item name="tabstate_active">@drawable/d_tabstate_active</item>
+        <item name="tabstate_inactive">@drawable/d_tabstate_inactive</item>
+        <item name="header_text">#ffffff</item>
+        <item name="header_secondary_text">#bbbbbb</item>
+        <item name="tab_bar_bg_color">#313431</item>
+        <item name="tab_bar_bg">@drawable/d_tab_bar_bg</item>
+        <item name="tabs_activetext">#ffffff</item>
+        <item name="tabs_inactivetext">#aaaaaa</item>
+        <item name="divider_color">#222222</item>
+        <item name="button_divider_color">@color/d_button_divider</item>
+        <item name="buttonstate">@drawable/d_buttonstate</item>
+        <item name="buttonstate_transparent">@drawable/d_buttonstate_transparent</item>
+        <item name="button_bar_bg">@drawable/d_button_bar_bg</item>
+        <item name="button_text">@color/d_button_text</item>
+        <item name="button_secondary_text">@color/d_button_secondary_text</item>
+        <item name="icn_loc_mylocation">@drawable/d_icn_loc_mylocation</item>
+        <item name="icn_loc_coords">@drawable/d_icn_loc_coords</item>
+        <item name="icn_loc_map">@drawable/d_icn_loc_map</item>
+        <item name="icn_loc_search">@drawable/d_icn_loc_search</item>
+        <item name="icn_loc_savedplaces">@drawable/d_icn_loc_savedplaces</item>
+        <item name="icn_btn_delete">@drawable/d_icn_btn_delete</item>
+        <item name="disclosure">@drawable/d_disclosure</item>
+        <item name="info">@drawable/d_info</item>
+        <item name="coords_invalid">#ffaaaa</item>
+        <item name="coords_valid">#d4ffbc</item>
+        <item name="calendar_title_bg">#222522</item>
+        <item name="disclosure_open">@drawable/d_disclosure_open</item>
+        <item name="disclosure_closed">@drawable/d_disclosure_closed</item>
+        <item name="spinner_style">@style/d_spinner</item>
+        <item name="list_divider">@drawable/d_list_divider</item>
+    </style>
+
+    <style name="SundroidLight" parent="android:Theme.Holo.Light.DarkActionBar">
+        <item name="app_background_colour">@color/l_app_background_start</item>
+        <item name="app_background">@drawable/l_app_bg</item>
+        <item name="header_background">@drawable/l_action_bar_bg</item>
+        <item name="body_text">#000000</item>
+        <item name="dialog_text">#000000</item>
+        <item name="secondary_text">#005895</item>
+        <item name="tabstate_active">@drawable/l_tabstate_active</item>
+        <item name="tabstate_inactive">@drawable/l_tabstate_inactive</item>
+        <item name="header_text">#ffffff</item>
+        <item name="header_secondary_text">#aaffffff</item>
+        <item name="tab_bar_bg_color">#003f6f</item>
+        <item name="tab_bar_bg">@drawable/l_tab_bar_bg</item>
+        <item name="tabs_activetext">#ffffff</item>
+        <item name="tabs_inactivetext">#aaffffff</item>
+        <item name="divider_color">#dddddd</item>
+        <item name="button_divider_color">@color/l_button_divider</item>
+        <item name="buttonstate">@drawable/l_buttonstate</item>
+        <item name="buttonstate_transparent">@drawable/l_buttonstate_transparent</item>
+        <item name="button_bar_bg">@drawable/l_button_bar_bg</item>
+        <item name="button_text">@color/l_button_text</item>
+        <item name="button_secondary_text">@color/l_button_secondary_text</item>
+        <item name="icn_loc_mylocation">@drawable/l_icn_loc_mylocation</item>
+        <item name="icn_loc_coords">@drawable/l_icn_loc_coords</item>
+        <item name="icn_loc_map">@drawable/l_icn_loc_map</item>
+        <item name="icn_loc_search">@drawable/l_icn_loc_search</item>
+        <item name="icn_loc_savedplaces">@drawable/l_icn_loc_savedplaces</item>
+        <item name="icn_btn_delete">@drawable/l_icn_btn_delete</item>
+        <item name="disclosure">@drawable/l_disclosure</item>
+        <item name="info">@drawable/l_info</item>
+        <item name="coords_invalid">#770000</item>
+        <item name="coords_valid">#007700</item>
+        <item name="calendar_title_bg">#c4eaf8</item>
+        <item name="disclosure_open">@drawable/l_disclosure_open</item>
+        <item name="disclosure_closed">@drawable/l_disclosure_closed</item>
+        <item name="spinner_style">@style/l_spinner</item>
+        <item name="list_divider">@drawable/l_list_divider</item>
+    </style>
+
+	<style name="Theme.Transparent" parent="android:Theme.Holo.Dialog">
+		<item name="android:windowIsTranslucent">true</item>
+		<item name="android:windowBackground">@color/transparent</item>
+		<item name="android:windowContentOverlay">@null</item>
+		<item name="android:windowNoTitle">true</item>
+		<item name="android:windowIsFloating">true</item>
+		<item name="android:backgroundDimEnabled">false</item>
+	</style>
+
+    <style name="l_spinner" parent="android:Widget.Holo.Light.Spinner">
+		<item name="android:background">@drawable/spinnerstate</item>
+    </style>
+
+    <style name="d_spinner" parent="android:Widget.Holo.Spinner">
+        <item name="android:background">@drawable/spinnerstate</item>
+    </style>
+
+	<style name="text">
+		<item name="android:textSize">14sp</item>
+		<item name="android:textColor">?body_text</item>
+	</style>
+	
+	<style name="bodyText" parent="@style/text">
+		<item name="android:textColor">?secondary_text</item>
+		<item name="android:layout_width">fill_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+	</style>
+
+	<style name="centeredText" parent="@style/text">
+		<item name="android:textColor">?secondary_text</item>
+		<item name="android:layout_width">fill_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:gravity">center_horizontal</item>
+		<item name="android:layout_centerHorizontal">true</item>
+	</style>
+	
+	<style name="listMenuBox">
+		<item name="android:layout_width">fill_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+	</style>
+	<style name="listMenuButton" parent="@style/text">
+		<item name="android:textColor">?body_text</item>
+		<item name="android:layout_width">fill_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:textSize">20sp</item>
+		<item name="android:padding">10dp</item>
+		<item name="android:gravity">left</item>
+		<item name="android:background">?disclosure</item>
+		<item name="android:clickable">true</item>
+		<item name="android:focusable">true</item>
+	</style>
+	<style name="listMenuDisclosureButton" parent="@style/listMenuButton">
+		<item name="android:paddingTop">10dp</item>
+		<item name="android:paddingRight">10dp</item>
+		<item name="android:paddingBottom">10dp</item>
+		<item name="android:paddingLeft">5dp</item>
+		<item name="android:drawableRight">?disclosure_closed</item>
+		<item name="android:drawablePadding">0dp</item>
+	</style>
+	<style name="listMenuDisclosureContent">
+		<item name="android:layout_width">fill_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:visibility">gone</item>
+		<item name="android:padding">10dp</item>
+	</style>
+	
+	<style name="listMenuIconButton" parent="@style/listMenuButton">
+		<item name="android:paddingTop">10dp</item>
+		<item name="android:paddingRight">10dp</item>
+		<item name="android:paddingBottom">10dp</item>
+		<item name="android:paddingLeft">5dp</item>
+	</style>
+	<style name="listMenuIconButtonDisabled" parent="@style/listMenuIconButton">
+		<item name="android:clickable">false</item>
+		<item name="android:focusable">false</item>
+	</style>
+	
+	<style name="listMenuIconIcon">
+		<item name="android:layout_width">30dp</item>
+		<item name="android:layout_height">30dp</item>
+		<item name="android:layout_marginTop">3sp</item>
+	</style>
+	
+	<style name="listMenuIconLabel" parent="@style/text">
+		<item name="android:textColor">?body_text</item>
+		<item name="android:layout_width">wrap_content</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:layout_marginLeft">13dp</item>
+		<item name="android:paddingTop">2dp</item>
+		<item name="android:textSize">22sp</item>
+		<item name="android:gravity">left</item>
+	</style>
+	<style name="listMenuIconLabelDisabled" parent="@style/listMenuIconLabel">
+		<item name="android:textColor">#888</item>
+	</style>
+	
+	<style name="listMenuSubButton" parent="@style/listMenuButton">
+		<item name="android:paddingTop">5dp</item>
+		<item name="android:paddingRight">10dp</item>
+		<item name="android:paddingBottom">10dp</item>
+		<item name="android:paddingLeft">10dp</item>
+	</style>
+	<style name="listMenuSubLabel" parent="@style/text">
+		<item name="android:textColor">?body_text</item>
+		<item name="android:layout_width">wrap_content</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:textSize">20dp</item>
+		<item name="android:gravity">left</item>
+	</style>
+	<style name="listMenuSubLabelGreyed" parent="@style/listMenuSubLabel">
+		<item name="android:textColor">#888</item>
+	</style>
+	<style name="listMenuSubSub" parent="@style/text">
+		<item name="android:textColor">?secondary_text</item>
+		<item name="android:layout_width">wrap_content</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:textSize">14dp</item>
+		<item name="android:gravity">left</item>
+	</style>
+	<style name="listMenuSubSubGreyed" parent="@style/listMenuSubSub">
+		<item name="android:textColor">#888</item>
+	</style>
+	
+	<style name="listMenuDivider">
+		<item name="android:layout_width">fill_parent</item>
+		<item name="android:layout_height">1px</item>
+		<item name="android:background">?divider_color</item>
+	</style>
+	<style name="verticalDivider">
+		<item name="android:layout_width">1px</item>
+		<item name="android:layout_height">fill_parent</item>
+		<item name="android:layout_marginTop">4dp</item>
+		<item name="android:layout_marginBottom">4dp</item>
+		<item name="android:background">?divider_color</item>
+	</style>
+	
+	<style name="calendarTitle" parent="@style/text">
+		<item name="android:textColor">?body_text</item>
+		<item name="android:layout_marginRight">1px</item>
+		<item name="android:background">?calendar_title_bg</item>
+		<item name="android:layout_weight">0.143</item>
+		<item name="android:gravity">center_horizontal</item>
+	</style>
+	
+	<style name="calendarTitleText" parent="@style/text">
+		<item name="android:textColor">?body_text</item>
+		<item name="android:layout_width">fill_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">14sp</item>
+	</style>
+	
+	<style name="calendarTitleImage">
+		<item name="android:layout_width">10dp</item>
+		<item name="android:layout_height">10dp</item>
+		<item name="android:scaleType">fitXY</item>
+		<item name="android:layout_marginTop">5sp</item>
+		<item name="android:layout_marginLeft">2dp</item>
+	</style>
+	
+	<style name="calendarTitleCell">
+		<item name="android:layout_marginRight">1px</item>
+        <item name="android:layout_marginTop">2dp</item>
+        <item name="android:padding">2dp</item>
+		<item name="android:background">#222522</item>
+		<item name="android:layout_weight">0.143</item>
+        <item name="android:textSize">14sp</item>
+		<item name="android:gravity">center_horizontal</item>
+	</style>
+	
+	<style name="calendarDay" parent="@style/calendarTitle">
+	</style>
+	
+	<style name="calendarMoonCell">
+		<item name="android:layout_marginRight">1px</item>
+		<item name="android:layout_weight">0.143</item>
+		<item name="android:layout_height">39dp</item>
+		<item name="android:gravity">center_horizontal</item>
+		<item name="android:paddingTop">3dp</item>
+		<item name="android:paddingBottom">3dp</item>
+	</style>
+	
+	<style name="calendarMoonImage">
+		<item name="android:layout_width">33dp</item>
+		<item name="android:layout_height">33dp</item>
+		<item name="android:scaleType">fitXY</item>
+		<item name="android:layout_centerInParent">true</item>
+	</style>
+	
+	<style name="dateBox">
+		<item name="android:layout_width">fill_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:layout_alignParentBottom">true</item>
+        <item name="android:background">?button_divider_color</item>
+	</style>
+	
+	<style name="zoneButton">
+	    <item name="android:layout_width">fill_parent</item>
+	    <item name="android:layout_height">wrap_content</item>
+	    <item name="android:layout_below">@id/dateRow</item>
+	    <item name="android:orientation">vertical</item>
+	    <item name="android:background">@drawable/d_buttonstate</item>
+	    <item name="android:clickable">true</item>
+	    <item name="android:focusable">true</item>
+	    <item name="android:padding">2dp</item>
+	</style>
+	
+	<style name="zoneCities" parent="@style/centeredText">
+		<item name="android:textSize">14sp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">?button_secondary_text</item>
+	</style>
+	
+	<style name="zoneName" parent="@style/centeredText">
+		<item name="android:textSize">16sp</item>
+		<item name="android:textColor">?button_text</item>
+        <item name="android:singleLine">true</item>
+	</style>
+	
+	<style name="button" parent="@style/text">
+		<item name="android:layout_width">wrap_content</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:layout_alignParentTop">true</item>
+		<item name="android:textSize">25dp</item>
+		<item name="android:background">@drawable/d_buttonstate</item>
+	</style>
+	
+	<style name="leftRightButton" parent="@style/button">
+		<item name="android:layout_width">50dp</item>
+		<item name="android:padding">4dp</item>
+	</style>
+	
+	<style name="currentDateButton" parent="@style/button">
+		<item name="android:layout_width">fill_parent</item>
+		<item name="android:textStyle">normal</item>
+		<item name="android:paddingTop">2dp</item>
+		<item name="android:paddingBottom">4dp</item>
+	</style>
+	
+	<style name="monthCalDateCell">
+		<item name="android:paddingTop">2dp</item>
+		<item name="android:layout_width">0dp</item>
+		<item name="android:layout_weight">.15</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:layout_alignParentLeft">true</item>
+		<item name="android:layout_alignParentBottom">true</item>
+		<item name="android:orientation">vertical</item>
+	</style>
+
+	<style name="monthCalDate" parent="@style/text">
+		<item name="android:textColor">?secondary_text</item>
+		<item name="android:layout_width">wrap_content</item>
+		<item name="android:layout_height">wrap_content</item>
+	</style>
+
+    <style name="monthCalDatePhaseCell">
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">.10</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentLeft">true</item>
+        <item name="android:layout_alignParentBottom">true</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+	
+	<style name="monthCalDatePhase">
+		<item name="android:layout_width">15dp</item>
+		<item name="android:layout_height">15dp</item>
+		<item name="android:scaleType">fitXY</item>
+		<item name="android:layout_marginTop">2dp</item>
+		<item name="android:visibility">gone</item>
+	</style>
+	
+	<style name="monthCalMoonCell">
+		<item name="android:layout_width">0dp</item>
+		<item name="android:layout_weight">.15</item>
+		<item name="android:layout_height">35dp</item>
+		<item name="android:layout_marginTop">4dp</item>
+		<item name="android:layout_marginBottom">4dp</item>
+		<item name="android:gravity">center_horizontal</item>
+		<item name="android:visibility">gone</item>
+	</style>
+	
+	<style name="monthCalCell">
+		<item name="android:layout_width">0dp</item>
+		<item name="android:layout_weight">.32</item>
+		<item name="android:gravity">center_horizontal</item>
+		<item name="android:layout_height">wrap_content</item>
+	</style>
+	
+	<style name="monthCalTime" parent="@style/text">
+		<item name="android:layout_width">fill_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:textColor">?body_text</item>
+		<item name="android:textSize">18sp</item>
+		<item name="android:gravity">center_horizontal</item>
+		<item name="android:layout_centerInParent">true</item>
+	</style>
+	
+	<style name="monthCalAz" parent="@style/text">
+		<item name="android:layout_width">fill_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:textColor">?secondary_text</item>
+		<item name="android:gravity">center_horizontal</item>
+		<item name="android:layout_centerInParent">true</item>
+        <item name="android:textSize">14sp</item>
+	</style>
+	
+	<style name="alarmAddRow">
+		<item name="android:layout_width">fill_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:background">?disclosure</item>
+		<item name="android:focusable">true</item>
+		<item name="android:clickable">true</item>
+		<item name="android:paddingTop">8dp</item>
+		<item name="android:paddingBottom">8dp</item>
+		<item name="android:paddingLeft">15dp</item>
+		<item name="android:paddingRight">15dp</item>
+	</style>
+	
+	<style name="alarmAddLabel" parent="@style/text">
+		<item name="android:layout_width">wrap_content</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:textColor">?secondary_text</item>
+		<item name="android:textSize">14sp</item>
+	</style>
+	
+	<style name="alarmAddValue" parent="@style/text">
+		<item name="android:layout_width">wrap_content</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:textSize">18sp</item>
+	</style>
+	
+	<style name="baseTab">
+	    <item name="android:layout_width">0dp</item>
+	    <item name="android:layout_weight">0.25</item>
+	    <item name="android:layout_height">@dimen/tab_bar_height</item>
+	    <item name="android:gravity">center</item>
+		<item name="android:focusable">true</item>
+		<item name="android:clickable">true</item>
+		<item name="android:textStyle">bold</item>
+		<item name="android:textColor">?tabs_inactivetext</item>
+	</style>
+	
+	<style name="tabInactive" parent="@style/baseTab">
+	    <item name="android:background">?tabstate_inactive</item>
+	</style>
+	
+	<style name="tabActive" parent="@style/baseTab">
+	    <item name="android:textColor">?tabs_activetext</item>
+	    <item name="android:background">?tabstate_active</item>
+	</style>
+
+</resources>

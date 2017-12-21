@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView android:id="@+id/saveFieldRoot"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp">
+
+        <EditText
+                android:id="@+id/saveField"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:maxLength="25"
+                android:singleLine="true"
+                android:maxLines="1"
+                android:inputType="text"
+                />
+
+    </LinearLayout>
+</ScrollView>

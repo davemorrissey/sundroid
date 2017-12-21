@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:s="http://schemas.android.com/apk/res/uk.co.sundroid"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+    <include
+            layout="@layout/inc_datebar"
+            android:id="@+id/incDateBar"
+            android:layout_alignParentBottom="true"/>
+
+    <ScrollView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_above="@id/incDateBar"
+            >
+
+        <uk.co.sundroid.util.view.BoundedLinearLayout
+                android:id="@+id/planetsDataBox"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                s:bounded_width="@dimen/column_max_width"
+                android:orientation="vertical"
+                android:padding="@dimen/content_pane_padding"
+                android:visibility="gone">
+
+        </uk.co.sundroid.util.view.BoundedLinearLayout>
+
+    </ScrollView>
+
+</RelativeLayout>

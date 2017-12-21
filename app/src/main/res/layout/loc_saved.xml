@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+    <include android:id="@+id/actionBar" layout="@layout/inc_actionbar" android:layout_alignParentTop="true"/>
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/actionBar">
+
+        <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+            <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="15dp"
+                    android:id="@+id/savedLocationsNone"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    >
+                <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_margin="15dp"
+                        android:src="?info"/>
+                <TextView
+                        android:text="You have no saved locations.\nTo save locations, choose Menu &gt; Save location when viewing data."
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="15dp"
+                        android:gravity="center_horizontal"
+                        android:textColor="?secondary_text"
+                        android:textSize="16sp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                    style="@style/listMenuBox"
+                    android:id="@+id/savedLocationsList"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    >
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

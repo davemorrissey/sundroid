@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableRow xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/eventRow" android:paddingTop="1dp" android:paddingBottom="2dp">
+	<TextView
+		android:id="@+id/eventName"
+        android:textSize="14sp"
+        android:textColor="?secondary_text"
+        android:paddingRight="3dp"
+        android:layout_width="0dp"
+        android:layout_weight=".46"
+		android:layout_height="wrap_content"/>
+	<TextView
+	    android:id="@+id/eventTime"
+	    android:textSize="18sp"
+	    android:textColor="?body_text"
+		android:layout_width="0dp"
+		android:layout_weight=".37"
+		android:layout_height="wrap_content"/>
+	<TextView
+	    android:id="@+id/eventAz"
+	    android:textSize="14sp"
+	    android:textColor="?body_text"
+		android:layout_width="0dp"
+		android:layout_weight=".20"
+		android:layout_height="wrap_content"/>
+</TableRow>

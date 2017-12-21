@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="column_max_width">370dp</dimen>
+    <dimen name="date_bar_height">50dp</dimen>
+    <dimen name="tab_bar_height">48dp</dimen>
+    
+    <dimen name="content_pane_padding">15dp</dimen>
+</resources>

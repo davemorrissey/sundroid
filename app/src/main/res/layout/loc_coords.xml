@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+    <include android:id="@+id/actionBar" layout="@layout/inc_actionbar" android:layout_alignParentTop="true"/>
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/actionBar"
+        >
+
+        <RelativeLayout
+            android:id="@+id/coordsBox"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            >
+
+            <TextView
+                android:id="@+id/coordsNotes"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textColor="?secondary_text"
+                android:textSize="16sp"
+                android:text="Enter coordinates in decimal format (N50.11 W3.26 or 50.11 -3.26) or degrees minutes and seconds (50N 003E, 5022N 00314E or 502245N 0031428E)."
+                />
+
+            <ImageButton
+                android:id="@+id/coordsSubmit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/coordsNotes"
+                android:layout_marginTop="15dp"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/icn_btn_ok"
+                android:padding="7dp"
+                android:background="?buttonstate"
+                />
+
+            <EditText
+                android:id="@+id/coordsField"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/coordsNotes"
+                android:layout_toLeftOf="@id/coordsSubmit"
+                android:textSize="24sp"
+                android:layout_marginTop="15dp"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:imeOptions="actionGo"
+                android:inputType="textFilter"
+                />
+
+            <TextView android:id="@+id/coordsValid"
+                android:layout_below="@id/coordsField"
+                android:layout_marginTop="5dp"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textColor="?coords_valid"
+                android:text="Valid coordinates"
+                android:visibility="gone"/>
+
+            <TextView android:id="@+id/coordsInvalid"
+                android:layout_below="@id/coordsField"
+                android:layout_marginTop="5dp"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textColor="?coords_invalid"
+                android:text="Invalid coordinates"/>
+
+        </RelativeLayout>
+
+    </ScrollView>
+</RelativeLayout>

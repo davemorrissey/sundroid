@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:orientation="vertical"
+	android:background="?tab_bar_bg_color"
+    >
+    
+	<TextView
+		android:id="@+id/timeZoneBestHeader"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginLeft="15dp"
+		android:layout_marginRight="15dp"
+		android:layout_marginTop="3dp"
+		android:layout_marginBottom="3dp"
+		android:textColor="?header_text"
+		android:textSize="18sp"
+		android:text="Best matches"/>
+    
+</LinearLayout>

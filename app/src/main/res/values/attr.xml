@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="BoundedLinearLayout">
+	    <attr name="bounded_width" format="dimension" />
+	    <attr name="bounded_height" format="dimension" />
+	</declare-styleable>
+    <attr name="sundroid_custom_1" format="string"/>
+    <attr name="sundroid_custom_2" format="string"/>
+    <attr name="sundroid_int_action" format="string"/>
+
+    <attr name="divider_color" format="color"/>
+    <attr name="list_divider" format="reference"/>
+
+    <attr name="app_background_colour" format="color"/>
+    <attr name="app_background" format="reference"/>
+    <attr name="header_background" format="reference"/>
+
+    <attr name="tabstate_inactive" format="reference"/>
+    <attr name="tabstate_active" format="reference"/>
+
+    <attr name="header_text" format="color"/>
+    <attr name="header_secondary_text" format="color"/>
+
+    <attr name="tab_bar_bg_color" format="color"/>
+    <attr name="tab_bar_bg" format="reference"/>
+    <attr name="tabs_activetext" format="color"/>
+    <attr name="tabs_inactivetext" format="color"/>
+
+    <attr name="dialog_text" format="color"/>
+    <attr name="body_text" format="color"/>
+    <attr name="secondary_text" format="color"/>
+
+    <attr name="button_divider_color" format="color"/>
+    <attr name="buttonstate" format="reference"/>
+    <attr name="buttonstate_transparent" format="reference"/>
+    <attr name="button_bar_bg" format="reference"/>
+    <attr name="button_text" format="color"/>
+    <attr name="button_secondary_text" format="color"/>
+
+    <attr name="icn_loc_mylocation" format="reference"/>
+    <attr name="icn_loc_coords" format="reference"/>
+    <attr name="icn_loc_map" format="reference"/>
+    <attr name="icn_loc_search" format="reference"/>
+    <attr name="icn_loc_savedplaces" format="reference"/>
+
+    <attr name="icn_btn_delete" format="reference"/>
+
+    <attr name="info" format="reference"/>
+
+    <attr name="disclosure" format="reference"/>
+
+    <attr name="coords_invalid" format="color"/>
+    <attr name="coords_valid" format="color"/>
+
+    <attr name="calendar_title_bg" format="color"/>
+
+    <attr name="disclosure_open" format="reference"/>
+    <attr name="disclosure_closed" format="reference"/>
+
+    <attr name="spinner_style" format="reference"/>
+</resources>

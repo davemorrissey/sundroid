@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:orientation="vertical">
+	
+	<TextView
+		style="@style/text"
+		android:id="@+id/planetName"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:textSize="18sp"
+		android:paddingLeft="5dp"
+		android:paddingTop="3dp"
+		android:paddingBottom="3dp"/>
+	<View style="@style/listMenuDivider" android:layout_marginBottom="5dp"/>
+		
+	<LinearLayout
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginLeft="15dp"
+		android:layout_marginBottom="5dp"
+		android:paddingTop="10dp"
+		android:orientation="vertical">
+	
+		<TextView
+			android:id="@+id/planetSpecial"
+			android:textColor="?body_text"
+			android:textSize="22sp"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:gravity="center_horizontal"
+			android:visibility="gone"
+			android:paddingBottom="15dp"/>
+		
+        <LinearLayout
+            android:id="@+id/planetEvtsRow"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="15dp">
+            
+            <LinearLayout
+                android:id="@+id/planetEvt1"
+                android:layout_width="0dp"
+                android:layout_weight="0.5"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+                
+				<ImageView
+				    android:id="@+id/planetEvt1Img"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					/>
+				<TextView
+				    android:id="@+id/planetEvt1Time"
+					style="@style/text"
+					android:textSize="22sp"
+				   	android:layout_width="wrap_content"
+					android:layout_height="wrap_content"/>
+				<TextView
+				    android:id="@+id/planetEvt1Az"
+					style="@style/text"
+					android:textSize="16sp"
+				   	android:layout_width="wrap_content"
+					android:layout_height="wrap_content"/>
+            </LinearLayout>
+            
+            <LinearLayout
+                android:id="@+id/planetEvt2"
+                android:layout_width="0dp"
+                android:layout_weight="0.5"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+                
+				<ImageView
+				    android:id="@+id/planetEvt2Img"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					/>
+				<TextView
+				    android:id="@+id/planetEvt2Time"
+					style="@style/text"
+					android:textSize="22sp"
+				   	android:layout_width="wrap_content"
+					android:layout_height="wrap_content"/>
+				<TextView
+				    android:id="@+id/planetEvt2Az"
+					style="@style/text"
+					android:textSize="16sp"
+				   	android:layout_width="wrap_content"
+					android:layout_height="wrap_content"/>
+            </LinearLayout>
+            
+        </LinearLayout>
+        
+        <LinearLayout
+            android:id="@+id/planetTransitUptime"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="15dp">
+            
+            <LinearLayout
+                android:id="@+id/planetTransit"
+                android:layout_width="0dp"
+                android:layout_weight="0.5"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+				<TextView
+					style="@style/text"
+					android:textSize="14sp"
+					android:textColor="?secondary_text"
+				   	android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="TRANSIT"/>
+				<TextView
+				    android:id="@+id/planetTransitTime"
+					style="@style/text"
+					android:textSize="18sp"
+				   	android:layout_width="wrap_content"
+					android:layout_height="wrap_content"/>
+            </LinearLayout>
+            
+            <LinearLayout
+                android:id="@+id/planetUptime"
+                android:layout_width="0dp"
+                android:layout_weight="0.5"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+				<TextView
+					style="@style/text"
+					android:textSize="14sp"
+					android:textColor="?secondary_text"
+				   	android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="UPTIME"/>
+				<TextView
+				    android:id="@+id/planetUptimeTime"
+					style="@style/text"
+					android:textSize="18sp"
+				   	android:layout_width="wrap_content"
+					android:layout_height="wrap_content"/>
+            </LinearLayout>
+            
+            
+        </LinearLayout>
+	    
+	</LinearLayout>
+</LinearLayout>

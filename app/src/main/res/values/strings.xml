@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Sundroid</string>
+    <string name="alarmAddEventPrompt">Event</string>
+    <string name="alarmAddBeforeAfterPrompt">Before or after</string>
+
+    <string name="nextDay">Next day</string>
+    <string name="prevDay">Previous day</string>
+    <string name="nextMonth">Next month</string>
+    <string name="prevMonth">Previous month</string>
+    <string name="nextYear">Next year</string>
+    <string name="prevYear">Previous year</string>
+
+	<string-array name="trackerSettingBodyNames">
+		<item>Sun</item>
+		<item>Moon</item>
+		<item>Mercury</item>
+		<item>Venus</item>
+		<item>Mars</item>
+		<item>Jupiter</item>
+		<item>Saturn</item>
+		<item>Uranus</item>
+		<item>Neptune</item>
+		<item>All</item>
+	</string-array>
+    <string-array name="trackerSettingMapModes">
+        <item>Map</item>
+        <item>Satellite</item>
+        <item>Terrain</item>
+        <item>Hybrid</item>
+    </string-array>
+    <string-array name="monthCalendars">
+        <item>Sunrise and sunset</item>
+        <item>Civil dawn and dusk</item>
+        <item>Nautical dawn and dusk</item>
+        <item>Astronomical dawn and dusk</item>
+        <item>Golden hours</item>
+        <item>Moonrise and moonset</item>
+        <item>Length of daylight</item>
+        <item>Mercury rise and set</item>
+        <item>Venus rise and set</item>
+        <item>Mars rise and set</item>
+        <item>Jupiter rise and set</item>
+        <item>Saturn rise and set</item>
+        <item>Uranus rise and set</item>
+        <item>Neptune rise and set</item>
+    </string-array>
+
+</resources>

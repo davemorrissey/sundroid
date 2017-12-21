@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+        >
+
+    <ImageButton
+            android:id="@+id/savedLocDelete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:padding="5dp"
+            android:src="?icn_btn_delete"
+            android:background="?buttonstate_transparent"/>
+
+    <LinearLayout
+            android:id="@+id/savedLocText"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/savedLocDelete"
+            android:orientation="vertical"
+            android:clickable="true"
+            android:focusable="true"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:background="?disclosure">
+
+        <TextView
+                android:id="@+id/savedLocName"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="-3dp"
+                android:textColor="?body_text"
+                android:textSize="18sp"/>
+
+        <TextView
+                android:id="@+id/savedLocCoords"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/savedLocName"
+                android:textColor="?secondary_text"
+                android:textSize="14sp"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

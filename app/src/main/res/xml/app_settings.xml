@@ -1,0 +1,66 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<PreferenceCategory android:title="Location and time zones">
+		<CheckBoxPreference
+			android:key="lastKnownLocation"
+			android:title="Last known location"
+			android:summary="Uses fast but often less accurate location" />
+		<CheckBoxPreference
+			android:key="reverseGeocode"
+			android:title="Lookup locations"
+			android:summary="Enables geocoding and auto time zone, requires connection" />
+		<ListPreference
+			android:key="defaultTimeZone"
+			android:title="Default time zone"
+			android:summary="Time zone to use when location is not recognised"
+			android:dialogTitle="Select time zone"
+			android:entries="@array/timeZoneValues"
+			android:entryValues="@array/timeZoneKeys"/>
+		<CheckBoxPreference
+			android:key="defaultTimeZoneOverride"
+			android:title="Override time zones"
+			android:summary="Use the default above even when location is recognised" />
+        <ListPreference
+            android:key="locationTimeout"
+            android:title="Location timeout"
+            android:summary="How long to wait for GPS or network location"
+            android:dialogTitle="Location timeout"
+            android:entries="@array/locationTimeoutValues"
+            android:entryValues="@array/locationTimeoutKeys"/>
+	</PreferenceCategory>
+	<PreferenceCategory android:title="Display">
+        <ListPreference
+            android:key="theme"
+            android:title="Theme"
+            android:summary="Choose between light and dark color schemes"
+            android:dialogTitle="Theme"
+            android:entries="@array/themeValues"
+            android:entryValues="@array/themeKeys"/>
+		<ListPreference
+			android:key="clock"
+			android:title="12/24 hour clock"
+			android:summary="Set how times should be displayed"
+			android:dialogTitle="12/24 hour clock"
+			android:entries="@array/clockOptionValues"
+			android:entryValues="@array/clockOptionKeys"/>
+		<CheckBoxPreference
+			android:key="showSeconds"
+			android:title="Show seconds"
+			android:summary="Shows times with seconds on some screens" />
+		<CheckBoxPreference
+			android:key="showTimeZone"
+			android:title="Show time zone"
+			android:summary="Shows the current time zone, turn off to save space" />
+		<CheckBoxPreference
+			android:key="magneticBearings"
+			android:title="Magnetic bearings"
+			android:summary="Shows bearings and azimuths relative to magnetic north" />
+		<ListPreference
+			android:key="firstWeekday"
+			android:title="First day of the week"
+			android:dialogTitle="First day of the week"
+			android:summary="Set the first day of the week for calendars"
+			android:entries="@array/firstWeekdayValues"
+			android:entryValues="@array/firstWeekdayKeys"/>
+	</PreferenceCategory>
+</PreferenceScreen>

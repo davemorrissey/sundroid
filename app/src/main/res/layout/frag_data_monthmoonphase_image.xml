@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/moonCalImageCell"
+                style="@style/calendarMoonCell">
+    <ImageView
+            android:id="@+id/moonCalImageBackground"
+            style="@style/calendarMoonImage"
+            android:scaleType="fitXY"
+            android:src="@drawable/moonsmall"/>
+    <ImageView
+            android:id="@+id/moonCalImageOverlay"
+            style="@style/calendarMoonImage"
+            android:src="@drawable/moonoverlay000"/>
+</RelativeLayout>

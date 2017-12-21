@@ -1,0 +1,39 @@
+apply plugin: 'com.android.application'
+
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
+android {
+    compileSdkVersion 27
+    buildToolsVersion "27.0.2"
+    defaultConfig {
+        applicationId "uk.co.sundroid"
+        minSdkVersion 21
+        targetSdkVersion 27
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        debug {
+            manifestPlaceholders = [ GOOGLE_MAPS_API_KEY:keystoreProperties['GOOGLE_MAPS_API_KEY']]
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            manifestPlaceholders = [ GOOGLE_MAPS_API_KEY:keystoreProperties['GOOGLE_MAPS_API_KEY']]
+        }
+    }
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
+}
+
+dependencies {
+    compile 'com.google.android.gms:play-services-maps:11.8.0'
+    compile 'com.android.support:appcompat-v7:27.0.2'
+    compile 'com.android.support:support-media-compat:27.0.2'
+    compile 'com.android.support:support-v4:27.0.2'
+    testCompile 'junit:junit:4.12'
+}

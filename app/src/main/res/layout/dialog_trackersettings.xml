@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView android:id="@+id/trackerSettingsDialogRoot"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:orientation="vertical"
+            >
+        <RelativeLayout
+                android:id="@+id/trackerSettingBodyWrapper"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp">
+
+            <Spinner
+                    android:id="@+id/trackerSettingBody"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:entries="@array/trackerSettingBodyNames"
+                    />
+
+            <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_toLeftOf="@id/trackerSettingBody"
+                    android:layout_alignBaseline="@id/trackerSettingBody"
+                    android:textSize="18sp"
+                    android:textColor="?dialog_text"
+                    android:text="Track"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+                android:id="@+id/trackerSettingMapWrapper"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp">
+
+            <CheckBox
+                    android:id="@+id/trackerSettingMap"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"/>
+
+            <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_toLeftOf="@id/trackerSettingMap"
+                    android:layout_alignBaseline="@id/trackerSettingMap"
+                    android:textSize="18sp"
+                    android:textColor="?dialog_text"
+                    android:text="Map view"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+                android:id="@+id/trackerSettingMapModeWrapper"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp">
+
+            <Spinner
+                    android:id="@+id/trackerSettingMapMode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:entries="@array/trackerSettingMapModes"
+                    />
+
+            <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_toLeftOf="@id/trackerSettingMapMode"
+                    android:layout_alignBaseline="@id/trackerSettingMapMode"
+                    android:textSize="18sp"
+                    android:textColor="?dialog_text"
+                    android:text="Map type"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+                android:id="@+id/trackerSettingCompassWrapper"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp">
+
+            <CheckBox
+                    android:id="@+id/trackerSettingCompass"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"/>
+
+            <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_toLeftOf="@id/trackerSettingCompass"
+                    android:layout_alignBaseline="@id/trackerSettingCompass"
+                    android:textSize="18sp"
+                    android:textColor="?dialog_text"
+                    android:text="Compass rotation"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+                android:id="@+id/trackerSettingHourMarkersWrapper"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp">
+
+            <CheckBox
+                    android:id="@+id/trackerSettingHourMarkers"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"/>
+
+            <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_toLeftOf="@id/trackerSettingHourMarkers"
+                    android:layout_alignBaseline="@id/trackerSettingHourMarkers"
+                    android:textSize="18sp"
+                    android:textColor="?dialog_text"
+                    android:text="Hour markers"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+                android:id="@+id/trackerSettingLinearElevationWrapper"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp">
+
+            <CheckBox
+                    android:id="@+id/trackerSettingLinearElevation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"/>
+
+            <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_toLeftOf="@id/trackerSettingLinearElevation"
+                    android:layout_alignBaseline="@id/trackerSettingLinearElevation"
+                    android:textSize="18sp"
+                    android:textColor="?dialog_text"
+                    android:text="Linear elevation"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+                android:id="@+id/trackerSettingTextWrapper"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp">
+
+            <CheckBox
+                    android:id="@+id/trackerSettingText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"/>
+
+            <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_toLeftOf="@id/trackerSettingText"
+                    android:layout_alignBaseline="@id/trackerSettingText"
+                    android:textSize="18sp"
+                    android:textColor="?dialog_text"
+                    android:text="Show text"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</ScrollView>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:s="http://schemas.android.com/apk/res/uk.co.sundroid"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+    <include
+            layout="@layout/inc_yearbar"
+            android:id="@+id/incYearBar"
+            android:layout_alignParentBottom="true"/>
+
+    <ScrollView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_above="@id/incYearBar"
+            >
+
+        <uk.co.sundroid.util.view.BoundedLinearLayout
+                android:layout_gravity="center_horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                s:bounded_width="@dimen/column_max_width"
+                android:orientation="vertical">
+
+            <LinearLayout
+                    android:id="@+id/yearEventsNone"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    >
+                <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_margin="15dp"
+                        android:src="?info"/>
+                <TextView
+                        android:text="No events selected.\nTap the settings icon above to select events."
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="15dp"
+                        android:gravity="center_horizontal"
+                        android:textColor="?secondary_text"
+                        android:textSize="16sp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                    android:id="@+id/yearEventsBox"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    />
+
+        </uk.co.sundroid.util.view.BoundedLinearLayout>
+
+    </ScrollView>
+
+</RelativeLayout>
