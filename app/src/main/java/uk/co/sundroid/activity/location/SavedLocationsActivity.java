@@ -17,14 +17,11 @@ import uk.co.sundroid.dao.DatabaseHelper;
 import uk.co.sundroid.domain.LocationDetails;
 import uk.co.sundroid.util.geometry.AngleFormat;
 import uk.co.sundroid.util.SharedPrefsHelper;
-import uk.co.sundroid.util.LogWrapper;
 
 import java.util.List;
 
 public class SavedLocationsActivity extends AbstractLocationActivity implements OnClickListener, DialogInterface.OnClickListener {
-	
-	private static final String TAG = SavedLocationsActivity.class.getSimpleName();
-	
+
 	private DatabaseHelper db;
 
     private static final int DIALOG_DELETE = 204;
@@ -48,10 +45,7 @@ public class SavedLocationsActivity extends AbstractLocationActivity implements 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		LogWrapper.d(TAG, "onCreate()");
-		
 		db = new DatabaseHelper(this);
-
         populateSavedLocations();
 	}
 
