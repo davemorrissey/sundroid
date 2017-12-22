@@ -125,10 +125,9 @@ public class SavedLocationsActivity extends AbstractLocationActivity implements 
         boolean first = true;
         for (final LocationDetails location : locations) {
             if (!first) {
-                View divider = getLayoutInflater().inflate(layout.divider, list);
-                list.addView(divider);
+                getLayoutInflater().inflate(layout.divider, list);
             }
-            final View row = getLayoutInflater().inflate(layout.loc_saved_row, list);
+            View row = getLayoutInflater().inflate(layout.loc_saved_row, list);
             TextView name = row.findViewById(R.id.savedLocName);
             name.setText(location.getName());
             TextView coords = row.findViewById(R.id.savedLocCoords);
@@ -141,7 +140,6 @@ public class SavedLocationsActivity extends AbstractLocationActivity implements 
             row.findViewById(id.savedLocDelete).setTag(TAG_ACTION, ACTION_DELETE);
             row.findViewById(id.savedLocDelete).setOnClickListener(this);
 
-            list.addView(row);
             first = false;
         }
 
