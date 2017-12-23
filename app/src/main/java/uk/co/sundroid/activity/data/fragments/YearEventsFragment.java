@@ -169,10 +169,9 @@ public class YearEventsFragment extends AbstractYearFragment implements Configur
                         }
 
                         if (!first) {
-                            final View divider = getActivity().getLayoutInflater().inflate(layout.divider, eventsBox);
-                            eventsBox.addView(divider);
+                            getActivity().getLayoutInflater().inflate(layout.divider, eventsBox);
                         }
-                        final View eventRow = getActivity().getLayoutInflater().inflate(layout.frag_data_yearevents_event, eventsBox);
+                        View eventRow = View.inflate(getActivity(), layout.frag_data_yearevents_event, null);
 
                         boolean today = todayCalendar.get(Calendar.YEAR) == event.time.get(Calendar.YEAR) &&
                                 todayCalendar.get(Calendar.MONTH) == event.time.get(Calendar.MONTH) &&
