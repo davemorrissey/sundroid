@@ -2,10 +2,13 @@ package uk.co.sundroid.domain;
 
 import android.support.annotation.NonNull;
 
+import java.io.Serializable;
 import java.util.TimeZone;
 
-public class TimeZoneDetail implements Comparable<TimeZoneDetail> {
-	
+public class TimeZoneDetail implements Comparable<TimeZoneDetail>, Serializable {
+
+	private static final long serialVersionUID = 8968408131775567729L;
+
 	private String id;
 	private String cities;
 	private TimeZone zone;
