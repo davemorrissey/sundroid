@@ -53,6 +53,8 @@ public class SharedPrefsHelper {
 	private static final String SUNTRACKER_TEXT_KEY = "sunTrackerText";
 	
 	private static final String LOCMAP_MODE_KEY = "locMapMode";
+
+	private static final String MAP_LOCATION_PERMISSION_DENIED_KEY = "mapLocationPermissionDenied";
 	
 	
 	public static LocationDetails getSelectedLocation(Context context) {
@@ -343,6 +345,16 @@ public class SharedPrefsHelper {
 	public static void setSunTrackerText(Context context, boolean on) {
 		SharedPreferences prefs = context.getSharedPreferences(PREFS_KEY, Context.MODE_PRIVATE);
 		prefs.edit().putBoolean(SUNTRACKER_TEXT_KEY, on).apply();
+	}
+
+	public static boolean getMapLocationPermissionDenied(Context context) {
+		SharedPreferences prefs = context.getSharedPreferences(PREFS_KEY, Context.MODE_PRIVATE);
+		return prefs.getBoolean(MAP_LOCATION_PERMISSION_DENIED_KEY, false);
+	}
+
+	public static void setMapLocationPermissionDenied(Context context, boolean denied) {
+		SharedPreferences prefs = context.getSharedPreferences(PREFS_KEY, Context.MODE_PRIVATE);
+		prefs.edit().putBoolean(MAP_LOCATION_PERMISSION_DENIED_KEY, denied).apply();
 	}
 	
 	private enum ClockType {

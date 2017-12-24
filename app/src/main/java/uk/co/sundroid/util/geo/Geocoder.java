@@ -10,8 +10,12 @@ import uk.co.sundroid.util.SharedPrefsHelper;
 import uk.co.sundroid.util.LogWrapper;
 import uk.co.sundroid.util.StringUtils;
 import uk.co.sundroid.util.time.TimeZoneResolver;
+
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.location.Address;
+import android.support.v4.content.ContextCompat;
 
 
 public class Geocoder {
@@ -57,7 +61,7 @@ public class Geocoder {
 		LocationDetails locationDetails = new LocationDetails();
 		locationDetails.setLocation(location);
 		
-		if (SharedPrefsHelper.getReverseGeocode(context)) {
+		if (SharedPrefsHelper.getReverseGeocode(context) && ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 			try {
 				android.location.Geocoder myLocation = new android.location.Geocoder(context, Locale.getDefault());
 				List<Address> myList = myLocation.getFromLocation(location.getLatitude().getDoubleValue(), location.getLongitude().getDoubleValue(), 1);

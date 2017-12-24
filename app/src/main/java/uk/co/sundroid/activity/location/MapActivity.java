@@ -1,10 +1,15 @@
 package uk.co.sundroid.activity.location;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.TextView;
 import com.google.android.gms.maps.CameraUpdate;
@@ -37,6 +42,7 @@ import static uk.co.sundroid.NavItem.NavItemLocation.*;
 public class MapActivity extends AbstractLocationActivity implements OnMapClickListener, OnInfoWindowClickListener {
 	
     private static final int DIALOG_MAPVIEW = 39879;
+    private static final int REQUEST_LOCATION = 87648;
 
     private Handler handler = new Handler();
 
@@ -65,7 +71,53 @@ public class MapActivity extends AbstractLocationActivity implements OnMapClickL
                 new NavItem("Page settings", drawable.icn_bar_viewsettings, HEADER, 0)
         ));
         setUpMapIfNeeded();
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+                builder.setTitle("Location required")
+                        .setMessage("Location permission is required to look up names and time zones. Proceed?")
+                        .setPositiveButton(android.R.string.yes, (dialog, which) -> requestLocationPermission())
+                        .setNegativeButton(android.R.string.no, (dialog, which) -> { })
+                        .setIcon(android.R.drawable.ic_dialog_info)
+                        .show();
+            } else {
+                requestLocationPermission();
+            }
+        }
    	}
+
+   	private void requestLocationPermission() {
+        ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, REQUEST_LOCATION);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0) {
+                    if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                        // Show alert only if this is the first time the user has denied permission,
+                        // later calls to this method happen without interaction if they selected
+                        // "always deny".
+                        if (!SharedPrefsHelper.getMapLocationPermissionDenied(this)) {
+                            SharedPrefsHelper.setMapLocationPermissionDenied(this, true);
+                            AlertDialog.Builder builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+                            builder.setTitle("Location denied")
+                                    .setMessage("Location name and time zone lookup will be unavailable. To fix this, you can grant this app location permission from Android settings.")
+                                    .setPositiveButton(android.R.string.ok, (dialog, which) -> { })
+                                    .setIcon(android.R.drawable.ic_dialog_info)
+                                    .show();
+                        }
+                    } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                        // Unset denied flag so next time permission is denied, the alert is displayed again
+                        SharedPrefsHelper.setMapLocationPermissionDenied(this, false);
+                    }
+                }
+            }
+        }
+    }
 
     @Override
     protected void onSaveInstanceState(Bundle state) {
@@ -205,13 +257,7 @@ public class MapActivity extends AbstractLocationActivity implements OnMapClickL
     }
 
     private void startPointLookup(final LatitudeLongitude location) {
-        Thread thread = new Thread() {
-            @Override
-            public void run() {
-                updateLocationDetails(Geocoder.getLocationDetails(location, getApplicationContext()));
-            }
-        };
-        thread.start();
+        new Thread(() -> updateLocationDetails(Geocoder.getLocationDetails(location, getApplicationContext()))).start();
     }
 
     private void updateLocationDetails(final LocationDetails locationDetails) {
