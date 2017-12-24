@@ -121,7 +121,7 @@ public class SavedLocationsActivity extends AbstractLocationActivity implements 
             if (!first) {
                 getLayoutInflater().inflate(layout.divider, list);
             }
-            View row = getLayoutInflater().inflate(layout.loc_saved_row, list);
+            View row = View.inflate(this, layout.loc_saved_row, null);
             TextView name = row.findViewById(R.id.savedLocName);
             name.setText(location.getName());
             TextView coords = row.findViewById(R.id.savedLocCoords);
@@ -133,6 +133,7 @@ public class SavedLocationsActivity extends AbstractLocationActivity implements 
             row.findViewById(id.savedLocDelete).setTag(TAG_LOCATION_ID, Integer.toString(location.getId()));
             row.findViewById(id.savedLocDelete).setTag(TAG_ACTION, ACTION_DELETE);
             row.findViewById(id.savedLocDelete).setOnClickListener(this);
+            list.addView(row);
 
             first = false;
         }
