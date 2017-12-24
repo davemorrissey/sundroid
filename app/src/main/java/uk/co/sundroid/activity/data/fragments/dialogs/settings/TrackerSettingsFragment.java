@@ -3,6 +3,7 @@ package uk.co.sundroid.activity.data.fragments.dialogs.settings;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
@@ -21,23 +22,15 @@ import java.util.List;
 
 public class TrackerSettingsFragment extends DialogFragment {
 
-    private OnViewPrefsChangedListener onViewPrefsChangedListener;
-
     public static TrackerSettingsFragment newInstance() {
         return new TrackerSettingsFragment();
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        this.onViewPrefsChangedListener = (OnViewPrefsChangedListener)context;
     }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         setRetainInstance(true);
 
-        Context context = getActivity().getApplicationContext();
+        Context context = getActivity();
         View view = View.inflate(context, R.layout.dialog_trackersettings, null);
 
         Spinner body = view.findViewById(id.trackerSettingBody);
@@ -103,7 +96,7 @@ public class TrackerSettingsFragment extends DialogFragment {
             view.findViewById(id.trackerSettingMapModeWrapper).setVisibility(View.GONE);
         }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), android.R.style.Theme_Material_Dialog_Alert);
         builder.setTitle("Settings");
         builder.setView(view);
         builder.setNegativeButton("Cancel", (d, i) -> dismiss());
@@ -132,7 +125,11 @@ public class TrackerSettingsFragment extends DialogFragment {
             SharedPrefsHelper.setSunTrackerLinearElevation(context, linearElevation.isChecked());
             SharedPrefsHelper.setSunTrackerHourMarkers(context, hourMarkers.isChecked());
             SharedPrefsHelper.setSunTrackerText(context, text.isChecked());
-            onViewPrefsChangedListener.onViewPrefsUpdated();
+
+            Fragment parent = getTargetFragment();
+            if (parent != null && parent instanceof OnViewPrefsChangedListener) {
+                ((OnViewPrefsChangedListener) parent).onViewPrefsUpdated();
+            }
             dismiss();
         });
         return builder.create();
