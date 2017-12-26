@@ -12,10 +12,10 @@ import uk.co.sundroid.activity.data.fragments.dialogs.date.DatePickerFragment;
 import uk.co.sundroid.activity.data.fragments.dialogs.date.TimePickerFragment;
 import uk.co.sundroid.domain.LocationDetails;
 import uk.co.sundroid.util.SharedPrefsHelper;
+import uk.co.sundroid.util.StringUtilsKt;
 import uk.co.sundroid.util.view.ButtonDragGestureDetector;
 import uk.co.sundroid.util.view.ButtonDragGestureDetector.ButtonDragGestureDetectorListener;
 import uk.co.sundroid.util.LogWrapper;
-import uk.co.sundroid.util.StringUtils;
 import uk.co.sundroid.util.time.TimeHelper;
 import uk.co.sundroid.util.time.TimeHelper.Time;
 
@@ -183,7 +183,7 @@ public abstract class AbstractTimeFragment extends AbstractDataFragment implemen
 			textInView(view, id.zoneName, zoneName);
 
 			String zoneCities = location.getTimeZone().getOffset(dateCalendar.getTimeInMillis() + (12 * 60 * 60 * 1000)); // Get day's main offset.
-			if (StringUtils.isNotEmpty(location.getTimeZone().getCities())) {
+			if (StringUtilsKt.isNotEmpty(location.getTimeZone().getCities())) {
 				zoneCities += " " + location.getTimeZone().getCities();
 			}
 			textInView(view, id.zoneCities, zoneCities);

@@ -10,7 +10,7 @@ import uk.co.sundroid.util.SharedPrefsHelper;
 import uk.co.sundroid.util.view.ButtonDragGestureDetector;
 import uk.co.sundroid.util.view.ButtonDragGestureDetector.ButtonDragGestureDetectorListener;
 import uk.co.sundroid.util.LogWrapper;
-import uk.co.sundroid.util.StringUtils;
+import uk.co.sundroid.util.StringUtilsKt;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -115,7 +115,7 @@ public abstract class AbstractMonthFragment<T> extends AbstractDataFragment impl
 			textInView(view, id.zoneName, zoneName);
 
 			String zoneCities = location.getTimeZone().getOffset(calendar.getTimeInMillis() + (12 * 60 * 60 * 1000)); // Get day's main offset.
-			if (StringUtils.isNotEmpty(location.getTimeZone().getCities())) {
+			if (StringUtilsKt.isNotEmpty(location.getTimeZone().getCities())) {
 				zoneCities += " " + location.getTimeZone().getCities();
 			}
 			textInView(view, id.zoneCities, zoneCities);

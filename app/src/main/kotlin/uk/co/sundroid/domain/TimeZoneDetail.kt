@@ -1,5 +1,6 @@
 package uk.co.sundroid.domain
 
+import uk.co.sundroid.util.*
 import java.io.Serializable
 import java.util.TimeZone
 
@@ -8,28 +9,24 @@ class TimeZoneDetail(val id: String, val cities: String, val zone: TimeZone) : C
     private val currentOffset: Long = zone.getOffset(System.currentTimeMillis()).toLong()
 
     fun getOffset(time: Long): String {
-
         if (zone.id == "UTC") {
             return "UTC"
         }
 
-        var offset = Math.abs(zone.getOffset(time))
+        val offset = zone.getOffset(time)
         if (offset == 0) {
             return "GMT"
         }
 
-        val offsetHours = offset / (1000 * 60 * 60)
-        offset -= offsetHours * (1000 * 60 * 60)
-        val offsetMinutes = offset / (1000 * 60)
+        var absOffset = Math.abs(offset)
+        val hours = absOffset / (1000 * 60 * 60)
+        absOffset -= hours * (1000 * 60 * 60)
+        val minutes = absOffset / (1000 * 60)
 
-        var offsetHoursStr = "00$offsetHours"
-        offsetHoursStr = offsetHoursStr.substring(offsetHoursStr.length - 2)
-
-        var offsetMinutesStr = "00$offsetMinutes"
-        offsetMinutesStr = offsetMinutesStr.substring(offsetMinutesStr.length - 2)
-
-        val sign = if (zone.getOffset(time) < 0) "-" else "+"
-        return "GMT$sign$offsetHoursStr:$offsetMinutesStr"
+        val hoursStr = zeroPad(hours.toString(), 2)
+        val minutesStr = zeroPad(minutes.toString(), 2)
+        val sign = if (offset < 0) "-" else "+"
+        return "GMT$sign$hoursStr:$minutesStr"
     }
 
     override fun toString(): String {

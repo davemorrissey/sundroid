@@ -5,7 +5,6 @@ import java.util.ArrayList
 
 import uk.co.sundroid.util.geometry.AngleFormat
 import uk.co.sundroid.util.geo.LatitudeLongitude
-import uk.co.sundroid.util.StringUtils
 
 class LocationDetails : Serializable {
 
@@ -26,11 +25,7 @@ class LocationDetails : Serializable {
     var possibleTimeZones: ArrayList<TimeZoneDetail>? = null
 
     val displayName: String
-        get() = if (StringUtils.isEmpty(name)) {
-            location!!.getPunctuatedValue(AngleFormat.Accuracy.MINUTES)
-        } else {
-            name!!
-        }
+        get() = name ?: location?.getPunctuatedValue(AngleFormat.Accuracy.MINUTES) ?: "Unknown"
 
     override fun toString(): String {
         return "location=$location, name=$name, country=$country, state=$state, timeZone=$timeZone"

@@ -448,7 +448,7 @@ public class RealDataActivity extends AbstractActivity implements OnClickListene
         		
         		final View view = getLayoutInflater().inflate(R.layout.dialog_save, null);
         		final EditText saveField = view.findViewById(R.id.saveField);
-            	if (StringUtils.isNotEmpty(location.getName()) && StringUtils.isEmpty(saveField.getText().toString())) {
+            	if (StringUtilsKt.isNotEmpty(location.getName()) && StringUtilsKt.isEmpty(saveField.getText().toString())) {
                 	saveField.setText(location.getName());
                 } else {
                 	saveField.setText("");
@@ -459,7 +459,7 @@ public class RealDataActivity extends AbstractActivity implements OnClickListene
                     String saveName = saveField.getText().toString();
                     DatabaseHelper db = null;
                     try {
-                        if (StringUtils.isNotEmpty(saveName)) {
+                        if (StringUtilsKt.isNotEmpty(saveName)) {
                             db = new DatabaseHelper(RealDataActivity.this);
                             location.setName(saveName);
                             SharedPrefsHelper.saveSelectedLocation(RealDataActivity.this, location);

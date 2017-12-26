@@ -9,13 +9,13 @@ import android.view.ViewGroup;
 import uk.co.sundroid.R.id;
 import uk.co.sundroid.R.layout;
 import uk.co.sundroid.activity.data.fragments.dialogs.settings.YearEventsPickerFragment;
+import uk.co.sundroid.util.StringUtilsKt;
 import uk.co.sundroid.util.astro.MoonPhaseEvent;
 import uk.co.sundroid.util.astro.SunDay;
 import uk.co.sundroid.util.astro.math.MoonPhaseCalculator;
 import uk.co.sundroid.util.astro.math.SunCalculator;
 import uk.co.sundroid.domain.LocationDetails;
 import uk.co.sundroid.util.SharedPrefsHelper;
-import uk.co.sundroid.util.StringUtils;
 import uk.co.sundroid.util.theme.ThemePalette;
 import uk.co.sundroid.util.time.TimeHelper;
 import uk.co.sundroid.util.time.TimeHelper.Time;
@@ -190,11 +190,11 @@ public class YearEventsFragment extends AbstractYearFragment implements Configur
                         textInView(eventRow, id.yearEventMonth, getShortMonth(event.time));
                         textInView(eventRow, id.yearEventTitle, Html.fromHtml(title));
                         textInView(eventRow, id.yearEventTime, Html.fromHtml(time));
-                        if (StringUtils.isNotEmpty(subtitle)) {
+                        if (StringUtilsKt.isNotEmpty(subtitle)) {
                             textInView(eventRow, id.yearEventSubtitle, Html.fromHtml(subtitle));
                             showInView(eventRow, id.yearEventSubtitle);
                         }
-                        if (StringUtils.isNotEmpty(link)) {
+                        if (StringUtilsKt.isNotEmpty(link)) {
                             final String finalLink = link;
                             showInView(eventRow, id.yearEventLink);
                             eventRow.setOnClickListener(view1 -> {
