@@ -25,7 +25,7 @@ import uk.co.sundroid.util.time.TimeHelper.Time;
 import uk.co.sundroid.util.astro.YearData.Event;
 import uk.co.sundroid.util.geometry.BearingHelper;
 import uk.co.sundroid.util.time.CalendarUtils;
-import uk.co.sundroid.util.time.TimeUtils;
+import uk.co.sundroid.util.time.TimeUtilsKt;
 
 import java.util.*;
 
@@ -132,7 +132,7 @@ public class DayDetailMoonFragment extends AbstractDayFragment {
                             phaseImg = getLocation().getLocation().getLatitude().getDoubleValue() >= 0 ? ThemePalette.getPhaseLeft() : ThemePalette.getPhaseRight();
                         }
                         ((ImageView)view.findViewById(phaseImgView)).setImageResource(phaseImg);
-                        ((TextView)view.findViewById(phaseLabelView)).setText(TimeUtils.shortDateAndMonth(phaseEvent.getTime()));
+                        ((TextView)view.findViewById(phaseLabelView)).setText(TimeUtilsKt.shortDateAndMonth(phaseEvent.getTime()));
                     }
 
                     boolean noTransit = true;
