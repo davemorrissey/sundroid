@@ -8,16 +8,15 @@ import static java.util.Calendar.MONTH;
 import static java.util.Calendar.SECOND;
 import static java.util.Calendar.YEAR;
 
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.TimeZone;
 
-import uk.co.sundroid.util.astro.EventName;
 import uk.co.sundroid.util.astro.Position;
 import uk.co.sundroid.util.astro.RiseSetType;
 import uk.co.sundroid.util.astro.SunDay;
 import uk.co.sundroid.util.astro.TwilightType;
 import uk.co.sundroid.util.geo.LatitudeLongitude;
-import uk.co.sundroid.util.ArrayUtils;
 
 public class SunCalculator {
 	
@@ -445,7 +444,7 @@ public class SunCalculator {
 		Position solarNoonPosition = calcPosition(location, sunDay.getTransit());
 		sunDay.setTransitAppElevation(solarNoonPosition.getAppElevation());
 
-		if (events == null || events.length == 0 || ArrayUtils.contains(events, Event.RISESET)) {
+		if (events == null || events.length == 0 || Arrays.asList(events).contains(Event.RISESET)) {
 			double sunrise = calcUpUTC(julianDay, latitude, longitude, 90.833);
 			if (!Double.isNaN(sunrise)) {
 				sunDay.setRise(createCalendar(dateMidnightUtc, sunrise, dateMidnight.getTimeZone()));
@@ -479,7 +478,7 @@ public class SunCalculator {
 			
 		}
 
-		if (events == null || events.length == 0 || ArrayUtils.contains(events, Event.CIVIL)) {
+		if (events == null || events.length == 0 || Arrays.asList(events).contains(Event.CIVIL)) {
 			double civDusk = calcDownUTC(julianDay, latitude, longitude, 96);
 			if (!Double.isNaN(civDusk)) {
 				sunDay.setCivDusk(createCalendar(dateMidnightUtc, civDusk, dateMidnight.getTimeZone()));
@@ -503,7 +502,7 @@ public class SunCalculator {
 			}
 		}
 		
-		if (events == null || events.length == 0 || ArrayUtils.contains(events, Event.NAUTICAL)) {
+		if (events == null || events.length == 0 || Arrays.asList(events).contains(Event.NAUTICAL)) {
 			double ntcDawn = calcUpUTC(julianDay, latitude, longitude, 102);
 			if (!Double.isNaN(ntcDawn)) {
 				sunDay.setNtcDawn(createCalendar(dateMidnightUtc, ntcDawn, dateMidnight.getTimeZone()));
@@ -527,7 +526,7 @@ public class SunCalculator {
 			}
 		}
 
-		if (events == null || events.length == 0 || ArrayUtils.contains(events, Event.ASTRONOMICAL)) {
+		if (events == null || events.length == 0 || Arrays.asList(events).contains(Event.ASTRONOMICAL)) {
 			double astDawn = calcUpUTC(julianDay, latitude, longitude, 108);
 			if (!Double.isNaN(astDawn)) {
 				sunDay.setAstDawn(createCalendar(dateMidnightUtc, astDawn, dateMidnight.getTimeZone()));
@@ -551,7 +550,7 @@ public class SunCalculator {
 			}
 		}
 		
-		if (events == null || events.length == 0 || ArrayUtils.contains(events, Event.GOLDENHOUR)) {
+		if (events == null || events.length == 0 || Arrays.asList(events).contains(Event.GOLDENHOUR)) {
 			double ghEnd = calcUpUTC(julianDay, latitude, longitude, 84);
 			if (!Double.isNaN(ghEnd)) {
 				sunDay.setGhEnd(createCalendar(dateMidnightUtc, ghEnd, dateMidnight.getTimeZone()));
