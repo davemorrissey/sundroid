@@ -135,6 +135,7 @@ public abstract class AbstractDayFragment extends AbstractDataFragment implement
 
     private void showDatePicker() {
         DatePickerFragment datePickerFragment = DatePickerFragment.newInstance(getDateCalendar());
+        datePickerFragment.setTargetFragment(this, 0);
         datePickerFragment.show(getFragmentManager(), "datePicker");
     }
 

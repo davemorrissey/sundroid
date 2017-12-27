@@ -3,7 +3,7 @@ package uk.co.sundroid.activity.data.fragments.dialogs.date;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.Context;
+import android.app.Fragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
@@ -22,7 +22,6 @@ import static java.util.Calendar.*;
 public class DatePickerFragment extends DialogFragment implements DialogInterface.OnClickListener, OnDateChangedListener, OnSeekBarChangeListener {
 
     private Calendar calendar;
-    private OnDateSelectedListener onDateSelectedListener;
     private DatePicker datePicker;
     private SeekBar dateSeeker;
 
@@ -53,12 +52,6 @@ public class DatePickerFragment extends DialogFragment implements DialogInterfac
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        this.onDateSelectedListener = (OnDateSelectedListener) getParentFragment();
-    }
-
-    @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         setRetainInstance(true); // TODO May not be required
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -85,7 +78,7 @@ public class DatePickerFragment extends DialogFragment implements DialogInterfac
         if (dateSeeker != null && calendar != null) {
             Calendar cal = Calendar.getInstance(calendar.getTimeZone());
             cal.set(datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth());
-            dateSeeker.setProgress(calendar.get(DAY_OF_YEAR));
+            dateSeeker.setProgress(cal.get(DAY_OF_YEAR));
         }
     }
 
@@ -95,7 +88,7 @@ public class DatePickerFragment extends DialogFragment implements DialogInterfac
             dayOfYear = Math.max(1, dayOfYear);
             Calendar cal = Calendar.getInstance(calendar.getTimeZone());
             cal.set(Calendar.DAY_OF_YEAR, dayOfYear);
-            datePicker.updateDate(datePicker.getYear(), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+            datePicker.updateDate(datePicker.getYear(), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
         }
     }
 
@@ -109,14 +102,14 @@ public class DatePickerFragment extends DialogFragment implements DialogInterfac
 
     @Override
     public void onClick(DialogInterface dialogInterface, int button) {
-        if (onDateSelectedListener == null) {
-            return;
-        }
-        if (button == DialogInterface.BUTTON_NEUTRAL) {
-            Calendar today = Calendar.getInstance();
-            onDateSelectedListener.onDateSet(today.get(YEAR), today.get(MONTH), today.get(DAY_OF_MONTH));
-        } else if (button == DialogInterface.BUTTON_POSITIVE) {
-            onDateSelectedListener.onDateSet(datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth());
+        Fragment parentFragment = getTargetFragment();
+        if (parentFragment != null && parentFragment instanceof OnDateSelectedListener) {
+            if (button == DialogInterface.BUTTON_NEUTRAL) {
+                Calendar today = Calendar.getInstance();
+                ((OnDateSelectedListener)parentFragment).onDateSet(today.get(YEAR), today.get(MONTH), today.get(DAY_OF_MONTH));
+            } else if (button == DialogInterface.BUTTON_POSITIVE) {
+                ((OnDateSelectedListener)parentFragment).onDateSet(datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth());
+            }
         }
         dismiss();
     }
