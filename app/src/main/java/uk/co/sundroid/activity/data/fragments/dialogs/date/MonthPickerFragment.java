@@ -3,7 +3,7 @@ package uk.co.sundroid.activity.data.fragments.dialogs.date;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.Context;
+import android.app.Fragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
@@ -19,7 +19,6 @@ public class MonthPickerFragment extends DialogFragment implements DialogInterfa
 
     private int year;
     private int month;
-    private OnMonthSelectedListener onMonthSelectedListener;
     private NumberPicker monthPicker;
     private NumberPicker yearPicker;
 
@@ -43,12 +42,6 @@ public class MonthPickerFragment extends DialogFragment implements DialogInterfa
         Calendar today = getInstance();
         this.year = getArguments().getInt("y", today.get(YEAR));
         this.month = getArguments().getInt("m", today.get(MONTH));
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        this.onMonthSelectedListener = (MonthPickerFragment.OnMonthSelectedListener) getParentFragment();
     }
 
     @Override
@@ -79,11 +72,14 @@ public class MonthPickerFragment extends DialogFragment implements DialogInterfa
 
     @Override
     public void onClick(DialogInterface dialogInterface, int button) {
-        if (button == DialogInterface.BUTTON_NEUTRAL) {
-            Calendar today = getInstance();
-            onMonthSelectedListener.onMonthSet(today.get(YEAR), today.get(MONTH));
-        } else if (button == DialogInterface.BUTTON_POSITIVE) {
-            onMonthSelectedListener.onMonthSet(yearPicker.getValue(), monthPicker.getValue());
+        Fragment target = getTargetFragment();
+        if (target != null && target instanceof OnMonthSelectedListener) {
+            if (button == DialogInterface.BUTTON_NEUTRAL) {
+                Calendar today = getInstance();
+                ((OnMonthSelectedListener)target).onMonthSet(today.get(YEAR), today.get(MONTH));
+            } else if (button == DialogInterface.BUTTON_POSITIVE) {
+                ((OnMonthSelectedListener)target).onMonthSet(yearPicker.getValue(), monthPicker.getValue());
+            }
         }
         dismiss();
     }

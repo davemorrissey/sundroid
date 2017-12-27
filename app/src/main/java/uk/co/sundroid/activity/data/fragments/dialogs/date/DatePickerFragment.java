@@ -102,13 +102,13 @@ public class DatePickerFragment extends DialogFragment implements DialogInterfac
 
     @Override
     public void onClick(DialogInterface dialogInterface, int button) {
-        Fragment parentFragment = getTargetFragment();
-        if (parentFragment != null && parentFragment instanceof OnDateSelectedListener) {
+        Fragment target = getTargetFragment();
+        if (target != null && target instanceof OnDateSelectedListener) {
             if (button == DialogInterface.BUTTON_NEUTRAL) {
                 Calendar today = Calendar.getInstance();
-                ((OnDateSelectedListener)parentFragment).onDateSet(today.get(YEAR), today.get(MONTH), today.get(DAY_OF_MONTH));
+                ((OnDateSelectedListener)target).onDateSet(today.get(YEAR), today.get(MONTH), today.get(DAY_OF_MONTH));
             } else if (button == DialogInterface.BUTTON_POSITIVE) {
-                ((OnDateSelectedListener)parentFragment).onDateSet(datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth());
+                ((OnDateSelectedListener)target).onDateSet(datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth());
             }
         }
         dismiss();
