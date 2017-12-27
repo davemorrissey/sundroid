@@ -24,7 +24,7 @@ import uk.co.sundroid.util.astro.MoonPhaseEvent;
 import uk.co.sundroid.util.astro.Position;
 import uk.co.sundroid.util.astro.RiseSetType;
 import uk.co.sundroid.util.geo.LatitudeLongitude;
-import uk.co.sundroid.util.time.CalendarUtils;
+import uk.co.sundroid.util.time.TimeUtilsKt;
 
 import static uk.co.sundroid.util.astro.math.SunCalculator.Event.*;
 import static uk.co.sundroid.util.astro.MoonPhase.*;
@@ -67,7 +67,7 @@ public class BodyPositionCalculator {
 		// use the relative elevations to guess a minute, calculate that, then work forward
 		// or back one minute at a time to find the minute nearest the event. If the body
 		// rises and sets within the same hour, both events will be missed.
-		Calendar calendar = CalendarUtils.clone(dateMidnight);
+		Calendar calendar = TimeUtilsKt.clone(dateMidnight);
 		int hours = transitAndLength ? 48 : 24;
 		double[] hourEls = new double[50];
 		double[] hourAzs = new double[50];
@@ -120,12 +120,12 @@ public class BodyPositionCalculator {
 						}
 						if (sign(hourEls[hour - 1], radiusCorrection) < 0) {
 							if (hour <= 24 && calendar.get(Calendar.DAY_OF_YEAR) == dateMidnight.get(Calendar.DAY_OF_YEAR)) {
-								bodyDay.setRise(CalendarUtils.clone(calendar));
+								bodyDay.setRise(TimeUtilsKt.clone(calendar));
 								bodyDay.setRiseAzimuth(azimuth);
 							}
 						} else {
 							if (hour <= 24 && calendar.get(Calendar.DAY_OF_YEAR) == dateMidnight.get(Calendar.DAY_OF_YEAR)) {
-								bodyDay.setSet(CalendarUtils.clone(calendar));
+								bodyDay.setSet(TimeUtilsKt.clone(calendar));
 								bodyDay.setSetAzimuth(azimuth);
 							} else if (hour > 24 && bodyDay.getRise() != null) {
 								bodyDay.setUptimeHours((calendar.getTimeInMillis() - bodyDay.getRise().getTimeInMillis())/(1000d * 60 * 60));

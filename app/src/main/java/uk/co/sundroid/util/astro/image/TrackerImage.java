@@ -16,7 +16,7 @@ import uk.co.sundroid.util.astro.math.BodyPositionCalculator;
 import uk.co.sundroid.util.geo.LatitudeLongitude;
 import uk.co.sundroid.util.geometry.BearingHelper;
 import uk.co.sundroid.util.theme.ThemePalette;
-import uk.co.sundroid.util.time.CalendarUtils;
+import uk.co.sundroid.util.time.TimeUtilsKt;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -135,20 +135,20 @@ public class TrackerImage {
 	}
 	
 	public void setDate(Calendar dateCalendar, Calendar timeCalendar) {
-		this.dateCalendar = CalendarUtils.clone(dateCalendar);
-		this.timeCalendar = CalendarUtils.clone(timeCalendar);
+		this.dateCalendar = TimeUtilsKt.clone(dateCalendar);
+		this.timeCalendar = TimeUtilsKt.clone(timeCalendar);
 		this.magneticDeclination = BearingHelper.getMagneticDeclination(this.location, this.dateCalendar);
 	}
 	
 	public void setTime(Calendar timeCalendar) {
-		this.timeCalendar = CalendarUtils.clone(timeCalendar);
+		this.timeCalendar = TimeUtilsKt.clone(timeCalendar);
 	}
 	
 	public void drawOnCanvas(View container, Canvas canvas, float left, float top) {
 		this.containerWidth = container.getWidth();
 		this.containerHeight = container.getHeight();
-		updateTimeImageIfStale(CalendarUtils.clone(timeCalendar));
-		updateDateImageIfStale(CalendarUtils.clone(dateCalendar));
+		updateTimeImageIfStale(TimeUtilsKt.clone(timeCalendar));
+		updateDateImageIfStale(TimeUtilsKt.clone(dateCalendar));
 		Paint paint = new Paint();
 		paint.setAntiAlias(true);
 		paint.setFilterBitmap(true);
@@ -162,8 +162,8 @@ public class TrackerImage {
 			return;
 		}
 		try {
-			updateTimeImageIfStale(CalendarUtils.clone(timeCalendar));
-			updateDateImageIfStale(CalendarUtils.clone(dateCalendar));
+			updateTimeImageIfStale(TimeUtilsKt.clone(timeCalendar));
+			updateDateImageIfStale(TimeUtilsKt.clone(dateCalendar));
 		} catch (Throwable t) {
 			LogWrapper.e(TAG, "Generate failed: ", t);
 		}
@@ -323,7 +323,7 @@ public class TrackerImage {
 
 	    	paint.setStrokeWidth(size(style.stroke));
 	    	
-			Calendar loopCalendar = CalendarUtils.clone(dateCalendar);
+			Calendar loopCalendar = TimeUtilsKt.clone(dateCalendar);
 			
 			Path path = new Path();
 			
@@ -338,17 +338,17 @@ public class TrackerImage {
 			
 			// Get rise/set events that happen on this calendar day, midnight to midnight.
 			Set<Event> eventsSet = new TreeSet<>();
-			Calendar dayLoopCalendar = CalendarUtils.clone(dateCalendar);
+			Calendar dayLoopCalendar = TimeUtilsKt.clone(dateCalendar);
 			dayLoopCalendar.add(Calendar.DAY_OF_MONTH, -1);
 			long riseTime = 0;
 			long setTime = 0;
 			for (int i = 0; i < 3; i++) {
 				BodyDay bodyDay = BodyPositionCalculator.calcDay(body, location, dayLoopCalendar, false);
-				if (bodyDay.getRise() != null && CalendarUtils.isSameDay(bodyDay.getRise(), dateCalendar) && eventsSet.size() < 2) {
+				if (bodyDay.getRise() != null && TimeUtilsKt.isSameDay(bodyDay.getRise(), dateCalendar) && eventsSet.size() < 2) {
 					eventsSet.add(new Event(bodyDay.getRise(), bodyDay.getRiseAzimuth()));
 					riseTime = bodyDay.getRise().getTimeInMillis();
 				}
-				if (bodyDay.getSet() != null && CalendarUtils.isSameDay(bodyDay.getSet(), dateCalendar) && eventsSet.size() < 2) {
+				if (bodyDay.getSet() != null && TimeUtilsKt.isSameDay(bodyDay.getSet(), dateCalendar) && eventsSet.size() < 2) {
 					eventsSet.add(new Event(bodyDay.getSet(), bodyDay.getSetAzimuth()));
 					setTime = bodyDay.getSet().getTimeInMillis();
 				}

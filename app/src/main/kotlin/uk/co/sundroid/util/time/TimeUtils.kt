@@ -19,3 +19,15 @@ fun shortDateAndMonth(calendar: Calendar): String {
 fun getShortMonth(calendar: Calendar): String {
     return shortMonths[calendar.get(Calendar.MONTH)]
 }
+
+fun clone(calendar: Calendar): Calendar {
+    val clone = Calendar.getInstance(calendar.timeZone)
+    clone.timeInMillis = calendar.timeInMillis
+    return clone
+}
+
+fun isSameDay(calendar1: Calendar, calendar2: Calendar): Boolean {
+    return calendar1.get(Calendar.YEAR) == calendar2.get(Calendar.YEAR)
+            && calendar1.get(Calendar.MONTH) == calendar2.get(Calendar.MONTH)
+            && calendar1.get(Calendar.DAY_OF_MONTH) == calendar2.get(Calendar.DAY_OF_MONTH)
+}

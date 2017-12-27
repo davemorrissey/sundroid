@@ -24,7 +24,6 @@ import uk.co.sundroid.util.time.TimeHelper;
 import uk.co.sundroid.util.time.TimeHelper.Time;
 import uk.co.sundroid.util.astro.YearData.Event;
 import uk.co.sundroid.util.geometry.BearingHelper;
-import uk.co.sundroid.util.time.CalendarUtils;
 import uk.co.sundroid.util.time.TimeUtilsKt;
 
 import java.util.*;
@@ -64,7 +63,7 @@ public class DayDetailMoonFragment extends AbstractDayFragment {
                 Event yearEventToday = null;
                 for (Event yearEvent : yearEvents) {
                     if (yearEvent.type.body == Body.MOON) {
-                        if (CalendarUtils.isSameDay(calendar, yearEvent.time)) {
+                        if (TimeUtilsKt.isSameDay(calendar, yearEvent.time)) {
                             yearEventToday = yearEvent;
                         }
                     }

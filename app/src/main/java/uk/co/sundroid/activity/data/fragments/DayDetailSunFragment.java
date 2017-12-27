@@ -16,7 +16,7 @@ import uk.co.sundroid.util.time.TimeHelper.Time;
 import uk.co.sundroid.util.astro.YearData.Event;
 import uk.co.sundroid.util.astro.YearData.EventType;
 import uk.co.sundroid.util.geometry.BearingHelper;
-import uk.co.sundroid.util.time.CalendarUtils;
+import uk.co.sundroid.util.time.TimeUtilsKt;
 
 import java.util.Calendar;
 import java.util.Set;
@@ -47,7 +47,7 @@ public class DayDetailSunFragment extends AbstractDayFragment {
                 Event yearEventToday = null;
                 for (Event yearEvent : yearEvents) {
                     if (yearEvent.type.body == Body.SUN) {
-                        if (CalendarUtils.isSameDay(calendar, yearEvent.time)) {
+                        if (TimeUtilsKt.isSameDay(calendar, yearEvent.time)) {
                             yearEventToday = yearEvent;
                         }
                     }
