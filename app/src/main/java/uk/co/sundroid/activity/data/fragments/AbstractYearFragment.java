@@ -169,6 +169,7 @@ public abstract class AbstractYearFragment extends AbstractDataFragment implemen
 
     private void showYearPicker() {
         YearPickerFragment yearPickerFragment = YearPickerFragment.newInstance(getDateCalendar());
+        yearPickerFragment.setTargetFragment(this, 0);
         yearPickerFragment.show(getFragmentManager(), "yearPicker");
     }
 
