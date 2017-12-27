@@ -50,7 +50,7 @@ public class DayDetailPlanetsFragment extends AbstractDayFragment {
                     for (Map.Entry<Body, BodyDay> planetEntry : planetDays.entrySet()) {
                         Body planet = planetEntry.getKey();
                         BodyDay planetDay = planetEntry.getValue();
-                        View planetRow = getActivity().getLayoutInflater().inflate(R.layout.frag_data_daydetail_planets_planet, planetsDataBox);
+                        View planetRow = View.inflate(getActivity(), R.layout.frag_data_daydetail_planets_planet, null);
 
                         textInView(planetRow, R.id.planetName, planet.name());
 
@@ -118,6 +118,7 @@ public class DayDetailPlanetsFragment extends AbstractDayFragment {
                         } else {
                             showInView(planetRow, R.id.planetTransitUptime);
                         }
+                        planetsDataBox.addView(planetRow);
 
                     }
                     showInView(view, R.id.planetsDataBox);
