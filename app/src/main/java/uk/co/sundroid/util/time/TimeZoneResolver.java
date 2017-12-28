@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.TimeZone;
 
 import uk.co.sundroid.domain.TimeZoneDetail;
-import uk.co.sundroid.util.StringUtilsKt;
+import uk.co.sundroid.util.StringUtils;
 import uk.co.sundroid.util.geo.LatitudeLongitude;
 
 
@@ -41,7 +41,7 @@ public class TimeZoneResolver {
 			String state) {
 
 		// Step 2: Look up country code. Countries with state mappings aren't in this map.
-		if (StringUtilsKt.isNotEmpty(countryCode)) {
+		if (StringUtils.isNotEmpty(countryCode)) {
 			for (Map.Entry<String, String[]> entry : countryCodeMap.entrySet()) {
 				if (entry.getKey().contains(countryCode + ",")) {
 					String[] possibleTimeZoneIds = entry.getValue();
@@ -60,13 +60,13 @@ public class TimeZoneResolver {
 		}
 		
 		// Step 3: Use state to resolve some ambiguous countries.
-		if (StringUtilsKt.isNotEmpty(countryCode) && StringUtilsKt.isNotEmpty(state) && stateMap.containsKey(countryCode + ":" + state)) {
+		if (StringUtils.isNotEmpty(countryCode) && StringUtils.isNotEmpty(state) && stateMap.containsKey(countryCode + ":" + state)) {
 			String[] possibleTimeZoneIds = stateMap.get(countryCode + ":" + state);
 			return resolve(Arrays.asList(possibleTimeZoneIds));
 		}
 		
 		// Step 4: Country might be known but state wasn't - if so use the catch-all state mapping.
-		if (StringUtilsKt.isNotEmpty(countryCode) && stateMap.containsKey(countryCode + ":*")) {
+		if (StringUtils.isNotEmpty(countryCode) && stateMap.containsKey(countryCode + ":*")) {
 			String[] possibleTimeZoneIds = stateMap.get(countryCode + ":*");
 			return resolve(Arrays.asList(possibleTimeZoneIds));
 		}

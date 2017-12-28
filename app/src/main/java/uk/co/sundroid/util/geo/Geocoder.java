@@ -8,7 +8,7 @@ import uk.co.sundroid.domain.LocationDetails;
 import uk.co.sundroid.domain.TimeZoneDetail;
 import uk.co.sundroid.util.SharedPrefsHelper;
 import uk.co.sundroid.util.LogWrapper;
-import uk.co.sundroid.util.StringUtilsKt;
+import uk.co.sundroid.util.StringUtils;
 import uk.co.sundroid.util.time.TimeZoneResolver;
 
 import android.Manifest;
@@ -32,7 +32,7 @@ public class Geocoder {
 				if ((address.getLocality() != null || address.getFeatureName() != null) && address.getCountryName() != null && address.hasLatitude() && address.hasLongitude()) {
 					LocationDetails locationDetails = new LocationDetails();
 					String name = address.getLocality() != null ? address.getLocality() : address.getFeatureName();
-					if (StringUtilsKt.isNotEmpty(address.getFeatureName()) && !address.getFeatureName().equals(name)) {
+					if (StringUtils.isNotEmpty(address.getFeatureName()) && !address.getFeatureName().equals(name)) {
 						name = address.getFeatureName() + ", " + name;
 					}
 					locationDetails.setCountry(address.getCountryCode());
@@ -66,12 +66,12 @@ public class Geocoder {
 				android.location.Geocoder myLocation = new android.location.Geocoder(context, Locale.getDefault());
 				List<Address> myList = myLocation.getFromLocation(location.getLatitude().getDoubleValue(), location.getLongitude().getDoubleValue(), 1);
 				for (Address address : myList) {
-					if (StringUtilsKt.isNotEmpty(address.getCountryCode())) {
+					if (StringUtils.isNotEmpty(address.getCountryCode())) {
 						locationDetails.setCountry(address.getCountryCode());
 						locationDetails.setName(address.getLocality());
 						locationDetails.setState(address.getAdminArea());
-						if (StringUtilsKt.isEmpty(address.getLocality())) {
-							if (StringUtilsKt.isNotEmpty(address.getSubAdminArea())) {
+						if (StringUtils.isEmpty(address.getLocality())) {
+							if (StringUtils.isNotEmpty(address.getSubAdminArea())) {
 								locationDetails.setName(address.getSubAdminArea());
 							}
 						}

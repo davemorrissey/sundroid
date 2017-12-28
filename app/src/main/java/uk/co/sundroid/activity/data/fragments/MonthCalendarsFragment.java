@@ -274,12 +274,12 @@ public class MonthCalendarsFragment extends AbstractMonthFragment<ArrayList<Mont
                     downAz = TimeHelper.formatDiff(getApplicationContext(), bodyDay.getSet(), previousBodyDay.getSet(), allowSeconds);
                 }
                 if (up != null) {
-                    if (StringUtilsKt.isNotEmpty(upAz)) { upAz += "\n"; } else { upAz = ""; }
+                    if (StringUtils.isNotEmpty(upAz)) { upAz += "\n"; } else { upAz = ""; }
                     String azimuth = BearingHelper.formatBearing(getApplicationContext(), bodyDay.getRiseAzimuth(), getLocation().getLocation(), up);
                     upAz += azimuth;
                 }
                 if (down != null) {
-                    if (StringUtilsKt.isNotEmpty(downAz)) { downAz += "\n"; } else { downAz = ""; }
+                    if (StringUtils.isNotEmpty(downAz)) { downAz += "\n"; } else { downAz = ""; }
                     String azimuth = BearingHelper.formatBearing(getApplicationContext(), bodyDay.getSetAzimuth(), getLocation().getLocation(), down);
                     downAz += azimuth;
                 }
@@ -412,7 +412,7 @@ public class MonthCalendarsFragment extends AbstractMonthFragment<ArrayList<Mont
                 if (up != null) {
                     Time time = TimeHelper.formatTime(getApplicationContext(), up, allowSeconds);
                     String timeStr = time.time;
-                    if (StringUtilsKt.isNotEmpty(time.marker)) {
+                    if (StringUtils.isNotEmpty(time.marker)) {
                         timeStr += time.marker;
                     }
                     textInView(row, id.dayUp, timeStr);
@@ -437,7 +437,7 @@ public class MonthCalendarsFragment extends AbstractMonthFragment<ArrayList<Mont
                 if (down != null) {
                     Time time = TimeHelper.formatTime(getApplicationContext(), down, allowSeconds);
                     String timeStr = time.time;
-                    if (StringUtilsKt.isNotEmpty(time.marker)) {
+                    if (StringUtils.isNotEmpty(time.marker)) {
                         timeStr += time.marker;
                     }
                     ((TextView)row.findViewById(R.id.dayDown)).setText(timeStr);

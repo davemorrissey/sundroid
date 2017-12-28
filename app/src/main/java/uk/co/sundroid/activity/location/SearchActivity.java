@@ -17,7 +17,7 @@ import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TextView.OnEditorActionListener;
 
-import uk.co.sundroid.util.StringUtilsKt;
+import uk.co.sundroid.util.StringUtils;
 import uk.co.sundroid.util.geo.Geocoder;
 import uk.co.sundroid.R;
 import uk.co.sundroid.domain.LocationDetails;
@@ -80,7 +80,7 @@ public class SearchActivity extends AbstractLocationActivity implements OnClickL
 		EditText searchField = findViewById(R.id.searchField);
 		final String searchValue = searchField.getText().toString();
 		
-		if (StringUtilsKt.isEmpty(searchValue)) {
+		if (StringUtils.isEmpty(searchValue)) {
 			Toast.makeText(getApplicationContext(), "Please enter a search term", Toast.LENGTH_LONG).show();
 			return;
 		}
@@ -138,7 +138,7 @@ public class SearchActivity extends AbstractLocationActivity implements OnClickL
 			LocationDetails item = getItem(position);
 			if (item != null) {
 				String extra = item.getCountryName();
-				if (StringUtilsKt.isNotEmpty(item.getState())) {
+				if (StringUtils.isNotEmpty(item.getState())) {
 					extra = item.getState() + ", " + extra;
 				}
 				textInView(row, R.id.searchLocName, item.getName());
