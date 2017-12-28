@@ -3,7 +3,7 @@ package uk.co.sundroid.activity.data.fragments.dialogs.date;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.Context;
+import android.app.Fragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
@@ -22,7 +22,6 @@ public class TimePickerFragment extends DialogFragment implements DialogInterfac
 
     private int hour;
     private int minute;
-    private OnTimeSelectedListener onTimeSelectedListener;
     private TimePicker timePicker;
 
     @FunctionalInterface
@@ -48,12 +47,6 @@ public class TimePickerFragment extends DialogFragment implements DialogInterfac
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        this.onTimeSelectedListener = (OnTimeSelectedListener) getParentFragment();
-    }
-
-    @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         setRetainInstance(true); // TODO may not be required
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -74,11 +67,14 @@ public class TimePickerFragment extends DialogFragment implements DialogInterfac
 
     @Override
     public void onClick(DialogInterface dialogInterface, int button) {
-        if (button == DialogInterface.BUTTON_NEUTRAL) {
-            Calendar today = Calendar.getInstance();
-            onTimeSelectedListener.onTimeSet(today.get(HOUR_OF_DAY), today.get(MINUTE));
-        } else if (button == DialogInterface.BUTTON_POSITIVE) {
-            onTimeSelectedListener.onTimeSet(timePicker.getCurrentHour(), timePicker.getCurrentMinute());
+        Fragment target = getTargetFragment();
+        if (target != null && target instanceof OnTimeSelectedListener) {
+            if (button == DialogInterface.BUTTON_NEUTRAL) {
+                Calendar today = Calendar.getInstance();
+                ((OnTimeSelectedListener)target).onTimeSet(today.get(HOUR_OF_DAY), today.get(MINUTE));
+            } else if (button == DialogInterface.BUTTON_POSITIVE) {
+                ((OnTimeSelectedListener)target).onTimeSet(timePicker.getCurrentHour(), timePicker.getCurrentMinute());
+            }
         }
         dismiss();
     }

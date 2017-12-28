@@ -213,6 +213,7 @@ public abstract class AbstractTimeFragment extends AbstractDataFragment implemen
 
     private void showTimePicker() {
         TimePickerFragment timePickerFragment = TimePickerFragment.newInstance(getTimeCalendar());
+        timePickerFragment.setTargetFragment(this, 0);
         timePickerFragment.show(getFragmentManager(), "timePicker");
     }
 
