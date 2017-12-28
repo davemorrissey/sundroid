@@ -31,7 +31,7 @@ import uk.co.sundroid.util.SharedPrefsHelper;
 import uk.co.sundroid.util.*;
 import uk.co.sundroid.util.time.TimeHelper.Time;
 import uk.co.sundroid.util.geometry.BearingHelper;
-import uk.co.sundroid.util.time.TimeUtilsKt;
+import uk.co.sundroid.util.time.TimeUtils;
 
 import java.math.BigDecimal;
 import java.util.Calendar;
@@ -246,8 +246,8 @@ public class TrackerFragment extends AbstractTimeFragment implements Configurabl
         if (view == null || dateCalendar == null || timeCalendar == null) {
             return;
         }
-        final Calendar dateCalendar = TimeUtilsKt.clone(this.dateCalendar);
-        final Calendar timeCalendar = TimeUtilsKt.clone(this.timeCalendar);
+        final Calendar dateCalendar = TimeUtils.clone(this.dateCalendar);
+        final Calendar timeCalendar = TimeUtils.clone(this.timeCalendar);
         final Body body = SharedPrefsHelper.getSunTrackerBody(getApplicationContext());
 
         if (trackerImage != null) {
@@ -273,14 +273,14 @@ public class TrackerFragment extends AbstractTimeFragment implements Configurabl
 
                 if (!timeOnly && body != null && SharedPrefsHelper.getSunTrackerText(getApplicationContext())) {
                     tempEventsSet = new TreeSet<>();
-                    Calendar loopCalendar = TimeUtilsKt.clone(dateCalendar);
+                    Calendar loopCalendar = TimeUtils.clone(dateCalendar);
                     loopCalendar.add(Calendar.DAY_OF_MONTH, -1);
                     for (int i = 0; i < 3; i++) {
                         BodyDay bodyDay = BodyPositionCalculator.calcDay(body, location.getLocation(), loopCalendar, false);
-                        if (bodyDay.getRise() != null && TimeUtilsKt.isSameDay(bodyDay.getRise(), dateCalendar) && tempEventsSet.size() < 2) {
+                        if (bodyDay.getRise() != null && TimeUtils.isSameDay(bodyDay.getRise(), dateCalendar) && tempEventsSet.size() < 2) {
                             tempEventsSet.add(new Event("RISE", bodyDay.getRise(), bodyDay.getRiseAzimuth()));
                         }
-                        if (bodyDay.getSet() != null && TimeUtilsKt.isSameDay(bodyDay.getSet(), dateCalendar) && tempEventsSet.size() < 2) {
+                        if (bodyDay.getSet() != null && TimeUtils.isSameDay(bodyDay.getSet(), dateCalendar) && tempEventsSet.size() < 2) {
                             tempEventsSet.add(new Event("SET", bodyDay.getSet(), bodyDay.getSetAzimuth()));
                         }
                         loopCalendar.add(Calendar.DAY_OF_MONTH, 1);

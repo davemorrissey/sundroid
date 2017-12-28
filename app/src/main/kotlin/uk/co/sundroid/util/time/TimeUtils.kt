@@ -1,3 +1,4 @@
+@file:JvmName("TimeUtils")
 package uk.co.sundroid.util.time
 
 import java.util.Calendar

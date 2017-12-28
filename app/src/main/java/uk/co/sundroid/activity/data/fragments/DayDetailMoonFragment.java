@@ -24,7 +24,7 @@ import uk.co.sundroid.util.time.TimeHelper;
 import uk.co.sundroid.util.time.TimeHelper.Time;
 import uk.co.sundroid.util.astro.YearData.Event;
 import uk.co.sundroid.util.geometry.BearingHelper;
-import uk.co.sundroid.util.time.TimeUtilsKt;
+import uk.co.sundroid.util.time.TimeUtils;
 
 import java.util.*;
 
@@ -63,7 +63,7 @@ public class DayDetailMoonFragment extends AbstractDayFragment {
                 Event yearEventToday = null;
                 for (Event yearEvent : yearEvents) {
                     if (yearEvent.type.body == Body.MOON) {
-                        if (TimeUtilsKt.isSameDay(calendar, yearEvent.time)) {
+                        if (TimeUtils.isSameDay(calendar, yearEvent.time)) {
                             yearEventToday = yearEvent;
                         }
                     }
@@ -131,7 +131,7 @@ public class DayDetailMoonFragment extends AbstractDayFragment {
                             phaseImg = getLocation().getLocation().getLatitude().getDoubleValue() >= 0 ? ThemePalette.getPhaseLeft() : ThemePalette.getPhaseRight();
                         }
                         ((ImageView)view.findViewById(phaseImgView)).setImageResource(phaseImg);
-                        ((TextView)view.findViewById(phaseLabelView)).setText(TimeUtilsKt.shortDateAndMonth(phaseEvent.getTime()));
+                        ((TextView)view.findViewById(phaseLabelView)).setText(TimeUtils.shortDateAndMonth(phaseEvent.getTime()));
                     }
 
                     boolean noTransit = true;
