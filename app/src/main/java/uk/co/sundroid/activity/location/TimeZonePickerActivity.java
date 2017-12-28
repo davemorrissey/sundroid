@@ -58,13 +58,10 @@ public class TimeZonePickerActivity extends AbstractActivity implements OnItemCl
     	ListView list = findViewById(R.id.timeZoneList);
     	MergeAdapter adapter = new MergeAdapter();
     	if (location.getPossibleTimeZones() != null && location.getPossibleTimeZones().size() > 0 && location.getPossibleTimeZones().size() < 20) {
-			LayoutInflater inflater = getLayoutInflater();
-			View bestHeader = inflater.inflate(R.layout.zone_best_header, list);
-			adapter.addView(bestHeader);
+			adapter.addView(View.inflate(this, R.layout.zone_best_header, null));
 			Set<TimeZoneDetail> sortedTimeZones = new TreeSet<>(location.getPossibleTimeZones());
     		adapter.addAdapter(new TimeZoneAdapter(new ArrayList<>(sortedTimeZones)));
-			View allHeader = inflater.inflate(R.layout.zone_all_header, list);
-			adapter.addView(allHeader);
+			adapter.addView(View.inflate(this, R.layout.zone_all_header, null));
     	}
     	
     	Set<TimeZoneDetail> sortedTimeZones = new TreeSet<>(TimeZoneResolver.getAllTimeZones());
