@@ -134,7 +134,7 @@ public class Longitude extends Angle {
 	 * Sets the value from a string in arc components format.
 	 */
 	@Override
-	public void parseArcValue(String string) throws ParseException {
+	public void parseArcValue(String string) {
 		String signString = string.substring(string.length() - 1);
 		int sign;
 		switch (signString) {
@@ -145,13 +145,13 @@ public class Longitude extends Angle {
 				sign = WEST;
 				break;
 			default:
-				throw new ParseException("Couldn't parse \"" + string + "\" as an abbreviated longitude value.", 0);
+				throw new IllegalArgumentException("Couldn't parse \"" + string + "\" as an abbreviated longitude value.");
 		}
 		try {
 			Angle parsedAngle = AngleFormat.parseArcValue(string.substring(0, string.length() - 1));
 			setAngle(sign*parsedAngle.getDegrees(), parsedAngle.getMinutes(), parsedAngle.getSeconds(), sign);
 		} catch (Exception e) {
-			throw new ParseException("Couldn't parse \"" + string + "\" as an abbreviated longitude value: " + e.toString(), 0);
+			throw new IllegalArgumentException("Couldn't parse \"" + string + "\" as an abbreviated longitude value: " + e.toString());
 		}
 	}
 	

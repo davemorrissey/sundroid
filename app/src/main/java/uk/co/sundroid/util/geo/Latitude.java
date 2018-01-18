@@ -3,9 +3,6 @@ package uk.co.sundroid.util.geo;
 import uk.co.sundroid.util.geometry.Angle;
 import uk.co.sundroid.util.geometry.AngleFormat;
 
-import java.io.Serializable;
-import java.text.ParseException;
-
 /**
  * Represents a latitude value.
  */
@@ -139,7 +136,7 @@ public class Latitude extends Angle {
 	 * Sets the value from a string in arc components format.
 	 */
 	@Override
-	public void parseArcValue(String string) throws ParseException {
+	public void parseArcValue(String string) {
 		String signString = string.substring(string.length() - 1);
 		int sign;
 		switch (signString) {
@@ -150,13 +147,13 @@ public class Latitude extends Angle {
 				sign = SOUTH;
 				break;
 			default:
-				throw new ParseException("Couldn't parse \"" + string + "\" as an abbreviated latitude value.", 0);
+				throw new IllegalArgumentException("Couldn't parse \"" + string + "\" as an abbreviated latitude value.");
 		}
 		try {
 			Angle parsedAngle = AngleFormat.parseArcValue("0" + string.substring(0, string.length() - 1));
 			setAngle(sign*parsedAngle.getDegrees(), parsedAngle.getMinutes(), parsedAngle.getSeconds(), sign);
 		} catch (Exception e) {
-			throw new ParseException("Couldn't parse \"" + string + "\" as an abbreviated latitude value: " + e.toString(), 0);
+			throw new IllegalArgumentException("Couldn't parse \"" + string + "\" as an abbreviated latitude value: " + e.toString());
 		}
 	}
 	
