@@ -1,5 +1,8 @@
 package uk.co.sundroid.util.geometry
 
+import uk.co.sundroid.util.geometry.AngleFormat.*
+import uk.co.sundroid.util.geometry.AngleFormat.Accuracy.*
+import uk.co.sundroid.util.geometry.AngleFormat.Punctuation.*
 import java.io.Serializable
 import java.text.ParseException
 
@@ -37,7 +40,7 @@ open class Angle : Serializable {
      * @throws IllegalArgumentException if the double value is greater than or equal to 360.
      */
     constructor(doubleValue: Double) {
-        setAngle(doubleValue)
+        this.setAngle(doubleValue)
     }
     
     /**
@@ -48,7 +51,7 @@ open class Angle : Serializable {
      * @throws IllegalArgumentException if degrees > 359 or minutes > 59 or seconds > 59.
      */
     constructor(degrees: Int, minutes: Int, seconds: Int) {
-        setAngle(degrees, minutes, seconds)
+        this.setAngle(degrees, minutes, seconds)
     }
     
     /**
@@ -97,7 +100,7 @@ open class Angle : Serializable {
             val parsedAngle = AngleFormat.parseArcValue(string.substring(0, string.length - 1))
             setAngle(parsedAngle.degrees, parsedAngle.minutes, parsedAngle.seconds)
         } catch (e: Exception) {
-            throw ParseException("Couldn't parse \"" + string + "\" as an arc angle value: " + e.toString(), 0)
+            throw IllegalArgumentException("Couldn't parse $string as an arc angle value: $e")
         }
     }
     
@@ -113,7 +116,7 @@ open class Angle : Serializable {
      * String display returns padded punctuated arc representation.
      */
     override fun toString(): String {
-        return AngleFormat.displayArcValue(this, AngleFormat.Accuracy.SECONDS, AngleFormat.Punctuation.STANDARD)
+        return displayArcValue(this, SECONDS, STANDARD)
     }
 
     companion object {
