@@ -1,7 +1,9 @@
 package uk.co.sundroid.util.geo;
 
+import uk.co.sundroid.util.geometry.Accuracy;
 import uk.co.sundroid.util.geometry.Angle;
-import uk.co.sundroid.util.geometry.AngleFormat;
+import uk.co.sundroid.util.geometry.GeometryUtils;
+import uk.co.sundroid.util.geometry.Punctuation;
 
 /**
  * Represents a latitude value.
@@ -107,7 +109,7 @@ public class Latitude extends Angle {
 	 */
 	String getAbbreviatedValue() {
 		// Get the displayed angle value. Then trim off the unnecessary leading.
-		String value = AngleFormat.displayArcValue(this, AngleFormat.Accuracy.SECONDS, AngleFormat.Punctuation.NONE);
+		String value = GeometryUtils.displayArcValue(this, Accuracy.SECONDS, Punctuation.NONE);
 		value = value.substring(1);
 		if (sign == NORTH) {
 			value += "N";
@@ -120,9 +122,9 @@ public class Latitude extends Angle {
 	/**
 	 * Displays the latitude in padded, punctuated component format with specified accuracy.
 	 */
-	String getPunctuatedValue(AngleFormat.Accuracy accuracy) {
+	String getPunctuatedValue(Accuracy accuracy) {
 		// Get the displayed angle value. Then trim off the unnecessary leading.
-		String value = AngleFormat.displayArcValue(this, accuracy, AngleFormat.Punctuation.STANDARD);
+		String value = GeometryUtils.displayArcValue(this, accuracy, Punctuation.STANDARD);
 		value = value.substring(1);
 		if (sign == NORTH) {
 			value += "N";
@@ -150,7 +152,7 @@ public class Latitude extends Angle {
 				throw new IllegalArgumentException("Couldn't parse \"" + string + "\" as an abbreviated latitude value.");
 		}
 		try {
-			Angle parsedAngle = AngleFormat.parseArcValue("0" + string.substring(0, string.length() - 1));
+			Angle parsedAngle = GeometryUtils.parseArcValue("0" + string.substring(0, string.length() - 1));
 			setAngle(sign*parsedAngle.getDegrees(), parsedAngle.getMinutes(), parsedAngle.getSeconds(), sign);
 		} catch (Exception e) {
 			throw new IllegalArgumentException("Couldn't parse \"" + string + "\" as an abbreviated latitude value: " + e.toString());

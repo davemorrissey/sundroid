@@ -1,9 +1,9 @@
 package uk.co.sundroid.util.geo;
 
+import uk.co.sundroid.util.geometry.Accuracy;
 import uk.co.sundroid.util.geometry.Angle;
-import uk.co.sundroid.util.geometry.AngleFormat;
-
-import java.text.ParseException;
+import uk.co.sundroid.util.geometry.GeometryUtils;
+import uk.co.sundroid.util.geometry.Punctuation;
 
 /**
  * Represents a longitude value.
@@ -108,7 +108,7 @@ public class Longitude extends Angle {
 	 * Displays the longitude in padded, unpunctuated component format.
 	 */
 	String getAbbreviatedValue() {
-		String value = AngleFormat.displayArcValue(this, AngleFormat.Accuracy.SECONDS, AngleFormat.Punctuation.NONE);
+		String value = GeometryUtils.displayArcValue(this, Accuracy.SECONDS, Punctuation.NONE);
 		if (sign == EAST) {
 			value += "E";
 		} else {
@@ -120,8 +120,8 @@ public class Longitude extends Angle {
 	/**
 	 * Displays the longitude in padded, punctuated component format with specified accuracy.
 	 */
-	String getPunctuatedValue(AngleFormat.Accuracy accuracy) {
-		String value = AngleFormat.displayArcValue(this, accuracy, AngleFormat.Punctuation.STANDARD);
+	String getPunctuatedValue(Accuracy accuracy) {
+		String value = GeometryUtils.displayArcValue(this, accuracy, Punctuation.STANDARD);
 		if (sign == EAST) {
 			value += "E";
 		} else {
@@ -148,7 +148,7 @@ public class Longitude extends Angle {
 				throw new IllegalArgumentException("Couldn't parse \"" + string + "\" as an abbreviated longitude value.");
 		}
 		try {
-			Angle parsedAngle = AngleFormat.parseArcValue(string.substring(0, string.length() - 1));
+			Angle parsedAngle = GeometryUtils.parseArcValue(string.substring(0, string.length() - 1));
 			setAngle(sign*parsedAngle.getDegrees(), parsedAngle.getMinutes(), parsedAngle.getSeconds(), sign);
 		} catch (Exception e) {
 			throw new IllegalArgumentException("Couldn't parse \"" + string + "\" as an abbreviated longitude value: " + e.toString());

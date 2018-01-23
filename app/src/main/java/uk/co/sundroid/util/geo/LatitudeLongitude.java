@@ -1,6 +1,6 @@
 package uk.co.sundroid.util.geo;
 
-import uk.co.sundroid.util.geometry.AngleFormat;
+import uk.co.sundroid.util.geometry.Accuracy;
 
 import java.io.Serializable;
 import java.text.ParseException;
@@ -166,7 +166,7 @@ public class LatitudeLongitude implements Serializable {
 	/**
 	 * Gets the co-ordinate in standard punctuated format with specified accuracy.
 	 */
-	public String getPunctuatedValue(AngleFormat.Accuracy accuracy) {
+	public String getPunctuatedValue(Accuracy accuracy) {
 		return latitude.getPunctuatedValue(accuracy) + " " + longitude.getPunctuatedValue(accuracy);
 	}
 	

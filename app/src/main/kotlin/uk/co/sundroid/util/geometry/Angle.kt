@@ -1,8 +1,8 @@
 package uk.co.sundroid.util.geometry
 
-import uk.co.sundroid.util.geometry.AngleFormat.*
-import uk.co.sundroid.util.geometry.AngleFormat.Accuracy.*
-import uk.co.sundroid.util.geometry.AngleFormat.Punctuation.*
+import uk.co.sundroid.util.geometry.parseArcValue as utilsParseArcValue
+import uk.co.sundroid.util.geometry.Accuracy.*
+import uk.co.sundroid.util.geometry.Punctuation.*
 import java.io.Serializable
 import java.text.ParseException
 
@@ -97,7 +97,7 @@ open class Angle : Serializable {
      */
     open fun parseArcValue(string: String) {
         try {
-            val parsedAngle = AngleFormat.parseArcValue(string.substring(0, string.length - 1))
+            val parsedAngle = utilsParseArcValue(string.substring(0, string.length - 1))
             setAngle(parsedAngle.degrees, parsedAngle.minutes, parsedAngle.seconds)
         } catch (e: Exception) {
             throw IllegalArgumentException("Couldn't parse $string as an arc angle value: $e")

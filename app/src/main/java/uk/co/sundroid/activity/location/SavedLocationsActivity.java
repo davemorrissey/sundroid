@@ -15,8 +15,8 @@ import uk.co.sundroid.R.id;
 import uk.co.sundroid.R.layout;
 import uk.co.sundroid.dao.DatabaseHelper;
 import uk.co.sundroid.domain.LocationDetails;
-import uk.co.sundroid.util.geometry.AngleFormat;
 import uk.co.sundroid.util.SharedPrefsHelper;
+import uk.co.sundroid.util.geometry.Accuracy;
 
 import java.util.List;
 
@@ -125,7 +125,7 @@ public class SavedLocationsActivity extends AbstractLocationActivity implements 
             TextView name = row.findViewById(R.id.savedLocName);
             name.setText(location.getName());
             TextView coords = row.findViewById(R.id.savedLocCoords);
-            coords.setText(location.getLocation().getPunctuatedValue(AngleFormat.Accuracy.MINUTES));
+            coords.setText(location.getLocation().getPunctuatedValue(Accuracy.MINUTES));
 
             row.findViewById(id.savedLocText).setTag(TAG_LOCATION_ID, Integer.toString(location.getId()));
             row.findViewById(id.savedLocText).setTag(TAG_ACTION, ACTION_VIEW);
