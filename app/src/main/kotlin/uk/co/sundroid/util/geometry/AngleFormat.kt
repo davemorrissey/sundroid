@@ -91,62 +91,54 @@ fun displayArcValue(angle: Angle, accuracy: Accuracy, punctuation: Punctuation):
 fun parseArcValue(angle: String): Angle {
     var string = angle
     try {
+        val degrees: String
+        var minutes = ""
+        var seconds = ""
+
         when {
             string.contains("\u00b0") -> {
                 // Parse components from standard punctuated string.
-                val degrees = string.substring(0, string.indexOf("\u00b0")).toInt()
-                var minutes = 0
-                var seconds = 0
+                degrees = string.substringBefore("\u00b0")
+                string = string.substringAfter("\u00b0")
 
-                string = string.substring(string.indexOf("\u00b0") + 1)
                 if (string.contains("'")) {
-                    minutes = Integer.parseInt(string.substring(0, string.indexOf("'")))
+                    minutes = string.substringBefore("'")
+                    string = string.substringAfter("'")
 
-                    string = string.substring(string.indexOf("'") + 1)
-
-                    if (string.contains("\"")) {
-                        seconds = Integer.parseInt(string.substring(0, string.indexOf("\"")))
+                    if (string.contains('"')) {
+                        seconds = string.substringBefore('"')
                     }
                 }
-                return Angle(degrees, minutes, seconds)
-
             }
             string.contains(":") -> {
                 // Parse components from colon punctuated string.
-                val degrees = string.substring(0, string.indexOf(":")).toInt()
-                var minutes = 0
-                var seconds = 0
+                degrees = string.substringBefore(":")
+                string = string.substringAfter(":")
 
-                string = string.substring(string.indexOf(":") + 1)
                 if (string.contains(":")) {
-                    minutes = string.substring(0, string.indexOf(":")).toInt()
+                    minutes = string.substringBefore(":")
+                    string = string.substringAfter(":")
 
-                    string = string.substring(string.indexOf(":") + 1)
-
-                    if (string.length > 0) {
-                        seconds = Integer.parseInt(string)
+                    if (string.isNotEmpty()) {
+                        seconds = string
                     }
-                } else if (string.length > 0) {
-                    minutes = Integer.parseInt(string)
+                } else if (string.isNotEmpty()) {
+                    minutes = string
                 }
-                return Angle(degrees, minutes, seconds)
-
             }
             else -> {
                 // Parse components from unpunctuated string.
-                val degrees = string.substring(0, 3).toInt()
-                var minutes = 0
-                var seconds = 0
+                degrees = string.substring(0, 3)
 
                 if (string.length >= 5) {
-                    minutes = string.substring(3, 5).toInt()
+                    minutes = string.substring(3, 5)
                 }
                 if (string.length >= 7) {
-                    seconds = string.substring(5, 7).toInt()
+                    seconds = string.substring(5, 7)
                 }
-                return Angle(degrees, minutes, seconds)
             }
         }
+        return Angle(degrees.toInt(), minutes.toInt(), seconds.toInt())
     } catch (e: Exception) {
         throw IllegalArgumentException("The string \"$string\" could not be parsed as an angle: $e")
     }
