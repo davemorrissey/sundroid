@@ -1,6 +1,13 @@
 @file:JvmName("GeometryUtils")
 package uk.co.sundroid.util.geometry
 
+import android.content.Context
+import android.hardware.GeomagneticField
+import uk.co.sundroid.util.SharedPrefsHelper
+import uk.co.sundroid.util.geo.LatitudeLongitude
+import java.math.BigDecimal
+import java.util.*
+
 enum class Punctuation {
     /**
      * No punctuation between components (applies only to deg/min/sec formatting).
@@ -142,4 +149,32 @@ fun parseArcValue(angle: String): Angle {
     } catch (e: Exception) {
         throw IllegalArgumentException("The string \"$string\" could not be parsed as an angle: $e")
     }
+}
+
+fun formatBearing(context: Context, bearing: Double, location: LatitudeLongitude, time: Calendar): String {
+
+    var b = bearing
+    if (SharedPrefsHelper.getMagneticBearings(context)) {
+        b -= getMagneticDeclination(location, time)
+    }
+    while (b < 0) {
+        b += 360
+    }
+    while (b > 360) {
+        b -= 360
+    }
+
+    val bd = BigDecimal(b).setScale(1, BigDecimal.ROUND_HALF_DOWN)
+    return "$bd\u00b0"
+
+}
+
+fun formatElevation(elevation: Double): String {
+    val bd = BigDecimal(elevation).setScale(1, BigDecimal.ROUND_HALF_DOWN)
+    return "$bd\u00b0"
+}
+
+fun getMagneticDeclination(location: LatitudeLongitude, time: Calendar): Double {
+    val field = GeomagneticField(location.latitude.getDoubleValue().toFloat(), location.longitude.getDoubleValue().toFloat(), 0f, time.timeInMillis)
+    return field.declination.toDouble()
 }

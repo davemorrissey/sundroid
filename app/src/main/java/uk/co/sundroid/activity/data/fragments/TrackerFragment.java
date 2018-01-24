@@ -25,12 +25,12 @@ import uk.co.sundroid.util.astro.BodyDay;
 import uk.co.sundroid.util.astro.Position;
 import uk.co.sundroid.util.astro.image.TrackerImage;
 import uk.co.sundroid.util.astro.math.BodyPositionCalculator;
+import uk.co.sundroid.util.geometry.GeometryUtils;
 import uk.co.sundroid.util.time.TimeHelper;
 import uk.co.sundroid.domain.LocationDetails;
 import uk.co.sundroid.util.SharedPrefsHelper;
 import uk.co.sundroid.util.*;
 import uk.co.sundroid.util.time.TimeHelper.Time;
-import uk.co.sundroid.util.geometry.BearingHelper;
 import uk.co.sundroid.util.time.TimeUtils;
 
 import java.math.BigDecimal;
@@ -127,7 +127,7 @@ public class TrackerFragment extends AbstractTimeFragment implements Configurabl
         String mapMode = SharedPrefsHelper.getSunTrackerMapMode(getApplicationContext());
 
         if (mode.equals("radar") && SharedPrefsHelper.getSunTrackerCompass(getApplicationContext())) {
-            magneticDeclination = BearingHelper.getMagneticDeclination(location.getLocation(), dateCalendar);
+            magneticDeclination = GeometryUtils.getMagneticDeclination(location.getLocation(), dateCalendar);
         }
 
         if (compassActive) {
@@ -303,7 +303,7 @@ public class TrackerFragment extends AbstractTimeFragment implements Configurabl
                                 if (eventsSet.size() > 0) {
                                     Event event1 = eventsSet.toArray(new Event[eventsSet.size()])[0];
                                     Time time = TimeHelper.formatTime(getApplicationContext(), event1.time, false);
-                                    String az = BearingHelper.formatBearing(getApplicationContext(), event1.azimuth, location.getLocation(), event1.time);
+                                    String az = GeometryUtils.formatBearing(getApplicationContext(), event1.azimuth, location.getLocation(), event1.time);
                                     textInView(view, id.trackerEvt1Name, event1.name);
                                     textInView(view, id.trackerEvt1Time, time.time + time.marker);
                                     textInView(view, id.trackerEvt1Az, az);
@@ -316,7 +316,7 @@ public class TrackerFragment extends AbstractTimeFragment implements Configurabl
                                 if (eventsSet.size() > 1) {
                                     Event event2 = eventsSet.toArray(new Event[eventsSet.size()])[1];
                                     Time time = TimeHelper.formatTime(getApplicationContext(), event2.time, false);
-                                    String az = BearingHelper.formatBearing(getApplicationContext(), event2.azimuth, location.getLocation(), event2.time);
+                                    String az = GeometryUtils.formatBearing(getApplicationContext(), event2.azimuth, location.getLocation(), event2.time);
                                     textInView(view, id.trackerEvt2Name, event2.name);
                                     textInView(view, id.trackerEvt2Time, time.time + time.marker);
                                     textInView(view, id.trackerEvt2Az, az);
@@ -330,7 +330,7 @@ public class TrackerFragment extends AbstractTimeFragment implements Configurabl
                             BigDecimal elBd = new BigDecimal(position.getAppElevation());
                             elBd = elBd.setScale(1, BigDecimal.ROUND_HALF_DOWN);
                             String el = elBd.toString() + "\u00b0";
-                            String az = BearingHelper.formatBearing(getApplicationContext(), position.getAzimuth(), location.getLocation(), timeCalendar);
+                            String az = GeometryUtils.formatBearing(getApplicationContext(), position.getAzimuth(), location.getLocation(), timeCalendar);
 
                             textInView(view, id.trackerAz, az);
                             textInView(view, id.trackerEl, el);

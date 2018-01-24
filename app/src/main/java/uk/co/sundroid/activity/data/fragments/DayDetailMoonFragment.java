@@ -19,11 +19,11 @@ import uk.co.sundroid.util.astro.math.BodyPositionCalculator;
 import uk.co.sundroid.util.astro.math.MoonPhaseCalculator;
 import uk.co.sundroid.domain.LocationDetails;
 import uk.co.sundroid.util.*;
+import uk.co.sundroid.util.geometry.GeometryUtils;
 import uk.co.sundroid.util.theme.ThemePalette;
 import uk.co.sundroid.util.time.TimeHelper;
 import uk.co.sundroid.util.time.TimeHelper.Time;
 import uk.co.sundroid.util.astro.YearData.Event;
-import uk.co.sundroid.util.geometry.BearingHelper;
 import uk.co.sundroid.util.time.TimeUtils;
 
 import java.util.*;
@@ -141,7 +141,7 @@ public class DayDetailMoonFragment extends AbstractDayFragment {
                         Time noon = TimeHelper.formatTime(getApplicationContext(), moonDay.getTransit(), false);
                         noTransit = false;
                         showInView(view, R.id.moonTransit);
-                        showInView(view, R.id.moonTransitTime, noon.time + noon.marker + "  " + BearingHelper.formatElevation(moonDay.getTransitAppElevation()));
+                        showInView(view, R.id.moonTransitTime, noon.time + noon.marker + "  " + GeometryUtils.formatElevation(moonDay.getTransitAppElevation()));
                     } else {
                         removeInView(view, R.id.moonTransit);
                     }
@@ -168,7 +168,7 @@ public class DayDetailMoonFragment extends AbstractDayFragment {
                             int imgId = view("moonEvt" + index + "Img");
 
                             Time time = TimeHelper.formatTime(getApplicationContext(), event.getTime(), false);
-                            String az = BearingHelper.formatBearing(getApplicationContext(), event.getAzimuth(), location.getLocation(), event.getTime());
+                            String az = GeometryUtils.formatBearing(getApplicationContext(), event.getAzimuth(), location.getLocation(), event.getTime());
 
                             textInView(view, timeId, time.time + time.marker);
                             textInView(view, azId, az);

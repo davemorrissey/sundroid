@@ -23,10 +23,10 @@ import uk.co.sundroid.util.astro.math.BodyPositionCalculator;
 import uk.co.sundroid.util.astro.math.SunCalculator;
 import uk.co.sundroid.domain.LocationDetails;
 import uk.co.sundroid.util.*;
+import uk.co.sundroid.util.geometry.GeometryUtils;
 import uk.co.sundroid.util.theme.ThemePalette;
 import uk.co.sundroid.util.time.TimeHelper;
 import uk.co.sundroid.util.time.TimeHelper.Time;
-import uk.co.sundroid.util.geometry.BearingHelper;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -275,12 +275,12 @@ public class MonthCalendarsFragment extends AbstractMonthFragment<ArrayList<Mont
                 }
                 if (up != null) {
                     if (StringUtils.isNotEmpty(upAz)) { upAz += "\n"; } else { upAz = ""; }
-                    String azimuth = BearingHelper.formatBearing(getApplicationContext(), bodyDay.getRiseAzimuth(), getLocation().getLocation(), up);
+                    String azimuth = GeometryUtils.formatBearing(getApplicationContext(), bodyDay.getRiseAzimuth(), getLocation().getLocation(), up);
                     upAz += azimuth;
                 }
                 if (down != null) {
                     if (StringUtils.isNotEmpty(downAz)) { downAz += "\n"; } else { downAz = ""; }
-                    String azimuth = BearingHelper.formatBearing(getApplicationContext(), bodyDay.getSetAzimuth(), getLocation().getLocation(), down);
+                    String azimuth = GeometryUtils.formatBearing(getApplicationContext(), bodyDay.getSetAzimuth(), getLocation().getLocation(), down);
                     downAz += azimuth;
                 }
                 if (up == null && down == null) {
@@ -360,10 +360,10 @@ public class MonthCalendarsFragment extends AbstractMonthFragment<ArrayList<Mont
                 up = moonDay.getRise();
                 down = moonDay.getSet();
                 if (up != null) {
-                    upAz = BearingHelper.formatBearing(getApplicationContext(), moonDay.getRiseAzimuth(), getLocation().getLocation(), up);
+                    upAz = GeometryUtils.formatBearing(getApplicationContext(), moonDay.getRiseAzimuth(), getLocation().getLocation(), up);
                 }
                 if (down != null) {
-                    downAz = BearingHelper.formatBearing(getApplicationContext(), moonDay.getSetAzimuth(), getLocation().getLocation(), down);
+                    downAz = GeometryUtils.formatBearing(getApplicationContext(), moonDay.getSetAzimuth(), getLocation().getLocation(), down);
                 }
                 if (up == null && down == null) {
                     if (moonDay.getRiseSetType() == RiseSetType.RISEN) {

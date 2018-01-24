@@ -16,7 +16,7 @@ import uk.co.sundroid.util.astro.math.BodyPositionCalculator;
 import uk.co.sundroid.util.astro.math.SunCalculator;
 import uk.co.sundroid.domain.LocationDetails;
 import uk.co.sundroid.util.SharedPrefsHelper;
-import uk.co.sundroid.util.geometry.BearingHelper;
+import uk.co.sundroid.util.geometry.GeometryUtils;
 import uk.co.sundroid.util.time.TimeHelper;
 import uk.co.sundroid.util.time.TimeHelper.Time;
 
@@ -153,7 +153,7 @@ public class DayDetailEventsFragment extends AbstractDayFragment implements Conf
                             Time time = TimeHelper.formatTime(getApplicationContext(), event.getTime(), true);
                             ((TextView)eventRow.findViewById(id.eventTime)).setText(time.time + time.marker);
                             if (event.getAzimuth() != null) {
-                                String azimuth = BearingHelper.formatBearing(getApplicationContext(), event.getAzimuth(), location.getLocation(), calendar);
+                                String azimuth = GeometryUtils.formatBearing(getApplicationContext(), event.getAzimuth(), location.getLocation(), calendar);
                                 ((TextView)eventRow.findViewById(id.eventAz)).setText(azimuth);
                             } else {
                                 ((TextView)eventRow.findViewById(id.eventAz)).setText(" ");

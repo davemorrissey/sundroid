@@ -14,7 +14,7 @@ import uk.co.sundroid.util.astro.BodyDay;
 import uk.co.sundroid.util.astro.Position;
 import uk.co.sundroid.util.astro.math.BodyPositionCalculator;
 import uk.co.sundroid.util.geo.LatitudeLongitude;
-import uk.co.sundroid.util.geometry.BearingHelper;
+import uk.co.sundroid.util.geometry.GeometryUtils;
 import uk.co.sundroid.util.theme.ThemePalette;
 import uk.co.sundroid.util.time.TimeUtils;
 
@@ -137,7 +137,7 @@ public class TrackerImage {
 	public void setDate(Calendar dateCalendar, Calendar timeCalendar) {
 		this.dateCalendar = TimeUtils.clone(dateCalendar);
 		this.timeCalendar = TimeUtils.clone(timeCalendar);
-		this.magneticDeclination = BearingHelper.getMagneticDeclination(this.location, this.dateCalendar);
+		this.magneticDeclination = GeometryUtils.getMagneticDeclination(this.location, this.dateCalendar);
 	}
 	
 	public void setTime(Calendar timeCalendar) {

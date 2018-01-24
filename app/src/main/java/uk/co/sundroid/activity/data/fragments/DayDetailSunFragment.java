@@ -11,11 +11,11 @@ import uk.co.sundroid.util.astro.SunDay;
 import uk.co.sundroid.util.astro.YearData;
 import uk.co.sundroid.util.astro.math.SunCalculator;
 import uk.co.sundroid.domain.LocationDetails;
+import uk.co.sundroid.util.geometry.GeometryUtils;
 import uk.co.sundroid.util.theme.ThemePalette;
 import uk.co.sundroid.util.time.TimeHelper.Time;
 import uk.co.sundroid.util.astro.YearData.Event;
 import uk.co.sundroid.util.astro.YearData.EventType;
-import uk.co.sundroid.util.geometry.BearingHelper;
 import uk.co.sundroid.util.time.TimeUtils;
 
 import java.util.Calendar;
@@ -92,7 +92,7 @@ public class DayDetailSunFragment extends AbstractDayFragment {
                         Time noon = formatTime(getApplicationContext(), sunDay.getTransit(), false);
                         noTransit = false;
                         showInView(view, R.id.sunTransit);
-                        showInView(view, R.id.sunTransitTime, noon.time + noon.marker + "  " + BearingHelper.formatElevation(sunDay.getTransitAppElevation()));
+                        showInView(view, R.id.sunTransitTime, noon.time + noon.marker + "  " + GeometryUtils.formatElevation(sunDay.getTransitAppElevation()));
                     } else {
                         removeInView(view, R.id.sunTransit);
                     }
@@ -119,7 +119,7 @@ public class DayDetailSunFragment extends AbstractDayFragment {
                             int imgId = view("sunEvt" + index + "Img");
 
                             Time time = formatTime(getApplicationContext(), event.getTime(), false);
-                            String az = BearingHelper.formatBearing(getApplicationContext(), event.getAzimuth(), location.getLocation(), event.getTime());
+                            String az = GeometryUtils.formatBearing(getApplicationContext(), event.getAzimuth(), location.getLocation(), event.getTime());
 
                             textInView(view, timeId, time.time + time.marker);
                             textInView(view, azId, az);
