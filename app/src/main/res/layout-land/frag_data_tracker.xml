@@ -25,12 +25,14 @@
 
             <LinearLayout
                     android:id="@+id/trackerMapContainer"
+                    android:orientation="horizontal"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent">
             </LinearLayout>
 
             <LinearLayout
                     android:id="@+id/trackerRadarContainer"
+                    android:orientation="horizontal"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"/>
 
