@@ -35,21 +35,6 @@ class Longitude : Angle {
     constructor(longitude: String) : super(0.0) {
         parseArcValue(longitude)
     }
-    
-    /**
-     * Constructs an angle of longitude from arc degrees, minutes and seconds values plus E/W sign.
-     * @param degrees The degrees part of the angle. Must not be greater than 180. The sign is ignored.
-     * @param minutes The minutes part of the angle. The sign is ignored.
-     * @param seconds The seconds part of the angle. The sign is ignored.
-     * @param sign The sign - either EAST or WEST
-     * @throws IllegalArgumentException if an invalid value is given.
-     */
-    constructor(degrees: Int, minutes: Int, seconds: Int, sign: Int) : super(Math.abs(degrees), Math.abs(minutes), Math.abs(seconds)) {
-        if (sign != EAST && sign != WEST) {
-            throw IllegalArgumentException("Sign \"$sign\" is not valid.")
-        }
-        this.sign = sign
-    }
 
     /**
      * Overrides super method to set sign.
@@ -86,7 +71,7 @@ class Longitude : Angle {
     fun setAngle(degrees: Int, minutes: Int, seconds: Int, sign: Int) {
         super.setAngle(Math.abs(degrees), Math.abs(minutes), Math.abs(seconds))
         if (degrees < -180 || degrees > 180) {
-            throw IllegalArgumentException("Latitude value cannot be less than -180 or greater than 180 degrees.");
+            throw IllegalArgumentException("Latitude value cannot be less than -180 or greater than 180 degrees.")
         }
         if (sign != EAST && sign != WEST) {
             throw IllegalArgumentException("Sign \"$sign\" is not valid.")
@@ -104,7 +89,7 @@ class Longitude : Angle {
         } else {
             value += "W"
         }
-        return value;
+        return value
     }
 
     /**

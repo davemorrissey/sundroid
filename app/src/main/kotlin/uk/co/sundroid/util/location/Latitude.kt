@@ -2,7 +2,6 @@ package uk.co.sundroid.util.location
 
 import uk.co.sundroid.util.geometry.parseArcValue as utilsParseArcValue
 import uk.co.sundroid.util.geometry.*
-import java.text.ParseException
 
 /**
  * Represents a latitude value.
@@ -34,20 +33,6 @@ class Latitude : Angle {
      */
     constructor(latitude: String) : super(0.0) {
         parseArcValue(latitude)
-    }
-
-    /**
-     * Constructs an angle of latitude from arc degrees, minutes and seconds values pus N/S sign.
-     * @param degrees The degrees part of the angle. Must not be greater than +90. The sign is ignored.
-     * @param minutes The minutes part of the angle. The sign is ignored.
-     * @param seconds The seconds part of the angle. The sign is ignored.
-     * @param sign The sign - either NORTH or SOUTH.
-     */
-    private constructor(degrees: Int, minutes: Int, seconds: Int, sign: Int) : super(Math.abs(degrees), Math.abs(minutes), Math.abs(seconds)) {
-        if (sign != NORTH && sign != SOUTH) {
-            throw IllegalArgumentException("Sign \"$sign\" is not valid.")
-        }
-        this.sign = sign
     }
 
     /**
