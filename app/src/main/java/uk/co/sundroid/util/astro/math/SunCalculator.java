@@ -16,7 +16,7 @@ import uk.co.sundroid.util.astro.Position;
 import uk.co.sundroid.util.astro.RiseSetType;
 import uk.co.sundroid.util.astro.SunDay;
 import uk.co.sundroid.util.astro.TwilightType;
-import uk.co.sundroid.util.geo.LatitudeLongitude;
+import uk.co.sundroid.util.location.LatitudeLongitude;
 
 public class SunCalculator {
 	

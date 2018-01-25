@@ -3,7 +3,7 @@ package uk.co.sundroid.dao;
 import java.util.ArrayList;
 
 import uk.co.sundroid.domain.LocationDetails;
-import uk.co.sundroid.util.geo.LatitudeLongitude;
+import uk.co.sundroid.util.location.LatitudeLongitude;
 import uk.co.sundroid.util.time.TimeZoneResolver;
 import android.content.ContentValues;
 import android.content.Context;

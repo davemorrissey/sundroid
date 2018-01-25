@@ -23,7 +23,7 @@ import uk.co.sundroid.util.astro.MoonDay;
 import uk.co.sundroid.util.astro.MoonPhaseEvent;
 import uk.co.sundroid.util.astro.Position;
 import uk.co.sundroid.util.astro.RiseSetType;
-import uk.co.sundroid.util.geo.LatitudeLongitude;
+import uk.co.sundroid.util.location.LatitudeLongitude;
 import uk.co.sundroid.util.time.TimeUtils;
 
 import static uk.co.sundroid.util.astro.math.SunCalculator.Event.*;

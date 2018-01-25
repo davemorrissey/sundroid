@@ -9,6 +9,7 @@ import uk.co.sundroid.domain.TimeZoneDetail;
 import uk.co.sundroid.util.SharedPrefsHelper;
 import uk.co.sundroid.util.LogWrapper;
 import uk.co.sundroid.util.StringUtils;
+import uk.co.sundroid.util.location.LatitudeLongitude;
 import uk.co.sundroid.util.time.TimeZoneResolver;
 
 import android.Manifest;

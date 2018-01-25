@@ -3,7 +3,7 @@ package uk.co.sundroid.activity.location;
 import uk.co.sundroid.util.geo.Geocoder;
 import uk.co.sundroid.R;
 import uk.co.sundroid.domain.LocationDetails;
-import uk.co.sundroid.util.geo.LatitudeLongitude;
+import uk.co.sundroid.util.location.LatitudeLongitude;
 import uk.co.sundroid.util.SharedPrefsHelper;
 import uk.co.sundroid.util.LogWrapper;
 import android.app.Activity;

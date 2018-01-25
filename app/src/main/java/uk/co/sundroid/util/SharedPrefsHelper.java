@@ -4,7 +4,7 @@ import uk.co.sundroid.activity.data.DataGroup;
 import uk.co.sundroid.util.astro.Body;
 import uk.co.sundroid.domain.LocationDetails;
 import uk.co.sundroid.domain.TimeZoneDetail;
-import uk.co.sundroid.util.geo.LatitudeLongitude;
+import uk.co.sundroid.util.location.LatitudeLongitude;
 import uk.co.sundroid.util.theme.ThemePalette;
 import uk.co.sundroid.util.time.TimeZoneResolver;
 

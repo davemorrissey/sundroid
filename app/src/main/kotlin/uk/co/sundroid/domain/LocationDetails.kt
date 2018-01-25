@@ -4,7 +4,7 @@ import java.io.Serializable
 import java.util.ArrayList
 
 import uk.co.sundroid.util.geometry.Accuracy.*
-import uk.co.sundroid.util.geo.LatitudeLongitude
+import uk.co.sundroid.util.location.LatitudeLongitude
 
 class LocationDetails : Serializable {
 

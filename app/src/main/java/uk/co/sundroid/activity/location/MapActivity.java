@@ -30,7 +30,7 @@ import uk.co.sundroid.R.id;
 import uk.co.sundroid.R.layout;
 import uk.co.sundroid.NavItem;
 import uk.co.sundroid.domain.LocationDetails;
-import uk.co.sundroid.util.geo.LatitudeLongitude;
+import uk.co.sundroid.util.location.LatitudeLongitude;
 import uk.co.sundroid.util.SharedPrefsHelper;
 
 import java.util.Arrays;

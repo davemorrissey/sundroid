@@ -11,7 +11,7 @@ import java.util.TimeZone;
 
 import uk.co.sundroid.domain.TimeZoneDetail;
 import uk.co.sundroid.util.StringUtils;
-import uk.co.sundroid.util.geo.LatitudeLongitude;
+import uk.co.sundroid.util.location.LatitudeLongitude;
 
 
 public class TimeZoneResolver {

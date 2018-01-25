@@ -31,7 +31,7 @@ import uk.co.sundroid.activity.location.TimeZonePickerActivity;
 import uk.co.sundroid.activity.settings.AppSettingsActivity;
 import uk.co.sundroid.dao.DatabaseHelper;
 import uk.co.sundroid.domain.LocationDetails;
-import uk.co.sundroid.util.geo.LatitudeLongitude;
+import uk.co.sundroid.util.location.LatitudeLongitude;
 import uk.co.sundroid.util.SharedPrefsHelper;
 import uk.co.sundroid.util.*;
 import uk.co.sundroid.util.time.TimeZoneResolver;

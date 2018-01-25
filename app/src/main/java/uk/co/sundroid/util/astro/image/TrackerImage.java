@@ -13,7 +13,7 @@ import uk.co.sundroid.util.astro.Body;
 import uk.co.sundroid.util.astro.BodyDay;
 import uk.co.sundroid.util.astro.Position;
 import uk.co.sundroid.util.astro.math.BodyPositionCalculator;
-import uk.co.sundroid.util.geo.LatitudeLongitude;
+import uk.co.sundroid.util.location.LatitudeLongitude;
 import uk.co.sundroid.util.geometry.GeometryUtils;
 import uk.co.sundroid.util.theme.ThemePalette;
 import uk.co.sundroid.util.time.TimeUtils;

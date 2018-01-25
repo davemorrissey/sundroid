@@ -4,7 +4,7 @@ package uk.co.sundroid.util.geometry
 import android.content.Context
 import android.hardware.GeomagneticField
 import uk.co.sundroid.util.SharedPrefsHelper
-import uk.co.sundroid.util.geo.LatitudeLongitude
+import uk.co.sundroid.util.location.LatitudeLongitude
 import java.math.BigDecimal
 import java.util.*
 
@@ -175,6 +175,6 @@ fun formatElevation(elevation: Double): String {
 }
 
 fun getMagneticDeclination(location: LatitudeLongitude, time: Calendar): Double {
-    val field = GeomagneticField(location.latitude.getDoubleValue().toFloat(), location.longitude.getDoubleValue().toFloat(), 0f, time.timeInMillis)
+    val field = GeomagneticField(location.latitude.doubleValue.toFloat(), location.longitude.doubleValue.toFloat(), 0f, time.timeInMillis)
     return field.declination.toDouble()
 }
