@@ -21,11 +21,7 @@ class Longitude : Angle {
      * @throws IllegalArgumentException if an invalid double value is given.
      */
     constructor(doubleValue: Double) : super(Math.abs(doubleValue)) {
-        if (doubleValue < 0) {
-            sign = WEST
-        } else {
-            sign = EAST
-        }
+        sign = if (doubleValue < 0) WEST else EAST
     }
 
     /**
@@ -47,10 +43,8 @@ class Longitude : Angle {
     /**
      * Overrides super method to set sign.
      */
-    override fun getE6(): Int {
-        return sign * super.getE6()
-    }
-    
+    override fun getE6(): Int = sign * super.getE6()
+
     /**
      * Overrides super method to check for angles over +/- 180 degrees, and set East/West sign.
      */
@@ -59,16 +53,12 @@ class Longitude : Angle {
         if (doubleValue < -180 || doubleValue > 180) {
             throw IllegalArgumentException("Latitude value cannot be less than -180 or greater than 180 degrees.")
         }
-        if (doubleValue < 0) {
-            sign = WEST
-        } else {
-            sign = EAST
-        }
+        sign = if (doubleValue < 0) WEST else EAST
     }
     /**
-     * Overrides super method to check for angles over 180 degrees, and set North/South sign.
+     * Overloads super method to check for angles over 180 degrees, and set North/South sign.
      */
-    fun setAngle(degrees: Int, minutes: Int, seconds: Int, sign: Int) {
+    private fun setAngle(degrees: Int, minutes: Int, seconds: Int, sign: Int) {
         super.setAngle(Math.abs(degrees), Math.abs(minutes), Math.abs(seconds))
         if (degrees < -180 || degrees > 180) {
             throw IllegalArgumentException("Latitude value cannot be less than -180 or greater than 180 degrees.")
@@ -84,11 +74,7 @@ class Longitude : Angle {
      */
     fun getAbbreviatedValue(): String {
         var value = displayArcValue(this, Accuracy.SECONDS, Punctuation.NONE)
-        if (sign == EAST) {
-            value += "E"
-        } else {
-            value += "W"
-        }
+        value += if (sign == EAST) "E" else "W"
         return value
     }
 
@@ -97,11 +83,7 @@ class Longitude : Angle {
      */
     fun getPunctuatedValue(accuracy: Accuracy): String {
         var value = displayArcValue(this, accuracy, Punctuation.STANDARD)
-        if (sign == EAST) {
-            value += "E"
-        } else {
-            value += "W"
-        }
+        value += if (sign == EAST) "E" else "W"
         return value
     }
     
@@ -126,10 +108,8 @@ class Longitude : Angle {
     /**
      * String display returns abbreviated value.
      */
-    override fun toString(): String {
-        return getAbbreviatedValue()
-    }
-    
+    override fun toString(): String = getAbbreviatedValue()
+
     /**
      * Compare two longitudes for equality. They are considered the same if
      * the displayed abbreviated values (which include degrees, minutes and
@@ -139,10 +119,7 @@ class Longitude : Angle {
      * @see java.lang.Object#equals(java.lang.Object)
      */
     override fun equals(other: Any?): Boolean {
-        if (other !is Longitude) {
-            return false
-        }
-        return other.toString() == toString()
+        return other is Longitude && other.toString() == toString()
     }
 
     override fun hashCode(): Int = toString().hashCode()

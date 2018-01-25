@@ -20,11 +20,7 @@ class Latitude : Angle {
      * @param doubleValue The double value of the angle. Must not be less than -90 or greater than +90.
      */
     constructor(doubleValue: Double) : super(Math.abs(doubleValue)) {
-        if (doubleValue < 0) {
-            sign = SOUTH
-        } else {
-            sign = NORTH
-        }
+        sign = if (doubleValue < 0) SOUTH else NORTH
     }
 
     /**
@@ -46,9 +42,7 @@ class Latitude : Angle {
     /**
      * Overrides super method to set sign.
      */
-    override fun getE6(): Int {
-        return sign * super.getE6()
-    }
+    override fun getE6(): Int = sign * super.getE6()
 
     /**
      * Overrides super method to check for angles over +/- 90 degrees, and set North/South sign.
@@ -58,15 +52,11 @@ class Latitude : Angle {
         if (doubleValue < -90 || doubleValue > 90) {
             throw IllegalArgumentException("Latitude value cannot be less than -90 or greater than 90 degrees.")
         }
-        if (doubleValue < 0) {
-            sign = SOUTH
-        } else {
-            sign = NORTH
-        }
+        sign = if (doubleValue < 0) SOUTH else NORTH
     }
 
     /**
-     * Overrides super method to check for angles over 90 degrees, and set North/South sign.
+     * Overloads super method to check for angles over 90 degrees, and set North/South sign.
      */
     private fun setAngle(degrees: Int, minutes: Int, seconds: Int, sign: Int) {
         super.setAngle(Math.abs(degrees), Math.abs(minutes), Math.abs(seconds))
@@ -86,11 +76,7 @@ class Latitude : Angle {
         // Get the displayed angle value. Then trim off the unnecessary leading.
         var value = displayArcValue(this, Accuracy.SECONDS, Punctuation.NONE)
         value = value.substring(1)
-        if (sign == NORTH) {
-            value += "N"
-        } else {
-            value += "S"
-        }
+        value += if (sign == NORTH) "N" else "S"
         return value
     }
     
@@ -101,11 +87,7 @@ class Latitude : Angle {
         // Get the displayed angle value. Then trim off the unnecessary leading.
         var value = displayArcValue(this, accuracy, Punctuation.STANDARD)
         value = value.substring(1)
-        if (sign == NORTH) {
-            value += "N"
-        } else {
-            value += "S"
-        }
+        value += if (sign == NORTH) "N" else "S"
         return value
     }
     
@@ -130,10 +112,8 @@ class Latitude : Angle {
     /**
      * String display returns abbreviated value.
      */
-    override fun toString(): String {
-        return getAbbreviatedValue()
-    }
-    
+    override fun toString(): String = getAbbreviatedValue()
+
     /**
      * Compare two latitudes for equality. They are considered the same if
      * the displayed abbreviated values (which include degrees, minutes and
@@ -143,10 +123,7 @@ class Latitude : Angle {
      * @see java.lang.Object#equals(java.lang.Object)
      */
     override fun equals(other: Any?): Boolean {
-        if (other !is Latitude) {
-            return false
-        }
-        return other.toString() == toString()
+        return other is Latitude && other.toString() == toString()
     }
 
     override fun hashCode(): Int = toString().hashCode()

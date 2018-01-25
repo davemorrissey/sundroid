@@ -65,8 +65,8 @@ class LatitudeLongitude : Serializable {
      */
     constructor(latitudeLongitude: String) {
         if (latitudeLongitude.contains(" ")) {
-            this.latitude = Latitude(latitudeLongitude.substring(0, latitudeLongitude.indexOf(" ")))
-            this.longitude = Longitude(latitudeLongitude.substring(latitudeLongitude.indexOf(" ") + 1))
+            this.latitude = Latitude(latitudeLongitude.substringBefore(" "))
+            this.longitude = Longitude(latitudeLongitude.substringAfter(" "))
         } else {
             throw ParseException("Could not parse lat/long coordinate from abbreviated string \"$latitudeLongitude\"", 0)
         }
@@ -76,23 +76,21 @@ class LatitudeLongitude : Serializable {
      * Gets the co-ordinate in abbreviated format e.g. ddmmssN dddmmssE
      */
     fun getAbbreviatedValue(): String {
-        return latitude.getAbbreviatedValue() + " " + longitude.getAbbreviatedValue()
+        return "${latitude.getAbbreviatedValue()} ${longitude.getAbbreviatedValue()}"
     }
     
     /**
      * Gets the co-ordinate in standard punctuated format with specified accuracy.
      */
     fun getPunctuatedValue(accuracy: Accuracy): String {
-        return latitude.getPunctuatedValue(accuracy) + " " + longitude.getPunctuatedValue(accuracy)
+        return "${latitude.getPunctuatedValue(accuracy)} ${longitude.getPunctuatedValue(accuracy)}"
     }
     
     /**
      * String display returns abbreviated value.
      */
-    override fun toString(): String {
-        return getAbbreviatedValue()
-    }
-    
+    override fun toString(): String = getAbbreviatedValue()
+
     /**
      * Compare two locations for equality. They are considered the same if
      * the displayed abbreviated values (which include degrees, minutes and
@@ -102,10 +100,7 @@ class LatitudeLongitude : Serializable {
      * @see java.lang.Object#equals(java.lang.Object)
      */
     override fun equals(other: Any?): Boolean {
-        if (other !is Latitude) {
-            return false
-        }
-        return other.toString() == toString()
+        return other is LatitudeLongitude && other.toString() == toString()
     }
 
     override fun hashCode(): Int = toString().hashCode()
