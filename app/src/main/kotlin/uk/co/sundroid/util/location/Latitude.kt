@@ -164,6 +164,8 @@ class Latitude : Angle {
         return other.toString() == toString()
     }
 
+    override fun hashCode(): Int = toString().hashCode()
+
     companion object {
         private const val serialVersionUID = 4806228965383925168L
 

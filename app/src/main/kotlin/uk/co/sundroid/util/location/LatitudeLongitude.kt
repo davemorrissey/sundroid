@@ -108,6 +108,8 @@ class LatitudeLongitude : Serializable {
         return other.toString() == toString()
     }
 
+    override fun hashCode(): Int = toString().hashCode()
+
     companion object {
         private const val serialVersionUID = -9133219631765541150L
     }
