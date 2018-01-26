@@ -259,89 +259,85 @@ public class TrackerFragment extends AbstractTimeFragment implements Configurabl
         }
 
         queue.clear();
-        executor.submit(new Runnable() {
-            public void run() {
+        executor.submit(() -> {
+            if (!isSafe()) {
+                return;
+            }
+
+            Set<Event> tempEventsSet = null;
+            final Position position = body != null && SharedPrefsHelper.getSunTrackerText(getApplicationContext()) ? BodyPositionCalculator.calcPosition(body, location.getLocation(), timeCalendar) : null;
+
+            // Get the first two rise/set events that happen on this calendar day,
+            // midnight to midnight.
+
+            if (!timeOnly && body != null && SharedPrefsHelper.getSunTrackerText(getApplicationContext())) {
+                tempEventsSet = new TreeSet<>();
+                Calendar loopCalendar = TimeUtils.clone(dateCalendar);
+                loopCalendar.add(Calendar.DAY_OF_MONTH, -1);
+                for (int i = 0; i < 3; i++) {
+                    BodyDay bodyDay = BodyPositionCalculator.calcDay(body, location.getLocation(), loopCalendar, false);
+                    if (bodyDay.getRise() != null && TimeUtils.isSameDay(bodyDay.getRise(), dateCalendar) && tempEventsSet.size() < 2) {
+                        tempEventsSet.add(new Event("RISE", bodyDay.getRise(), bodyDay.getRiseAzimuth()));
+                    }
+                    if (bodyDay.getSet() != null && TimeUtils.isSameDay(bodyDay.getSet(), dateCalendar) && tempEventsSet.size() < 2) {
+                        tempEventsSet.add(new Event("SET", bodyDay.getSet(), bodyDay.getSetAzimuth()));
+                    }
+                    loopCalendar.add(Calendar.DAY_OF_MONTH, 1);
+                }
+            }
+            final Set<Event> eventsSet = tempEventsSet;
+
+
+            trackerImage.generate();
+
+            handler.post(() -> {
                 if (!isSafe()) {
                     return;
                 }
 
-                Set<Event> tempEventsSet = null;
-                final Position position = body != null && SharedPrefsHelper.getSunTrackerText(getApplicationContext()) ? BodyPositionCalculator.calcPosition(body, location.getLocation(), timeCalendar) : null;
+                if (position != null && SharedPrefsHelper.getSunTrackerText(getApplicationContext())) {
 
-                // Get the first two rise/set events that happen on this calendar day,
-                // midnight to midnight.
+                    if (eventsSet != null) {
+                        if (eventsSet.size() > 0) {
+                            Event event1 = eventsSet.toArray(new Event[eventsSet.size()])[0];
+                            Time time = TimeHelper.formatTime(getApplicationContext(), event1.time, false);
+                            String az = GeometryUtils.formatBearing(getApplicationContext(), event1.azimuth, location.getLocation(), event1.time);
+                            textInView(view, id.trackerEvt1Name, event1.name);
+                            textInView(view, id.trackerEvt1Time, time.time + time.marker);
+                            textInView(view, id.trackerEvt1Az, az);
+                        } else {
+                            textInView(view, id.trackerEvt1Name, "");
+                            textInView(view, id.trackerEvt1Time, "");
+                            textInView(view, id.trackerEvt1Az, "");
+                        }
 
-                if (!timeOnly && body != null && SharedPrefsHelper.getSunTrackerText(getApplicationContext())) {
-                    tempEventsSet = new TreeSet<>();
-                    Calendar loopCalendar = TimeUtils.clone(dateCalendar);
-                    loopCalendar.add(Calendar.DAY_OF_MONTH, -1);
-                    for (int i = 0; i < 3; i++) {
-                        BodyDay bodyDay = BodyPositionCalculator.calcDay(body, location.getLocation(), loopCalendar, false);
-                        if (bodyDay.getRise() != null && TimeUtils.isSameDay(bodyDay.getRise(), dateCalendar) && tempEventsSet.size() < 2) {
-                            tempEventsSet.add(new Event("RISE", bodyDay.getRise(), bodyDay.getRiseAzimuth()));
+                        if (eventsSet.size() > 1) {
+                            Event event2 = eventsSet.toArray(new Event[eventsSet.size()])[1];
+                            Time time = TimeHelper.formatTime(getApplicationContext(), event2.time, false);
+                            String az = GeometryUtils.formatBearing(getApplicationContext(), event2.azimuth, location.getLocation(), event2.time);
+                            textInView(view, id.trackerEvt2Name, event2.name);
+                            textInView(view, id.trackerEvt2Time, time.time + time.marker);
+                            textInView(view, id.trackerEvt2Az, az);
+                        } else {
+                            textInView(view, id.trackerEvt2Name, "");
+                            textInView(view, id.trackerEvt2Time, "");
+                            textInView(view, id.trackerEvt2Az, "");
                         }
-                        if (bodyDay.getSet() != null && TimeUtils.isSameDay(bodyDay.getSet(), dateCalendar) && tempEventsSet.size() < 2) {
-                            tempEventsSet.add(new Event("SET", bodyDay.getSet(), bodyDay.getSetAzimuth()));
-                        }
-                        loopCalendar.add(Calendar.DAY_OF_MONTH, 1);
                     }
+
+                    BigDecimal elBd = new BigDecimal(position.getAppElevation());
+                    elBd = elBd.setScale(1, BigDecimal.ROUND_HALF_DOWN);
+                    String el = elBd.toString() + "\u00b0";
+                    String az = GeometryUtils.formatBearing(getApplicationContext(), position.getAzimuth(), location.getLocation(), timeCalendar);
+
+                    textInView(view, id.trackerAz, az);
+                    textInView(view, id.trackerEl, el);
+                    textInView(view, id.trackerBodyAndLight, body.name().substring(0, 1) + body.name().substring(1).toLowerCase() + ": " + getLight(body, position.getAppElevation()));
                 }
-                final Set<Event> eventsSet = tempEventsSet;
 
+                trackerImageView.invalidate();
+            });
 
-                trackerImage.generate();
-
-                handler.post(new Runnable() {
-                    public void run() {
-                        if (!isSafe()) {
-                            return;
-                        }
-
-                        if (position != null && SharedPrefsHelper.getSunTrackerText(getApplicationContext())) {
-
-                            if (eventsSet != null) {
-                                if (eventsSet.size() > 0) {
-                                    Event event1 = eventsSet.toArray(new Event[eventsSet.size()])[0];
-                                    Time time = TimeHelper.formatTime(getApplicationContext(), event1.time, false);
-                                    String az = GeometryUtils.formatBearing(getApplicationContext(), event1.azimuth, location.getLocation(), event1.time);
-                                    textInView(view, id.trackerEvt1Name, event1.name);
-                                    textInView(view, id.trackerEvt1Time, time.time + time.marker);
-                                    textInView(view, id.trackerEvt1Az, az);
-                                } else {
-                                    textInView(view, id.trackerEvt1Name, "");
-                                    textInView(view, id.trackerEvt1Time, "");
-                                    textInView(view, id.trackerEvt1Az, "");
-                                }
-
-                                if (eventsSet.size() > 1) {
-                                    Event event2 = eventsSet.toArray(new Event[eventsSet.size()])[1];
-                                    Time time = TimeHelper.formatTime(getApplicationContext(), event2.time, false);
-                                    String az = GeometryUtils.formatBearing(getApplicationContext(), event2.azimuth, location.getLocation(), event2.time);
-                                    textInView(view, id.trackerEvt2Name, event2.name);
-                                    textInView(view, id.trackerEvt2Time, time.time + time.marker);
-                                    textInView(view, id.trackerEvt2Az, az);
-                                } else {
-                                    textInView(view, id.trackerEvt2Name, "");
-                                    textInView(view, id.trackerEvt2Time, "");
-                                    textInView(view, id.trackerEvt2Az, "");
-                                }
-                            }
-
-                            BigDecimal elBd = new BigDecimal(position.getAppElevation());
-                            elBd = elBd.setScale(1, BigDecimal.ROUND_HALF_DOWN);
-                            String el = elBd.toString() + "\u00b0";
-                            String az = GeometryUtils.formatBearing(getApplicationContext(), position.getAzimuth(), location.getLocation(), timeCalendar);
-
-                            textInView(view, id.trackerAz, az);
-                            textInView(view, id.trackerEl, el);
-                            textInView(view, id.trackerBodyAndLight, body.name().substring(0, 1) + body.name().substring(1).toLowerCase() + ": " + getLight(body, position.getAppElevation()));
-                        }
-
-                        trackerImageView.invalidate();
-                    }
-                });
-
-            }
         });
 
     }
