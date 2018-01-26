@@ -325,16 +325,22 @@ public class MapActivity extends AbstractLocationActivity implements OnMapClickL
             List<String> names = Arrays.asList("Map", "Satellite", "Terrain", "Hybrid");
             int selectedIndex;
             String currentMapMode = SharedPrefsHelper.getLocMapMode(getApplicationContext());
-            if (currentMapMode.equals("normal")) {
-                selectedIndex = 0;
-            } else if (currentMapMode.equals("satellite")) {
-                selectedIndex = 1;
-            } else if (currentMapMode.equals("terrain")) {
-                selectedIndex = 2;
-            } else if (currentMapMode.equals("hybrid")) {
-                selectedIndex = 3;
-            } else {
-                selectedIndex = 4;
+            switch (currentMapMode) {
+                case "normal":
+                    selectedIndex = 0;
+                    break;
+                case "satellite":
+                    selectedIndex = 1;
+                    break;
+                case "terrain":
+                    selectedIndex = 2;
+                    break;
+                case "hybrid":
+                    selectedIndex = 3;
+                    break;
+                default:
+                    selectedIndex = 4;
+                    break;
             }
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
