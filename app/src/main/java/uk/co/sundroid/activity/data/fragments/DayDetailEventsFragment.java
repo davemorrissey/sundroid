@@ -17,8 +17,8 @@ import uk.co.sundroid.util.astro.math.SunCalculator;
 import uk.co.sundroid.domain.LocationDetails;
 import uk.co.sundroid.util.SharedPrefsHelper;
 import uk.co.sundroid.util.geometry.GeometryUtils;
-import uk.co.sundroid.util.time.TimeHelper;
-import uk.co.sundroid.util.time.TimeHelper.Time;
+import uk.co.sundroid.util.time.TimeUtils;
+import uk.co.sundroid.util.time.Time;
 
 import java.util.*;
 
@@ -150,8 +150,8 @@ public class DayDetailEventsFragment extends AbstractDayFragment implements Conf
                         for (SummaryEvent event : eventsList) {
                             final View eventRow = getActivity().getLayoutInflater().inflate(R.layout.frag_data_daydetail_events_row, null);
                             ((TextView)eventRow.findViewById(id.eventName)).setText(event.getName().toUpperCase());
-                            Time time = TimeHelper.formatTime(getApplicationContext(), event.getTime(), true);
-                            ((TextView)eventRow.findViewById(id.eventTime)).setText(time.time + time.marker);
+                            Time time = TimeUtils.formatTime(getApplicationContext(), event.getTime(), true);
+                            ((TextView)eventRow.findViewById(id.eventTime)).setText(time.getTime() + time.getMarker());
                             if (event.getAzimuth() != null) {
                                 String azimuth = GeometryUtils.formatBearing(getApplicationContext(), event.getAzimuth(), location.getLocation(), calendar);
                                 ((TextView)eventRow.findViewById(id.eventAz)).setText(azimuth);

@@ -13,7 +13,7 @@ import uk.co.sundroid.util.astro.math.SunCalculator;
 import uk.co.sundroid.domain.LocationDetails;
 import uk.co.sundroid.util.geometry.GeometryUtils;
 import uk.co.sundroid.util.theme.ThemePalette;
-import uk.co.sundroid.util.time.TimeHelper.Time;
+import uk.co.sundroid.util.time.Time;
 import uk.co.sundroid.util.astro.YearData.Event;
 import uk.co.sundroid.util.astro.YearData.EventType;
 import uk.co.sundroid.util.time.TimeUtils;
@@ -22,8 +22,8 @@ import java.util.Calendar;
 import java.util.Set;
 import java.util.TreeSet;
 
-import static uk.co.sundroid.util.time.TimeHelper.formatDurationHMS;
-import static uk.co.sundroid.util.time.TimeHelper.formatTime;
+import static uk.co.sundroid.util.time.TimeUtils.formatDurationHMS;
+import static uk.co.sundroid.util.time.TimeUtils.formatTime;
 
 public class DayDetailSunFragment extends AbstractDayFragment {
 
@@ -92,7 +92,7 @@ public class DayDetailSunFragment extends AbstractDayFragment {
                         Time noon = formatTime(getApplicationContext(), sunDay.getTransit(), false);
                         noTransit = false;
                         showInView(view, R.id.sunTransit);
-                        showInView(view, R.id.sunTransitTime, noon.time + noon.marker + "  " + GeometryUtils.formatElevation(sunDay.getTransitAppElevation()));
+                        showInView(view, R.id.sunTransitTime, noon.getTime() + noon.getMarker() + "  " + GeometryUtils.formatElevation(sunDay.getTransitAppElevation()));
                     } else {
                         removeInView(view, R.id.sunTransit);
                     }
@@ -121,7 +121,7 @@ public class DayDetailSunFragment extends AbstractDayFragment {
                             Time time = formatTime(getApplicationContext(), event.getTime(), false);
                             String az = GeometryUtils.formatBearing(getApplicationContext(), event.getAzimuth(), location.getLocation(), event.getTime());
 
-                            textInView(view, timeId, time.time + time.marker);
+                            textInView(view, timeId, time.getTime() + time.getMarker());
                             textInView(view, azId, az);
                             showInView(view, rowId);
                             imageInView(view, imgId, event.getName().equals("Rise") ? ThemePalette.getRiseArrow() : ThemePalette.getSetArrow());
@@ -149,37 +149,37 @@ public class DayDetailSunFragment extends AbstractDayFragment {
                         textInView(view, R.id.sunCivDawnTime, "-");
                     } else {
                         Time time = formatTime(getApplicationContext(), sunDay.getCivDawn(), false);
-                        textInView(view, R.id.sunCivDawnTime, time.time + time.marker);
+                        textInView(view, R.id.sunCivDawnTime, time.getTime() + time.getMarker());
                     }
                     if (sunDay.getCivDusk() == null) {
                         textInView(view, R.id.sunCivDuskTime, "-");
                     } else {
                         Time time = formatTime(getApplicationContext(), sunDay.getCivDusk(), false);
-                        textInView(view, R.id.sunCivDuskTime, time.time + time.marker);
+                        textInView(view, R.id.sunCivDuskTime, time.getTime() + time.getMarker());
                     }
                     if (sunDay.getNtcDawn() == null) {
                         textInView(view, R.id.sunNtcDawnTime, "-");
                     } else {
                         Time time = formatTime(getApplicationContext(), sunDay.getNtcDawn(), false);
-                        textInView(view, R.id.sunNtcDawnTime, time.time + time.marker);
+                        textInView(view, R.id.sunNtcDawnTime, time.getTime() + time.getMarker());
                     }
                     if (sunDay.getNtcDusk() == null) {
                         textInView(view, R.id.sunNtcDuskTime, "-");
                     } else {
                         Time time = formatTime(getApplicationContext(), sunDay.getNtcDusk(), false);
-                        textInView(view, R.id.sunNtcDuskTime, time.time + time.marker);
+                        textInView(view, R.id.sunNtcDuskTime, time.getTime() + time.getMarker());
                     }
                     if (sunDay.getAstDawn() == null) {
                         textInView(view, R.id.sunAstDawnTime, "-");
                     } else {
                         Time time = formatTime(getApplicationContext(), sunDay.getAstDawn(), false);
-                        textInView(view, R.id.sunAstDawnTime, time.time + time.marker);
+                        textInView(view, R.id.sunAstDawnTime, time.getTime() + time.getMarker());
                     }
                     if (sunDay.getAstDusk() == null) {
                         textInView(view, R.id.sunAstDuskTime, "-");
                     } else {
                         Time time = formatTime(getApplicationContext(), sunDay.getAstDusk(), false);
-                        textInView(view, R.id.sunAstDuskTime, time.time + time.marker);
+                        textInView(view, R.id.sunAstDuskTime, time.getTime() + time.getMarker());
                     }
 
                     showInView(view, R.id.sunDataBox);

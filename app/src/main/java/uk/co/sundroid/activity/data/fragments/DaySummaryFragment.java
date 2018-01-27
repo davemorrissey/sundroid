@@ -15,8 +15,8 @@ import uk.co.sundroid.util.astro.math.SunCalculator;
 import uk.co.sundroid.domain.LocationDetails;
 import uk.co.sundroid.util.*;
 import uk.co.sundroid.util.theme.ThemePalette;
-import uk.co.sundroid.util.time.TimeHelper;
-import uk.co.sundroid.util.time.TimeHelper.Time;
+import uk.co.sundroid.util.time.TimeUtils;
+import uk.co.sundroid.util.time.Time;
 
 import java.util.Calendar;
 import java.util.Set;
@@ -87,9 +87,9 @@ public class DaySummaryFragment extends AbstractDayFragment {
 	    			int timeId = view("sunEvt" + index + "Time");
 	    			int imgId = view("sunEvt" + index + "Img");
 
-	    			Time time = TimeHelper.formatTime(getApplicationContext(), event.getTime(), false);
+	    			Time time = TimeUtils.formatTime(getApplicationContext(), event.getTime(), false);
 	    			textInView(view, labelId, event.getName());
-	    			textInView(view, timeId, time.time + time.marker.toLowerCase());
+	    			textInView(view, timeId, time.getTime() + time.getMarker().toLowerCase());
 	    			imageInView(view, imgId, event.getName().equals("RISE") ? ThemePalette.getRiseArrow() : ThemePalette.getSetArrow());
 	    			showInView(view, rowId);
 
@@ -98,7 +98,7 @@ public class DaySummaryFragment extends AbstractDayFragment {
 
 	    		if (sunDay.getUptimeHours() > 0 && sunDay.getUptimeHours() < 24) {
 	    			showInView(view, R.id.sunUptimeRow);
-	    			showInView(view, R.id.sunUptimeTime, TimeHelper.formatDurationHMS(getApplicationContext(), sunDay.getUptimeHours(), false));
+	    			showInView(view, R.id.sunUptimeTime, TimeUtils.formatDurationHMS(getApplicationContext(), sunDay.getUptimeHours(), false));
 	    		} else {
 	    			removeInView(view, R.id.sunUptimeRow);
 	    		}
@@ -128,9 +128,9 @@ public class DaySummaryFragment extends AbstractDayFragment {
 	    			int timeId = view("moonEvt" + index + "Time");
 	    			int imgId = view("moonEvt" + index + "Img");
 
-	    			Time time = TimeHelper.formatTime(getApplicationContext(), event.getTime(), false);
+	    			Time time = TimeUtils.formatTime(getApplicationContext(), event.getTime(), false);
 	    			textInView(view, labelId, event.getName());
-	    			textInView(view, timeId, time.time + time.marker.toLowerCase());
+	    			textInView(view, timeId, time.getTime() + time.getMarker().toLowerCase());
 	    			imageInView(view, imgId, event.getName().equals("RISE") ? ThemePalette.getRiseArrow() : ThemePalette.getSetArrow());
 	    			showInView(view, rowId);
 
@@ -141,8 +141,8 @@ public class DaySummaryFragment extends AbstractDayFragment {
 	    	if (moonDay.getPhaseEvent() == null) {
 	    		showInView(view, R.id.moonPhase, moonDay.getPhase().getShortDisplayName());
 	    	} else {
-	    		Time time = TimeHelper.formatTime(getApplicationContext(), moonDay.getPhaseEvent().getTime(), false);
-	    		showInView(view, R.id.moonPhase, moonDay.getPhase().getShortDisplayName() + " at " + time.time + time.marker);
+	    		Time time = TimeUtils.formatTime(getApplicationContext(), moonDay.getPhaseEvent().getTime(), false);
+	    		showInView(view, R.id.moonPhase, moonDay.getPhase().getShortDisplayName() + " at " + time.getTime() + time.getMarker());
 	    	}
 	    	showInView(view, R.id.moonIllumination, Integer.toString(moonDay.getIllumination()) + "%");
     	}

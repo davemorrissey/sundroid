@@ -12,8 +12,8 @@ import uk.co.sundroid.util.astro.math.BodyPositionCalculator;
 import uk.co.sundroid.domain.LocationDetails;
 import uk.co.sundroid.util.geometry.GeometryUtils;
 import uk.co.sundroid.util.theme.ThemePalette;
-import uk.co.sundroid.util.time.TimeHelper;
-import uk.co.sundroid.util.time.TimeHelper.Time;
+import uk.co.sundroid.util.time.TimeUtils;
+import uk.co.sundroid.util.time.Time;
 
 import java.util.*;
 
@@ -58,9 +58,9 @@ public class DayDetailPlanetsFragment extends AbstractDayFragment {
                         boolean noUptime = false;
 
                         if (planetDay.getRiseSetType() != RiseSetType.SET && planetDay.getTransitAppElevation() > 0) {
-                            Time noon = TimeHelper.formatTime(getApplicationContext(), planetDay.getTransit(), false);
+                            Time noon = TimeUtils.formatTime(getApplicationContext(), planetDay.getTransit(), false);
                             showInView(planetRow, R.id.planetTransit);
-                            showInView(planetRow, R.id.planetTransitTime, noon.time + noon.marker + "  " + GeometryUtils.formatElevation(planetDay.getTransitAppElevation()));
+                            showInView(planetRow, R.id.planetTransitTime, noon.getTime() + noon.getMarker() + "  " + GeometryUtils.formatElevation(planetDay.getTransitAppElevation()));
                         } else {
                             removeInView(planetRow, R.id.planetTransit);
                             noTransit = true;
@@ -88,10 +88,10 @@ public class DayDetailPlanetsFragment extends AbstractDayFragment {
                                 int azId = view("planetEvt" + index + "Az");
                                 int imgId = view("planetEvt" + index + "Img");
 
-                                Time time = TimeHelper.formatTime(getApplicationContext(), event.getTime(), false);
+                                Time time = TimeUtils.formatTime(getApplicationContext(), event.getTime(), false);
                                 String az = GeometryUtils.formatBearing(getApplicationContext(), event.getAzimuth(), location.getLocation(), event.getTime());
 
-                                textInView(planetRow, timeId, time.time + time.marker);
+                                textInView(planetRow, timeId, time.getTime() + time.getMarker());
                                 textInView(planetRow, azId, az);
                                 showInView(planetRow, rowId);
 
@@ -106,7 +106,7 @@ public class DayDetailPlanetsFragment extends AbstractDayFragment {
 
                             if (planetDay.getUptimeHours() > 0 && planetDay.getUptimeHours() < 24) {
                                 showInView(planetRow, R.id.planetUptime);
-                                showInView(planetRow, R.id.planetUptimeTime, TimeHelper.formatDurationHMS(getApplicationContext(), planetDay.getUptimeHours(), false));
+                                showInView(planetRow, R.id.planetUptimeTime, TimeUtils.formatDurationHMS(getApplicationContext(), planetDay.getUptimeHours(), false));
                             } else {
                                 removeInView(planetRow, R.id.planetUptime);
                             }

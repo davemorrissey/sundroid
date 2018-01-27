@@ -25,8 +25,8 @@ import uk.co.sundroid.domain.LocationDetails;
 import uk.co.sundroid.util.*;
 import uk.co.sundroid.util.geometry.GeometryUtils;
 import uk.co.sundroid.util.theme.ThemePalette;
-import uk.co.sundroid.util.time.TimeHelper;
-import uk.co.sundroid.util.time.TimeHelper.Time;
+import uk.co.sundroid.util.time.Time;
+import uk.co.sundroid.util.time.TimeUtils;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -268,10 +268,10 @@ public class MonthCalendarsFragment extends AbstractMonthFragment<ArrayList<Mont
                 up = bodyDay.getRise();
                 down = bodyDay.getSet();
                 if (up != null && previousBodyDay.getRise() != null) {
-                    upAz = TimeHelper.formatDiff(getApplicationContext(), bodyDay.getRise(), previousBodyDay.getRise(), allowSeconds);
+                    upAz = TimeUtils.formatDiff(getApplicationContext(), bodyDay.getRise(), previousBodyDay.getRise(), allowSeconds);
                 }
                 if (down != null && previousBodyDay.getSet() != null) {
-                    downAz = TimeHelper.formatDiff(getApplicationContext(), bodyDay.getSet(), previousBodyDay.getSet(), allowSeconds);
+                    downAz = TimeUtils.formatDiff(getApplicationContext(), bodyDay.getSet(), previousBodyDay.getSet(), allowSeconds);
                 }
                 if (up != null) {
                     if (StringUtils.isNotEmpty(upAz)) { upAz += "\n"; } else { upAz = ""; }
@@ -299,10 +299,10 @@ public class MonthCalendarsFragment extends AbstractMonthFragment<ArrayList<Mont
                     riseSetType = sunDay.getCivType() == TwilightType.DARK ? RiseSetType.SET : RiseSetType.RISEN;
                 }
                 if (up != null && previousSunDay.getCivDawn() != null) {
-                    upAz = TimeHelper.formatDiff(getApplicationContext(), sunDay.getCivDawn(), previousSunDay.getCivDawn(), true);
+                    upAz = TimeUtils.formatDiff(getApplicationContext(), sunDay.getCivDawn(), previousSunDay.getCivDawn(), true);
                 }
                 if (down != null && previousSunDay.getCivDusk() != null) {
-                    downAz = TimeHelper.formatDiff(getApplicationContext(), sunDay.getCivDusk(), previousSunDay.getCivDusk(), true);
+                    downAz = TimeUtils.formatDiff(getApplicationContext(), sunDay.getCivDusk(), previousSunDay.getCivDusk(), true);
                 }
             } else if (type.equals("ntc")) {
                 allowSeconds = true;
@@ -314,10 +314,10 @@ public class MonthCalendarsFragment extends AbstractMonthFragment<ArrayList<Mont
                     riseSetType = sunDay.getNtcType() == TwilightType.DARK ? RiseSetType.SET : RiseSetType.RISEN;
                 }
                 if (up != null && previousSunDay.getNtcDawn() != null) {
-                    upAz = TimeHelper.formatDiff(getApplicationContext(), sunDay.getNtcDawn(), previousSunDay.getNtcDawn(), true);
+                    upAz = TimeUtils.formatDiff(getApplicationContext(), sunDay.getNtcDawn(), previousSunDay.getNtcDawn(), true);
                 }
                 if (down != null && previousSunDay.getNtcDusk() != null) {
-                    downAz = TimeHelper.formatDiff(getApplicationContext(), sunDay.getNtcDusk(), previousSunDay.getNtcDusk(), true);
+                    downAz = TimeUtils.formatDiff(getApplicationContext(), sunDay.getNtcDusk(), previousSunDay.getNtcDusk(), true);
                 }
             } else if (type.equals("ast")) {
                 allowSeconds = true;
@@ -329,10 +329,10 @@ public class MonthCalendarsFragment extends AbstractMonthFragment<ArrayList<Mont
                     riseSetType = sunDay.getAstType() == TwilightType.DARK ? RiseSetType.SET : RiseSetType.RISEN;
                 }
                 if (up != null && previousSunDay.getAstDawn() != null) {
-                    upAz = TimeHelper.formatDiff(getApplicationContext(), sunDay.getAstDawn(), previousSunDay.getAstDawn(), true);
+                    upAz = TimeUtils.formatDiff(getApplicationContext(), sunDay.getAstDawn(), previousSunDay.getAstDawn(), true);
                 }
                 if (down != null && previousSunDay.getAstDusk() != null) {
-                    downAz = TimeHelper.formatDiff(getApplicationContext(), sunDay.getAstDusk(), previousSunDay.getAstDusk(), true);
+                    downAz = TimeUtils.formatDiff(getApplicationContext(), sunDay.getAstDusk(), previousSunDay.getAstDusk(), true);
                 }
             } else if (type.equals("golden")) {
                 allowSeconds = true;
@@ -344,10 +344,10 @@ public class MonthCalendarsFragment extends AbstractMonthFragment<ArrayList<Mont
                     riseSetType = sunDay.getGhType() == TwilightType.DARK ? RiseSetType.SET : RiseSetType.RISEN;
                 }
                 if (up != null && previousSunDay.getGhEnd() != null) {
-                    upAz = TimeHelper.formatDiff(getApplicationContext(), sunDay.getGhEnd(), previousSunDay.getGhEnd(), true);
+                    upAz = TimeUtils.formatDiff(getApplicationContext(), sunDay.getGhEnd(), previousSunDay.getGhEnd(), true);
                 }
                 if (down != null && previousSunDay.getGhStart() != null) {
-                    downAz = TimeHelper.formatDiff(getApplicationContext(), sunDay.getGhStart(), previousSunDay.getGhStart(), true);
+                    downAz = TimeUtils.formatDiff(getApplicationContext(), sunDay.getGhStart(), previousSunDay.getGhStart(), true);
                 }
             } else if (type.equals("daylight")) {
                 allowSeconds = true;
@@ -402,18 +402,18 @@ public class MonthCalendarsFragment extends AbstractMonthFragment<ArrayList<Mont
             }
 
             if (length != Double.MIN_VALUE) {
-                String timeStr = TimeHelper.formatDuration(getApplicationContext(), length, true);
+                String timeStr = TimeUtils.formatDuration(getApplicationContext(), length, true);
                 textInView(row, id.dayUp, timeStr);
-                String diffStr = TimeHelper.formatDiff(getApplicationContext(), lengthDiff, true);
+                String diffStr = TimeUtils.formatDiff(getApplicationContext(), lengthDiff, true);
                 textInView(row, id.dayDown, diffStr);
                 removeInView(row, id.dayUpAz);
                 removeInView(row, id.dayDownAz);
             } else {
                 if (up != null) {
-                    Time time = TimeHelper.formatTime(getApplicationContext(), up, allowSeconds);
-                    String timeStr = time.time;
-                    if (StringUtils.isNotEmpty(time.marker)) {
-                        timeStr += time.marker;
+                    Time time = TimeUtils.formatTime(getApplicationContext(), up, allowSeconds);
+                    String timeStr = time.getTime();
+                    if (StringUtils.isNotEmpty(time.getMarker())) {
+                        timeStr += time.getMarker();
                     }
                     textInView(row, id.dayUp, timeStr);
                     if (upAz != null) {
@@ -435,10 +435,10 @@ public class MonthCalendarsFragment extends AbstractMonthFragment<ArrayList<Mont
                 }
 
                 if (down != null) {
-                    Time time = TimeHelper.formatTime(getApplicationContext(), down, allowSeconds);
-                    String timeStr = time.time;
-                    if (StringUtils.isNotEmpty(time.marker)) {
-                        timeStr += time.marker;
+                    Time time = TimeUtils.formatTime(getApplicationContext(), down, allowSeconds);
+                    String timeStr = time.getTime();
+                    if (StringUtils.isNotEmpty(time.getMarker())) {
+                        timeStr += time.getMarker();
                     }
                     ((TextView)row.findViewById(R.id.dayDown)).setText(timeStr);
                     if (downAz != null) {

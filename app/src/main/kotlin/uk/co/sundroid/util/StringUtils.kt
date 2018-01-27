@@ -12,3 +12,7 @@ fun isNotEmpty(string: String?): Boolean {
 fun zeroPad(string: String, length: Int): String {
     return "0".repeat(Math.max(0, length - string.length)) + string
 }
+
+fun zeroPad(number: Int, length: Int): String {
+    return zeroPad(number.toString(), length)
+}

@@ -16,8 +16,8 @@ import uk.co.sundroid.util.StringUtils;
 import uk.co.sundroid.util.view.ButtonDragGestureDetector;
 import uk.co.sundroid.util.view.ButtonDragGestureDetector.ButtonDragGestureDetectorListener;
 import uk.co.sundroid.util.LogWrapper;
-import uk.co.sundroid.util.time.TimeHelper;
-import uk.co.sundroid.util.time.TimeHelper.Time;
+import uk.co.sundroid.util.time.TimeUtils;
+import uk.co.sundroid.util.time.Time;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -191,8 +191,8 @@ public abstract class AbstractTimeFragment extends AbstractDataFragment implemen
     		removeInView(view, id.zoneButton);
     	}
 
-        Time time = TimeHelper.formatTime(getApplicationContext(), timeCalendar, false, false);
-        showInView(view, id.timeHM, time.time + time.marker);
+        Time time = TimeUtils.formatTime(getApplicationContext(), timeCalendar, false, false);
+        showInView(view, id.timeHM, time.getTime() + time.getMarker());
 
         dateFormat.setTimeZone(dateCalendar.getTimeZone());
 		weekdayFormat.setTimeZone(dateCalendar.getTimeZone());

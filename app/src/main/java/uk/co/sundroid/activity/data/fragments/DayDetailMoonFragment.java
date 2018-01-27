@@ -21,8 +21,8 @@ import uk.co.sundroid.domain.LocationDetails;
 import uk.co.sundroid.util.*;
 import uk.co.sundroid.util.geometry.GeometryUtils;
 import uk.co.sundroid.util.theme.ThemePalette;
-import uk.co.sundroid.util.time.TimeHelper;
-import uk.co.sundroid.util.time.TimeHelper.Time;
+import uk.co.sundroid.util.time.TimeUtils;
+import uk.co.sundroid.util.time.Time;
 import uk.co.sundroid.util.astro.YearData.Event;
 import uk.co.sundroid.util.time.TimeUtils;
 
@@ -138,10 +138,10 @@ public class DayDetailMoonFragment extends AbstractDayFragment {
                     boolean noUptime = true;
 
                     if (moonDay.getRiseSetType() != RiseSetType.SET && moonDay.getTransitAppElevation() > 0) {
-                        Time noon = TimeHelper.formatTime(getApplicationContext(), moonDay.getTransit(), false);
+                        Time noon = TimeUtils.formatTime(getApplicationContext(), moonDay.getTransit(), false);
                         noTransit = false;
                         showInView(view, R.id.moonTransit);
-                        showInView(view, R.id.moonTransitTime, noon.time + noon.marker + "  " + GeometryUtils.formatElevation(moonDay.getTransitAppElevation()));
+                        showInView(view, R.id.moonTransitTime, noon.getTime() + noon.getMarker() + "  " + GeometryUtils.formatElevation(moonDay.getTransitAppElevation()));
                     } else {
                         removeInView(view, R.id.moonTransit);
                     }
@@ -167,10 +167,10 @@ public class DayDetailMoonFragment extends AbstractDayFragment {
                             int azId = view("moonEvt" + index + "Az");
                             int imgId = view("moonEvt" + index + "Img");
 
-                            Time time = TimeHelper.formatTime(getApplicationContext(), event.getTime(), false);
+                            Time time = TimeUtils.formatTime(getApplicationContext(), event.getTime(), false);
                             String az = GeometryUtils.formatBearing(getApplicationContext(), event.getAzimuth(), location.getLocation(), event.getTime());
 
-                            textInView(view, timeId, time.time + time.marker);
+                            textInView(view, timeId, time.getTime() + time.getMarker());
                             textInView(view, azId, az);
                             showInView(view, rowId);
                             imageInView(view, imgId, event.getName().equals("Rise") ? ThemePalette.getRiseArrow() : ThemePalette.getSetArrow());
@@ -181,7 +181,7 @@ public class DayDetailMoonFragment extends AbstractDayFragment {
                         if (moonDay.getUptimeHours() > 0 && moonDay.getUptimeHours() < 24) {
                             noUptime = false;
                             showInView(view, R.id.moonUptime);
-                            showInView(view, R.id.moonUptimeTime, TimeHelper.formatDurationHMS(getApplicationContext(), moonDay.getUptimeHours(), false));
+                            showInView(view, R.id.moonUptimeTime, TimeUtils.formatDurationHMS(getApplicationContext(), moonDay.getUptimeHours(), false));
                         } else {
                             removeInView(view, R.id.moonUptime);
                         }
@@ -197,8 +197,8 @@ public class DayDetailMoonFragment extends AbstractDayFragment {
                     if (moonDay.getPhaseEvent() == null) {
                         showInView(view, R.id.moonPhase, moonDay.getPhase().getDisplayName());
                     } else {
-                        Time time = TimeHelper.formatTime(getApplicationContext(), moonDay.getPhaseEvent().getTime(), false);
-                        showInView(view, R.id.moonPhase, moonDay.getPhase().getDisplayName() + " at " + time.time + time.marker);
+                        Time time = TimeUtils.formatTime(getApplicationContext(), moonDay.getPhaseEvent().getTime(), false);
+                        showInView(view, R.id.moonPhase, moonDay.getPhase().getDisplayName() + " at " + time.getTime() + time.getMarker());
                     }
                     showInView(view, R.id.moonIllumination, Integer.toString(moonDay.getIllumination()) + "%");
                     showInView(view, R.id.moonDataBox);

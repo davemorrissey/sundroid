@@ -17,8 +17,8 @@ import uk.co.sundroid.util.astro.math.SunCalculator;
 import uk.co.sundroid.domain.LocationDetails;
 import uk.co.sundroid.util.SharedPrefsHelper;
 import uk.co.sundroid.util.theme.ThemePalette;
-import uk.co.sundroid.util.time.TimeHelper;
-import uk.co.sundroid.util.time.TimeHelper.Time;
+import uk.co.sundroid.util.time.TimeUtils;
+import uk.co.sundroid.util.time.Time;
 import uk.co.sundroid.util.astro.YearData;
 import uk.co.sundroid.util.astro.YearData.Event;
 import uk.co.sundroid.util.astro.YearData.EventType;
@@ -81,9 +81,9 @@ public class YearEventsFragment extends AbstractYearFragment implements Configur
 
                     boolean first = true;
                     for (Event event : eventsList) {
-                        Time eventTime = TimeHelper.formatTime(getApplicationContext(), event.time, false);
+                        Time eventTime = TimeUtils.formatTime(getApplicationContext(), event.time, false);
                         String title = "";
-                        String time = eventTime.time + eventTime.marker.toLowerCase();
+                        String time = eventTime.getTime() + eventTime.getMarker().toLowerCase();
                         String subtitle = "";
                         String link = null;
                         int image = 0;
@@ -124,7 +124,7 @@ public class YearEventsFragment extends AbstractYearFragment implements Configur
                                 if (Math.abs(location.getLocation().getLatitude().getDoubleValue()) > 23.44) {
                                     SunDay sunDay = SunCalculator.calcDay(location.getLocation(), event.time, SunCalculator.Event.RISESET);
                                     String localExtreme = location.getLocation().getLatitude().getDoubleValue() >= 0 ? "Longest" : "Shortest";
-                                    subtitle = localExtreme + " day: " + TimeHelper.formatDurationHMS(getApplicationContext(), sunDay.getUptimeHours(), true);
+                                    subtitle = localExtreme + " day: " + TimeUtils.formatDurationHMS(getApplicationContext(), sunDay.getUptimeHours(), true);
                                 }
                                 break;
                             }
@@ -135,7 +135,7 @@ public class YearEventsFragment extends AbstractYearFragment implements Configur
                                 if (Math.abs(location.getLocation().getLatitude().getDoubleValue()) > 23.44) {
                                     SunDay sunDay = SunCalculator.calcDay(location.getLocation(), event.time, SunCalculator.Event.RISESET);
                                     String localExtreme = location.getLocation().getLatitude().getDoubleValue() >= 0 ? "Shortest" : "Longest";
-                                    subtitle = localExtreme + " day: " + TimeHelper.formatDurationHMS(getApplicationContext(), sunDay.getUptimeHours(), true);
+                                    subtitle = localExtreme + " day: " + TimeUtils.formatDurationHMS(getApplicationContext(), sunDay.getUptimeHours(), true);
                                 }
                                 break;
                             }
