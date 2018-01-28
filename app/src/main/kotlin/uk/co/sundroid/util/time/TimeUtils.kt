@@ -70,23 +70,11 @@ fun formatTime(context: Context, calendar: Calendar, allowSeconds: Boolean = fal
 }
 
 fun formatDuration(context: Context, durationHours: Double, allowSeconds: Boolean = false): String {
-    if (SharedPrefsHelper.getShowSeconds(context) && allowSeconds) {
-        val hms = hms(durationHours, true)
-        return hms[0].toString() + ":" + zeroPad(hms[1], 2) + ":" + zeroPad(hms[2], 2)
-    } else {
-        val hms = hms(durationHours, false)
-        return hms[0].toString() + ":" + zeroPad(hms[1], 2)
-    }
+    return Clock(durationHours, SharedPrefsHelper.getShowSeconds(context) && allowSeconds).toClock()
 }
 
 fun formatDurationHMS(context: Context, durationHours: Double, allowSeconds: Boolean = false): String {
-    if (SharedPrefsHelper.getShowSeconds(context) && allowSeconds) {
-        val hms = hms(durationHours, true)
-        return hms[0].toString() + "h " + zeroPad(hms[1], 2) + "m " + zeroPad(hms[2], 2) + "s"
-    } else {
-        val hms = hms(durationHours, false)
-        return hms[0].toString() + "h " + zeroPad(hms[1], 2) + "m"
-    }
+    return Clock(durationHours, SharedPrefsHelper.getShowSeconds(context) && allowSeconds).toHMS()
 }
 
 fun formatDiff(context: Context, diffHours: Double, allowSeconds: Boolean = false): String {
@@ -94,35 +82,12 @@ fun formatDiff(context: Context, diffHours: Double, allowSeconds: Boolean = fals
     val sign = if (diff == 0.0) "\u00b1" else if (diff < 0) "-" else "+"
     diff = Math.abs(diff)
 
-    if (SharedPrefsHelper.getShowSeconds(context) && allowSeconds) {
-        val hms = hms(diff, true)
-        return sign + hms[0].toString() + ":" + zeroPad(hms[1], 2) + ":" + zeroPad(hms[2], 2)
-    } else {
-        val hms = hms(diff, false)
-        return sign + hms[0].toString() + ":" + zeroPad(hms[1], 2)
-    }
+    val clock = Clock(diff, SharedPrefsHelper.getShowSeconds(context) && allowSeconds)
+    return sign + clock.toClock()
 }
 
 fun formatDiff(context: Context, current: Calendar, previous: Calendar, allowSeconds: Boolean = false): String {
     var diffMs = current.timeInMillis - previous.timeInMillis
     diffMs -= 24 * 60 * 60 * 1000
     return formatDiff(context, diffMs/(1000.0*60.0*60.0), allowSeconds)
-}
-
-private fun hms(hours: Double, allowSeconds: Boolean = false): Array<Int> {
-    var h = Math.floor(hours).toInt()
-    var m = Math.floor((hours - h) * 60.0).toInt()
-    var s = 0
-    if (allowSeconds) {
-        s = Math.round((hours - h - (m / 60.0)) * 3600.0).toInt()
-        if (s >= 60) {
-            s -= 60
-            m++
-        }
-    }
-    if (m >= 60) {
-        m -= 60
-        h++
-    }
-    return arrayOf(h, m, s)
 }
