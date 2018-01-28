@@ -71,51 +71,21 @@ fun formatTime(context: Context, calendar: Calendar, allowSeconds: Boolean = fal
 
 fun formatDuration(context: Context, durationHours: Double, allowSeconds: Boolean = false): String {
     if (SharedPrefsHelper.getShowSeconds(context) && allowSeconds) {
-        var hours = Math.floor(durationHours).toInt()
-        var minutes = Math.floor((durationHours - hours) * 60.0).toInt()
-        var seconds = Math.round((durationHours - hours - (minutes/60.0)) * 3600.0).toInt()
-        if (seconds >= 60) {
-            seconds -= 60
-            minutes++
-        }
-        if (minutes >= 60) {
-            minutes -=60
-            hours++
-        }
-        return hours.toString() + ":" + zeroPad(minutes, 2) + ":" + zeroPad(seconds, 2)
+        val hms = hms(durationHours, true)
+        return hms[0].toString() + ":" + zeroPad(hms[1], 2) + ":" + zeroPad(hms[2], 2)
     } else {
-        var hours = Math.floor(durationHours).toInt()
-        var minutes = Math.round((durationHours - hours) * 60.0).toInt()
-        if (minutes >= 60) {
-            minutes -=60
-            hours++
-        }
-        return hours.toString() + ":" + zeroPad(minutes, 2)
+        val hms = hms(durationHours, false)
+        return hms[0].toString() + ":" + zeroPad(hms[1], 2)
     }
 }
 
 fun formatDurationHMS(context: Context, durationHours: Double, allowSeconds: Boolean = false): String {
     if (SharedPrefsHelper.getShowSeconds(context) && allowSeconds) {
-        var hours = Math.floor(durationHours).toInt()
-        var minutes = Math.floor((durationHours - hours) * 60.0).toInt()
-        var seconds = Math.round((durationHours - hours - (minutes/60.0)) * 3600.0).toInt()
-        if (seconds >= 60) {
-            seconds -= 60
-            minutes++
-        }
-        if (minutes >= 60) {
-            minutes -=60
-            hours++
-        }
-        return hours.toString() + "h " + zeroPad(minutes, 2) + "m " + zeroPad(seconds, 2) + "s"
+        val hms = hms(durationHours, true)
+        return hms[0].toString() + "h " + zeroPad(hms[1], 2) + "m " + zeroPad(hms[2], 2) + "s"
     } else {
-        var hours = Math.floor(durationHours).toInt()
-        var minutes = Math.round((durationHours - hours) * 60.0).toInt()
-        if (minutes >= 60) {
-            minutes -=60
-            hours++
-        }
-        return hours.toString() + "h " + zeroPad(minutes, 2) + "m"
+        val hms = hms(durationHours, false)
+        return hms[0].toString() + "h " + zeroPad(hms[1], 2) + "m"
     }
 }
 
@@ -123,27 +93,13 @@ fun formatDiff(context: Context, diffHours: Double, allowSeconds: Boolean = fals
     var diff = diffHours
     val sign = if (diff == 0.0) "\u00b1" else if (diff < 0) "-" else "+"
     diff = Math.abs(diff)
+
     if (SharedPrefsHelper.getShowSeconds(context) && allowSeconds) {
-        var hours = Math.floor(diff).toInt()
-        var minutes = Math.floor((diff - hours) * 60.0).toInt()
-        var seconds = Math.round((diff - hours - (minutes/60.0)) * 3600.0).toInt()
-        if (seconds >= 60) {
-            seconds -= 60
-            minutes++
-        }
-        if (minutes >= 60) {
-            minutes -=60
-            hours++
-        }
-        return sign + hours.toString() + ":" + zeroPad(minutes, 2) + ":" + zeroPad(seconds, 2)
+        val hms = hms(diff, true)
+        return sign + hms[0].toString() + ":" + zeroPad(hms[1], 2) + ":" + zeroPad(hms[2], 2)
     } else {
-        var hours = Math.floor(diff).toInt()
-        var minutes = Math.round((diff - hours) * 60.0).toInt()
-        if (minutes >= 60) {
-            minutes -=60
-            hours++
-        }
-        return sign + hours.toString() + ":" + zeroPad(minutes, 2)
+        val hms = hms(diff, false)
+        return sign + hms[0].toString() + ":" + zeroPad(hms[1], 2)
     }
 }
 
@@ -151,4 +107,22 @@ fun formatDiff(context: Context, current: Calendar, previous: Calendar, allowSec
     var diffMs = current.timeInMillis - previous.timeInMillis
     diffMs -= 24 * 60 * 60 * 1000
     return formatDiff(context, diffMs/(1000.0*60.0*60.0), allowSeconds)
+}
+
+private fun hms(hours: Double, allowSeconds: Boolean = false): Array<Int> {
+    var h = Math.floor(hours).toInt()
+    var m = Math.floor((hours - h) * 60.0).toInt()
+    var s = 0
+    if (allowSeconds) {
+        s = Math.round((hours - h - (m / 60.0)) * 3600.0).toInt()
+        if (s >= 60) {
+            s -= 60
+            m++
+        }
+    }
+    if (m >= 60) {
+        m -= 60
+        h++
+    }
+    return arrayOf(h, m, s)
 }
