@@ -88,7 +88,8 @@
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:layout_marginBottom="15dp">
+                        android:layout_marginBottom="15dp"
+                        android:baselineAligned="false">
 
                     <LinearLayout
                             android:id="@+id/moonEvt1"
@@ -153,7 +154,8 @@
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:layout_marginBottom="15dp">
+                        android:layout_marginBottom="15dp"
+                        android:baselineAligned="false">
 
                     <LinearLayout
                             android:id="@+id/moonTransit"
@@ -208,7 +210,8 @@
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:layout_marginBottom="15dp">
+                        android:layout_marginBottom="15dp"
+                        android:baselineAligned="false">
 
                     <LinearLayout
                             android:layout_width="0dp"
@@ -245,7 +248,8 @@
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:layout_marginBottom="15dp">
+                        android:layout_marginBottom="15dp"
+                        android:baselineAligned="false">
 
                     <LinearLayout
                             android:layout_width="0dp"

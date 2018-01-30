@@ -6,7 +6,8 @@
         android:layout_height="wrap_content"
         android:clickable="true"
         android:focusable="true"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:baselineAligned="false">
     <LinearLayout
             android:id="@+id/yearEventDateMonth"
             android:layout_width="0dp"
