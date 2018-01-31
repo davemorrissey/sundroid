@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Sundroid</string>
-    <string name="alarmAddEventPrompt">Event</string>
-    <string name="alarmAddBeforeAfterPrompt">Before or after</string>
 
     <string name="nextDay">Next day</string>
     <string name="prevDay">Previous day</string>
