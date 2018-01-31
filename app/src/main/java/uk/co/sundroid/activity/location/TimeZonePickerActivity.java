@@ -64,7 +64,7 @@ public class TimeZonePickerActivity extends AbstractActivity implements OnItemCl
 			adapter.addView(View.inflate(this, R.layout.zone_all_header, null));
     	}
     	
-    	Set<TimeZoneDetail> sortedTimeZones = new TreeSet<>(TimeZoneResolver.getAllTimeZones());
+    	Set<TimeZoneDetail> sortedTimeZones = new TreeSet<>(TimeZoneResolver.Companion.getInstance().getAllTimeZones());
     	adapter.addAdapter(new TimeZoneAdapter(new ArrayList<>(sortedTimeZones)));
     	
     	list.setAdapter(adapter);

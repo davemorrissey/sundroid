@@ -61,7 +61,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			savedLocation.setLocation(new LatitudeLongitude(cursor.getDouble(1), cursor.getDouble(2)));
 			savedLocation.setName(cursor.getString(3));
 			savedLocation.setCountry(cursor.getString(4));
-			savedLocation.setTimeZone(TimeZoneResolver.getTimeZone(cursor.getString(5), true));
+			savedLocation.setTimeZone(TimeZoneResolver.Companion.getInstance().getTimeZone(cursor.getString(5), true));
 			savedLocations.add(savedLocation);
 			cursor.moveToNext();
 		}
@@ -81,7 +81,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             savedLocation.setLocation(new LatitudeLongitude(cursor.getDouble(1), cursor.getDouble(2)));
             savedLocation.setName(cursor.getString(3));
             savedLocation.setCountry(cursor.getString(4));
-            savedLocation.setTimeZone(TimeZoneResolver.getTimeZone(cursor.getString(5), true));
+            savedLocation.setTimeZone(TimeZoneResolver.Companion.getInstance().getTimeZone(cursor.getString(5), true));
         }
         cursor.close();
         return savedLocation;

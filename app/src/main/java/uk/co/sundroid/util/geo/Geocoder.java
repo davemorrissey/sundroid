@@ -94,7 +94,7 @@ public class Geocoder {
 	
 	private static void setTimeZone(LocationDetails locationDetails, Context context) {
 		
-		ArrayList<TimeZoneDetail> possibleTimeZones = TimeZoneResolver.getPossibleTimeZones(locationDetails.getLocation(), locationDetails.getCountry(), locationDetails.getState());
+		ArrayList<TimeZoneDetail> possibleTimeZones = TimeZoneResolver.Companion.getInstance().getPossibleTimeZones(locationDetails.getLocation(), locationDetails.getCountry(), locationDetails.getState());
 		locationDetails.setPossibleTimeZones(possibleTimeZones);
 		if (possibleTimeZones.size() == 1) {
 			locationDetails.setTimeZone(possibleTimeZones.get(0));
