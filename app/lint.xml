@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <issue id="UnusedResources">
+        <ignore path="src/main/res/drawable/moonoverlay002.png" />
+        <ignore path="src/main/res/drawable/moonoverlay004.png" />
+        <ignore path="src/main/res/drawable/moonoverlay006.png" />
+        <ignore path="src/main/res/drawable/moonoverlay008.png" />
+        <ignore path="src/main/res/drawable/moonoverlay010.png" />
+        <ignore path="src/main/res/drawable/moonoverlay012.png" />
+        <ignore path="src/main/res/drawable/moonoverlay014.png" />
+        <ignore path="src/main/res/drawable/moonoverlay016.png" />
+        <ignore path="src/main/res/drawable/moonoverlay018.png" />
+        <ignore path="src/main/res/drawable/moonoverlay020.png" />
+        <ignore path="src/main/res/drawable/moonoverlay022.png" />
+        <ignore path="src/main/res/drawable/moonoverlay024.png" />
+        <ignore path="src/main/res/drawable/moonoverlay026.png" />
+        <ignore path="src/main/res/drawable/moonoverlay028.png" />
+        <ignore path="src/main/res/drawable/moonoverlay030.png" />
+        <ignore path="src/main/res/drawable/moonoverlay032.png" />
+        <ignore path="src/main/res/drawable/moonoverlay034.png" />
+        <ignore path="src/main/res/drawable/moonoverlay036.png" />
+        <ignore path="src/main/res/drawable/moonoverlay038.png" />
+        <ignore path="src/main/res/drawable/moonoverlay040.png" />
+        <ignore path="src/main/res/drawable/moonoverlay042.png" />
+        <ignore path="src/main/res/drawable/moonoverlay044.png" />
+        <ignore path="src/main/res/drawable/moonoverlay046.png" />
+        <ignore path="src/main/res/drawable/moonoverlay048.png" />
+        <ignore path="src/main/res/drawable/moonoverlay050.png" />
+        <ignore path="src/main/res/drawable/moonoverlay052.png" />
+        <ignore path="src/main/res/drawable/moonoverlay054.png" />
+        <ignore path="src/main/res/drawable/moonoverlay056.png" />
+        <ignore path="src/main/res/drawable/moonoverlay058.png" />
+        <ignore path="src/main/res/drawable/moonoverlay060.png" />
+        <ignore path="src/main/res/drawable/moonoverlay062.png" />
+        <ignore path="src/main/res/drawable/moonoverlay064.png" />
+        <ignore path="src/main/res/drawable/moonoverlay066.png" />
+        <ignore path="src/main/res/drawable/moonoverlay068.png" />
+        <ignore path="src/main/res/drawable/moonoverlay070.png" />
+        <ignore path="src/main/res/drawable/moonoverlay072.png" />
+        <ignore path="src/main/res/drawable/moonoverlay074.png" />
+        <ignore path="src/main/res/drawable/moonoverlay076.png" />
+        <ignore path="src/main/res/drawable/moonoverlay078.png" />
+        <ignore path="src/main/res/drawable/moonoverlay080.png" />
+        <ignore path="src/main/res/drawable/moonoverlay082.png" />
+        <ignore path="src/main/res/drawable/moonoverlay084.png" />
+        <ignore path="src/main/res/drawable/moonoverlay086.png" />
+        <ignore path="src/main/res/drawable/moonoverlay088.png" />
+        <ignore path="src/main/res/drawable/moonoverlay090.png" />
+        <ignore path="src/main/res/drawable/moonoverlay092.png" />
+        <ignore path="src/main/res/drawable/moonoverlay094.png" />
+        <ignore path="src/main/res/drawable/moonoverlay096.png" />
+        <ignore path="src/main/res/drawable/moonoverlay098.png" />
+        <ignore path="src/main/res/drawable/moonoverlay100.png" />
+    </issue>
+</lint>
