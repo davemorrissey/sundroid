@@ -196,12 +196,12 @@ public class RealDataActivity extends AbstractActivity implements OnClickListene
         if (location == null) {
             location = new LocationDetails();
             location.setName("San Francisco");
-            location.setTimeZone(TimeZoneResolver.Companion.getInstance().getTimeZone("US/Pacific", true));
+            location.setTimeZone(TimeZoneResolver.INSTANCE.getTimeZone("US/Pacific", true));
             location.setLocation(new LatitudeLongitude(37.779093, -122.419109));
             SharedPrefsHelper.saveSelectedLocation(this, location);
         }
         if (location.getTimeZone() == null) {
-            location.setTimeZone(TimeZoneResolver.Companion.getInstance().getTimeZone("UTC", true));
+            location.setTimeZone(TimeZoneResolver.INSTANCE.getTimeZone("UTC", true));
         }
 
     	if (dateCalendar == null || timeCalendar == null || forceDateUpdate) {

@@ -11,7 +11,7 @@ import uk.co.sundroid.util.*
 import uk.co.sundroid.util.location.LatitudeLongitude
 
 
-class TimeZoneResolver private constructor() {
+object TimeZoneResolver {
     
     /** Map of comma-separated country codes to java timezone IDs for those countries. */
     private val countryCodeMap: HashMap<String, Array<String>>
@@ -21,12 +21,6 @@ class TimeZoneResolver private constructor() {
 
     /** Map of java timezone ID to cities list for display. */
     private val timeZoneMap: HashMap<String, String>
-
-    companion object {
-
-        val instance = TimeZoneResolver()
-
-    }
     
     fun getAllTimeZones(): ArrayList<TimeZoneDetail> {
         return resolve(timeZoneMap.keys)

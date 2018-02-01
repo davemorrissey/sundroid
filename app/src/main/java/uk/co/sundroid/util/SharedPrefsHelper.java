@@ -68,8 +68,8 @@ public class SharedPrefsHelper {
 				locationDetails.setName(prefs.getString(LOC_NAME_KEY, null));
 				locationDetails.setCountry(prefs.getString(LOC_COUNTRY_KEY, null));
 				locationDetails.setState(prefs.getString(LOC_STATE_KEY, null));
-				locationDetails.setTimeZone(TimeZoneResolver.Companion.getInstance().getTimeZone(prefs.getString(LOC_ZONE_KEY, null), true));
-				locationDetails.setPossibleTimeZones(TimeZoneResolver.Companion.getInstance().getPossibleTimeZones(locationDetails.getLocation(), locationDetails.getCountry(), locationDetails.getState()));
+				locationDetails.setTimeZone(TimeZoneResolver.INSTANCE.getTimeZone(prefs.getString(LOC_ZONE_KEY, null), true));
+				locationDetails.setPossibleTimeZones(TimeZoneResolver.INSTANCE.getPossibleTimeZones(locationDetails.getLocation(), locationDetails.getCountry(), locationDetails.getState()));
 				return locationDetails;
 			} catch (Exception e) {
 				// Should never save invalid coordinates.
@@ -180,9 +180,9 @@ public class SharedPrefsHelper {
 			case "~ASK":
 				return null;
 			case "~DEVICE":
-				return TimeZoneResolver.Companion.getInstance().getTimeZone(null, true);
+				return TimeZoneResolver.INSTANCE.getTimeZone(null, true);
 			default:
-				return TimeZoneResolver.Companion.getInstance().getTimeZone(pref, true);
+				return TimeZoneResolver.INSTANCE.getTimeZone(pref, true);
 		}
 	}
 	
