@@ -76,10 +76,13 @@ object TimeZoneResolver {
      * Attempt to get a time zone by ID, and optionally default to the device zone if the zone ID is
      * not known to Java. The cities attribute is populated from the stored map when possible.
      * @param id Time zone ID.
-     * @param fallback Whether to fall back to using default time zone if the device doesn't recognise the ID.
      * @return A {@link TimeZoneDetail}. Only the cities attribute may be null.
      */
-    fun getTimeZone(id: String, fallback: Boolean): TimeZoneDetail? {
+    fun getTimeZone(id: String?): TimeZoneDetail {
+        return getTimeZoneInternal(id) ?: getDefaultTimeZone()
+    }
+
+    private fun getTimeZoneInternal(id: String?): TimeZoneDetail? {
         try {
             val timeZone = TimeZone.getTimeZone(id)
             if (timeZone != null && (timeZone.id != "UTC" || id == "UTC")) {
@@ -88,14 +91,16 @@ object TimeZoneResolver {
         } catch (e: Exception) {
             // Zone not known to this device.
         }
-        if (fallback) {
-            return getTimeZone(TimeZone.getDefault().id, false)
-        }
         return null
+    }
+
+    private fun getDefaultTimeZone(): TimeZoneDetail {
+        val defaultTimeZone = TimeZone.getDefault()
+        return TimeZoneDetail(defaultTimeZone.id, timeZoneMap[defaultTimeZone.id], defaultTimeZone)
     }
     
     private fun resolve(timeZoneIds: MutableCollection<String>): ArrayList<TimeZoneDetail> {
-        return timeZoneIds.mapNotNullTo(ArrayList()) { getTimeZone(it, false) }
+        return timeZoneIds.mapNotNullTo(ArrayList()) { getTimeZoneInternal(it) }
     }
 
     init {

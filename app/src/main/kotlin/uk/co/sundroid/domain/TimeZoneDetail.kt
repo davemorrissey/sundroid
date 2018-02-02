@@ -4,7 +4,7 @@ import uk.co.sundroid.util.*
 import java.io.Serializable
 import java.util.TimeZone
 
-class TimeZoneDetail(val id: String, val cities: String?, val zone: TimeZone) : Comparable<TimeZoneDetail>, Serializable {
+class TimeZoneDetail(val id: String?, val cities: String?, val zone: TimeZone) : Comparable<TimeZoneDetail>, Serializable {
 
     private val currentOffset: Long = zone.getOffset(System.currentTimeMillis()).toLong()
 
