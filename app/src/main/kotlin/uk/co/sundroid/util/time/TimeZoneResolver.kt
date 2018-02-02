@@ -86,7 +86,7 @@ object TimeZoneResolver {
         try {
             val timeZone = TimeZone.getTimeZone(id)
             if (timeZone != null && (timeZone.id != "UTC" || id == "UTC")) {
-                return TimeZoneDetail(id, timeZoneMap[id], timeZone)
+                return TimeZoneDetail(timeZone, timeZoneMap[id])
             }
         } catch (e: Exception) {
             // Zone not known to this device.
@@ -96,7 +96,7 @@ object TimeZoneResolver {
 
     private fun getDefaultTimeZone(): TimeZoneDetail {
         val defaultTimeZone = TimeZone.getDefault()
-        return TimeZoneDetail(defaultTimeZone.id, timeZoneMap[defaultTimeZone.id], defaultTimeZone)
+        return TimeZoneDetail(defaultTimeZone, timeZoneMap[defaultTimeZone.id])
     }
     
     private fun resolve(timeZoneIds: MutableCollection<String>): ArrayList<TimeZoneDetail> {
