@@ -22,14 +22,15 @@ import uk.co.sundroid.util.time.Time;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 public abstract class AbstractTimeFragment extends AbstractDataFragment implements OnClickListener, OnTouchListener, OnSeekBarChangeListener, DatePickerFragment.OnDateSelectedListener, TimePickerFragment.OnTimeSelectedListener {
 	
 	private static final String TAG = AbstractTimeFragment.class.getSimpleName();
 
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
-    private SimpleDateFormat weekdayFormat = new SimpleDateFormat("EEEE");
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.US);
+    private SimpleDateFormat weekdayFormat = new SimpleDateFormat("EEEE", Locale.US);
 
     private GestureDetector dateDetector;
     private GestureDetector timeDetector;

@@ -18,13 +18,14 @@ import uk.co.sundroid.util.LogWrapper;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 public abstract class AbstractYearFragment extends AbstractDataFragment implements OnClickListener, OnTouchListener, YearPickerFragment.OnYearSelectedListener {
 	
 	private static final String TAG = AbstractYearFragment.class.getSimpleName();
 
-    private SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
+    private SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy", Locale.US);
 
     private GestureDetector yearDetector;
 
