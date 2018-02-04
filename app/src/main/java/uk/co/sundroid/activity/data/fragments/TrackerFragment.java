@@ -27,7 +27,6 @@ import uk.co.sundroid.util.astro.image.TrackerImage;
 import uk.co.sundroid.util.astro.math.BodyPositionCalculator;
 import uk.co.sundroid.util.geometry.GeometryUtils;
 import uk.co.sundroid.domain.LocationDetails;
-import uk.co.sundroid.util.SharedPrefsHelper;
 import uk.co.sundroid.util.*;
 import uk.co.sundroid.util.time.Time;
 import uk.co.sundroid.util.time.TimeUtils;

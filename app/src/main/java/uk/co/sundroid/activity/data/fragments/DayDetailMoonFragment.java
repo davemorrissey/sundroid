@@ -24,7 +24,6 @@ import uk.co.sundroid.util.theme.ThemePalette;
 import uk.co.sundroid.util.time.TimeUtils;
 import uk.co.sundroid.util.time.Time;
 import uk.co.sundroid.util.astro.YearData.Event;
-import uk.co.sundroid.util.time.TimeUtils;
 
 import java.util.*;
 
