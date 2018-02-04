@@ -109,8 +109,7 @@ public class SunCalculator {
 	//*   the Geometric Mean Anomaly of the Sun in degrees			*/
 	//***********************************************************************/
 	private static double calcGeomMeanAnomalySun(double t) {
-		double M = 357.52911 + t * (35999.05029 - 0.0001537 * t);
-		return M;		// in degrees
+		return 357.52911 + t * (35999.05029 - 0.0001537 * t); // in degrees
 	}
 
 	//***********************************************************************/
@@ -123,8 +122,7 @@ public class SunCalculator {
 	//*   the unitless eccentricity							*/
 	//***********************************************************************/
 	private static double calcEccentricityEarthOrbit(double t) {
-		double e = 0.016708634 - t * (0.000042037 + 0.0000001267 * t);
-		return e;		// unitless
+		return 0.016708634 - t * (0.000042037 + 0.0000001267 * t); // unitless
 	}
 
 	//***********************************************************************/
@@ -192,8 +190,7 @@ public class SunCalculator {
 		double e0 = calcMeanObliquityOfEcliptic(t);
 
 		double omega = 125.04 - 1934.136 * t;
-		double e = e0 + 0.00256 * Math.cos(degToRad(omega));
-		return e;		// in degrees
+		return e0 + 0.00256 * Math.cos(degToRad(omega)); // in degrees
 	}
 
 	//***********************************************************************/
@@ -211,8 +208,7 @@ public class SunCalculator {
  
 		double tananum = (Math.cos(degToRad(e)) * Math.sin(degToRad(lambda)));
 		double tanadenom = (Math.cos(degToRad(lambda)));
-		double alpha = radToDeg(Math.atan2(tananum, tanadenom));
-		return alpha;		// in degrees
+		return radToDeg(Math.atan2(tananum, tanadenom)); // alpha, in degrees
 	}
 
 	//***********************************************************************/
@@ -229,8 +225,7 @@ public class SunCalculator {
 		double lambda = calcSunApparentLong(t);
 
 		double sint = Math.sin(degToRad(e)) * Math.sin(degToRad(lambda));
-		double theta = radToDeg(Math.asin(sint));
-		return theta;		// in degrees
+		return radToDeg(Math.asin(sint)); // theta in degrees
 	}
 
 	//***********************************************************************/
