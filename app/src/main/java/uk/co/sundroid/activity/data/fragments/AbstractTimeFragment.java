@@ -96,17 +96,9 @@ public abstract class AbstractTimeFragment extends AbstractDataFragment implemen
 
     public boolean onTouch(View view, MotionEvent event) {
         if (view.getId() == id.dateButton) {
-            if (dateDetector.onTouchEvent(event)) {
-                return true;
-            } else {
-                return false;
-            }
+            return dateDetector.onTouchEvent(event);
         } else if (view.getId() == id.timeButton) {
-            if (timeDetector.onTouchEvent(event)) {
-                return true;
-            } else {
-                return false;
-            }
+            return timeDetector.onTouchEvent(event);
         }
         return false;
     }
