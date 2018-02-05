@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import uk.co.sundroid.util.LogWrapper;
+import uk.co.sundroid.util.log.LogWrapper;
 import uk.co.sundroid.util.SharedPrefsHelper;
 import uk.co.sundroid.util.astro.Body;
 import uk.co.sundroid.util.astro.BodyDay;

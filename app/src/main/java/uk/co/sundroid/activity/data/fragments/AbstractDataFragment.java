@@ -6,7 +6,7 @@ import uk.co.sundroid.activity.data.RealDataActivity;
 import uk.co.sundroid.activity.data.fragments.dialogs.OnViewPrefsChangedListener;
 import uk.co.sundroid.activity.location.TimeZonePickerActivity;
 import uk.co.sundroid.domain.LocationDetails;
-import uk.co.sundroid.util.LogWrapper;
+import uk.co.sundroid.util.log.LogWrapper;
 import uk.co.sundroid.util.SharedPrefsHelper;
 
 import java.util.Calendar;

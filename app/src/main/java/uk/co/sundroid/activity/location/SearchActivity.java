@@ -22,7 +22,7 @@ import uk.co.sundroid.util.geo.Geocoder;
 import uk.co.sundroid.R;
 import uk.co.sundroid.domain.LocationDetails;
 import uk.co.sundroid.util.SharedPrefsHelper;
-import uk.co.sundroid.util.LogWrapper;
+import uk.co.sundroid.util.log.LogWrapper;
 
 import java.util.ArrayList;
 import java.util.List;

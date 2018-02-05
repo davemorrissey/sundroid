@@ -5,7 +5,7 @@ import uk.co.sundroid.R;
 import uk.co.sundroid.domain.LocationDetails;
 import uk.co.sundroid.util.location.LatitudeLongitude;
 import uk.co.sundroid.util.SharedPrefsHelper;
-import uk.co.sundroid.util.LogWrapper;
+import uk.co.sundroid.util.log.LogWrapper;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;

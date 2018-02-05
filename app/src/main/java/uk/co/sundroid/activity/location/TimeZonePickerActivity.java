@@ -16,7 +16,7 @@ import uk.co.sundroid.R;
 import uk.co.sundroid.domain.LocationDetails;
 import uk.co.sundroid.domain.TimeZoneDetail;
 import uk.co.sundroid.util.SharedPrefsHelper;
-import uk.co.sundroid.util.LogWrapper;
+import uk.co.sundroid.util.log.LogWrapper;
 import uk.co.sundroid.util.view.MergeAdapter;
 import uk.co.sundroid.util.time.TimeZoneResolver;
 

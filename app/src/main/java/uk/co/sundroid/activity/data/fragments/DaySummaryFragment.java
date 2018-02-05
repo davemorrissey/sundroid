@@ -13,7 +13,7 @@ import uk.co.sundroid.util.astro.image.MoonPhaseImage;
 import uk.co.sundroid.util.astro.math.BodyPositionCalculator;
 import uk.co.sundroid.util.astro.math.SunCalculator;
 import uk.co.sundroid.domain.LocationDetails;
-import uk.co.sundroid.util.*;
+import uk.co.sundroid.util.log.LogWrapper;
 import uk.co.sundroid.util.theme.ThemePalette;
 import uk.co.sundroid.util.time.TimeUtils;
 import uk.co.sundroid.util.time.Time;

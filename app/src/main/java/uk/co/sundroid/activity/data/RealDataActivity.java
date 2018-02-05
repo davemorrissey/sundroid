@@ -33,6 +33,7 @@ import uk.co.sundroid.dao.DatabaseHelper;
 import uk.co.sundroid.domain.LocationDetails;
 import uk.co.sundroid.util.location.LatitudeLongitude;
 import uk.co.sundroid.util.*;
+import uk.co.sundroid.util.log.LogWrapper;
 import uk.co.sundroid.util.time.TimeZoneResolver;
 
 import java.util.ArrayList;

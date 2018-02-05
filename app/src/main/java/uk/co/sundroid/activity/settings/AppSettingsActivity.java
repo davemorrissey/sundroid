@@ -12,7 +12,7 @@ import android.view.MenuItem;
 
 import uk.co.sundroid.R;
 import uk.co.sundroid.activity.data.RealDataActivity;
-import uk.co.sundroid.util.LogWrapper;
+import uk.co.sundroid.util.log.LogWrapper;
 import uk.co.sundroid.util.theme.ThemePalette;
 
 public class AppSettingsActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {

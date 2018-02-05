@@ -15,7 +15,7 @@ import uk.co.sundroid.util.SharedPrefsHelper;
 import uk.co.sundroid.util.StringUtils;
 import uk.co.sundroid.util.view.ButtonDragGestureDetector;
 import uk.co.sundroid.util.view.ButtonDragGestureDetector.ButtonDragGestureDetectorListener;
-import uk.co.sundroid.util.LogWrapper;
+import uk.co.sundroid.util.log.LogWrapper;
 import uk.co.sundroid.util.time.TimeUtils;
 import uk.co.sundroid.util.time.Time;
 

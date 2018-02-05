@@ -16,7 +16,7 @@ import uk.co.sundroid.R;
 import uk.co.sundroid.R.id;
 import uk.co.sundroid.domain.LocationDetails;
 import uk.co.sundroid.util.SharedPrefsHelper;
-import uk.co.sundroid.util.LogWrapper;
+import uk.co.sundroid.util.log.LogWrapper;
 
 public class LocationSelectActivity extends AbstractLocationActivity implements LocaterListener, OnClickListener, DialogInterface.OnClickListener {
 	
