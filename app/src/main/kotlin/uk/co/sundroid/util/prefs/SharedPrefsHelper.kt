@@ -8,7 +8,7 @@ import uk.co.sundroid.util.location.LatitudeLongitude
 import uk.co.sundroid.util.time.TimeZoneResolver
 
 import android.content.Context
-import android.preference.PreferenceManager
+import android.content.SharedPreferences
 import android.text.format.DateFormat
 import uk.co.sundroid.util.theme.THEME_DARK
 
@@ -75,10 +75,9 @@ object SharedPrefsHelper {
     }
         
     fun saveSelectedLocation(context: Context, locationDetails: LocationDetails) {
-        val prefs = context.getSharedPreferences(PREFS_KEY, Context.MODE_PRIVATE)
         val location = locationDetails.location
         if (location != null) {
-            prefs.edit()
+            prefs(context).edit()
                     .putFloat(LOC_LAT_KEY, location.latitude.doubleValue.toFloat())
                     .putFloat(LOC_LON_KEY, location.longitude.doubleValue.toFloat())
                     .putString(LOC_NAME_KEY, locationDetails.name)
@@ -90,7 +89,7 @@ object SharedPrefsHelper {
     }
     
     fun initPreferences(context: Context) {
-        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+        val prefs = prefs(context)
         val editor = prefs.edit()
         if (!prefs.contains(CLOCK_KEY)) {
             editor.putString(CLOCK_KEY, ClockType.DEFAULT.name)
@@ -139,30 +138,25 @@ object SharedPrefsHelper {
     }
     
     fun getShowSeconds(context: Context): Boolean {
-        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-        return prefs.getBoolean(SHOW_SECONDS_KEY, false)
+        return prefs(context).getBoolean(SHOW_SECONDS_KEY, false)
     }
     
     fun getReverseGeocode(context: Context): Boolean {
-        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-        return prefs.getBoolean(REVERSE_GEOCODE_KEY, true)
+        return prefs(context).getBoolean(REVERSE_GEOCODE_KEY, true)
     }
     
     fun getClockType24(context: Context): Boolean {
         val default24 = DateFormat.is24HourFormat(context)
-        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-        val clockType = ClockType.valueOf(prefs.getString(CLOCK_KEY, ClockType.DEFAULT.name))
+        val clockType = ClockType.valueOf(prefs(context).getString(CLOCK_KEY, ClockType.DEFAULT.name))
         return clockType == ClockType.TWENTYFOUR || (clockType == ClockType.DEFAULT && default24)
     }
 
     fun getTheme(context: Context): String {
-        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-        return prefs.getString(THEME_KEY, THEME_DARK)
+        return prefs(context).getString(THEME_KEY, THEME_DARK)
     }
 
     fun getLocationTimeout(context: Context): Int {
-        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-        val timeout = prefs.getString(LOCATION_TIMEOUT_KEY, "60")
+        val timeout = prefs(context).getString(LOCATION_TIMEOUT_KEY, "60")
         try {
             return Integer.parseInt(timeout)
         } catch (e: Exception) {
@@ -171,8 +165,7 @@ object SharedPrefsHelper {
     }
     
     fun getDefaultZone(context: Context): TimeZoneDetail? {
-        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-        val pref = prefs.getString(DEFAULT_ZONE_KEY, "~ASK")
+        val pref = prefs(context).getString(DEFAULT_ZONE_KEY, "~ASK")
         return when (pref) {
             "~ASK" -> null
             "~DEVICE" ->  TimeZoneResolver.getTimeZone(null)
@@ -181,43 +174,35 @@ object SharedPrefsHelper {
     }
     
     fun getDefaultZoneOverride(context: Context): Boolean {
-        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-        return prefs.getBoolean(DEFAULT_ZONE_OVERRIDE_KEY, false)
+        return prefs(context).getBoolean(DEFAULT_ZONE_OVERRIDE_KEY, false)
     }
     
     fun getLastKnownLocation(context: Context): Boolean {
-        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-        return prefs.getBoolean(LAST_KNOWN_LOCATION_KEY, false)
+        return prefs(context).getBoolean(LAST_KNOWN_LOCATION_KEY, false)
     }
     
     fun getShowTimeZone(context: Context): Boolean {
-        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-        return prefs.getBoolean(SHOW_ZONE_KEY, true)
+        return prefs(context).getBoolean(SHOW_ZONE_KEY, true)
     }
     
     fun getFirstWeekday(context: Context): Int {
-        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-        return Integer.parseInt(prefs.getString(FIRST_WEEKDAY_KEY, "1"))
+        return Integer.parseInt(prefs(context).getString(FIRST_WEEKDAY_KEY, "1"))
     }
     
     fun getMagneticBearings(context: Context): Boolean {
-        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-        return prefs.getBoolean(MAGNETIC_BEARINGS_KEY, false)
+        return prefs(context).getBoolean(MAGNETIC_BEARINGS_KEY, false)
     }
     
     fun setShowElement(context: Context, ref: String, show: Boolean) {
-        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-        prefs.edit().putBoolean("show-" + ref, show).apply()
+        prefs(context).edit().putBoolean("show-" + ref, show).apply()
     }
     
     fun getShowElement(context: Context, ref: String, def: Boolean): Boolean {
-        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-        return prefs.getBoolean("show-" + ref, def)
+        return prefs(context).getBoolean("show-" + ref, def)
     }
     
     fun getLastDataGroup(context: Context): DataGroup {
-        val prefs = context.getSharedPreferences(PREFS_KEY, Context.MODE_PRIVATE)
-        val name = prefs.getString(LAST_DATA_GROUP_KEY, DataGroup.DAY_SUMMARY.name)
+        val name = prefs(context).getString(LAST_DATA_GROUP_KEY, DataGroup.DAY_SUMMARY.name)
         try {
             return DataGroup.valueOf(name)
         } catch (e: Exception) {
@@ -227,43 +212,35 @@ object SharedPrefsHelper {
     }
     
     fun setLastDataGroup(context: Context, dataGroup: DataGroup) {
-        val prefs = context.getSharedPreferences(PREFS_KEY, Context.MODE_PRIVATE)
-        prefs.edit().putString(LAST_DATA_GROUP_KEY, dataGroup.name).apply()
+        prefs(context).edit().putString(LAST_DATA_GROUP_KEY, dataGroup.name).apply()
     }
 
     fun getLastDetailTab(context: Context): String {
-        val prefs = context.getSharedPreferences(PREFS_KEY, Context.MODE_PRIVATE)
-        return prefs.getString(LAST_DETAIL_TAB_KEY, "sun")
+        return prefs(context).getString(LAST_DETAIL_TAB_KEY, "sun")
     }
 
     fun setLastDayDetailTab(context: Context, tab: String) {
-        val prefs = context.getSharedPreferences(PREFS_KEY, Context.MODE_PRIVATE)
-        prefs.edit().putString(LAST_DETAIL_TAB_KEY, tab).apply()
+        prefs(context).edit().putString(LAST_DETAIL_TAB_KEY, tab).apply()
     }
 
     fun getLastCalendar(context: Context): Int {
-        val prefs = context.getSharedPreferences(PREFS_KEY, Context.MODE_PRIVATE)
-        return prefs.getInt(LAST_CALENDAR_KEY, 0)
+        return prefs(context).getInt(LAST_CALENDAR_KEY, 0)
     }
 
     fun setLastCalendar(context: Context, calendar: Int) {
-        val prefs = context.getSharedPreferences(PREFS_KEY, Context.MODE_PRIVATE)
-        prefs.edit().putInt(LAST_CALENDAR_KEY, calendar).apply()
+        prefs(context).edit().putInt(LAST_CALENDAR_KEY, calendar).apply()
     }
 
     fun getLocMapMode(context: Context): String {
-        val prefs = context.getSharedPreferences(PREFS_KEY, Context.MODE_PRIVATE)
-        return prefs.getString(LOCMAP_MODE_KEY, "normal")
+        return prefs(context).getString(LOCMAP_MODE_KEY, "normal")
     }
     
     fun setLocMapMode(context: Context, mode: String) {
-        val prefs = context.getSharedPreferences(PREFS_KEY, Context.MODE_PRIVATE)
-        prefs.edit().putString(LOCMAP_MODE_KEY, mode).apply()
+        prefs(context).edit().putString(LOCMAP_MODE_KEY, mode).apply()
     }
     
     fun getSunTrackerBody(context: Context): Body? {
-        val prefs = context.getSharedPreferences(PREFS_KEY, Context.MODE_PRIVATE)
-        val value = prefs.getString(SUNTRACKER_BODY_KEY, "SUN")
+        val value = prefs(context).getString(SUNTRACKER_BODY_KEY, "SUN")
         if (value == "all") {
             return null
         } else {
@@ -272,82 +249,69 @@ object SharedPrefsHelper {
     }
     
     fun getSunTrackerMode(context: Context): String {
-        val prefs = context.getSharedPreferences(PREFS_KEY, Context.MODE_PRIVATE)
-        return prefs.getString(SUNTRACKER_MODE_KEY, "radar")
+        return prefs(context).getString(SUNTRACKER_MODE_KEY, "radar")
     }
     
     fun setSunTrackerBody(context: Context, body: Body?) {
-        val prefs = context.getSharedPreferences(PREFS_KEY, Context.MODE_PRIVATE)
         if (body == null) {
-            prefs.edit().putString(SUNTRACKER_BODY_KEY, "all").apply()
+            prefs(context).edit().putString(SUNTRACKER_BODY_KEY, "all").apply()
         } else {
-            prefs.edit().putString(SUNTRACKER_BODY_KEY, body.name).apply()
+            prefs(context).edit().putString(SUNTRACKER_BODY_KEY, body.name).apply()
         }
     }
     
     fun setSunTrackerMode(context: Context, mode: String) {
-        val prefs = context.getSharedPreferences(PREFS_KEY, Context.MODE_PRIVATE)
-        prefs.edit().putString(SUNTRACKER_MODE_KEY, mode).apply()
+        prefs(context).edit().putString(SUNTRACKER_MODE_KEY, mode).apply()
     }
     
     fun getSunTrackerMapMode(context: Context): String {
-        val prefs = context.getSharedPreferences(PREFS_KEY, Context.MODE_PRIVATE)
-        return prefs.getString(SUNTRACKER_MAPMODE_KEY, "normal")
+        return prefs(context).getString(SUNTRACKER_MAPMODE_KEY, "normal")
     }
     
     fun setSunTrackerMapMode(context: Context, mode: String) {
-        val prefs = context.getSharedPreferences(PREFS_KEY, Context.MODE_PRIVATE)
-        prefs.edit().putString(SUNTRACKER_MAPMODE_KEY, mode).apply()
+        prefs(context).edit().putString(SUNTRACKER_MAPMODE_KEY, mode).apply()
     }
     
     fun getSunTrackerLinearElevation(context: Context): Boolean {
-        val prefs = context.getSharedPreferences(PREFS_KEY, Context.MODE_PRIVATE)
-        return prefs.getBoolean(SUNTRACKER_LINEARELEVATION_KEY, false)
+        return prefs(context).getBoolean(SUNTRACKER_LINEARELEVATION_KEY, false)
     }
     
     fun setSunTrackerLinearElevation(context: Context, on: Boolean) {
-        val prefs = context.getSharedPreferences(PREFS_KEY, Context.MODE_PRIVATE)
-        prefs.edit().putBoolean(SUNTRACKER_LINEARELEVATION_KEY, on).apply()
+        prefs(context).edit().putBoolean(SUNTRACKER_LINEARELEVATION_KEY, on).apply()
     }
     
     fun getSunTrackerCompass(context: Context): Boolean {
-        val prefs = context.getSharedPreferences(PREFS_KEY, Context.MODE_PRIVATE)
-        return prefs.getBoolean(SUNTRACKER_COMPASS_KEY, false)
+        return prefs(context).getBoolean(SUNTRACKER_COMPASS_KEY, false)
     }
     
     fun setSunTrackerCompass(context: Context, on: Boolean) {
-        val prefs = context.getSharedPreferences(PREFS_KEY, Context.MODE_PRIVATE)
-        prefs.edit().putBoolean(SUNTRACKER_COMPASS_KEY, on).apply()
+        prefs(context).edit().putBoolean(SUNTRACKER_COMPASS_KEY, on).apply()
     }
     
     fun getSunTrackerHourMarkers(context: Context): Boolean {
-        val prefs = context.getSharedPreferences(PREFS_KEY, Context.MODE_PRIVATE)
-        return prefs.getBoolean(SUNTRACKER_HOURMARKERS_KEY, false)
+        return prefs(context).getBoolean(SUNTRACKER_HOURMARKERS_KEY, false)
     }
     
     fun setSunTrackerHourMarkers(context: Context, on: Boolean) {
-        val prefs = context.getSharedPreferences(PREFS_KEY, Context.MODE_PRIVATE)
-        prefs.edit().putBoolean(SUNTRACKER_HOURMARKERS_KEY, on).apply()
+        prefs(context).edit().putBoolean(SUNTRACKER_HOURMARKERS_KEY, on).apply()
     }
     
     fun getSunTrackerText(context: Context): Boolean {
-        val prefs = context.getSharedPreferences(PREFS_KEY, Context.MODE_PRIVATE)
-        return prefs.getBoolean(SUNTRACKER_TEXT_KEY, true)
+        return prefs(context).getBoolean(SUNTRACKER_TEXT_KEY, true)
     }
     
     fun setSunTrackerText(context: Context, on: Boolean) {
-        val prefs = context.getSharedPreferences(PREFS_KEY, Context.MODE_PRIVATE)
-        prefs.edit().putBoolean(SUNTRACKER_TEXT_KEY, on).apply()
+        prefs(context).edit().putBoolean(SUNTRACKER_TEXT_KEY, on).apply()
     }
 
     fun getMapLocationPermissionDenied(context: Context): Boolean {
-        val prefs = context.getSharedPreferences(PREFS_KEY, Context.MODE_PRIVATE)
-        return prefs.getBoolean(MAP_LOCATION_PERMISSION_DENIED_KEY, false)
+        return prefs(context).getBoolean(MAP_LOCATION_PERMISSION_DENIED_KEY, false)
     }
 
     fun setMapLocationPermissionDenied(context: Context, denied: Boolean) {
-        val prefs = context.getSharedPreferences(PREFS_KEY, Context.MODE_PRIVATE)
-        prefs.edit().putBoolean(MAP_LOCATION_PERMISSION_DENIED_KEY, denied).apply()
+        prefs(context).edit().putBoolean(MAP_LOCATION_PERMISSION_DENIED_KEY, denied).apply()
     }
+
+	private fun prefs(context: Context): SharedPreferences = context.getSharedPreferences(PREFS_KEY, Context.MODE_PRIVATE)
     
 }
