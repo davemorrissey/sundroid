@@ -9,7 +9,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnMultiChoiceClickListener;
 import android.os.Bundle;
 import uk.co.sundroid.activity.data.fragments.dialogs.OnViewPrefsChangedListener;
-import uk.co.sundroid.util.SharedPrefsHelper;
+import uk.co.sundroid.util.prefs.SharedPrefsHelper;
 
 public class YearEventsPickerFragment extends DialogFragment implements OnClickListener, OnMultiChoiceClickListener {
 
@@ -30,14 +30,14 @@ public class YearEventsPickerFragment extends DialogFragment implements OnClickL
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         setRetainInstance(true);// TODO Redundant?
 
-        currentEvents[0] = SharedPrefsHelper.getShowElement(getActivity(), "yearNewMoon", true);
-        currentEvents[1] = SharedPrefsHelper.getShowElement(getActivity(), "yearFullMoon", true);
-        currentEvents[2] = SharedPrefsHelper.getShowElement(getActivity(), "yearQuarterMoon", true);
-        currentEvents[3] = SharedPrefsHelper.getShowElement(getActivity(), "yearSolstice", true);
-        currentEvents[4] = SharedPrefsHelper.getShowElement(getActivity(), "yearEquinox", true);
-        currentEvents[5] = SharedPrefsHelper.getShowElement(getActivity(), "yearLunarEclipse", true);
-        currentEvents[6] = SharedPrefsHelper.getShowElement(getActivity(), "yearSolarEclipse", true);
-        currentEvents[7] = SharedPrefsHelper.getShowElement(getActivity(), "yearEarthApsis", true);
+        currentEvents[0] = SharedPrefsHelper.INSTANCE.getShowElement(getActivity(), "yearNewMoon", true);
+        currentEvents[1] = SharedPrefsHelper.INSTANCE.getShowElement(getActivity(), "yearFullMoon", true);
+        currentEvents[2] = SharedPrefsHelper.INSTANCE.getShowElement(getActivity(), "yearQuarterMoon", true);
+        currentEvents[3] = SharedPrefsHelper.INSTANCE.getShowElement(getActivity(), "yearSolstice", true);
+        currentEvents[4] = SharedPrefsHelper.INSTANCE.getShowElement(getActivity(), "yearEquinox", true);
+        currentEvents[5] = SharedPrefsHelper.INSTANCE.getShowElement(getActivity(), "yearLunarEclipse", true);
+        currentEvents[6] = SharedPrefsHelper.INSTANCE.getShowElement(getActivity(), "yearSolarEclipse", true);
+        currentEvents[7] = SharedPrefsHelper.INSTANCE.getShowElement(getActivity(), "yearEarthApsis", true);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMultiChoiceItems(
@@ -58,14 +58,14 @@ public class YearEventsPickerFragment extends DialogFragment implements OnClickL
     @Override
     public void onClick(DialogInterface dialogInterface, int button) {
         if (button == DialogInterface.BUTTON_POSITIVE && onViewPrefsChangedListener != null) {
-            SharedPrefsHelper.setShowElement(getActivity(), "yearNewMoon", currentEvents[0]);
-            SharedPrefsHelper.setShowElement(getActivity(), "yearFullMoon", currentEvents[1]);
-            SharedPrefsHelper.setShowElement(getActivity(), "yearQuarterMoon", currentEvents[2]);
-            SharedPrefsHelper.setShowElement(getActivity(), "yearSolstice", currentEvents[3]);
-            SharedPrefsHelper.setShowElement(getActivity(), "yearEquinox", currentEvents[4]);
-            SharedPrefsHelper.setShowElement(getActivity(), "yearLunarEclipse", currentEvents[5]);
-            SharedPrefsHelper.setShowElement(getActivity(), "yearSolarEclipse", currentEvents[6]);
-            SharedPrefsHelper.setShowElement(getActivity(), "yearEarthApsis", currentEvents[7]);
+            SharedPrefsHelper.INSTANCE.setShowElement(getActivity(), "yearNewMoon", currentEvents[0]);
+            SharedPrefsHelper.INSTANCE.setShowElement(getActivity(), "yearFullMoon", currentEvents[1]);
+            SharedPrefsHelper.INSTANCE.setShowElement(getActivity(), "yearQuarterMoon", currentEvents[2]);
+            SharedPrefsHelper.INSTANCE.setShowElement(getActivity(), "yearSolstice", currentEvents[3]);
+            SharedPrefsHelper.INSTANCE.setShowElement(getActivity(), "yearEquinox", currentEvents[4]);
+            SharedPrefsHelper.INSTANCE.setShowElement(getActivity(), "yearLunarEclipse", currentEvents[5]);
+            SharedPrefsHelper.INSTANCE.setShowElement(getActivity(), "yearSolarEclipse", currentEvents[6]);
+            SharedPrefsHelper.INSTANCE.setShowElement(getActivity(), "yearEarthApsis", currentEvents[7]);
             onViewPrefsChangedListener.onViewPrefsUpdated();
         }
         dismiss();

@@ -34,6 +34,7 @@ import uk.co.sundroid.domain.LocationDetails;
 import uk.co.sundroid.util.location.LatitudeLongitude;
 import uk.co.sundroid.util.*;
 import uk.co.sundroid.util.log.LogWrapper;
+import uk.co.sundroid.util.prefs.SharedPrefsHelper;
 import uk.co.sundroid.util.time.TimeZoneResolver;
 
 import java.util.ArrayList;
@@ -132,7 +133,7 @@ public class RealDataActivity extends AbstractActivity implements OnClickListene
             getIntent().setAction(null);
         }
 
-    	SharedPrefsHelper.initPreferences(this);
+    	SharedPrefsHelper.INSTANCE.initPreferences(this);
     	initCalendarAndLocation(forceDateUpdate);
     	restoreState(state);
 		initDayDetailTabs();
@@ -192,13 +193,13 @@ public class RealDataActivity extends AbstractActivity implements OnClickListene
     }
 
     private void initCalendarAndLocation(boolean forceDateUpdate) {
-        location = SharedPrefsHelper.getSelectedLocation(this);
+        location = SharedPrefsHelper.INSTANCE.getSelectedLocation(this);
         if (location == null) {
             location = new LocationDetails();
             location.setName("San Francisco");
             location.setTimeZone(TimeZoneResolver.INSTANCE.getTimeZone("US/Pacific"));
             location.setLocation(new LatitudeLongitude(37.779093, -122.419109));
-            SharedPrefsHelper.saveSelectedLocation(this, location);
+            SharedPrefsHelper.INSTANCE.saveSelectedLocation(this, location);
         }
         if (location.getTimeZone() == null) {
             location.setTimeZone(TimeZoneResolver.INSTANCE.getTimeZone("UTC"));
@@ -266,9 +267,9 @@ public class RealDataActivity extends AbstractActivity implements OnClickListene
                 this.timeCalendar.setTimeInMillis(state.getLong(STATE_TIME_TIMESTAMP));
 	    	}
     	} else {
-            this.dataGroup = SharedPrefsHelper.getLastDataGroup(this);
+            this.dataGroup = SharedPrefsHelper.INSTANCE.getLastDataGroup(this);
             if (this.dataGroup == DataGroup.DAY_DETAIL) {
-                this.dayDetailTab = SharedPrefsHelper.getLastDetailTab(this);
+                this.dayDetailTab = SharedPrefsHelper.INSTANCE.getLastDetailTab(this);
             }
         }
     }
@@ -277,7 +278,7 @@ public class RealDataActivity extends AbstractActivity implements OnClickListene
     	if (dataGroup != this.dataGroup) {
     		LogWrapper.d(TAG, "Changing data group to " + dataGroup);
     		this.dataGroup = dataGroup;
-            SharedPrefsHelper.setLastDataGroup(this, dataGroup);
+            SharedPrefsHelper.INSTANCE.setLastDataGroup(this, dataGroup);
             updateDataFragment(true);
     	}
     }
@@ -286,7 +287,7 @@ public class RealDataActivity extends AbstractActivity implements OnClickListene
     	if (!dayDetailTab.equals(this.dayDetailTab)) {
 	    	LogWrapper.d(TAG, "Changing day detail tab to " + dayDetailTab);
 	    	this.dayDetailTab = dayDetailTab;
-            SharedPrefsHelper.setLastDayDetailTab(this, dayDetailTab);
+            SharedPrefsHelper.INSTANCE.setLastDayDetailTab(this, dayDetailTab);
 	    	updateDayDetailTabs();
             updateDataFragment(true);
     	}
@@ -462,7 +463,7 @@ public class RealDataActivity extends AbstractActivity implements OnClickListene
                         if (StringUtils.isNotEmpty(saveName)) {
                             db = new DatabaseHelper(RealDataActivity.this);
                             location.setName(saveName);
-                            SharedPrefsHelper.saveSelectedLocation(RealDataActivity.this, location);
+                            SharedPrefsHelper.INSTANCE.saveSelectedLocation(RealDataActivity.this, location);
                             db.addSavedLocation(location);
                             Toast.makeText(RealDataActivity.this, "This location has been saved", Toast.LENGTH_SHORT).show();
                             refreshSelector();

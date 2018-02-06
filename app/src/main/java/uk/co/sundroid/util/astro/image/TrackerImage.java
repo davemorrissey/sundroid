@@ -8,7 +8,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import uk.co.sundroid.util.log.LogWrapper;
-import uk.co.sundroid.util.SharedPrefsHelper;
+import uk.co.sundroid.util.prefs.SharedPrefsHelper;
 import uk.co.sundroid.util.astro.Body;
 import uk.co.sundroid.util.astro.BodyDay;
 import uk.co.sundroid.util.astro.Position;
@@ -128,10 +128,10 @@ public class TrackerImage {
 		this.style = style;
 		this.context = context;
 		this.location = location;
-		this.body = SharedPrefsHelper.getSunTrackerBody(context);
-		this.hourMarkers = SharedPrefsHelper.getSunTrackerHourMarkers(context);
-		this.linearElevation = SharedPrefsHelper.getSunTrackerLinearElevation(context);
-		this.magneticBearings = SharedPrefsHelper.getMagneticBearings(context);
+		this.body = SharedPrefsHelper.INSTANCE.getSunTrackerBody(context);
+		this.hourMarkers = SharedPrefsHelper.INSTANCE.getSunTrackerHourMarkers(context);
+		this.linearElevation = SharedPrefsHelper.INSTANCE.getSunTrackerLinearElevation(context);
+		this.magneticBearings = SharedPrefsHelper.INSTANCE.getMagneticBearings(context);
 	}
 	
 	public void setDate(Calendar dateCalendar, Calendar timeCalendar) {

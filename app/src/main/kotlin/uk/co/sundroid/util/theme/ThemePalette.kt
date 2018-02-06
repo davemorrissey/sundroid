@@ -6,7 +6,7 @@ import android.content.Intent
 import android.graphics.Color
 
 import uk.co.sundroid.R.style
-import uk.co.sundroid.util.SharedPrefsHelper
+import uk.co.sundroid.util.prefs.SharedPrefsHelper
 import uk.co.sundroid.util.astro.Body
 import uk.co.sundroid.util.astro.image.TrackerImage.TrackerStyle
 import uk.co.sundroid.R.drawable.*

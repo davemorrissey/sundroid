@@ -6,7 +6,7 @@ import android.view.*;
 import uk.co.sundroid.R.id;
 import uk.co.sundroid.activity.data.fragments.dialogs.date.MonthPickerFragment;
 import uk.co.sundroid.domain.LocationDetails;
-import uk.co.sundroid.util.SharedPrefsHelper;
+import uk.co.sundroid.util.prefs.SharedPrefsHelper;
 import uk.co.sundroid.util.StringUtils;
 import uk.co.sundroid.util.view.ButtonDragGestureDetector;
 import uk.co.sundroid.util.view.ButtonDragGestureDetector.ButtonDragGestureDetectorListener;
@@ -107,7 +107,7 @@ public abstract class AbstractMonthFragment<T> extends AbstractDataFragment impl
     }
 
     private void updateMonth(LocationDetails location, Calendar calendar, View view) {
-    	if (SharedPrefsHelper.getShowTimeZone(getApplicationContext())) {
+    	if (SharedPrefsHelper.INSTANCE.getShowTimeZone(getApplicationContext())) {
     		showInView(view, id.zoneButton);
 			TimeZone zone = location.getTimeZone().getZone();
 			boolean zoneDST = zone.inDaylightTime(new Date(calendar.getTimeInMillis() + (12 * 60 * 60 * 1000)));

@@ -15,7 +15,7 @@ import uk.co.sundroid.util.astro.SunDay;
 import uk.co.sundroid.util.astro.math.MoonPhaseCalculator;
 import uk.co.sundroid.util.astro.math.SunCalculator;
 import uk.co.sundroid.domain.LocationDetails;
-import uk.co.sundroid.util.SharedPrefsHelper;
+import uk.co.sundroid.util.prefs.SharedPrefsHelper;
 import uk.co.sundroid.util.theme.ThemePalette;
 import uk.co.sundroid.util.time.TimeUtils;
 import uk.co.sundroid.util.time.Time;
@@ -40,14 +40,14 @@ public class YearEventsFragment extends AbstractYearFragment implements Configur
     @Override
     public void openSettingsDialog() {
 //        boolean[] currentEvents = new boolean[8];
-//        currentEvents[0] = SharedPrefsHelper.getShowElement(getApplicationContext(), "yearNewMoon", true);
-//        currentEvents[1] = SharedPrefsHelper.getShowElement(getApplicationContext(), "yearFullMoon", true);
-//        currentEvents[2] = SharedPrefsHelper.getShowElement(getApplicationContext(), "yearQuarterMoon", true);
-//        currentEvents[3] = SharedPrefsHelper.getShowElement(getApplicationContext(), "yearSolstice", true);
-//        currentEvents[4] = SharedPrefsHelper.getShowElement(getApplicationContext(), "yearEquinox", true);
-//        currentEvents[5] = SharedPrefsHelper.getShowElement(getApplicationContext(), "yearLunarEclipse", true);
-//        currentEvents[6] = SharedPrefsHelper.getShowElement(getApplicationContext(), "yearSolarEclipse", true);
-//        currentEvents[7] = SharedPrefsHelper.getShowElement(getApplicationContext(), "yearEarthApsis", true);
+//        currentEvents[0] = SharedPrefsHelper.INSTANCE.getShowElement(getApplicationContext(), "yearNewMoon", true);
+//        currentEvents[1] = SharedPrefsHelper.INSTANCE.getShowElement(getApplicationContext(), "yearFullMoon", true);
+//        currentEvents[2] = SharedPrefsHelper.INSTANCE.getShowElement(getApplicationContext(), "yearQuarterMoon", true);
+//        currentEvents[3] = SharedPrefsHelper.INSTANCE.getShowElement(getApplicationContext(), "yearSolstice", true);
+//        currentEvents[4] = SharedPrefsHelper.INSTANCE.getShowElement(getApplicationContext(), "yearEquinox", true);
+//        currentEvents[5] = SharedPrefsHelper.INSTANCE.getShowElement(getApplicationContext(), "yearLunarEclipse", true);
+//        currentEvents[6] = SharedPrefsHelper.INSTANCE.getShowElement(getApplicationContext(), "yearSolarEclipse", true);
+//        currentEvents[7] = SharedPrefsHelper.INSTANCE.getShowElement(getApplicationContext(), "yearEarthApsis", true);
 
         YearEventsPickerFragment settingsDialog = YearEventsPickerFragment.newInstance();
         settingsDialog.show(getFragmentManager(), "yearEventsSettings");
@@ -90,14 +90,14 @@ public class YearEventsFragment extends AbstractYearFragment implements Configur
                         switch (event.type) {
                             case EARTH_APHELION:
                             case EARTH_PERIHELION:
-                                if (!SharedPrefsHelper.getShowElement(getApplicationContext(), "yearEarthApsis", true)) { continue; }
+                                if (!SharedPrefsHelper.INSTANCE.getShowElement(getApplicationContext(), "yearEarthApsis", true)) { continue; }
                                 title = event.type.name;
                                 link = event.link;
                                 break;
                             case PARTIAL_LUNAR:
                             case TOTAL_LUNAR:
                             case PENUMBRAL_LUNAR:
-                                if (!SharedPrefsHelper.getShowElement(getApplicationContext(), "yearLunarEclipse", true)) { continue; }
+                                if (!SharedPrefsHelper.INSTANCE.getShowElement(getApplicationContext(), "yearLunarEclipse", true)) { continue; }
                                 title = event.type.name;
                                 time = "Greatest eclipse: " + time;
                                 link = event.link;
@@ -106,7 +106,7 @@ public class YearEventsFragment extends AbstractYearFragment implements Configur
                             case TOTAL_SOLAR:
                             case ANNULAR_SOLAR:
                             case HYBRID_SOLAR:
-                                if (!SharedPrefsHelper.getShowElement(getApplicationContext(), "yearSolarEclipse", true)) { continue; }
+                                if (!SharedPrefsHelper.INSTANCE.getShowElement(getApplicationContext(), "yearSolarEclipse", true)) { continue; }
                                 title = event.type.name;
                                 time = "Greatest eclipse: " + time;
                                 subtitle = (String)event.extra;
@@ -114,12 +114,12 @@ public class YearEventsFragment extends AbstractYearFragment implements Configur
                                 break;
                             case MARCH_EQUINOX:
                             case SEPTEMBER_EQUINOX:
-                                if (!SharedPrefsHelper.getShowElement(getApplicationContext(), "yearEquinox", true)) { continue; }
+                                if (!SharedPrefsHelper.INSTANCE.getShowElement(getApplicationContext(), "yearEquinox", true)) { continue; }
                                 title = event.type.name;
                                 break;
                             case NORTHERN_SOLSTICE:
                             {
-                                if (!SharedPrefsHelper.getShowElement(getApplicationContext(), "yearSolstice", true)) { continue; }
+                                if (!SharedPrefsHelper.INSTANCE.getShowElement(getApplicationContext(), "yearSolstice", true)) { continue; }
                                 title = event.type.name;
                                 if (Math.abs(location.getLocation().getLatitude().getDoubleValue()) > 23.44) {
                                     SunDay sunDay = SunCalculator.calcDay(location.getLocation(), event.time, SunCalculator.Event.RISESET);
@@ -130,7 +130,7 @@ public class YearEventsFragment extends AbstractYearFragment implements Configur
                             }
                             case SOUTHERN_SOLSTICE:
                             {
-                                if (!SharedPrefsHelper.getShowElement(getApplicationContext(), "yearSolstice", true)) { continue; }
+                                if (!SharedPrefsHelper.INSTANCE.getShowElement(getApplicationContext(), "yearSolstice", true)) { continue; }
                                 title = event.type.name;
                                 if (Math.abs(location.getLocation().getLatitude().getDoubleValue()) > 23.44) {
                                     SunDay sunDay = SunCalculator.calcDay(location.getLocation(), event.time, SunCalculator.Event.RISESET);
@@ -143,22 +143,22 @@ public class YearEventsFragment extends AbstractYearFragment implements Configur
                                 MoonPhaseEvent moonPhase = (MoonPhaseEvent)event.extra;
                                 switch (moonPhase.getPhase()) {
                                     case FULL:
-                                        if (!SharedPrefsHelper.getShowElement(getApplicationContext(), "yearFullMoon", true)) { continue; }
+                                        if (!SharedPrefsHelper.INSTANCE.getShowElement(getApplicationContext(), "yearFullMoon", true)) { continue; }
                                         title = "Full Moon";
                                         image = ThemePalette.getPhaseFull();
                                         break;
                                     case NEW:
-                                        if (!SharedPrefsHelper.getShowElement(getApplicationContext(), "yearNewMoon", true)) { continue; }
+                                        if (!SharedPrefsHelper.INSTANCE.getShowElement(getApplicationContext(), "yearNewMoon", true)) { continue; }
                                         title = "New Moon";
                                         image = ThemePalette.getPhaseNew();
                                         break;
                                     case FIRST_QUARTER:
-                                        if (!SharedPrefsHelper.getShowElement(getApplicationContext(), "yearQuarterMoon", true)) { continue; }
+                                        if (!SharedPrefsHelper.INSTANCE.getShowElement(getApplicationContext(), "yearQuarterMoon", true)) { continue; }
                                         title = "First Quarter";
                                         image = location.getLocation().getLatitude().getDoubleValue() >= 0 ? ThemePalette.getPhaseRight() : ThemePalette.getPhaseLeft();
                                         break;
                                     case LAST_QUARTER:
-                                        if (!SharedPrefsHelper.getShowElement(getApplicationContext(), "yearQuarterMoon", true)) { continue; }
+                                        if (!SharedPrefsHelper.INSTANCE.getShowElement(getApplicationContext(), "yearQuarterMoon", true)) { continue; }
                                         title = "Last Quarter";
                                         image = location.getLocation().getLatitude().getDoubleValue() >= 0 ? ThemePalette.getPhaseLeft() : ThemePalette.getPhaseRight();
                                         break;

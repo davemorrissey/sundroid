@@ -15,7 +15,7 @@ import uk.co.sundroid.AbstractActivity;
 import uk.co.sundroid.R;
 import uk.co.sundroid.domain.LocationDetails;
 import uk.co.sundroid.domain.TimeZoneDetail;
-import uk.co.sundroid.util.SharedPrefsHelper;
+import uk.co.sundroid.util.prefs.SharedPrefsHelper;
 import uk.co.sundroid.util.log.LogWrapper;
 import uk.co.sundroid.util.view.MergeAdapter;
 import uk.co.sundroid.util.time.TimeZoneResolver;
@@ -44,7 +44,7 @@ public class TimeZonePickerActivity extends AbstractActivity implements OnItemCl
     public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
 
-        location = SharedPrefsHelper.getSelectedLocation(this);
+        location = SharedPrefsHelper.INSTANCE.getSelectedLocation(this);
         int mode = getIntent().getIntExtra(INTENT_MODE, MODE_SELECT);
 
         setContentView(R.layout.zone);
@@ -78,7 +78,7 @@ public class TimeZonePickerActivity extends AbstractActivity implements OnItemCl
 		// Update the passed location and update the current location.
 		TimeZoneDetail timeZone = (TimeZoneDetail)parent.getItemAtPosition(position);
 		location.setTimeZone(timeZone);
-		SharedPrefsHelper.saveSelectedLocation(this, location);
+		SharedPrefsHelper.INSTANCE.saveSelectedLocation(this, location);
 		setResult(RESULT_TIMEZONE_SELECTED);
 		finish();
 	}

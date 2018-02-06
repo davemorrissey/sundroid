@@ -15,7 +15,7 @@ import uk.co.sundroid.R;
 import uk.co.sundroid.R.id;
 import uk.co.sundroid.activity.data.fragments.dialogs.OnViewPrefsChangedListener;
 import uk.co.sundroid.util.astro.Body;
-import uk.co.sundroid.util.SharedPrefsHelper;
+import uk.co.sundroid.util.prefs.SharedPrefsHelper;
 
 import java.util.Arrays;
 import java.util.List;
@@ -34,7 +34,7 @@ public class TrackerSettingsFragment extends DialogFragment {
         View view = View.inflate(context, R.layout.dialog_trackersettings, null);
 
         Spinner body = view.findViewById(id.trackerSettingBody);
-        Body currentBody = SharedPrefsHelper.getSunTrackerBody(context);
+        Body currentBody = SharedPrefsHelper.INSTANCE.getSunTrackerBody(context);
         if (currentBody != null) {
             body.setSelection(currentBody.ordinal());
         } else {
@@ -42,7 +42,7 @@ public class TrackerSettingsFragment extends DialogFragment {
         }
 
         CheckBox map = view.findViewById(id.trackerSettingMap);
-        map.setChecked(SharedPrefsHelper.getSunTrackerMode(context).equals("map"));
+        map.setChecked(SharedPrefsHelper.INSTANCE.getSunTrackerMode(context).equals("map"));
         map.setOnCheckedChangeListener((b, checked) -> {
             if (checked) {
                 view.findViewById(id.trackerSettingCompassWrapper).setVisibility(View.GONE);
@@ -59,7 +59,7 @@ public class TrackerSettingsFragment extends DialogFragment {
         mapModeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mapMode.setAdapter(mapModeAdapter);
 
-        String currentMapMode = SharedPrefsHelper.getSunTrackerMapMode(context);
+        String currentMapMode = SharedPrefsHelper.INSTANCE.getSunTrackerMapMode(context);
         switch (currentMapMode) {
             case "normal":
                 mapMode.setSelection(0);
@@ -79,18 +79,18 @@ public class TrackerSettingsFragment extends DialogFragment {
         }
 
         CheckBox compass = view.findViewById(id.trackerSettingCompass);
-        compass.setChecked(SharedPrefsHelper.getSunTrackerCompass(context));
+        compass.setChecked(SharedPrefsHelper.INSTANCE.getSunTrackerCompass(context));
 
         CheckBox linearElevation = view.findViewById(id.trackerSettingLinearElevation);
-        linearElevation.setChecked(SharedPrefsHelper.getSunTrackerLinearElevation(context));
+        linearElevation.setChecked(SharedPrefsHelper.INSTANCE.getSunTrackerLinearElevation(context));
 
         CheckBox hourMarkers = view.findViewById(id.trackerSettingHourMarkers);
-        hourMarkers.setChecked(SharedPrefsHelper.getSunTrackerHourMarkers(context));
+        hourMarkers.setChecked(SharedPrefsHelper.INSTANCE.getSunTrackerHourMarkers(context));
 
         CheckBox text = view.findViewById(id.trackerSettingText);
-        text.setChecked(SharedPrefsHelper.getSunTrackerText(context));
+        text.setChecked(SharedPrefsHelper.INSTANCE.getSunTrackerText(context));
 
-        if (SharedPrefsHelper.getSunTrackerMode(context).equals("map")) {
+        if (SharedPrefsHelper.INSTANCE.getSunTrackerMode(context).equals("map")) {
             view.findViewById(id.trackerSettingCompassWrapper).setVisibility(View.GONE);
         } else {
             view.findViewById(id.trackerSettingMapModeWrapper).setVisibility(View.GONE);
@@ -102,29 +102,29 @@ public class TrackerSettingsFragment extends DialogFragment {
         builder.setNegativeButton("Cancel", (d, i) -> dismiss());
         builder.setPositiveButton("OK", (d, i) -> {
             if (body.getSelectedItemPosition() >= Body.values().length) {
-                SharedPrefsHelper.setSunTrackerBody(context, null);
+                SharedPrefsHelper.INSTANCE.setSunTrackerBody(context, null);
             } else {
-                SharedPrefsHelper.setSunTrackerBody(context, Body.values()[body.getSelectedItemPosition()]);
+                SharedPrefsHelper.INSTANCE.setSunTrackerBody(context, Body.values()[body.getSelectedItemPosition()]);
             }
 
             if (map.isChecked()) {
-                SharedPrefsHelper.setSunTrackerMode(context, "map");
+                SharedPrefsHelper.INSTANCE.setSunTrackerMode(context, "map");
                 if (mapMode.getSelectedItemPosition() == 0) {
-                    SharedPrefsHelper.setSunTrackerMapMode(context, "normal");
+                    SharedPrefsHelper.INSTANCE.setSunTrackerMapMode(context, "normal");
                 } else if (mapMode.getSelectedItemPosition() == 1) {
-                    SharedPrefsHelper.setSunTrackerMapMode(context, "satellite");
+                    SharedPrefsHelper.INSTANCE.setSunTrackerMapMode(context, "satellite");
                 } else if (mapMode.getSelectedItemPosition() == 2) {
-                    SharedPrefsHelper.setSunTrackerMapMode(context, "terrain");
+                    SharedPrefsHelper.INSTANCE.setSunTrackerMapMode(context, "terrain");
                 } else if (mapMode.getSelectedItemPosition() == 3) {
-                    SharedPrefsHelper.setSunTrackerMapMode(context, "hybrid");
+                    SharedPrefsHelper.INSTANCE.setSunTrackerMapMode(context, "hybrid");
                 }
             } else {
-                SharedPrefsHelper.setSunTrackerMode(context, "radar");
+                SharedPrefsHelper.INSTANCE.setSunTrackerMode(context, "radar");
             }
-            SharedPrefsHelper.setSunTrackerCompass(context, compass.isChecked());
-            SharedPrefsHelper.setSunTrackerLinearElevation(context, linearElevation.isChecked());
-            SharedPrefsHelper.setSunTrackerHourMarkers(context, hourMarkers.isChecked());
-            SharedPrefsHelper.setSunTrackerText(context, text.isChecked());
+            SharedPrefsHelper.INSTANCE.setSunTrackerCompass(context, compass.isChecked());
+            SharedPrefsHelper.INSTANCE.setSunTrackerLinearElevation(context, linearElevation.isChecked());
+            SharedPrefsHelper.INSTANCE.setSunTrackerHourMarkers(context, hourMarkers.isChecked());
+            SharedPrefsHelper.INSTANCE.setSunTrackerText(context, text.isChecked());
 
             Fragment parent = getTargetFragment();
             if (parent != null && parent instanceof OnViewPrefsChangedListener) {

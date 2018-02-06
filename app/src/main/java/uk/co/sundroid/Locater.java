@@ -3,7 +3,7 @@ package uk.co.sundroid;
 import uk.co.sundroid.domain.LocationDetails;
 import uk.co.sundroid.util.geo.Geocoder;
 import uk.co.sundroid.util.location.LatitudeLongitude;
-import uk.co.sundroid.util.SharedPrefsHelper;
+import uk.co.sundroid.util.prefs.SharedPrefsHelper;
 import uk.co.sundroid.util.log.LogWrapper;
 import android.content.Context;
 import android.location.Criteria;
@@ -53,7 +53,7 @@ public class Locater implements LocationListener {
 			 return LocationType.UNAVAILABLE;
 		}
 		
-		if (SharedPrefsHelper.getLastKnownLocation(context) && allowLastKnown) {
+		if (SharedPrefsHelper.INSTANCE.getLastKnownLocation(context) && allowLastKnown) {
 			LocationType lastKnownType = startLastKnown();
 			if (lastKnownType != LocationType.UNAVAILABLE) {
 				return lastKnownType;
@@ -238,7 +238,7 @@ public class Locater implements LocationListener {
 		public void run() {
 			Thread thisThread = Thread.currentThread();
 			try {
-				Thread.sleep(1000 * SharedPrefsHelper.getLocationTimeout(context));
+				Thread.sleep(1000 * SharedPrefsHelper.INSTANCE.getLocationTimeout(context));
 				if (thread == thisThread) {
 					onTimeout();
 				}

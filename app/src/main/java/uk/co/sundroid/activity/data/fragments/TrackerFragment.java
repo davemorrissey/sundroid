@@ -27,8 +27,8 @@ import uk.co.sundroid.util.astro.image.TrackerImage;
 import uk.co.sundroid.util.astro.math.BodyPositionCalculator;
 import uk.co.sundroid.util.geometry.GeometryUtils;
 import uk.co.sundroid.domain.LocationDetails;
-import uk.co.sundroid.util.*;
 import uk.co.sundroid.util.log.LogWrapper;
+import uk.co.sundroid.util.prefs.SharedPrefsHelper;
 import uk.co.sundroid.util.time.Time;
 import uk.co.sundroid.util.time.TimeUtils;
 
@@ -121,11 +121,11 @@ public class TrackerFragment extends AbstractTimeFragment implements Configurabl
         this.timeCalendar = newTimeCalendar;
         this.view = view;
 
-        Body body = SharedPrefsHelper.getSunTrackerBody(getApplicationContext());
-        String mode = SharedPrefsHelper.getSunTrackerMode(getApplicationContext());
-        String mapMode = SharedPrefsHelper.getSunTrackerMapMode(getApplicationContext());
+        Body body = SharedPrefsHelper.INSTANCE.getSunTrackerBody(getApplicationContext());
+        String mode = SharedPrefsHelper.INSTANCE.getSunTrackerMode(getApplicationContext());
+        String mapMode = SharedPrefsHelper.INSTANCE.getSunTrackerMapMode(getApplicationContext());
 
-        if (mode.equals("radar") && SharedPrefsHelper.getSunTrackerCompass(getApplicationContext())) {
+        if (mode.equals("radar") && SharedPrefsHelper.INSTANCE.getSunTrackerCompass(getApplicationContext())) {
             magneticDeclination = GeometryUtils.getMagneticDeclination(location.getLocation(), dateCalendar);
         }
 
@@ -137,7 +137,7 @@ public class TrackerFragment extends AbstractTimeFragment implements Configurabl
         }
         compassActive = false;
 
-        if (SharedPrefsHelper.getSunTrackerText(getApplicationContext()) && body != null) {
+        if (SharedPrefsHelper.INSTANCE.getSunTrackerText(getApplicationContext()) && body != null) {
             showInView(view, id.trackerText);
         } else {
             removeInView(view, id.trackerText);
@@ -175,7 +175,7 @@ public class TrackerFragment extends AbstractTimeFragment implements Configurabl
                         .commit();
             }
 
-            if (SharedPrefsHelper.getSunTrackerCompass(getApplicationContext())) {
+            if (SharedPrefsHelper.INSTANCE.getSunTrackerCompass(getApplicationContext())) {
                 SensorManager sensorManager = (SensorManager)getActivity().getSystemService(Activity.SENSOR_SERVICE);
                 if (sensorManager != null) {
                     List<Sensor> orientationSensors = sensorManager.getSensorList(Sensor.TYPE_ORIENTATION);
@@ -218,12 +218,12 @@ public class TrackerFragment extends AbstractTimeFragment implements Configurabl
         if (event.sensor.getType() != Sensor.TYPE_ORIENTATION || getApplicationContext() == null) {
             return;
         }
-        String mode = SharedPrefsHelper.getSunTrackerMode(getApplicationContext());
+        String mode = SharedPrefsHelper.INSTANCE.getSunTrackerMode(getApplicationContext());
         if (!"radar".equals(mode)) {
             return;
         }
         LogWrapper.d(TAG, "Compass event: " + event.values[0] + " orientation: " + rotation + " declination: " + magneticDeclination);
-        if (trackerImageView != null && SharedPrefsHelper.getSunTrackerCompass(getApplicationContext())) {
+        if (trackerImageView != null && SharedPrefsHelper.INSTANCE.getSunTrackerCompass(getApplicationContext())) {
             trackerImageView.setDirection(event.values[0] + rotation + Double.valueOf(magneticDeclination).floatValue());
         }
     }
@@ -247,7 +247,7 @@ public class TrackerFragment extends AbstractTimeFragment implements Configurabl
         }
         final Calendar dateCalendar = TimeUtils.clone(this.dateCalendar);
         final Calendar timeCalendar = TimeUtils.clone(this.timeCalendar);
-        final Body body = SharedPrefsHelper.getSunTrackerBody(getApplicationContext());
+        final Body body = SharedPrefsHelper.INSTANCE.getSunTrackerBody(getApplicationContext());
 
         if (trackerImage != null) {
             if (timeOnly) {
@@ -264,12 +264,12 @@ public class TrackerFragment extends AbstractTimeFragment implements Configurabl
             }
 
             Set<Event> tempEventsSet = null;
-            final Position position = body != null && SharedPrefsHelper.getSunTrackerText(getApplicationContext()) ? BodyPositionCalculator.calcPosition(body, location.getLocation(), timeCalendar) : null;
+            final Position position = body != null && SharedPrefsHelper.INSTANCE.getSunTrackerText(getApplicationContext()) ? BodyPositionCalculator.calcPosition(body, location.getLocation(), timeCalendar) : null;
 
             // Get the first two rise/set events that happen on this calendar day,
             // midnight to midnight.
 
-            if (!timeOnly && body != null && SharedPrefsHelper.getSunTrackerText(getApplicationContext())) {
+            if (!timeOnly && body != null && SharedPrefsHelper.INSTANCE.getSunTrackerText(getApplicationContext())) {
                 tempEventsSet = new TreeSet<>();
                 Calendar loopCalendar = TimeUtils.clone(dateCalendar);
                 loopCalendar.add(Calendar.DAY_OF_MONTH, -1);
@@ -294,7 +294,7 @@ public class TrackerFragment extends AbstractTimeFragment implements Configurabl
                     return;
                 }
 
-                if (position != null && SharedPrefsHelper.getSunTrackerText(getApplicationContext())) {
+                if (position != null && SharedPrefsHelper.INSTANCE.getSunTrackerText(getApplicationContext())) {
 
                     if (eventsSet != null) {
                         if (eventsSet.size() > 0) {

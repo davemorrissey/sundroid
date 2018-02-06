@@ -6,7 +6,7 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.os.Bundle;
 import uk.co.sundroid.activity.data.fragments.dialogs.OnViewPrefsChangedListener;
-import uk.co.sundroid.util.SharedPrefsHelper;
+import uk.co.sundroid.util.prefs.SharedPrefsHelper;
 
 public class DayEventsPickerFragment extends DialogFragment {
 
@@ -45,9 +45,9 @@ public class DayEventsPickerFragment extends DialogFragment {
         builder.setTitle("Select events");
         builder.setPositiveButton("OK", (d, i) -> {
             Context context = getActivity().getApplicationContext();
-            SharedPrefsHelper.setShowElement(context, "evtByTimeSun", currentEvents[0]);
-            SharedPrefsHelper.setShowElement(context, "evtByTimeMoon", currentEvents[1]);
-            SharedPrefsHelper.setShowElement(context, "evtByTimePlanets", currentEvents[2]);
+            SharedPrefsHelper.INSTANCE.setShowElement(context, "evtByTimeSun", currentEvents[0]);
+            SharedPrefsHelper.INSTANCE.setShowElement(context, "evtByTimeMoon", currentEvents[1]);
+            SharedPrefsHelper.INSTANCE.setShowElement(context, "evtByTimePlanets", currentEvents[2]);
             onViewPrefsChangedListener.onViewPrefsUpdated();
             dismiss();
         });

@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.TimePicker;
 import uk.co.sundroid.R.id;
 import uk.co.sundroid.R.layout;
-import uk.co.sundroid.util.SharedPrefsHelper;
+import uk.co.sundroid.util.prefs.SharedPrefsHelper;
 
 import java.util.Calendar;
 
@@ -53,7 +53,7 @@ public class TimePickerFragment extends DialogFragment implements DialogInterfac
 
         View view = View.inflate(getActivity(), layout.dialog_timepicker, null);
         timePicker = view.findViewById(id.timePicker);
-        timePicker.setIs24HourView(SharedPrefsHelper.getClockType24(getActivity().getApplicationContext()));
+        timePicker.setIs24HourView(SharedPrefsHelper.INSTANCE.getClockType24(getActivity().getApplicationContext()));
         timePicker.setCurrentHour(hour);
         timePicker.setCurrentMinute(minute);
         builder.setView(view);

@@ -21,7 +21,7 @@ import uk.co.sundroid.util.StringUtils;
 import uk.co.sundroid.util.geo.Geocoder;
 import uk.co.sundroid.R;
 import uk.co.sundroid.domain.LocationDetails;
-import uk.co.sundroid.util.SharedPrefsHelper;
+import uk.co.sundroid.util.prefs.SharedPrefsHelper;
 import uk.co.sundroid.util.log.LogWrapper;
 
 import java.util.ArrayList;
@@ -150,7 +150,7 @@ public class SearchActivity extends AbstractLocationActivity implements OnClickL
 
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		LocationDetails locationDetails = (LocationDetails)parent.getItemAtPosition(position);
-		SharedPrefsHelper.saveSelectedLocation(this, locationDetails);
+		SharedPrefsHelper.INSTANCE.saveSelectedLocation(this, locationDetails);
 		if (locationDetails.getTimeZone() == null) {
 			Intent intent = new Intent(getApplicationContext(), TimeZonePickerActivity.class);
 			intent.putExtra(TimeZonePickerActivity.INTENT_MODE, TimeZonePickerActivity.MODE_SELECT);

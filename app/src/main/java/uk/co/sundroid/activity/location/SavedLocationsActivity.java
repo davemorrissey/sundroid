@@ -15,7 +15,7 @@ import uk.co.sundroid.R.id;
 import uk.co.sundroid.R.layout;
 import uk.co.sundroid.dao.DatabaseHelper;
 import uk.co.sundroid.domain.LocationDetails;
-import uk.co.sundroid.util.SharedPrefsHelper;
+import uk.co.sundroid.util.prefs.SharedPrefsHelper;
 import uk.co.sundroid.util.geometry.Accuracy;
 
 import java.util.List;
@@ -64,7 +64,7 @@ public class SavedLocationsActivity extends AbstractLocationActivity implements 
         if (savedLocationId != null && action != null && db != null) {
             LocationDetails locationDetails = db.getSavedLocation(Integer.parseInt(savedLocationId));
             if (action.equals(ACTION_VIEW)) {
-                SharedPrefsHelper.saveSelectedLocation(this, locationDetails);
+                SharedPrefsHelper.INSTANCE.saveSelectedLocation(this, locationDetails);
                 if (locationDetails.getTimeZone() == null) {
                     Intent intent = new Intent(getApplicationContext(), TimeZonePickerActivity.class);
                     intent.putExtra(TimeZonePickerActivity.INTENT_MODE, TimeZonePickerActivity.MODE_SELECT);

@@ -31,7 +31,7 @@ import uk.co.sundroid.R.layout;
 import uk.co.sundroid.NavItem;
 import uk.co.sundroid.domain.LocationDetails;
 import uk.co.sundroid.util.location.LatitudeLongitude;
-import uk.co.sundroid.util.SharedPrefsHelper;
+import uk.co.sundroid.util.prefs.SharedPrefsHelper;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -101,8 +101,8 @@ public class MapActivity extends AbstractLocationActivity implements OnMapClickL
                         // Show alert only if this is the first time the user has denied permission,
                         // later calls to this method happen without interaction if they selected
                         // "always deny".
-                        if (!SharedPrefsHelper.getMapLocationPermissionDenied(this)) {
-                            SharedPrefsHelper.setMapLocationPermissionDenied(this, true);
+                        if (!SharedPrefsHelper.INSTANCE.getMapLocationPermissionDenied(this)) {
+                            SharedPrefsHelper.INSTANCE.setMapLocationPermissionDenied(this, true);
                             AlertDialog.Builder builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
                             builder.setTitle("Location denied")
                                     .setMessage("Location name and time zone lookup will be unavailable. To fix this, you can grant this app location permission from Android settings.")
@@ -112,7 +112,7 @@ public class MapActivity extends AbstractLocationActivity implements OnMapClickL
                         }
                     } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                         // Unset denied flag so next time permission is denied, the alert is displayed again
-                        SharedPrefsHelper.setMapLocationPermissionDenied(this, false);
+                        SharedPrefsHelper.INSTANCE.setMapLocationPermissionDenied(this, false);
                     }
                 }
             }
@@ -177,7 +177,7 @@ public class MapActivity extends AbstractLocationActivity implements OnMapClickL
 
     private void setUpMap() {
 
-        LocationDetails location = SharedPrefsHelper.getSelectedLocation(this);
+        LocationDetails location = SharedPrefsHelper.INSTANCE.getSelectedLocation(this);
 
         // Hide the zoom controls as the button panel will cover it.
         map.getUiSettings().setZoomControlsEnabled(true);
@@ -192,7 +192,7 @@ public class MapActivity extends AbstractLocationActivity implements OnMapClickL
         map.setOnMapClickListener(this);
         map.clear();
 
-        String mapMode = SharedPrefsHelper.getLocMapMode(getApplicationContext());
+        String mapMode = SharedPrefsHelper.INSTANCE.getLocMapMode(getApplicationContext());
         switch (mapMode) {
             case "normal":
                 map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
@@ -235,7 +235,7 @@ public class MapActivity extends AbstractLocationActivity implements OnMapClickL
     @Override
     public void onInfoWindowClick(Marker marker) {
         if (mapLocation != null && mapLocationDetails != null) {
-            SharedPrefsHelper.saveSelectedLocation(this, mapLocationDetails);
+            SharedPrefsHelper.INSTANCE.saveSelectedLocation(this, mapLocationDetails);
             if (mapLocationDetails.getTimeZone() == null) {
                 Intent intent = new Intent(getApplicationContext(), TimeZonePickerActivity.class);
                 intent.putExtra(TimeZonePickerActivity.INTENT_MODE, TimeZonePickerActivity.MODE_SELECT);
@@ -324,7 +324,7 @@ public class MapActivity extends AbstractLocationActivity implements OnMapClickL
         if (id == DIALOG_MAPVIEW) {
             List<String> names = Arrays.asList("Map", "Satellite", "Terrain", "Hybrid");
             int selectedIndex;
-            String currentMapMode = SharedPrefsHelper.getLocMapMode(getApplicationContext());
+            String currentMapMode = SharedPrefsHelper.INSTANCE.getLocMapMode(getApplicationContext());
             switch (currentMapMode) {
                 case "normal":
                     selectedIndex = 0;
@@ -352,16 +352,16 @@ public class MapActivity extends AbstractLocationActivity implements OnMapClickL
                 if (dialog instanceof AlertDialog) {
                     int selectedItem = ((AlertDialog)dialog).getListView().getCheckedItemPosition();
                     if (selectedItem == 0) {
-                        SharedPrefsHelper.setLocMapMode(getApplicationContext(), "normal");
+                        SharedPrefsHelper.INSTANCE.setLocMapMode(getApplicationContext(), "normal");
                         map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
                     } else if (selectedItem == 1) {
-                        SharedPrefsHelper.setLocMapMode(getApplicationContext(), "satellite");
+                        SharedPrefsHelper.INSTANCE.setLocMapMode(getApplicationContext(), "satellite");
                         map.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
                     } else if (selectedItem == 2) {
-                        SharedPrefsHelper.setLocMapMode(getApplicationContext(), "terrain");
+                        SharedPrefsHelper.INSTANCE.setLocMapMode(getApplicationContext(), "terrain");
                         map.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
                     } else if (selectedItem == 3) {
-                        SharedPrefsHelper.setLocMapMode(getApplicationContext(), "hybrid");
+                        SharedPrefsHelper.INSTANCE.setLocMapMode(getApplicationContext(), "hybrid");
                         map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
                     }
                 }

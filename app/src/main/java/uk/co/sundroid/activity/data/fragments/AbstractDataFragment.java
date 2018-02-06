@@ -7,7 +7,7 @@ import uk.co.sundroid.activity.data.fragments.dialogs.OnViewPrefsChangedListener
 import uk.co.sundroid.activity.location.TimeZonePickerActivity;
 import uk.co.sundroid.domain.LocationDetails;
 import uk.co.sundroid.util.log.LogWrapper;
-import uk.co.sundroid.util.SharedPrefsHelper;
+import uk.co.sundroid.util.prefs.SharedPrefsHelper;
 
 import java.util.Calendar;
 
@@ -43,7 +43,7 @@ public abstract class AbstractDataFragment extends AbstractFragment implements O
     }
 
     protected LocationDetails getLocation() {
-        return SharedPrefsHelper.getSelectedLocation(getApplicationContext());
+        return SharedPrefsHelper.INSTANCE.getSelectedLocation(getApplicationContext());
     }
 
     protected Calendar getDateCalendar() {

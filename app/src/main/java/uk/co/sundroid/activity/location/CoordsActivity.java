@@ -4,7 +4,7 @@ import uk.co.sundroid.util.geo.Geocoder;
 import uk.co.sundroid.R;
 import uk.co.sundroid.domain.LocationDetails;
 import uk.co.sundroid.util.location.LatitudeLongitude;
-import uk.co.sundroid.util.SharedPrefsHelper;
+import uk.co.sundroid.util.prefs.SharedPrefsHelper;
 import uk.co.sundroid.util.log.LogWrapper;
 import android.app.Activity;
 import android.app.Dialog;
@@ -131,7 +131,7 @@ public class CoordsActivity extends AbstractLocationActivity implements OnClickL
     		public void run() {
     	    	final LocationDetails locationDetails = Geocoder.getLocationDetails(location, getApplicationContext());
     	    	dismissDialog(DIALOG_LOOKINGUP);
-    			SharedPrefsHelper.saveSelectedLocation(activity, locationDetails);
+    			SharedPrefsHelper.INSTANCE.saveSelectedLocation(activity, locationDetails);
     			if (locationDetails.getTimeZone() == null) {
     				Intent intent = new Intent(getApplicationContext(), TimeZonePickerActivity.class);
     				intent.putExtra(TimeZonePickerActivity.INTENT_MODE, TimeZonePickerActivity.MODE_SELECT);

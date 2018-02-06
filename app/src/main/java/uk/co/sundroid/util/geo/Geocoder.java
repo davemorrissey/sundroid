@@ -6,7 +6,7 @@ import java.util.Locale;
 
 import uk.co.sundroid.domain.LocationDetails;
 import uk.co.sundroid.domain.TimeZoneDetail;
-import uk.co.sundroid.util.SharedPrefsHelper;
+import uk.co.sundroid.util.prefs.SharedPrefsHelper;
 import uk.co.sundroid.util.log.LogWrapper;
 import uk.co.sundroid.util.StringUtils;
 import uk.co.sundroid.util.location.LatitudeLongitude;
@@ -62,7 +62,7 @@ public class Geocoder {
 		LocationDetails locationDetails = new LocationDetails();
 		locationDetails.setLocation(location);
 		
-		if (SharedPrefsHelper.getReverseGeocode(context) && ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+		if (SharedPrefsHelper.INSTANCE.getReverseGeocode(context) && ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 			try {
 				android.location.Geocoder myLocation = new android.location.Geocoder(context, Locale.getDefault());
 				List<Address> myList = myLocation.getFromLocation(location.getLatitude().getDoubleValue(), location.getLongitude().getDoubleValue(), 1);
@@ -100,8 +100,8 @@ public class Geocoder {
 			locationDetails.setTimeZone(possibleTimeZones.get(0));
 		}
 		
-		TimeZoneDetail defaultZone = SharedPrefsHelper.getDefaultZone(context);
-		boolean defaultZoneOverride = SharedPrefsHelper.getDefaultZoneOverride(context);
+		TimeZoneDetail defaultZone = SharedPrefsHelper.INSTANCE.getDefaultZone(context);
+		boolean defaultZoneOverride = SharedPrefsHelper.INSTANCE.getDefaultZoneOverride(context);
 
 		if (locationDetails.getTimeZone() == null || (defaultZone != null && defaultZoneOverride)) {
 			locationDetails.setTimeZone(defaultZone);

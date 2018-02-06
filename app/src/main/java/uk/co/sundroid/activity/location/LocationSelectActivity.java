@@ -15,7 +15,7 @@ import uk.co.sundroid.LocaterListener;
 import uk.co.sundroid.R;
 import uk.co.sundroid.R.id;
 import uk.co.sundroid.domain.LocationDetails;
-import uk.co.sundroid.util.SharedPrefsHelper;
+import uk.co.sundroid.util.prefs.SharedPrefsHelper;
 import uk.co.sundroid.util.log.LogWrapper;
 
 public class LocationSelectActivity extends AbstractLocationActivity implements LocaterListener, OnClickListener, DialogInterface.OnClickListener {
@@ -166,7 +166,7 @@ public class LocationSelectActivity extends AbstractLocationActivity implements 
 			// May not have been shown yet.
 		}
 		LogWrapper.d(TAG, "Location received: " + locationDetails);
-		SharedPrefsHelper.saveSelectedLocation(this, locationDetails);
+		SharedPrefsHelper.INSTANCE.saveSelectedLocation(this, locationDetails);
 		
 		if (locationDetails.getTimeZone() == null) {
 			Intent intent = new Intent(getApplicationContext(), TimeZonePickerActivity.class);

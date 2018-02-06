@@ -3,7 +3,7 @@ package uk.co.sundroid.util.geometry
 
 import android.content.Context
 import android.hardware.GeomagneticField
-import uk.co.sundroid.util.SharedPrefsHelper
+import uk.co.sundroid.util.prefs.SharedPrefsHelper
 import uk.co.sundroid.util.location.LatitudeLongitude
 import java.math.BigDecimal
 import java.util.*

@@ -11,7 +11,7 @@ import uk.co.sundroid.util.astro.MoonPhase;
 import uk.co.sundroid.util.astro.MoonPhaseEvent;
 import uk.co.sundroid.util.astro.math.MoonPhaseCalculator;
 import uk.co.sundroid.domain.LocationDetails;
-import uk.co.sundroid.util.SharedPrefsHelper;
+import uk.co.sundroid.util.prefs.SharedPrefsHelper;
 import uk.co.sundroid.util.theme.ThemePalette;
 
 import java.math.BigDecimal;
@@ -47,7 +47,7 @@ public class MonthMoonPhaseFragment extends AbstractMonthFragment {
                     // Set column headers according to weekday preference.
                     for (int day = 1; day < 8; day++) {
                         int dayId = view("moonCalD" + day);
-                        int altDay = day + SharedPrefsHelper.getFirstWeekday(getApplicationContext()) - 1;
+                        int altDay = day + SharedPrefsHelper.INSTANCE.getFirstWeekday(getApplicationContext()) - 1;
                         if (altDay > 7) { altDay -= 7; };
                         switch(altDay) {
                             case 1: showInView(view, dayId, "Sun"); break;
@@ -78,7 +78,7 @@ public class MonthMoonPhaseFragment extends AbstractMonthFragment {
                     Calendar todayCalendar = Calendar.getInstance(calendar.getTimeZone());
 
                     // Add empty cells to the first row.
-                    int firstCol = loopCalendar.get(Calendar.DAY_OF_WEEK) + (7 - SharedPrefsHelper.getFirstWeekday(getApplicationContext())) + 1;
+                    int firstCol = loopCalendar.get(Calendar.DAY_OF_WEEK) + (7 - SharedPrefsHelper.INSTANCE.getFirstWeekday(getApplicationContext())) + 1;
                     if (firstCol > 7) { firstCol -= 7; }
                     for (int i = 1; i < firstCol; i++) {
                         TableRow datesRow = view.findViewById(id.moonCalDates1);
@@ -94,7 +94,7 @@ public class MonthMoonPhaseFragment extends AbstractMonthFragment {
                     List<MoonPhaseEvent> phaseEvents = MoonPhaseCalculator.getYearEvents(calendar.get(Calendar.YEAR), calendar.getTimeZone());
 
                     for (int i = 0; i < 32 && loopCalendar.get(Calendar.MONTH) == month; i++) {
-                        int col = loopCalendar.get(Calendar.DAY_OF_WEEK) + (7 - SharedPrefsHelper.getFirstWeekday(getApplicationContext())) + 1;
+                        int col = loopCalendar.get(Calendar.DAY_OF_WEEK) + (7 - SharedPrefsHelper.INSTANCE.getFirstWeekday(getApplicationContext())) + 1;
                         if (col > 7) { col -= 7; }
 
                         boolean today = todayCalendar.get(Calendar.YEAR) == loopCalendar.get(Calendar.YEAR) &&
@@ -156,7 +156,7 @@ public class MonthMoonPhaseFragment extends AbstractMonthFragment {
 
                     // Fill out any remaining cells in the last row.
                     loopCalendar.add(Calendar.DAY_OF_MONTH, -1);
-                    int lastCol = loopCalendar.get(Calendar.DAY_OF_WEEK) + (7 - SharedPrefsHelper.getFirstWeekday(getApplicationContext())) + 1;
+                    int lastCol = loopCalendar.get(Calendar.DAY_OF_WEEK) + (7 - SharedPrefsHelper.INSTANCE.getFirstWeekday(getApplicationContext())) + 1;
                     if (lastCol > 7) { lastCol -= 7; }
                     for (int i = lastCol + 1; i < 8; i++) {
                         TableRow datesRow = view.findViewById(view("moonCalDates" + row));

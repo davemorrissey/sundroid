@@ -2,7 +2,7 @@
 package uk.co.sundroid.util.time
 
 import android.content.Context
-import uk.co.sundroid.util.SharedPrefsHelper
+import uk.co.sundroid.util.prefs.SharedPrefsHelper
 import uk.co.sundroid.util.zeroPad
 import java.util.Calendar
 import java.util.Calendar.*

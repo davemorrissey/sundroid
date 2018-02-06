@@ -15,7 +15,7 @@ import uk.co.sundroid.util.astro.SunDay;
 import uk.co.sundroid.util.astro.math.BodyPositionCalculator;
 import uk.co.sundroid.util.astro.math.SunCalculator;
 import uk.co.sundroid.domain.LocationDetails;
-import uk.co.sundroid.util.SharedPrefsHelper;
+import uk.co.sundroid.util.prefs.SharedPrefsHelper;
 import uk.co.sundroid.util.geometry.GeometryUtils;
 import uk.co.sundroid.util.time.TimeUtils;
 import uk.co.sundroid.util.time.Time;
@@ -34,9 +34,9 @@ public class DayDetailEventsFragment extends AbstractDayFragment implements Conf
     @Override
     public void openSettingsDialog() {
         boolean[] currentEvents = new boolean[7];
-        currentEvents[0] = SharedPrefsHelper.getShowElement(getApplicationContext(), "evtByTimeSun", true);
-        currentEvents[1] = SharedPrefsHelper.getShowElement(getApplicationContext(), "evtByTimeMoon", true);
-        currentEvents[2] = SharedPrefsHelper.getShowElement(getApplicationContext(), "evtByTimePlanets", false);
+        currentEvents[0] = SharedPrefsHelper.INSTANCE.getShowElement(getApplicationContext(), "evtByTimeSun", true);
+        currentEvents[1] = SharedPrefsHelper.INSTANCE.getShowElement(getApplicationContext(), "evtByTimeMoon", true);
+        currentEvents[2] = SharedPrefsHelper.INSTANCE.getShowElement(getApplicationContext(), "evtByTimePlanets", false);
 
         DayEventsPickerFragment settingsDialog = DayEventsPickerFragment.newInstance(currentEvents);
         settingsDialog.show(getFragmentManager(), "dayEventsSettings");
@@ -55,13 +55,13 @@ public class DayDetailEventsFragment extends AbstractDayFragment implements Conf
                 MoonDay moonDay = null;
                 Map<Body, BodyDay> planetDays = null;
 
-                if (SharedPrefsHelper.getShowElement(getApplicationContext(), "evtByTimeSun", true)) {
+                if (SharedPrefsHelper.INSTANCE.getShowElement(getApplicationContext(), "evtByTimeSun", true)) {
                     sunDay = SunCalculator.calcDay(location.getLocation(), calendar);
                 }
-                if (SharedPrefsHelper.getShowElement(getApplicationContext(), "evtByTimeMoon", true)) {
+                if (SharedPrefsHelper.INSTANCE.getShowElement(getApplicationContext(), "evtByTimeMoon", true)) {
                     moonDay = (MoonDay)BodyPositionCalculator.calcDay(Body.MOON, location.getLocation(), calendar, false);
                 }
-                if (SharedPrefsHelper.getShowElement(getApplicationContext(), "evtByTimePlanets", false)) {
+                if (SharedPrefsHelper.INSTANCE.getShowElement(getApplicationContext(), "evtByTimePlanets", false)) {
                     planetDays = new LinkedHashMap<>();
                     for (Body body : Body.values()) {
                         if (body != Body.SUN && body != Body.MOON) {

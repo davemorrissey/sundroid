@@ -12,7 +12,7 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import uk.co.sundroid.domain.LocationDetails;
-import uk.co.sundroid.util.SharedPrefsHelper;
+import uk.co.sundroid.util.prefs.SharedPrefsHelper;
 
 public class TrackerMapFragment extends MapFragment {
 
@@ -55,7 +55,7 @@ public class TrackerMapFragment extends MapFragment {
                 uiSettings.setRotateGesturesEnabled(false);
                 uiSettings.setTiltGesturesEnabled(false);
 
-                String mapMode = SharedPrefsHelper.getSunTrackerMapMode(getActivity().getApplicationContext());
+                String mapMode = SharedPrefsHelper.INSTANCE.getSunTrackerMapMode(getActivity().getApplicationContext());
                 switch (mapMode) {
                     case "normal":
                         map.setMapType(GoogleMap.MAP_TYPE_NORMAL);

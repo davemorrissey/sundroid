@@ -25,6 +25,7 @@ import uk.co.sundroid.domain.LocationDetails;
 import uk.co.sundroid.util.*;
 import uk.co.sundroid.util.geometry.GeometryUtils;
 import uk.co.sundroid.util.log.LogWrapper;
+import uk.co.sundroid.util.prefs.SharedPrefsHelper;
 import uk.co.sundroid.util.theme.ThemePalette;
 import uk.co.sundroid.util.time.Time;
 import uk.co.sundroid.util.time.TimeUtils;
@@ -57,7 +58,7 @@ public class MonthCalendarsFragment extends AbstractMonthFragment<ArrayList<Mont
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), array.monthCalendars, layout.frag_data_monthcalendars_selector_selected);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        int index = SharedPrefsHelper.getLastCalendar(getActivity());
+        int index = SharedPrefsHelper.INSTANCE.getLastCalendar(getActivity());
         selector.setAdapter(adapter);
         selector.setOnItemSelectedListener(this);
         if (selector.getSelectedItemPosition() != index) {
@@ -71,7 +72,7 @@ public class MonthCalendarsFragment extends AbstractMonthFragment<ArrayList<Mont
     public void onItemSelected(AdapterView<?> adapterView, View view, int index, long l) {
         if (selectorActive) {
             LogWrapper.d(TAG, "Item selected " + index);
-            SharedPrefsHelper.setLastCalendar(getActivity(), index);
+            SharedPrefsHelper.INSTANCE.setLastCalendar(getActivity(), index);
             update();
         } else {
             LogWrapper.d(TAG, "SELECTOR NOT ACTIVE " + index);
@@ -462,7 +463,7 @@ public class MonthCalendarsFragment extends AbstractMonthFragment<ArrayList<Mont
     }
 
     private Body getBody() {
-        switch (SharedPrefsHelper.getLastCalendar(getActivity())) {
+        switch (SharedPrefsHelper.INSTANCE.getLastCalendar(getActivity())) {
             case 0:
                 return Body.SUN;
             case 7:
@@ -485,7 +486,7 @@ public class MonthCalendarsFragment extends AbstractMonthFragment<ArrayList<Mont
     }
 
     private String getType() {
-        switch (SharedPrefsHelper.getLastCalendar(getActivity())) {
+        switch (SharedPrefsHelper.INSTANCE.getLastCalendar(getActivity())) {
             case 0:
                 return "daylight";
             case 1:
