@@ -157,10 +157,10 @@ object SharedPrefsHelper {
 
     fun getLocationTimeout(context: Context): Int {
         val timeout = prefs(context).getString(LOCATION_TIMEOUT_KEY, "60")
-        try {
-            return Integer.parseInt(timeout)
+		return try {
+			Integer.parseInt(timeout)
         } catch (e: Exception) {
-            return 60
+			60
         }
     }
     
@@ -241,10 +241,10 @@ object SharedPrefsHelper {
     
     fun getSunTrackerBody(context: Context): Body? {
         val value = prefs(context).getString(SUNTRACKER_BODY_KEY, "SUN")
-        if (value == "all") {
-            return null
+		return if (value == "all") {
+			null
         } else {
-            return Body.valueOf(value)
+			Body.valueOf(value)
         }
     }
     
@@ -253,11 +253,7 @@ object SharedPrefsHelper {
     }
     
     fun setSunTrackerBody(context: Context, body: Body?) {
-        if (body == null) {
-            prefs(context).edit().putString(SUNTRACKER_BODY_KEY, "all").apply()
-        } else {
-            prefs(context).edit().putString(SUNTRACKER_BODY_KEY, body.name).apply()
-        }
+		prefs(context).edit().putString(SUNTRACKER_BODY_KEY, body?.name ?: "all").apply()
     }
     
     fun setSunTrackerMode(context: Context, mode: String) {
@@ -313,5 +309,5 @@ object SharedPrefsHelper {
     }
 
 	private fun prefs(context: Context): SharedPreferences = context.getSharedPreferences(PREFS_KEY, Context.MODE_PRIVATE)
-    
+
 }
