@@ -18,7 +18,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TextView.OnEditorActionListener;
 
 import uk.co.sundroid.util.StringUtils;
-import uk.co.sundroid.util.geo.Geocoder;
+import uk.co.sundroid.util.location.Geocoder;
 import uk.co.sundroid.R;
 import uk.co.sundroid.domain.LocationDetails;
 import uk.co.sundroid.util.prefs.SharedPrefsHelper;
@@ -91,7 +91,7 @@ public class SearchActivity extends AbstractLocationActivity implements OnClickL
     		@Override
     		public void run() {
     			try {
-	    	    	final List<LocationDetails> results = Geocoder.search(searchValue, getApplicationContext());
+	    	    	final List<LocationDetails> results = Geocoder.INSTANCE.search(searchValue, getApplicationContext());
 	    	    	if (results.isEmpty()) {
 	    	        	handler.post(() -> {
                                     dismissDialog(DIALOG_SEARCHING);

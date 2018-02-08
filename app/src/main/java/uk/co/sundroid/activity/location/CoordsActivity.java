@@ -1,6 +1,6 @@
 package uk.co.sundroid.activity.location;
 
-import uk.co.sundroid.util.geo.Geocoder;
+import uk.co.sundroid.util.location.Geocoder;
 import uk.co.sundroid.R;
 import uk.co.sundroid.domain.LocationDetails;
 import uk.co.sundroid.util.location.LatitudeLongitude;
@@ -129,7 +129,7 @@ public class CoordsActivity extends AbstractLocationActivity implements OnClickL
     	Thread thread = new Thread() {
     		@Override
     		public void run() {
-    	    	final LocationDetails locationDetails = Geocoder.getLocationDetails(location, getApplicationContext());
+    	    	final LocationDetails locationDetails = Geocoder.INSTANCE.getLocationDetails(location, getApplicationContext());
     	    	dismissDialog(DIALOG_LOOKINGUP);
     			SharedPrefsHelper.INSTANCE.saveSelectedLocation(activity, locationDetails);
     			if (locationDetails.getTimeZone() == null) {

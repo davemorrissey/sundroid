@@ -23,7 +23,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import uk.co.sundroid.util.geo.Geocoder;
+import uk.co.sundroid.util.location.Geocoder;
 import uk.co.sundroid.R;
 import uk.co.sundroid.R.drawable;
 import uk.co.sundroid.R.id;
@@ -257,7 +257,7 @@ public class MapActivity extends AbstractLocationActivity implements OnMapClickL
     }
 
     private void startPointLookup(final LatitudeLongitude location) {
-        new Thread(() -> updateLocationDetails(Geocoder.getLocationDetails(location, getApplicationContext()))).start();
+        new Thread(() -> updateLocationDetails(Geocoder.INSTANCE.getLocationDetails(location, getApplicationContext()))).start();
     }
 
     private void updateLocationDetails(final LocationDetails locationDetails) {

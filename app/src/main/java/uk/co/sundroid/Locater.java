@@ -1,7 +1,7 @@
 package uk.co.sundroid;
 
 import uk.co.sundroid.domain.LocationDetails;
-import uk.co.sundroid.util.geo.Geocoder;
+import uk.co.sundroid.util.location.Geocoder;
 import uk.co.sundroid.util.location.LatitudeLongitude;
 import uk.co.sundroid.util.prefs.SharedPrefsHelper;
 import uk.co.sundroid.util.log.LogWrapper;
@@ -174,7 +174,7 @@ public class Locater implements LocationListener {
 			cancel();
 			LogWrapper.d(TAG, "Location received: " + coords.getProvider() + ", " + coords.getLatitude() + " " + coords.getLongitude());
 			LatitudeLongitude location = new LatitudeLongitude(coords.getLatitude(), coords.getLongitude());
-			LocationDetails locationDetails = Geocoder.getLocationDetails(location, context);
+			LocationDetails locationDetails = Geocoder.INSTANCE.getLocationDetails(location, context);
 			listener.locationReceived(locationDetails);
 		}
 	}
