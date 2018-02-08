@@ -195,10 +195,9 @@ public class RealDataActivity extends AbstractActivity implements OnClickListene
     private void initCalendarAndLocation(boolean forceDateUpdate) {
         location = SharedPrefsHelper.INSTANCE.getSelectedLocation(this);
         if (location == null) {
-            location = new LocationDetails();
+            location = new LocationDetails(new LatitudeLongitude(37.779093, -122.419109));
             location.setName("San Francisco");
             location.setTimeZone(TimeZoneResolver.INSTANCE.getTimeZone("US/Pacific"));
-            location.setLocation(new LatitudeLongitude(37.779093, -122.419109));
             SharedPrefsHelper.INSTANCE.saveSelectedLocation(this, location);
         }
         if (location.getTimeZone() == null) {

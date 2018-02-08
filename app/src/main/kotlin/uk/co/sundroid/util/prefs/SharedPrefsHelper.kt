@@ -59,8 +59,7 @@ object SharedPrefsHelper {
         if (prefs.contains(LOC_LAT_KEY) && prefs.contains(LOC_LON_KEY)) {
             try {
                 val location = LatitudeLongitude(prefs.getFloat(LOC_LAT_KEY, 0f).toDouble(), prefs.getFloat(LOC_LON_KEY, 0f).toDouble())
-                val locationDetails = LocationDetails()
-                locationDetails.location = location
+                val locationDetails = LocationDetails(location)
                 locationDetails.name = prefs.getString(LOC_NAME_KEY, null)
                 locationDetails.country = prefs.getString(LOC_COUNTRY_KEY, null)
                 locationDetails.state = prefs.getString(LOC_STATE_KEY, null)

@@ -26,8 +26,8 @@ object Geocoder {
             val myLocation = android.location.Geocoder(context, Locale.getDefault())
             val myList = myLocation.getFromLocationName(search, 1)
             for (address in myList) {
-                if ((address.locality != null || address.featureName != null) && address.countryName != null && address.hasLatitude() && address.hasLongitude()) {
-                    val locationDetails = LocationDetails()
+                if ((address.locality.isNotEmpty() || address.featureName.isNotEmpty()) && address.countryName.isNotEmpty() && address.hasLatitude() && address.hasLongitude()) {
+                    val locationDetails = LocationDetails(LatitudeLongitude(address.latitude, address.longitude))
                     var name = if (address.locality != null) address.locality else address.featureName
                     if (isNotEmpty(address.featureName) && address.featureName != name) {
                         name = address.featureName + ", " + name
@@ -36,7 +36,6 @@ object Geocoder {
                     locationDetails.countryName = address.countryName
                     locationDetails.state = address.adminArea
                     locationDetails.name = name
-                    locationDetails.location = LatitudeLongitude(address.latitude, address.longitude)
 
                     setTimeZone(locationDetails, context)
 
@@ -45,18 +44,16 @@ object Geocoder {
 
             }
         } catch (e: Exception) {
-            e(TAG, "Search failed: " + e.toString(), e)
+            e(TAG, "Search failed: $e", e)
             throw RuntimeException("Search failed")
         }
 
         return results
-
     }
 
     fun getLocationDetails(location: LatitudeLongitude, context: Context): LocationDetails {
 
-        val locationDetails = LocationDetails()
-        locationDetails.location = location
+        val locationDetails = LocationDetails(location)
 
         if (SharedPrefsHelper.getReverseGeocode(context) && ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             try {
@@ -89,7 +86,7 @@ object Geocoder {
 
     private fun setTimeZone(locationDetails: LocationDetails, context: Context) {
 
-        val possibleTimeZones = TimeZoneResolver.getPossibleTimeZones(locationDetails.location!!, locationDetails.country, locationDetails.state)
+        val possibleTimeZones = TimeZoneResolver.getPossibleTimeZones(locationDetails.location, locationDetails.country, locationDetails.state)
         locationDetails.possibleTimeZones = possibleTimeZones
         if (possibleTimeZones.size == 1) {
             locationDetails.timeZone = possibleTimeZones[0]

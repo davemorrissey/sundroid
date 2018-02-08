@@ -6,11 +6,9 @@ import java.util.ArrayList
 import uk.co.sundroid.util.geometry.Accuracy.*
 import uk.co.sundroid.util.location.LatitudeLongitude
 
-class LocationDetails : Serializable {
+class LocationDetails(val location: LatitudeLongitude) : Serializable {
 
     var id: Int = 0
-
-    var location: LatitudeLongitude? = null
 
     var name: String? = null
 
