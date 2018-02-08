@@ -23,7 +23,7 @@ class LocationDetails(val location: LatitudeLongitude) : Serializable {
     var possibleTimeZones: ArrayList<TimeZoneDetail>? = null
 
     val displayName: String
-        get() = name ?: location?.getPunctuatedValue(MINUTES) ?: "Unknown"
+        get() = name ?: location.getPunctuatedValue(MINUTES) ?: "Unknown"
 
     override fun toString(): String {
         return "location=$location, name=$name, country=$country, state=$state, timeZone=$timeZone"
