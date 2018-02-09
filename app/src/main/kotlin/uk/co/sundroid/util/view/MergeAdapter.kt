@@ -29,9 +29,6 @@ import android.widget.ListAdapter
  * Ideally, adapters also have distinct ranges for their row ids, as
  * returned by getItemId().
  */
-/**
- * Stock constructor, simply chaining to the superclass.
- */
 class MergeAdapter : BaseAdapter() {
 
     private val pieces = ArrayList<ListAdapter>()
