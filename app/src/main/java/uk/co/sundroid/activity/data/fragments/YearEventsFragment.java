@@ -64,7 +64,7 @@ public class YearEventsFragment extends AbstractYearFragment implements Configur
                 }
 
                 final Calendar todayCalendar = Calendar.getInstance(calendar.getTimeZone());
-                final Set<Event> eventsSet = YearData.getYearEvents(calendar.get(Calendar.YEAR), location.getTimeZone().getZone());
+                final Set<Event> eventsSet = YearData.INSTANCE.getYearEvents(calendar.get(Calendar.YEAR), location.getTimeZone().getZone());
                 List<MoonPhaseEvent> moonPhases = MoonPhaseCalculator.getYearEvents(calendar.get(Calendar.YEAR), location.getTimeZone().getZone());
                 for (MoonPhaseEvent moonPhase : moonPhases) {
                     eventsSet.add(new Event(EventType.PHASE, moonPhase, moonPhase.getTime(), null));
@@ -81,48 +81,48 @@ public class YearEventsFragment extends AbstractYearFragment implements Configur
 
                     boolean first = true;
                     for (Event event : eventsList) {
-                        Time eventTime = TimeUtils.formatTime(getApplicationContext(), event.time, false);
+                        Time eventTime = TimeUtils.formatTime(getApplicationContext(), event.getTime(), false);
                         String title = "";
                         String time = eventTime.getTime() + eventTime.getMarker().toLowerCase();
                         String subtitle = "";
                         String link = null;
                         int image = 0;
-                        switch (event.type) {
+                        switch (event.getType()) {
                             case EARTH_APHELION:
                             case EARTH_PERIHELION:
                                 if (!SharedPrefsHelper.INSTANCE.getShowElement(getApplicationContext(), "yearEarthApsis", true)) { continue; }
-                                title = event.type.name;
-                                link = event.link;
+                                title = event.getType().getDisplayName();
+                                link = event.getLink();
                                 break;
                             case PARTIAL_LUNAR:
                             case TOTAL_LUNAR:
                             case PENUMBRAL_LUNAR:
                                 if (!SharedPrefsHelper.INSTANCE.getShowElement(getApplicationContext(), "yearLunarEclipse", true)) { continue; }
-                                title = event.type.name;
+                                title = event.getType().getDisplayName();
                                 time = "Greatest eclipse: " + time;
-                                link = event.link;
+                                link = event.getLink();
                                 break;
                             case PARTIAL_SOLAR:
                             case TOTAL_SOLAR:
                             case ANNULAR_SOLAR:
                             case HYBRID_SOLAR:
                                 if (!SharedPrefsHelper.INSTANCE.getShowElement(getApplicationContext(), "yearSolarEclipse", true)) { continue; }
-                                title = event.type.name;
+                                title = event.getType().getDisplayName();
                                 time = "Greatest eclipse: " + time;
-                                subtitle = (String)event.extra;
-                                link = event.link;
+                                subtitle = (String) event.getExtra();
+                                link = event.getLink();
                                 break;
                             case MARCH_EQUINOX:
                             case SEPTEMBER_EQUINOX:
                                 if (!SharedPrefsHelper.INSTANCE.getShowElement(getApplicationContext(), "yearEquinox", true)) { continue; }
-                                title = event.type.name;
+                                title = event.getType().getDisplayName();
                                 break;
                             case NORTHERN_SOLSTICE:
                             {
                                 if (!SharedPrefsHelper.INSTANCE.getShowElement(getApplicationContext(), "yearSolstice", true)) { continue; }
-                                title = event.type.name;
+                                title = event.getType().getDisplayName();
                                 if (Math.abs(location.getLocation().getLatitude().getDoubleValue()) > 23.44) {
-                                    SunDay sunDay = SunCalculator.calcDay(location.getLocation(), event.time, SunCalculator.Event.RISESET);
+                                    SunDay sunDay = SunCalculator.calcDay(location.getLocation(), event.getTime(), SunCalculator.Event.RISESET);
                                     String localExtreme = location.getLocation().getLatitude().getDoubleValue() >= 0 ? "Longest" : "Shortest";
                                     subtitle = localExtreme + " day: " + TimeUtils.formatDurationHMS(getApplicationContext(), sunDay.getUptimeHours(), true);
                                 }
@@ -131,16 +131,16 @@ public class YearEventsFragment extends AbstractYearFragment implements Configur
                             case SOUTHERN_SOLSTICE:
                             {
                                 if (!SharedPrefsHelper.INSTANCE.getShowElement(getApplicationContext(), "yearSolstice", true)) { continue; }
-                                title = event.type.name;
+                                title = event.getType().getDisplayName();
                                 if (Math.abs(location.getLocation().getLatitude().getDoubleValue()) > 23.44) {
-                                    SunDay sunDay = SunCalculator.calcDay(location.getLocation(), event.time, SunCalculator.Event.RISESET);
+                                    SunDay sunDay = SunCalculator.calcDay(location.getLocation(), event.getTime(), SunCalculator.Event.RISESET);
                                     String localExtreme = location.getLocation().getLatitude().getDoubleValue() >= 0 ? "Shortest" : "Longest";
                                     subtitle = localExtreme + " day: " + TimeUtils.formatDurationHMS(getApplicationContext(), sunDay.getUptimeHours(), true);
                                 }
                                 break;
                             }
                             case PHASE:
-                                MoonPhaseEvent moonPhase = (MoonPhaseEvent)event.extra;
+                                MoonPhaseEvent moonPhase = (MoonPhaseEvent) event.getExtra();
                                 switch (moonPhase.getPhase()) {
                                     case FULL:
                                         if (!SharedPrefsHelper.INSTANCE.getShowElement(getApplicationContext(), "yearFullMoon", true)) { continue; }
@@ -173,9 +173,9 @@ public class YearEventsFragment extends AbstractYearFragment implements Configur
                         }
                         View eventRow = View.inflate(getActivity(), layout.frag_data_yearevents_event, null);
 
-                        boolean today = todayCalendar.get(Calendar.YEAR) == event.time.get(Calendar.YEAR) &&
-                                todayCalendar.get(Calendar.MONTH) == event.time.get(Calendar.MONTH) &&
-                                todayCalendar.get(Calendar.DAY_OF_MONTH) == event.time.get(Calendar.DAY_OF_MONTH);
+                        boolean today = todayCalendar.get(Calendar.YEAR) == event.getTime().get(Calendar.YEAR) &&
+                                todayCalendar.get(Calendar.MONTH) == event.getTime().get(Calendar.MONTH) &&
+                                todayCalendar.get(Calendar.DAY_OF_MONTH) == event.getTime().get(Calendar.DAY_OF_MONTH);
                         if (today) {
                             eventRow.setBackgroundColor(ThemePalette.getCalendarHighlightColor());
                         } else {
@@ -186,8 +186,8 @@ public class YearEventsFragment extends AbstractYearFragment implements Configur
                             imageInView(eventRow, id.yearEventImg, image);
                             showInView(eventRow, id.yearEventImg);
                         }
-                        textInView(eventRow, id.yearEventDate, Integer.toString(event.time.get(Calendar.DAY_OF_MONTH)));
-                        textInView(eventRow, id.yearEventMonth, getShortMonth(event.time));
+                        textInView(eventRow, id.yearEventDate, Integer.toString(event.getTime().get(Calendar.DAY_OF_MONTH)));
+                        textInView(eventRow, id.yearEventMonth, getShortMonth(event.getTime()));
                         textInView(eventRow, id.yearEventTitle, Html.fromHtml(title));
                         textInView(eventRow, id.yearEventTime, Html.fromHtml(time));
                         if (StringUtils.isNotEmpty(subtitle)) {

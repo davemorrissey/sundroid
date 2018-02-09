@@ -58,11 +58,11 @@ public class DayDetailMoonFragment extends AbstractDayFragment {
                     moonPhaseEvents.addAll(MoonPhaseCalculator.getYearEvents(calendar.get(Calendar.YEAR) + 1, calendar.getTimeZone()));
                 }
 
-                Set<Event> yearEvents = YearData.getYearEvents(calendar.get(Calendar.YEAR), calendar.getTimeZone());
+                Set<Event> yearEvents = YearData.INSTANCE.getYearEvents(calendar.get(Calendar.YEAR), calendar.getTimeZone());
                 Event yearEventToday = null;
                 for (Event yearEvent : yearEvents) {
-                    if (yearEvent.type.body == Body.MOON) {
-                        if (TimeUtils.isSameDay(calendar, yearEvent.time)) {
+                    if (yearEvent.getType().getBody() == Body.MOON) {
+                        if (TimeUtils.isSameDay(calendar, yearEvent.getTime())) {
                             yearEventToday = yearEvent;
                         }
                     }
@@ -105,9 +105,9 @@ public class DayDetailMoonFragment extends AbstractDayFragment {
                     if (todayEvent != null) {
                         view.findViewById(R.id.moonEvent).setOnClickListener(null);
                         showInView(view, R.id.moonEvent);
-                        showInView(view, R.id.moonEventTitle, todayEvent.type.name);
+                        showInView(view, R.id.moonEventTitle, todayEvent.getType().getName());
                         showInView(view, R.id.moonEventSubtitle, "Tap to check Wikipedia for visibility");
-                        final String finalLink = todayEvent.link;
+                        final String finalLink = todayEvent.getLink();
                         view.findViewById(R.id.moonEvent).setOnClickListener(view1 -> {
                             Intent intent = new Intent(Intent.ACTION_VIEW);
                             intent.setData(Uri.parse(finalLink));

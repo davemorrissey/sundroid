@@ -43,11 +43,11 @@ public class DayDetailSunFragment extends AbstractDayFragment {
                     return;
                 }
 
-                Set<Event> yearEvents = YearData.getYearEvents(calendar.get(Calendar.YEAR), calendar.getTimeZone());
+                Set<Event> yearEvents = YearData.INSTANCE.getYearEvents(calendar.get(Calendar.YEAR), calendar.getTimeZone());
                 Event yearEventToday = null;
                 for (Event yearEvent : yearEvents) {
-                    if (yearEvent.type.body == Body.SUN) {
-                        if (TimeUtils.isSameDay(calendar, yearEvent.time)) {
+                    if (yearEvent.getType().getBody() == Body.SUN) {
+                        if (TimeUtils.isSameDay(calendar, yearEvent.getTime())) {
                             yearEventToday = yearEvent;
                         }
                     }
@@ -63,16 +63,16 @@ public class DayDetailSunFragment extends AbstractDayFragment {
                     if (todayEvent != null) {
                         view.findViewById(R.id.sunEvent).setOnClickListener(null);
                         showInView(view, R.id.sunEvent);
-                        showInView(view, R.id.sunEventTitle, todayEvent.type.name);
-                        if (todayEvent.type == EventType.NORTHERN_SOLSTICE && Math.abs(location.getLocation().getLatitude().getDoubleValue()) > 23.44) {
+                        showInView(view, R.id.sunEventTitle, todayEvent.getType().getDisplayName());
+                        if (todayEvent.getType() == EventType.NORTHERN_SOLSTICE && Math.abs(location.getLocation().getLatitude().getDoubleValue()) > 23.44) {
                             String localExtreme = location.getLocation().getLatitude().getDoubleValue() >= 0 ? "Longest" : "Shortest";
                             showInView(view, R.id.sunEventSubtitle, localExtreme + " day");
-                        } else if (todayEvent.type == EventType.SOUTHERN_SOLSTICE && Math.abs(location.getLocation().getLatitude().getDoubleValue()) > 23.44) {
+                        } else if (todayEvent.getType() == EventType.SOUTHERN_SOLSTICE && Math.abs(location.getLocation().getLatitude().getDoubleValue()) > 23.44) {
                             String localExtreme = location.getLocation().getLatitude().getDoubleValue() >= 0 ? "Shortest" : "Longest";
                             showInView(view, R.id.sunEventSubtitle, localExtreme + " day");
-                        } else if (todayEvent.type == EventType.ANNULAR_SOLAR || todayEvent.type == EventType.HYBRID_SOLAR || todayEvent.type == EventType.PARTIAL_SOLAR || todayEvent.type == EventType.TOTAL_SOLAR) {
+                        } else if (todayEvent.getType() == EventType.ANNULAR_SOLAR || todayEvent.getType() == EventType.HYBRID_SOLAR || todayEvent.getType() == EventType.PARTIAL_SOLAR || todayEvent.getType() == EventType.TOTAL_SOLAR) {
                             showInView(view, R.id.sunEventSubtitle, "Tap to check Wikipedia for visibility");
-                            final String finalLink = todayEvent.link;
+                            final String finalLink = todayEvent.getLink();
                             view.findViewById(R.id.sunEvent).setOnClickListener(view1 -> {
                                 Intent intent = new Intent(Intent.ACTION_VIEW);
                                 intent.setData(Uri.parse(finalLink));
