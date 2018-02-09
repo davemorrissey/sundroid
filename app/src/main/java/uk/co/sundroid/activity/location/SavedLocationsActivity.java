@@ -13,7 +13,7 @@ import uk.co.sundroid.R;
 import uk.co.sundroid.R.attr;
 import uk.co.sundroid.R.id;
 import uk.co.sundroid.R.layout;
-import uk.co.sundroid.dao.DatabaseHelper;
+import uk.co.sundroid.util.dao.DatabaseHelper;
 import uk.co.sundroid.domain.LocationDetails;
 import uk.co.sundroid.util.prefs.SharedPrefsHelper;
 import uk.co.sundroid.util.geometry.Accuracy;

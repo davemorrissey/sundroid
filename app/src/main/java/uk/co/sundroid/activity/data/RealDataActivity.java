@@ -29,7 +29,7 @@ import uk.co.sundroid.activity.info.InfoActivity;
 import uk.co.sundroid.activity.location.LocationSelectActivity;
 import uk.co.sundroid.activity.location.TimeZonePickerActivity;
 import uk.co.sundroid.activity.settings.AppSettingsActivity;
-import uk.co.sundroid.dao.DatabaseHelper;
+import uk.co.sundroid.util.dao.DatabaseHelper;
 import uk.co.sundroid.domain.LocationDetails;
 import uk.co.sundroid.util.location.LatitudeLongitude;
 import uk.co.sundroid.util.*;
