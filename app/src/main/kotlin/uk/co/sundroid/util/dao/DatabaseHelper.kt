@@ -71,8 +71,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
 
     fun deleteSavedLocation(rowId: Long) {
         val db = readableDatabase
-        val args = arrayOf(rowId.toString())
-        db.delete("saved_locations", "id = ?", args)
+        db.delete("saved_locations", "id = ?", arrayOf(rowId.toString()))
     }
 
     companion object {
