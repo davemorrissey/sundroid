@@ -29,12 +29,12 @@ class SunDay : BodyDay() {
 
     var ghType: TwilightType? = null
 
-    var civHours: Double = 0.toDouble()
+    var civHours: Double = 0.0
 
-    var ntcHours: Double = 0.toDouble()
+    var ntcHours: Double = 0.0
 
-    var astHours: Double = 0.toDouble()
+    var astHours: Double = 0.0
 
-    var ghHours: Double = 0.toDouble()
+    var ghHours: Double = 0.0
 
 }

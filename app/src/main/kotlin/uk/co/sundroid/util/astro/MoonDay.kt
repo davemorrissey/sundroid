@@ -8,16 +8,10 @@ package uk.co.sundroid.util.astro
 class MoonDay : BodyDay() {
 
     /** Phase at noon.  */
-    /**
-     * @return Returns the phase.
-     */
-    /**
-     * @param phase The phase to set.
-     */
     var phase: MoonPhase? = null
 
     /** Exact phase at noon as a double (0 = new, 0.5 = full).  */
-    var phaseDouble: Double = 0.toDouble()
+    var phaseDouble: Double = 0.0
 
     /** Illumination percentage.  */
     var illumination: Int = 0

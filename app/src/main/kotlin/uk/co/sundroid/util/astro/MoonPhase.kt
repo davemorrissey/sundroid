@@ -4,7 +4,7 @@ package uk.co.sundroid.util.astro
 /**
  * Phases of the moon.
  */
-enum class MoonPhase private constructor(val displayName: String, val shortDisplayName: String) {
+enum class MoonPhase constructor(val displayName: String, val shortDisplayName: String) {
 
     NEW("New", "New"),
     EVENING_CRESCENT("Evening crescent", "Eve. crescent"),

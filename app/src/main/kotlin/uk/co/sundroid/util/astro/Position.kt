@@ -4,8 +4,8 @@ class Position {
 
     var timestamp: Long = 0
 
-    var azimuth: Double = 0.toDouble()
+    var azimuth: Double = 0.0
 
-    var appElevation: Double = 0.toDouble()
+    var appElevation: Double = 0.0
 
 }

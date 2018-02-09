@@ -11,14 +11,14 @@ open class BodyDay {
 
     var transit: Calendar? = null
 
-    var riseAzimuth: Double = 0.toDouble()
+    var riseAzimuth: Double = 0.0
 
-    var setAzimuth: Double = 0.toDouble()
+    var setAzimuth: Double = 0.0
 
-    var transitAppElevation: Double = 0.toDouble()
+    var transitAppElevation: Double = 0.0
 
     var riseSetType: RiseSetType? = null
 
-    var uptimeHours: Double = 0.toDouble()
+    var uptimeHours: Double = 0.0
 
 }

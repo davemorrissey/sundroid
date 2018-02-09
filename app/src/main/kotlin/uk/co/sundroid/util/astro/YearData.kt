@@ -8,7 +8,7 @@ import uk.co.sundroid.util.astro.YearData.EventType.*
 
 object YearData {
     
-    const val WIKI = "http://en.m.wikipedia.org/wiki/"
+    private const val WIKI = "http://en.m.wikipedia.org/wiki/"
 
     fun getYearEvents(year: Int, timeZone: TimeZone): Set<Event> {
 
