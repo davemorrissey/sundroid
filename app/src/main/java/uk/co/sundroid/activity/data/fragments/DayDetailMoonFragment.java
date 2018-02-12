@@ -80,7 +80,7 @@ public class DayDetailMoonFragment extends AbstractDayFragment {
                         try {
                             long start = System.currentTimeMillis();
                             double phase = moonDay.getPhaseDouble();
-                            final Bitmap moonBitmap = MoonPhaseImage.INSTANCE.makeImage(getResources(), R.drawable.moon, phase, location.getLocation().getLatitude().getDoubleValue() < 0, MoonPhaseImage.INSTANCE.getSIZE_LARGE());
+                            final Bitmap moonBitmap = MoonPhaseImage.INSTANCE.makeImage(getResources(), R.drawable.moon, phase, location.getLocation().getLatitude().getDoubleValue() < 0, MoonPhaseImage.SIZE_LARGE);
                             long end = System.currentTimeMillis();
                             handler.post(() -> {
                                         if (!isSafe()) {
@@ -105,7 +105,7 @@ public class DayDetailMoonFragment extends AbstractDayFragment {
                     if (todayEvent != null) {
                         view.findViewById(R.id.moonEvent).setOnClickListener(null);
                         showInView(view, R.id.moonEvent);
-                        showInView(view, R.id.moonEventTitle, todayEvent.getType().getName());
+                        showInView(view, R.id.moonEventTitle, todayEvent.getType().getDisplayName());
                         showInView(view, R.id.moonEventSubtitle, "Tap to check Wikipedia for visibility");
                         final String finalLink = todayEvent.getLink();
                         view.findViewById(R.id.moonEvent).setOnClickListener(view1 -> {

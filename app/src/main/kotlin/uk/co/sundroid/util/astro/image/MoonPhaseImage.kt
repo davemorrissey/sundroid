@@ -9,9 +9,8 @@ import android.graphics.RectF
 
 object MoonPhaseImage {
 
-    val SIZE_SMALL = 0
-    val SIZE_MEDIUM = 1
-    val SIZE_LARGE = 2
+    const val SIZE_MEDIUM = 1
+    const val SIZE_LARGE = 2
 
     @Throws(Exception::class)
     fun makeImage(resources: Resources, drawable: Int, phase: Double, southernHemisphere: Boolean, size: Int): Bitmap {
@@ -19,11 +18,11 @@ object MoonPhaseImage {
         val densityDpi = metrics.densityDpi
         val source = BitmapFactory.decodeResource(resources, drawable)
 
-        var targetSize = if (size == SIZE_SMALL) 31 else if (size == SIZE_MEDIUM) 61 else 121
+        var targetSize = if (size == SIZE_MEDIUM) 61 else 121
         if (densityDpi > 160) {
-            targetSize = if (size == SIZE_SMALL) 45 else if (size == SIZE_MEDIUM) 91 else 181
+            targetSize = if (size == SIZE_MEDIUM) 91 else 181
         } else if (densityDpi < 160) {
-            targetSize = if (size == SIZE_SMALL) 23 else if (size == SIZE_MEDIUM) 45 else 91
+            targetSize = if (size == SIZE_MEDIUM) 45 else 91
         }
 
         val matrix = Matrix()
@@ -75,12 +74,10 @@ object MoonPhaseImage {
                     var brightness = 0.0
                     val left = leftEdge[r]
                     val right = rightEdge[r]
-                    for (p in left.indices) {
-                        if (x >= left[p] && x <= right[p]) {
-                            brightness += 1.0
-                        }
-                    }
-                    brightness = brightness / left.size.toDouble()
+                    left.indices
+                            .filter { x >= left[it] && x <= right[it] }
+                            .forEach { brightness += 1.0 }
+                    brightness /= left.size.toDouble()
                     brightness = brightness * 0.75 + 0.25
                     if (phase < 0.01 || phase > 0.99) {
                         brightness = 0.25
