@@ -80,7 +80,7 @@ public class DayDetailMoonFragment extends AbstractDayFragment {
                         try {
                             long start = System.currentTimeMillis();
                             double phase = moonDay.getPhaseDouble();
-                            final Bitmap moonBitmap = MoonPhaseImage.makeImage(getResources(), R.drawable.moon, phase, location.getLocation().getLatitude().getDoubleValue() < 0, MoonPhaseImage.SIZE_LARGE);
+                            final Bitmap moonBitmap = MoonPhaseImage.INSTANCE.makeImage(getResources(), R.drawable.moon, phase, location.getLocation().getLatitude().getDoubleValue() < 0, MoonPhaseImage.INSTANCE.getSIZE_LARGE());
                             long end = System.currentTimeMillis();
                             handler.post(() -> {
                                         if (!isSafe()) {

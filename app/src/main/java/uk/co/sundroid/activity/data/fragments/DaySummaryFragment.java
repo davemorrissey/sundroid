@@ -49,7 +49,7 @@ public class DaySummaryFragment extends AbstractDayFragment {
                     }
 
 	    	    	try {
-	    		    	Bitmap moonBitmap = MoonPhaseImage.makeImage(getResources(), R.drawable.moon, moonDay.getPhaseDouble(), location.getLocation().getLatitude().getDoubleValue() < 0, MoonPhaseImage.SIZE_MEDIUM);
+	    		    	Bitmap moonBitmap = MoonPhaseImage.INSTANCE.makeImage(getResources(), R.drawable.moon, moonDay.getPhaseDouble(), location.getLocation().getLatitude().getDoubleValue() < 0, MoonPhaseImage.INSTANCE.getSIZE_MEDIUM());
 	    	        	handler.post(() -> {
 							if (!isSafe()) {
 								return;
