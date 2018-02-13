@@ -3,6 +3,7 @@ package uk.co.sundroid.activity.data.fragments.dialogs.settings;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import uk.co.sundroid.activity.data.fragments.dialogs.OnViewPrefsChangedListener;
@@ -11,7 +12,6 @@ import uk.co.sundroid.util.prefs.SharedPrefsHelper;
 public class DayEventsPickerFragment extends DialogFragment {
 
     private boolean[] currentEvents;
-    private OnViewPrefsChangedListener onViewPrefsChangedListener;
 
     public static DayEventsPickerFragment newInstance(boolean[] currentEvents) {
         DayEventsPickerFragment fragment = new DayEventsPickerFragment();
@@ -25,12 +25,6 @@ public class DayEventsPickerFragment extends DialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.currentEvents = getArguments().getBooleanArray("currentEvents");
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        this.onViewPrefsChangedListener = (OnViewPrefsChangedListener)context;
     }
 
     @Override
@@ -48,7 +42,11 @@ public class DayEventsPickerFragment extends DialogFragment {
             SharedPrefsHelper.INSTANCE.setShowElement(context, "evtByTimeSun", currentEvents[0]);
             SharedPrefsHelper.INSTANCE.setShowElement(context, "evtByTimeMoon", currentEvents[1]);
             SharedPrefsHelper.INSTANCE.setShowElement(context, "evtByTimePlanets", currentEvents[2]);
-            onViewPrefsChangedListener.onViewPrefsUpdated();
+
+            Fragment parent = getTargetFragment();
+            if (parent != null && parent instanceof OnViewPrefsChangedListener) {
+                ((OnViewPrefsChangedListener) parent).onViewPrefsUpdated();
+            }
             dismiss();
         });
         builder.setNegativeButton("Cancel", (d, i) -> dismiss());
