@@ -93,7 +93,7 @@ class SackOfViewsAdapter(private var views: List<View>) : BaseAdapter() {
      * @param convertView View to recycle, if not null
      * @param parent ViewGroup containing the returned View
      */
-    override fun getView(position: Int, convertView: View, parent: ViewGroup): View {
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         return views[position]
     }
 

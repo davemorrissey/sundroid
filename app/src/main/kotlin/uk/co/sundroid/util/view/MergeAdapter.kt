@@ -138,7 +138,7 @@ class MergeAdapter : BaseAdapter() {
      * @param convertView View to recycle, if not null
      * @param parent      ViewGroup containing the returned View
      */
-    override fun getView(position: Int, convertView: View, parent: ViewGroup): View? {
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View? {
         var pos = position
         for (piece in pieces) {
             val size = piece.count
