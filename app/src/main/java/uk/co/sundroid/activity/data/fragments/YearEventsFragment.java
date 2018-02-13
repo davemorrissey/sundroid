@@ -50,6 +50,7 @@ public class YearEventsFragment extends AbstractYearFragment implements Configur
 //        currentEvents[7] = SharedPrefsHelper.INSTANCE.getShowElement(getApplicationContext(), "yearEarthApsis", true);
 
         YearEventsPickerFragment settingsDialog = YearEventsPickerFragment.newInstance();
+        settingsDialog.setTargetFragment(this, 0);
         settingsDialog.show(getFragmentManager(), "yearEventsSettings");
     }
 

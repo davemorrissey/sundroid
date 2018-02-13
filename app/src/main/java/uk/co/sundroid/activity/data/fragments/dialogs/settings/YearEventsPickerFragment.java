@@ -3,6 +3,7 @@ package uk.co.sundroid.activity.data.fragments.dialogs.settings;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -14,16 +15,9 @@ import uk.co.sundroid.util.prefs.SharedPrefsHelper;
 public class YearEventsPickerFragment extends DialogFragment implements OnClickListener, OnMultiChoiceClickListener {
 
     private final boolean[] currentEvents = new boolean[8];
-    private OnViewPrefsChangedListener onViewPrefsChangedListener;
 
     public static YearEventsPickerFragment newInstance() {
         return new YearEventsPickerFragment();
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        this.onViewPrefsChangedListener = (OnViewPrefsChangedListener)context;
     }
 
     @Override
@@ -57,7 +51,7 @@ public class YearEventsPickerFragment extends DialogFragment implements OnClickL
 
     @Override
     public void onClick(DialogInterface dialogInterface, int button) {
-        if (button == DialogInterface.BUTTON_POSITIVE && onViewPrefsChangedListener != null) {
+        if (button == DialogInterface.BUTTON_POSITIVE) {
             SharedPrefsHelper.INSTANCE.setShowElement(getActivity(), "yearNewMoon", currentEvents[0]);
             SharedPrefsHelper.INSTANCE.setShowElement(getActivity(), "yearFullMoon", currentEvents[1]);
             SharedPrefsHelper.INSTANCE.setShowElement(getActivity(), "yearQuarterMoon", currentEvents[2]);
@@ -66,7 +60,11 @@ public class YearEventsPickerFragment extends DialogFragment implements OnClickL
             SharedPrefsHelper.INSTANCE.setShowElement(getActivity(), "yearLunarEclipse", currentEvents[5]);
             SharedPrefsHelper.INSTANCE.setShowElement(getActivity(), "yearSolarEclipse", currentEvents[6]);
             SharedPrefsHelper.INSTANCE.setShowElement(getActivity(), "yearEarthApsis", currentEvents[7]);
-            onViewPrefsChangedListener.onViewPrefsUpdated();
+
+            Fragment parent = getTargetFragment();
+            if (parent != null && parent instanceof OnViewPrefsChangedListener) {
+                ((OnViewPrefsChangedListener) parent).onViewPrefsUpdated();
+            }
         }
         dismiss();
     }
