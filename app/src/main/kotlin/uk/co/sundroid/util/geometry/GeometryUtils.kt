@@ -99,8 +99,8 @@ fun parseArcValue(angle: String): Angle {
     var string = angle
     try {
         val degrees: String
-        var minutes = ""
-        var seconds = ""
+        var minutes = "0"
+        var seconds = "0"
 
         when {
             string.contains("\u00b0") -> {
