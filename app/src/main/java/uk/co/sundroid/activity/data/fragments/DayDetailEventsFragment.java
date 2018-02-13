@@ -120,10 +120,10 @@ public class DayDetailEventsFragment extends AbstractDayFragment implements Conf
                         Body planet = planetEntry.getKey();
                         BodyDay planetDay = planetEntry.getValue();
                         if (planetDay.getRise() != null) {
-                            eventsSet.add(new SummaryEvent(planet.getName() + " rise", planetDay.getRise(), planetDay.getRiseAzimuth()));
+                            eventsSet.add(new SummaryEvent(planet.getDisplayName() + " rise", planetDay.getRise(), planetDay.getRiseAzimuth()));
                         }
                         if (planetDay.getSet() != null) {
-                            eventsSet.add(new SummaryEvent(planet.getName() + " set", planetDay.getSet(), planetDay.getSetAzimuth()));
+                            eventsSet.add(new SummaryEvent(planet.getDisplayName() + " set", planetDay.getSet(), planetDay.getSetAzimuth()));
                         }
                     }
                 }

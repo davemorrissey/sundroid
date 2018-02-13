@@ -145,7 +145,7 @@ fun parseArcValue(angle: String): Angle {
                 }
             }
         }
-        return Angle(degrees.toInt(), minutes.toInt(), seconds.toInt())
+        return Angle(degrees.toInt(), minutes.toInt(), seconds.toInt(), Angle.Direction.CLOCKWISE)
     } catch (e: Exception) {
         throw IllegalArgumentException("The string \"$string\" could not be parsed as an angle: $e")
     }

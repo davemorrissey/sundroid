@@ -4,7 +4,6 @@ import uk.co.sundroid.util.geometry.parseArcValue as utilsParseArcValue
 import uk.co.sundroid.util.geometry.Accuracy.*
 import uk.co.sundroid.util.geometry.Punctuation.*
 import java.io.Serializable
-import java.text.ParseException
 
 /**
  * Represents an angle and provides methods for getting and setting the angle using either double
@@ -13,26 +12,48 @@ import java.text.ParseException
  */
 open class Angle : Serializable {
 
+    enum class Direction {
+        CLOCKWISE,
+        ANTICLOCKWISE
+    }
+
     /**
      * The double value of this angle to the best possible accuracy.
      */
-    open var doubleValue: Double = 0.0
+    var doubleValue: Double = 0.0
+
+    /**
+     * The angle's direction or sign.
+     */
+    var direction: Direction = Direction.CLOCKWISE
 
     /**
      * The degrees part of the angle.
      */
-    var degrees: Int = 0
-    
+    val degrees: Int
+        get() {
+            return Math.floor(Math.abs(doubleValue)).toInt()
+        }
+
     /**
      * The minutes part of the angle.
      */
-    var minutes: Int = 0
-    
+    val minutes: Int
+        get() {
+            val degrees = Math.floor(Math.abs(doubleValue)).toInt()
+            return Math.floor((Math.abs(doubleValue) - degrees) * 60).toInt()
+        }
+
     /**
      * The seconds part of the angle.
      */
-    var seconds: Int = 0
-    
+    val seconds: Int
+        get() {
+            val degrees = Math.floor(Math.abs(doubleValue)).toInt()
+            val minutes = Math.floor((Math.abs(doubleValue) - degrees) * 60).toInt()
+            return ((((Math.abs(doubleValue) - degrees) * 60) - minutes) * 60).toInt()
+        }
+
     /**
      * Construct an angle from a double value. The arc degrees, minutes and seconds values will be
      * calculated to the best possible accuracy.
@@ -45,13 +66,13 @@ open class Angle : Serializable {
     
     /**
      * Construct an angle using degrees, minutes and seconds values.
-     * @param degrees The degrees part of the angle.
-     * @param minutes The minutes part of the angle.
-     * @param seconds The seconds part of the angle.
+     * @param degrees The degrees part of the angle. Can be negative.
+     * @param minutes The minutes part of the angle. Must be positive.
+     * @param seconds The seconds part of the angle. Must be positive.
      * @throws IllegalArgumentException if degrees > 359 or minutes > 59 or seconds > 59.
      */
-    constructor(degrees: Int, minutes: Int, seconds: Int) {
-        this.setAngle(degrees, minutes, seconds)
+    constructor(degrees: Int, minutes: Int, seconds: Int, direction: Direction) {
+        this.setAngle(degrees, minutes, seconds, direction)
     }
     
     /**
@@ -60,17 +81,15 @@ open class Angle : Serializable {
      * @param doubleValue The value to set, in degrees.
      */
     open fun setAngle(doubleValue: Double) {
-        var d = doubleValue
-        while (d > 360) {
-            d -= 360
+        var double = doubleValue
+        while (double > 360) {
+            double -= 360
         }
-        while (d < 0) {
-            d += 360
+        while (double < -360) {
+            double += 360
         }
-        this.doubleValue = d
-        degrees = Math.floor(Math.abs(doubleValue)).toInt()
-        minutes = Math.floor((Math.abs(doubleValue) - degrees) * 60).toInt()
-        seconds = ((((Math.abs(doubleValue) - degrees) * 60) - minutes) * 60).toInt()
+        this.doubleValue = double
+        this.direction = if (doubleValue < 0) Direction.ANTICLOCKWISE else Direction.CLOCKWISE
     }
     
     /**
@@ -78,38 +97,15 @@ open class Angle : Serializable {
      * @param degrees The degrees part of the angle.
      * @param minutes The minutes part of the angle.
      * @param seconds The seconds part of the angle.
+     *
      * @throws IllegalArgumentException if 0 > degrees > 359 or 0 > minutes > 59 or 0 > seconds > 59.
      */
-    open fun setAngle(degrees: Int, minutes: Int, seconds: Int) {
-        if (degrees < 0 || degrees > 360 || minutes < 0 || minutes > 59 || seconds < 0 || seconds > 60) {
-            throw IllegalArgumentException("Degrees value must be < 360 and > 0, minutes < 60 and > 0, and seconds < 60 and > 0.")
+    protected open fun setAngle(degrees: Int, minutes: Int, seconds: Int, direction: Direction) {
+        if (degrees < -360 || degrees > 360 || minutes < 0 || minutes > 59 || seconds < 0 || seconds > 60) {
+            throw IllegalArgumentException("Degrees value must be < 360 and > -360, minutes < 60 and > 0, and seconds < 60 and > 0.")
         }
-        this.degrees = if (degrees == 360) 0 else degrees
-        this.minutes = minutes
-        this.seconds = seconds
-        this.doubleValue = degrees + ((minutes + (seconds / 60.0)) / 60.0)
-    }
-    
-    /**
-     * Sets the value from a string in arc components format.
-     * @param string An angle expressed using arc components.
-     * @throws ParseException if the string format is invalid.
-     */
-    open fun parseArcValue(string: String) {
-        try {
-            val parsedAngle = utilsParseArcValue(string.substring(0, string.length - 1))
-            setAngle(parsedAngle.degrees, parsedAngle.minutes, parsedAngle.seconds)
-        } catch (e: Exception) {
-            throw IllegalArgumentException("Couldn't parse $string as an arc angle value: $e")
-        }
-    }
-    
-    /**
-     * Supports Google's E6 integer format.
-     * @return the angle expressed in Google's E6 format.
-     */
-    open fun getE6(): Int {
-        return (doubleValue * 1e6).toInt()
+        this.doubleValue = (degrees + ((minutes + (seconds / 60.0)) / 60.0)) * if (degrees < 0) -1 else 1
+        this.direction = direction
     }
     
     /**

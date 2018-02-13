@@ -9,20 +9,12 @@ import uk.co.sundroid.util.geometry.*
 class Longitude : Angle {
 
     /**
-     * Indicates whether the angle is East or West, using one of the static fields above.
-     */
-    private var sign = EAST
-    
-    /**
      * Constructs an angle of longitude from a double value. The sign of the angle
      * is based on the sign of the double value (East +, West -). Angles greater
      * than 180 degrees are not accepted.
      * @param doubleValue The double value of the angle. Must not be less than -180 or greater than +180.
-     * @throws IllegalArgumentException if an invalid double value is given.
      */
-    constructor(doubleValue: Double) : super(Math.abs(doubleValue)) {
-        sign = if (doubleValue < 0) WEST else EAST
-    }
+    constructor(doubleValue: Double) : super(doubleValue)
 
     /**
      * Create a longitude from a string value in abbreviated format.
@@ -33,40 +25,13 @@ class Longitude : Angle {
     }
 
     /**
-     * Overrides super method to set sign.
-     */
-    override var doubleValue = 0.0
-        get() {
-            return sign * super.doubleValue
-        }
-    
-    /**
-     * Overrides super method to set sign.
-     */
-    override fun getE6(): Int = sign * super.getE6()
-
-    /**
      * Overrides super method to check for angles over +/- 180 degrees, and set East/West sign.
      */
     override fun setAngle(doubleValue: Double) {
-        super.setAngle(Math.abs(doubleValue))
+        super.setAngle(doubleValue)
         if (doubleValue < -180 || doubleValue > 180) {
             throw IllegalArgumentException("Latitude value cannot be less than -180 or greater than 180 degrees.")
         }
-        sign = if (doubleValue < 0) WEST else EAST
-    }
-    /**
-     * Overloads super method to check for angles over 180 degrees, and set North/South sign.
-     */
-    private fun setAngle(degrees: Int, minutes: Int, seconds: Int, sign: Int) {
-        super.setAngle(Math.abs(degrees), Math.abs(minutes), Math.abs(seconds))
-        if (degrees < -180 || degrees > 180) {
-            throw IllegalArgumentException("Latitude value cannot be less than -180 or greater than 180 degrees.")
-        }
-        if (sign != EAST && sign != WEST) {
-            throw IllegalArgumentException("Sign \"$sign\" is not valid.")
-        }
-        this.sign = sign
     }
 
     /**
@@ -74,7 +39,7 @@ class Longitude : Angle {
      */
     fun getAbbreviatedValue(): String {
         var value = displayArcValue(this, Accuracy.SECONDS, Punctuation.NONE)
-        value += if (sign == EAST) "E" else "W"
+        value += if (direction == Direction.CLOCKWISE) "E" else "W"
         return value
     }
 
@@ -83,14 +48,14 @@ class Longitude : Angle {
      */
     fun getPunctuatedValue(accuracy: Accuracy): String {
         var value = displayArcValue(this, accuracy, Punctuation.STANDARD)
-        value += if (sign == EAST) "E" else "W"
+        value += if (direction == Direction.CLOCKWISE) "E" else "W"
         return value
     }
     
     /**
      * Sets the value from a string in arc components format.
      */
-    override fun parseArcValue(string: String) {
+    private fun parseArcValue(string: String) {
         val signString = string.substring(string.length - 1)
         val sign = when(signString) {
             "E" -> EAST
@@ -99,7 +64,7 @@ class Longitude : Angle {
         }
         try {
             val parsedAngle = utilsParseArcValue(string.substring(0, string.length - 1))
-            setAngle(sign * parsedAngle.degrees, parsedAngle.minutes, parsedAngle.seconds, sign)
+            setAngle(sign * parsedAngle.degrees, parsedAngle.minutes, parsedAngle.seconds, if (sign == EAST) Direction.CLOCKWISE else Direction.ANTICLOCKWISE)
         } catch (e: Exception) {
             throw IllegalArgumentException("Couldn't parse \"$string\" as an abbreviated longitude value: $e")
         }

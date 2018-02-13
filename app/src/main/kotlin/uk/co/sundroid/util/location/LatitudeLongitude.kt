@@ -14,14 +14,12 @@ class LatitudeLongitude : Serializable {
      * The latitude angle.
      */
     var latitude = Latitude(0.0)
-        get() = Latitude(latitude.doubleValue)
         private set
     
     /**
      * The longitude angle.
      */
     var longitude = Longitude(0.0)
-        get() = Longitude(longitude.doubleValue)
         private set
     
     /**
