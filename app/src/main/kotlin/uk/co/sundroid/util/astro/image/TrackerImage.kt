@@ -171,24 +171,24 @@ class TrackerImage(val style: TrackerStyle, val context: Context, val location: 
                     
                     if (!style.isRadar) {
                         paint.color = Color.argb(100, 0, 0, 0)
-                        canvas.drawCircle(centerX + x, centerY - y, size(6).toFloat(), paint)
+                        canvas.drawCircle(centerX + x, centerY - y, size(6), paint)
                         
                         val strokePaint = Paint()
                         strokePaint.color = Color.argb(100, 0, 0, 0)
-                        strokePaint.textSize = size(14).toFloat()
+                        strokePaint.textSize = size(14)
                         strokePaint.style = Style.STROKE
-                        strokePaint.strokeWidth = size(2).toFloat()
+                        strokePaint.strokeWidth = size(2)
                         strokePaint.isAntiAlias = true
                         canvas.drawText(body.name.substring(0, 1) + body.name.substring(1).toLowerCase(), centerX + x + size(6), centerY - y + size(5), strokePaint)
                     }
                         
-                    paint.strokeWidth = size(style.stroke).toFloat()
+                    paint.strokeWidth = size(style.stroke)
                     paint.color = getBodyColor(body)
-                    canvas.drawCircle(centerX + x, centerY - y, size(4).toFloat(), paint)
+                    canvas.drawCircle(centerX + x, centerY - y, size(4), paint)
                     
                     
                     val textPaint = Paint()
-                    textPaint.textSize = size(14).toFloat()
+                    textPaint.textSize = size(14)
                     textPaint.color = getBodyColor(body)
                     textPaint.isAntiAlias = true
                     canvas.drawText(body.name.substring(0, 1) + body.name.substring(1).toLowerCase(), centerX + x + size(6), centerY - y + size(5), textPaint)
@@ -207,17 +207,17 @@ class TrackerImage(val style: TrackerStyle, val context: Context, val location: 
             val y = (Math.cos(degToRad(position.azimuth)) * apparentRadius).toFloat()
             
             if (!style.isRadar) {
-                paint.strokeWidth = size(style.stroke + 1).toFloat()
+                paint.strokeWidth = size(style.stroke + 1)
                 paint.color = Color.argb(100, 0, 0, 0)
                 canvas.drawLine(centerX, centerY, centerX + x, centerY - y, paint)
-                canvas.drawCircle(centerX + x, centerY - y, size(7).toFloat(), paint)
+                canvas.drawCircle(centerX + x, centerY - y, size(7), paint)
             }
                 
-            paint.strokeWidth = size(style.stroke).toFloat()
+            paint.strokeWidth = size(style.stroke)
             val color = getElevationColor(position.appElevation, true)
             paint.color = color
             canvas.drawLine(centerX, centerY, centerX + x, centerY - y, paint)
-            canvas.drawCircle(centerX + x, centerY - y, size(7).toFloat(), paint)
+            canvas.drawCircle(centerX + x, centerY - y, size(7), paint)
             
         }
         
@@ -259,13 +259,13 @@ class TrackerImage(val style: TrackerStyle, val context: Context, val location: 
         
         val textPaint = Paint()
         textPaint.isAntiAlias = true
-        textPaint.textSize = fontSize.toFloat()
+        textPaint.textSize = fontSize
         textPaint.textAlign = Paint.Align.CENTER
         textPaint.isFakeBoldText = false
         textPaint.typeface = Typeface.DEFAULT
         textPaint.color = style.cardinals
         
-        canvas.drawText(if (magneticBearings) "N(M)" else "N(T)", (size/2), size(12).toFloat(), textPaint)
+        canvas.drawText(if (magneticBearings) "N(M)" else "N(T)", (size/2), size(12), textPaint)
         canvas.drawText("S", size/2, size - size(2), textPaint)
         canvas.drawText("E", size - 10, size/2 + size(5), textPaint)
         canvas.drawText("W", 10F, size/2 + size(5), textPaint)
@@ -283,7 +283,7 @@ class TrackerImage(val style: TrackerStyle, val context: Context, val location: 
         
         if (body != null) {
 
-            paint.strokeWidth = size(style.stroke).toFloat()
+            paint.strokeWidth = size(style.stroke)
             
             val loopCalendar = clone(dateCalendar)
             
@@ -362,14 +362,14 @@ class TrackerImage(val style: TrackerStyle, val context: Context, val location: 
                     if (!style.isRadar) {
                         val color = paint.color
                         paint.color = Color.argb(100, 0, 0, 0)
-                        paint.strokeWidth = size(style.markerStroke + 2).toFloat()
+                        paint.strokeWidth = size(style.markerStroke + 2)
                         canvas.drawLine((centerX + x) + markX, (centerY - y) + markY, (centerX + x) - markX, (centerY - y) - markY, paint)
                         paint.color = color
                     }
     
-                    paint.strokeWidth = size(style.markerStroke).toFloat()
+                    paint.strokeWidth = size(style.markerStroke)
                     canvas.drawLine((centerX + x) + markX, (centerY - y) + markY, (centerX + x) - markX, (centerY - y) - markY, paint)
-                    paint.strokeWidth = size(style.stroke).toFloat()
+                    paint.strokeWidth = size(style.stroke)
                     
                     paint.strokeCap = cap
                     
@@ -394,12 +394,12 @@ class TrackerImage(val style: TrackerStyle, val context: Context, val location: 
             paths[path] = currentColor
             
             if (!style.isRadar) {
-                paint.strokeWidth = size(style.stroke + 1).toFloat()
+                paint.strokeWidth = size(style.stroke + 1)
                 paint.color = Color.argb(100, 0, 0, 0)
                 paths.keys.forEach { canvas.drawPath(it, paint) }
             }
             
-            paint.strokeWidth = size(style.stroke).toFloat()
+            paint.strokeWidth = size(style.stroke)
             paths.forEach { (path, color) ->
                 paint.color = color
                 canvas.drawPath(path, paint)
@@ -415,13 +415,13 @@ class TrackerImage(val style: TrackerStyle, val context: Context, val location: 
                 
                 if (!style.isRadar) {
                     paint.pathEffect = null
-                    paint.strokeWidth = size(style.stroke + 1).toFloat()
+                    paint.strokeWidth = size(style.stroke + 1)
                     paint.color = Color.argb(50, 0, 0, 0)
                     canvas.drawLine(centerX, centerY, centerX + x, centerY - y, paint)
                 }
                 
                 paint.pathEffect = DashPathEffect(style.dash.toFloatArray(), 0F)
-                paint.strokeWidth = size(style.stroke).toFloat()
+                paint.strokeWidth = size(style.stroke)
                 paint.color = if (body == Body.SUN) style.golden else style.bodyRisen
                 canvas.drawLine(centerX, centerY, centerX + x, centerY - y, paint)
             }
@@ -436,9 +436,9 @@ class TrackerImage(val style: TrackerStyle, val context: Context, val location: 
         
     }
 
-    fun size(size: Int): Int {
+    fun size(size: Int): Float {
         val metrics = context.resources.displayMetrics
-        return ((metrics.densityDpi/160.0) * size).toInt()
+        return ((metrics.densityDpi/160.0) * size).toInt().toFloat()
     }
     
     private fun getElevationColor(elevation: Double, line: Boolean): Int {
