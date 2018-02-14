@@ -143,7 +143,7 @@ public class TrackerFragment extends AbstractTimeFragment implements Configurabl
             removeInView(view, id.trackerText);
         }
 
-        trackerImage = new TrackerImage(TrackerImage.TrackerStyle.forMode(mode, mapMode), getApplicationContext(), location.getLocation());
+        trackerImage = new TrackerImage(TrackerImage.TrackerStyle.Companion.forMode(mode, mapMode), getApplicationContext(), location.getLocation());
         trackerImage.setDate(dateCalendar, timeCalendar);
         trackerImageView = new TrackerImageView(getApplicationContext());
         trackerImageView.setTrackerImage(trackerImage);
