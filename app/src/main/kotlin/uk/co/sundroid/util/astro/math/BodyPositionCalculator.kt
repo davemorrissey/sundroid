@@ -20,7 +20,6 @@ import java.util.TimeZone
 import uk.co.sundroid.util.astro.Body
 import uk.co.sundroid.util.astro.BodyDay
 import uk.co.sundroid.util.astro.MoonDay
-import uk.co.sundroid.util.astro.MoonPhaseEvent
 import uk.co.sundroid.util.astro.Position
 import uk.co.sundroid.util.astro.RiseSetType
 import uk.co.sundroid.util.location.LatitudeLongitude
@@ -43,14 +42,11 @@ object BodyPositionCalculator {
             bodyDay.phaseDouble = MoonPhaseCalculator.getNoonPhase(dateMidnight)
             bodyDay.illumination = MoonPhaseCalculator.getIlluminatedPercent(bodyDay.phaseDouble)
 
-            if (bodyDay.phaseDouble < 0.25) {
-                bodyDay.phase = EVENING_CRESCENT
-            } else if (bodyDay.phaseDouble < 0.5) {
-                bodyDay.phase = WAXING_GIBBOUS
-            } else if (bodyDay.phaseDouble < 0.75) {
-                bodyDay.phase = WANING_GIBBOUS
-            } else {
-                bodyDay.phase = MORNING_CRESCENT
+            when {
+                bodyDay.phaseDouble < 0.25 -> bodyDay.phase = EVENING_CRESCENT
+                bodyDay.phaseDouble < 0.5 -> bodyDay.phase = WAXING_GIBBOUS
+                bodyDay.phaseDouble < 0.75 -> bodyDay.phase = WANING_GIBBOUS
+                else -> bodyDay.phase = MORNING_CRESCENT
             }
             val event = MoonPhaseCalculator.getDayEvent(dateMidnight)
             if (event != null) {
@@ -185,7 +181,7 @@ object BodyPositionCalculator {
         }
     }
 
-    fun calcPosition(body: Body, location: LatitudeLongitude, time: Long): Position {
+    private fun calcPosition(body: Body, location: LatitudeLongitude, time: Long): Position {
         val dateTimeUtc = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
         dateTimeUtc.timeInMillis = time
         dateTimeUtc.timeInMillis
@@ -198,68 +194,68 @@ object BodyPositionCalculator {
 
     private fun calcMoonPosition(location: LatitudeLongitude, dateTime: Calendar): Position {
 
-        val d = dayNumber(dateTime)
+        val day = dayNumber(dateTime)
         val obliquityOfEliptic = obliquityOfEcliptic(julianCent(dateTime))
 
         // Geocentric orbital components.
-        val N = norm360(125.1228 - 0.0529538083 * d) // (Long asc. node)
+        val n = norm360(125.1228 - 0.0529538083 * day) // (Long asc. node)
         val i = norm360(5.1454) // (Inclination)
-        val w = norm360(318.0634 + 0.1643573223 * d) // (Arg. of perigee)
+        val w = norm360(318.0634 + 0.1643573223 * day) // (Arg. of perigee)
         val a = 60.2666 // (Mean distance)
         val e = 0.054900 // (Eccentricity)
-        val M = norm360(115.3654 + 13.0649929509 * d) // (Mean anomaly)
+        val m = norm360(115.3654 + 13.0649929509 * day) // (Mean anomaly)
 
         // Calculate eccentric anomaly using iteration to produce accurate value.
-        val E0 = M + 180 / PI * e * sin(toRadians(M)) * (1 + e * cos(toRadians(M)))
-        var E1 = java.lang.Double.MAX_VALUE
+        val e0 = m + 180 / PI * e * sin(toRadians(m)) * (1 + e * cos(toRadians(m)))
+        var e1 = java.lang.Double.MAX_VALUE
         var loopCount = 0
-        while (abs(E1 - E0) > 0.005 && loopCount < 10) {
-            E1 = E0 - (E0 - 180 / PI * e * sin(toRadians(E0)) - M) / (1 - e * cos(toRadians(E0)))
+        while (abs(e1 - e0) > 0.005 && loopCount < 10) {
+            e1 = e0 - (e0 - 180 / PI * e * sin(toRadians(e0)) - m) / (1 - e * cos(toRadians(e0)))
             loopCount++
         }
 
         // Rectangular (x,y) coordinates in the plane of the orbit
-        val planarX = a * (cos(toRadians(E1)) - e)
-        val planarY = a * sqrt(1 - e * e) * sin(toRadians(E1))
+        val planarX = a * (cos(toRadians(e1)) - e)
+        val planarY = a * sqrt(1 - e * e) * sin(toRadians(e1))
 
         // Convert rectangular coordinates to distance and true anomaly.
         val geoR = sqrt(planarX * planarX + planarY * planarY) // (Earth radii)
         val trueAnomaly = norm360(toDegrees(atan2(toRadians(planarY), toRadians(planarX)))) // (Degrees)
 
         // Ecliptic geocentric rectangular coordinates
-        var geoRectEclip = doubleArrayOf(geoR * (cos(toRadians(N)) * cos(toRadians(trueAnomaly + w)) - sin(toRadians(N)) * sin(toRadians(trueAnomaly + w)) * cos(toRadians(i))), geoR * (sin(toRadians(N)) * cos(toRadians(trueAnomaly + w)) + cos(toRadians(N)) * sin(toRadians(trueAnomaly + w)) * cos(toRadians(i))), geoR * sin(toRadians(trueAnomaly + w)) * sin(toRadians(i)))
+        var geoRectEclip = doubleArrayOf(geoR * (cos(toRadians(n)) * cos(toRadians(trueAnomaly + w)) - sin(toRadians(n)) * sin(toRadians(trueAnomaly + w)) * cos(toRadians(i))), geoR * (sin(toRadians(n)) * cos(toRadians(trueAnomaly + w)) + cos(toRadians(n)) * sin(toRadians(trueAnomaly + w)) * cos(toRadians(i))), geoR * sin(toRadians(trueAnomaly + w)) * sin(toRadians(i)))
 
         val geoRLonLatEclip = rectangularToSpherical(geoRectEclip)
 
         // Sun values
-        val ws = norm360(282.9404 + 4.70935E-5 * d) // (longitude of perihelion)
-        val Ms = norm360(356.0470 + 0.9856002585 * d) // (mean anomaly)
+        val ws = norm360(282.9404 + 4.70935E-5 * day) // (longitude of perihelion)
+        val ms = norm360(356.0470 + 0.9856002585 * day) // (mean anomaly)
 
-        val Ls = norm360(ws + Ms)
-        val Lm = norm360(N + w + M)
-        val D = norm360(Lm - Ls)
-        val F = norm360(Lm - N)
+        val ls = norm360(ws + ms)
+        val lm = norm360(n + w + m)
+        val d = norm360(lm - ls)
+        val f = norm360(lm - n)
 
         // Apply lunar orbit perturbations
-        geoRLonLatEclip[1] = (((geoRLonLatEclip[1] - 1.274 * sin(toRadians(M - 2 * D)) + 0.658 * sin(toRadians(2 * D))
-                - 0.186 * sin(toRadians(Ms))
-                - 0.059 * sin(toRadians(2 * M - 2 * D))
-                - 0.057 * sin(toRadians(M - 2 * D + Ms)))
-                + 0.053 * sin(toRadians(M + 2 * D))
-                + 0.046 * sin(toRadians(2 * D - Ms))
-                + 0.041 * sin(toRadians(M - Ms)))
-                - 0.035 * sin(toRadians(D))
-                - 0.031 * sin(toRadians(M + Ms))
-                - 0.015 * sin(toRadians(2 * F - 2 * D))) + 0.011 * sin(toRadians(M - 4 * D))
+        geoRLonLatEclip[1] = (((geoRLonLatEclip[1] - 1.274 * sin(toRadians(m - 2 * d)) + 0.658 * sin(toRadians(2 * d))
+                - 0.186 * sin(toRadians(ms))
+                - 0.059 * sin(toRadians(2 * m - 2 * d))
+                - 0.057 * sin(toRadians(m - 2 * d + ms)))
+                + 0.053 * sin(toRadians(m + 2 * d))
+                + 0.046 * sin(toRadians(2 * d - ms))
+                + 0.041 * sin(toRadians(m - ms)))
+                - 0.035 * sin(toRadians(d))
+                - 0.031 * sin(toRadians(m + ms))
+                - 0.015 * sin(toRadians(2 * f - 2 * d))) + 0.011 * sin(toRadians(m - 4 * d))
         geoRLonLatEclip[2] = ((geoRLonLatEclip[2]
-                - 0.173 * sin(toRadians(F - 2 * D))
-                - 0.055 * sin(toRadians(M - F - 2 * D))
-                - 0.046 * sin(toRadians(M + F - 2 * D)))
-                + 0.033 * sin(toRadians(F + 2 * D))
-                + 0.017 * sin(toRadians(2 * M + F)))
+                - 0.173 * sin(toRadians(f - 2 * d))
+                - 0.055 * sin(toRadians(m - f - 2 * d))
+                - 0.046 * sin(toRadians(m + f - 2 * d)))
+                + 0.033 * sin(toRadians(f + 2 * d))
+                + 0.017 * sin(toRadians(2 * m + f)))
         geoRLonLatEclip[0] = (geoRLonLatEclip[0]
-                - 0.58 * cos(toRadians(M - 2 * D))
-                - 0.46 * cos(toRadians(2 * D)))
+                - 0.58 * cos(toRadians(m - 2 * d))
+                - 0.46 * cos(toRadians(2 * d)))
 
         // Convert perturbed ecliptic lat and lon back into geo ecliptic rectangular coords.
         geoRectEclip = sphericalToRectangular(geoRLonLatEclip)
@@ -280,125 +276,126 @@ object BodyPositionCalculator {
 
     private fun calcPlanetPositionInternal(body: Body, location: LatitudeLongitude, dateTime: Calendar): Position {
 
-        val d = dayNumber(dateTime)
+        val day = dayNumber(dateTime)
         val obliquityOfEliptic = obliquityOfEcliptic(julianCent(dateTime))
 
-        val N: Double
+        val n: Double
         val i: Double
         val w: Double
         val a: Double
         val e: Double
-        val M: Double
+        val m: Double
 
         // Calculate heliocentric orbital components.
         when (body) {
             Body.MERCURY -> {
-                N = norm360(48.3313 + 3.24587E-5 * d)
-                i = norm360(7.0047 + 5.00E-8 * d)
-                w = norm360(29.1241 + 1.01444E-5 * d)
+                n = norm360(48.3313 + 3.24587E-5 * day)
+                i = norm360(7.0047 + 5.00E-8 * day)
+                w = norm360(29.1241 + 1.01444E-5 * day)
                 a = 0.387098
-                e = 0.205635 + 5.59E-10 * d
-                M = norm360(168.6562 + 4.0923344368 * d)
+                e = 0.205635 + 5.59E-10 * day
+                m = norm360(168.6562 + 4.0923344368 * day)
             }
             Body.VENUS -> {
-                N = norm360(76.6799 + 2.46590E-5 * d)
-                i = norm360(3.3946 + 2.75E-8 * d)
-                w = norm360(54.8910 + 1.38374E-5 * d)
+                n = norm360(76.6799 + 2.46590E-5 * day)
+                i = norm360(3.3946 + 2.75E-8 * day)
+                w = norm360(54.8910 + 1.38374E-5 * day)
                 a = 0.723330
-                e = 0.006773 - 1.302E-9 * d
-                M = norm360(48.0052 + 1.6021302244 * d)
+                e = 0.006773 - 1.302E-9 * day
+                m = norm360(48.0052 + 1.6021302244 * day)
             }
             Body.MARS -> {
-                N = norm360(49.5574 + 2.11081E-5 * d)
-                i = norm360(1.8497 - 1.78E-8 * d)
-                w = norm360(286.5016 + 2.92961E-5 * d)
+                n = norm360(49.5574 + 2.11081E-5 * day)
+                i = norm360(1.8497 - 1.78E-8 * day)
+                w = norm360(286.5016 + 2.92961E-5 * day)
                 a = 1.523688
-                e = 0.093405 + 2.516E-9 * d
-                M = norm360(18.6021 + 0.5240207766 * d)
+                e = 0.093405 + 2.516E-9 * day
+                m = norm360(18.6021 + 0.5240207766 * day)
             }
             Body.JUPITER -> {
-                N = norm360(100.4542 + 2.76854E-5 * d)
-                i = norm360(1.3030 - 1.557E-7 * d)
-                w = norm360(273.8777 + 1.64505E-5 * d)
+                n = norm360(100.4542 + 2.76854E-5 * day)
+                i = norm360(1.3030 - 1.557E-7 * day)
+                w = norm360(273.8777 + 1.64505E-5 * day)
                 a = 5.20256
-                e = 0.048498 + 4.469E-9 * d
-                M = norm360(19.8950 + 0.0830853001 * d)
+                e = 0.048498 + 4.469E-9 * day
+                m = norm360(19.8950 + 0.0830853001 * day)
             }
             Body.SATURN -> {
-                N = norm360(113.6634 + 2.38980E-5 * d)
-                i = norm360(2.4886 - 1.081E-7 * d)
-                w = norm360(339.3939 + 2.97661E-5 * d)
+                n = norm360(113.6634 + 2.38980E-5 * day)
+                i = norm360(2.4886 - 1.081E-7 * day)
+                w = norm360(339.3939 + 2.97661E-5 * day)
                 a = 9.55475
-                e = 0.055546 - 9.499E-9 * d
-                M = norm360(316.9670 + 0.0334442282 * d)
+                e = 0.055546 - 9.499E-9 * day
+                m = norm360(316.9670 + 0.0334442282 * day)
             }
             Body.URANUS -> {
-                N = norm360(74.0005 + 1.3978E-5 * d)
-                i = norm360(0.7733 + 1.9E-8 * d)
-                w = norm360(96.6612 + 3.0565E-5 * d)
-                a = 19.18171 - 1.55E-8 * d
-                e = 0.047318 + 7.45E-9 * d
-                M = norm360(142.5905 + 0.011725806 * d)
+                n = norm360(74.0005 + 1.3978E-5 * day)
+                i = norm360(0.7733 + 1.9E-8 * day)
+                w = norm360(96.6612 + 3.0565E-5 * day)
+                a = 19.18171 - 1.55E-8 * day
+                e = 0.047318 + 7.45E-9 * day
+                m = norm360(142.5905 + 0.011725806 * day)
             }
             Body.NEPTUNE -> {
-                N = norm360(131.7806 + 3.0173E-5 * d)
-                i = norm360(1.7700 - 2.55E-7 * d)
-                w = norm360(272.8461 - 6.027E-6 * d)
-                a = 30.05826 + 3.313E-8 * d
-                e = 0.008606 + 2.15E-9 * d
-                M = norm360(260.2471 + 0.005995147 * d)
+                n = norm360(131.7806 + 3.0173E-5 * day)
+                i = norm360(1.7700 - 2.55E-7 * day)
+                w = norm360(272.8461 - 6.027E-6 * day)
+                a = 30.05826 + 3.313E-8 * day
+                e = 0.008606 + 2.15E-9 * day
+                m = norm360(260.2471 + 0.005995147 * day)
             }
             else -> throw IllegalArgumentException("Unrecognised body: " + body)
         }
 
         // Calculate eccentric anomaly using iteration to produce accurate value.
-        val E0 = M + 180 / PI * e * sin(toRadians(M)) * (1 + e * cos(toRadians(M)))
-        var E1 = java.lang.Double.MAX_VALUE
+        val e0 = m + 180 / PI * e * sin(toRadians(m)) * (1 + e * cos(toRadians(m)))
+        var e1 = java.lang.Double.MAX_VALUE
         var loopCount = 0
-        while (abs(E1 - E0) > 0.005 && loopCount < 10) {
-            E1 = E0 - (E0 - 180 / PI * e * sin(toRadians(E0)) - M) / (1 - e * cos(toRadians(E0)))
+        while (abs(e1 - e0) > 0.005 && loopCount < 10) {
+            e1 = e0 - (e0 - 180 / PI * e * sin(toRadians(e0)) - m) / (1 - e * cos(toRadians(e0)))
             loopCount++
         }
 
         // Rectangular (x,y) coordinates in the plane of the orbit
-        val planarX = a * (cos(toRadians(E1)) - e)
-        val planarY = a * sqrt(1 - e * e) * sin(toRadians(E1))
+        val planarX = a * (cos(toRadians(e1)) - e)
+        val planarY = a * sqrt(1 - e * e) * sin(toRadians(e1))
 
         // Convert rectangular coordinates to distance and true anomaly.
         val helioR = sqrt(planarX * planarX + planarY * planarY) // (Earth radii)
         val trueAnomaly = norm360(toDegrees(atan2(toRadians(planarY), toRadians(planarX)))) // (Degrees)
 
         // Ecliptic heliocentric rectangular coordinates
-        var helioRectEclip = doubleArrayOf(helioR * (cos(toRadians(N)) * cos(toRadians(trueAnomaly + w)) - sin(toRadians(N)) * sin(toRadians(trueAnomaly + w)) * cos(toRadians(i))), helioR * (sin(toRadians(N)) * cos(toRadians(trueAnomaly + w)) + cos(toRadians(N)) * sin(toRadians(trueAnomaly + w)) * cos(toRadians(i))), helioR * sin(toRadians(trueAnomaly + w)) * sin(toRadians(i)))
+        var helioRectEclip = doubleArrayOf(helioR * (cos(toRadians(n)) * cos(toRadians(trueAnomaly + w)) - sin(toRadians(n)) * sin(toRadians(trueAnomaly + w)) * cos(toRadians(i))), helioR * (sin(toRadians(n)) * cos(toRadians(trueAnomaly + w)) + cos(toRadians(n)) * sin(toRadians(trueAnomaly + w)) * cos(toRadians(i))), helioR * sin(toRadians(trueAnomaly + w)) * sin(toRadians(i)))
 
         val helioRLonLatEclip = rectangularToSpherical(helioRectEclip)
 
         // Apply the planet's perturbations.
-        val Mju = norm360(19.8950 + 0.0830853001 * d)
-        val Msa = norm360(316.9670 + 0.0334442282 * d)
-        val Mur = norm360(142.5905 + 0.011725806 * d)
+        val mju = norm360(19.8950 + 0.0830853001 * day)
+        val msa = norm360(316.9670 + 0.0334442282 * day)
+        val mur = norm360(142.5905 + 0.011725806 * day)
         when (body) {
             Body.JUPITER -> helioRLonLatEclip[1] = ((helioRLonLatEclip[1]
-                    - 0.332 * sin(toRadians(2 * Mju - 5 * Msa - 67.6))
-                    - 0.056 * sin(toRadians(2 * Mju - 2 * Msa + 21))) + 0.042 * sin(toRadians(3 * Mju - 5 * Msa + 21)) - 0.036 * sin(toRadians(Mju - 2 * Msa))
-                    + 0.022 * cos(toRadians(Mju - Msa))
-                    + 0.023 * sin(toRadians(2 * Mju - 3 * Msa + 52))) - 0.016 * sin(toRadians(Mju - 5 * Msa - 69.0))
+                    - 0.332 * sin(toRadians(2 * mju - 5 * msa - 67.6))
+                    - 0.056 * sin(toRadians(2 * mju - 2 * msa + 21))) + 0.042 * sin(toRadians(3 * mju - 5 * msa + 21)) - 0.036 * sin(toRadians(mju - 2 * msa))
+                    + 0.022 * cos(toRadians(mju - msa))
+                    + 0.023 * sin(toRadians(2 * mju - 3 * msa + 52))) - 0.016 * sin(toRadians(mju - 5 * msa - 69.0))
             Body.SATURN -> {
-                helioRLonLatEclip[1] = (helioRLonLatEclip[1] + 0.812 * sin(toRadians(2 * Mju - 5 * Msa - 67.6)) - 0.229 * cos(toRadians(2 * Mju - 4 * Msa - 2.0))
-                        + 0.119 * sin(toRadians(Mju - 2 * Msa - 3.0))
-                        + 0.046 * sin(toRadians(2 * Mju - 6 * Msa - 69.0))
-                        + 0.014 * sin(toRadians(Mju - 3 * Msa + 32)))
-                helioRLonLatEclip[2] = helioRLonLatEclip[2] - 0.020 * cos(toRadians(2 * Mju - 4 * Msa - 2.0)) + 0.018 * sin(toRadians(2 * Mju - 6 * Msa - 49.0))
+                helioRLonLatEclip[1] = (helioRLonLatEclip[1] + 0.812 * sin(toRadians(2 * mju - 5 * msa - 67.6)) - 0.229 * cos(toRadians(2 * mju - 4 * msa - 2.0))
+                        + 0.119 * sin(toRadians(mju - 2 * msa - 3.0))
+                        + 0.046 * sin(toRadians(2 * mju - 6 * msa - 69.0))
+                        + 0.014 * sin(toRadians(mju - 3 * msa + 32)))
+                helioRLonLatEclip[2] = helioRLonLatEclip[2] - 0.020 * cos(toRadians(2 * mju - 4 * msa - 2.0)) + 0.018 * sin(toRadians(2 * mju - 6 * msa - 49.0))
             }
             Body.URANUS -> helioRLonLatEclip[1] = (helioRLonLatEclip[1]
-                    + 0.040 * sin(toRadians(Msa - 2 * Mur + 6))
-                    + 0.035 * sin(toRadians(Msa - 3 * Mur + 33))) - 0.015 * sin(toRadians(Mju - Mur + 20))
+                    + 0.040 * sin(toRadians(msa - 2 * mur + 6))
+                    + 0.035 * sin(toRadians(msa - 3 * mur + 33))) - 0.015 * sin(toRadians(mju - mur + 20))
+            else -> { }
         }
 
         // Convert perturbed ecliptic lat and lon back into helio ecliptic rectangular coords.
         helioRectEclip = sphericalToRectangular(helioRLonLatEclip)
 
-        val geoRectEclip = helioToGeo(helioRectEclip, d)
+        val geoRectEclip = helioToGeo(helioRectEclip, day)
         val geoRectEquat = eclipticToEquatorial(geoRectEclip, obliquityOfEliptic)
         val geoRRADec = rectangularToSpherical(geoRectEquat)
         val geoAzEl = raDecToAzEl(geoRRADec, location, dateTime)
@@ -411,23 +408,19 @@ object BodyPositionCalculator {
     }
 
     private fun refractionCorrection(elevation: Double): Double {
-
-        var refractionCorrection: Double
+        var correction: Double
         if (elevation > 85.0) {
-            refractionCorrection = 0.0
+            correction = 0.0
         } else {
             val te = tan(toRadians(elevation))
-            if (elevation > 5.0) {
-                refractionCorrection = 58.1 / te - 0.07 / (te * te * te) + 0.000086 / (te * te * te * te * te)
-            } else if (elevation > -0.575) {
-                refractionCorrection = 1735.0 + elevation * (-518.2 + elevation * (103.4 + elevation * (-12.79 + elevation * 0.711)))
-            } else {
-                refractionCorrection = -20.774 / te
+            correction = when {
+                elevation > 5.0     -> 58.1 / te - 0.07 / (te * te * te) + 0.000086 / (te * te * te * te * te)
+                elevation > -0.575  -> 1735.0 + elevation * (-518.2 + elevation * (103.4 + elevation * (-12.79 + elevation * 0.711)))
+                else                -> -20.774 / te
             }
-            refractionCorrection = refractionCorrection / 3600.0
+            correction /= 3600.0
         }
-        return elevation + refractionCorrection
-
+        return elevation + correction
     }
 
     private fun dayNumber(dateTime: Calendar): Double {
@@ -461,109 +454,91 @@ object BodyPositionCalculator {
         return doubleArrayOf(x, y, z)
     }
 
-    private fun eclipticToEquatorial(xyzEclip: DoubleArray, o: Double): DoubleArray {
+    private fun eclipticToEquatorial(xyzEclip: DoubleArray, obliquityOfEliptic: Double): DoubleArray {
         val xEquat = xyzEclip[0]
-        val yEquat = xyzEclip[1] * cos(toRadians(o)) - xyzEclip[2] * sin(toRadians(o))
-        val zEquat = xyzEclip[1] * sin(toRadians(o)) + xyzEclip[2] * cos(toRadians(o))
+        val yEquat = xyzEclip[1] * cos(toRadians(obliquityOfEliptic)) - xyzEclip[2] * sin(toRadians(obliquityOfEliptic))
+        val zEquat = xyzEclip[1] * sin(toRadians(obliquityOfEliptic)) + xyzEclip[2] * cos(toRadians(obliquityOfEliptic))
         return doubleArrayOf(xEquat, yEquat, zEquat)
     }
 
     private fun raDecToAzEl(rRaDecl: DoubleArray, location: LatitudeLongitude, dateTime: Calendar): DoubleArray {
-
-        val LSTh = localSiderealTimeHours(location, dateTime)
-        val RAh = rRaDecl[1] / 15.0
-
-        // Hour angle
-        val HAd = 15 * norm24(LSTh - RAh)
-
-        val x = cos(toRadians(HAd)) * cos(toRadians(rRaDecl[2]))
-        val y = sin(toRadians(HAd)) * cos(toRadians(rRaDecl[2]))
+        val lsth = localSiderealTimeHours(location, dateTime)
+        val rah = rRaDecl[1] / 15.0
+        val had = 15 * norm24(lsth - rah) // Hour angle
+        val x = cos(toRadians(had)) * cos(toRadians(rRaDecl[2]))
+        val y = sin(toRadians(had)) * cos(toRadians(rRaDecl[2]))
         val z = sin(toRadians(rRaDecl[2]))
-
         val xhor = x * sin(toRadians(location.latitude.doubleValue)) - z * cos(toRadians(location.latitude.doubleValue))
         val zhor = x * cos(toRadians(location.latitude.doubleValue)) + z * sin(toRadians(location.latitude.doubleValue))
-
         val azimuth = norm360(toDegrees(atan2(toRadians(y), toRadians(xhor))) + 180.0)
         val trueElevation = toDegrees(atan2(toRadians(zhor), toRadians(sqrt(xhor * xhor + y * y))))
-
         return doubleArrayOf(azimuth, trueElevation)
     }
 
     private fun geoToTopo(rRaDec: DoubleArray, location: LatitudeLongitude, dateTime: Calendar): DoubleArray {
-
         val lat = location.latitude.doubleValue
         val gclat = lat - 0.1924 * sin(toRadians(2 * lat))
         val rho = 0.99833 + 0.00167 * cos(toRadians(2 * lat))
         val mpar = toDegrees(asin(1 / rRaDec[0]))
-        val LST = localSiderealTimeHours(location, dateTime)
-        val HA = norm360(LST * 15 - rRaDec[1])
-        val g = toDegrees(atan(tan(toRadians(gclat)) / cos(toRadians(HA))))
-
-        val topRA = rRaDec[1] - mpar * rho * cos(toRadians(gclat)) * sin(toRadians(HA)) / cos(toRadians(rRaDec[2]))
+        val lst = localSiderealTimeHours(location, dateTime)
+        val ha = norm360(lst * 15 - rRaDec[1])
+        val g = toDegrees(atan(tan(toRadians(gclat)) / cos(toRadians(ha))))
+        val topRA = rRaDec[1] - mpar * rho * cos(toRadians(gclat)) * sin(toRadians(ha)) / cos(toRadians(rRaDec[2]))
         val topDecl = rRaDec[2] - mpar * rho * sin(toRadians(gclat)) * sin(toRadians(g - rRaDec[2])) / sin(toRadians(g))
-
         return doubleArrayOf(rRaDec[0], topRA, topDecl)
     }
 
-    private fun helioToGeo(helioRectEclip: DoubleArray, d: Double): DoubleArray {
-
-        val w = norm360(282.9404 + 4.70935E-5 * d) // (longitude of perihelion)
-        val e = 0.016709 - 1.151E-9 * d // (eccentricity)
-        val M = norm360(356.0470 + 0.9856002585 * d) // (mean anomaly)
-        val E = M + 180 / PI * e * sin(toRadians(M)) * (1 + e * cos(toRadians(M)))
-        var x = cos(toRadians(E)) - e
-        var y = sin(toRadians(E)) * sqrt(1 - e * e)
+    private fun helioToGeo(helioRectEclip: DoubleArray, day: Double): DoubleArray {
+        val w = norm360(282.9404 + 4.70935E-5 * day) // (longitude of perihelion)
+        val e = 0.016709 - 1.151E-9 * day // (eccentricity)
+        val m = norm360(356.0470 + 0.9856002585 * day) // (mean anomaly)
+        val d = m + 180 / PI * e * sin(toRadians(m)) * (1 + e * cos(toRadians(m)))
+        var x = cos(toRadians(d)) - e
+        var y = sin(toRadians(d)) * sqrt(1 - e * e)
         val r = sqrt(x * x + y * y)
         val v = toDegrees(atan2(y, x))
         val lon = norm360(v + w)
         x = r * cos(toRadians(lon))
         y = r * sin(toRadians(lon))
         val z = 0.0
-
         return doubleArrayOf(helioRectEclip[0] + x, helioRectEclip[1] + y, helioRectEclip[2] + z)
-
     }
 
     private fun localSiderealTimeHours(location: LatitudeLongitude, dateTime: Calendar): Double {
-
-        val d = dayNumber(dateTime)
-        val UT = dateTime.get(Calendar.HOUR_OF_DAY).toDouble() + dateTime.get(Calendar.MINUTE) / 60.0 + dateTime.get(Calendar.SECOND) / 3600.0
-
-        val ws = norm360(282.9404 + 4.70935E-5 * d) // (longitude of perihelion)
-        val Ms = norm360(356.0470 + 0.9856002585 * d) // (mean anomaly)
-        val Ls = norm360(ws + Ms)
-
-        val GMST0 = Ls / 15 + 12.0
-
-        return norm24(GMST0 + UT + location.longitude.doubleValue / 15.0)
-
+        val day = dayNumber(dateTime)
+        val ut = dateTime.get(Calendar.HOUR_OF_DAY).toDouble() + dateTime.get(Calendar.MINUTE) / 60.0 + dateTime.get(Calendar.SECOND) / 3600.0
+        val ws = norm360(282.9404 + 4.70935E-5 * day) // (longitude of perihelion)
+        val ms = norm360(356.0470 + 0.9856002585 * day) // (mean anomaly)
+        val ls = norm360(ws + ms)
+        val gmst0 = ls / 15 + 12.0
+        return norm24(gmst0 + ut + location.longitude.doubleValue / 15.0)
     }
 
-    private fun obliquityOfEcliptic(t: Double): Double {
-        val seconds = 21.448 - t * (46.8150 + t * (0.00059 - t * 0.001813))
+    private fun obliquityOfEcliptic(julianCent: Double): Double {
+        val seconds = 21.448 - julianCent * (46.8150 + julianCent * (0.00059 - julianCent * 0.001813))
         return 23.0 + (26.0 + seconds / 60.0) / 60.0
     }
 
     private fun norm360(degrees: Double): Double {
-        var degrees = degrees
-        while (degrees < 0.0) {
-            degrees += 360.0
+        var d = degrees
+        while (d < 0.0) {
+            d += 360.0
         }
-        while (degrees > 360.0) {
-            degrees -= 360.0
+        while (d > 360.0) {
+            d -= 360.0
         }
-        return degrees
+        return d
     }
 
     private fun norm24(hours: Double): Double {
-        var hours = hours
-        while (hours < 0.0) {
-            hours += 24.0
+        var h = hours
+        while (h < 0.0) {
+            h += 24.0
         }
-        while (hours > 24.0) {
-            hours -= 24.0
+        while (h > 24.0) {
+            h -= 24.0
         }
-        return hours
+        return h
     }
 
     private fun sign(value: Double, plus: Double): Int {
@@ -574,20 +549,15 @@ object BodyPositionCalculator {
         val thisTimestamp = initialTimestamp + searchDirection * intervalMs
         val thisPosition = calcPosition(body, location, thisTimestamp)
         val thisSector = sector(thisPosition.azimuth)
-        //Calendar thisCal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        //thisCal.setTimeInMillis(thisTimestamp);
-        //System.out.println("binary " + initialSector + ", " + initialTimestamp + " (" + thisCal.get(Calendar.HOUR_OF_DAY) + ":" + thisCal.get(Calendar.MINUTE) + ":" + thisCal.get(Calendar.SECOND) + ", " + intervalMs + ", " + searchDirection + " : el " + thisPosition.getAzimuth());
 
         if (intervalMs < 15000 || depth > 10) {
             return thisPosition
         }
-
         return if (thisSector == initialSector) {
             binarySearchNoon(body, location, thisSector, thisTimestamp, intervalMs / 2, searchDirection, depth + 1)
         } else {
             binarySearchNoon(body, location, thisSector, thisTimestamp, intervalMs / 2, -searchDirection, depth + 1)
         }
-
     }
 
     //
