@@ -56,8 +56,8 @@ object SunCalculator {
             y -= 1
             m += 12
         }
-        var A = Math.floor(y/100.0)
-        var B = 2 - A + Math.floor(A/4)
+        val A = Math.floor(y/100.0)
+        val B = 2 - A + Math.floor(A/4)
         return Math.floor(365.25*(year + 4716)) + Math.floor(30.6001*(month+1)) + day + B - 1524.5
     }
 
@@ -119,12 +119,12 @@ object SunCalculator {
      * @return in degrees
      */
     private fun calcSunEqOfCenter(t: Double): Double {
-        var m = calcGeomMeanAnomalySun(t)
+        val m = calcGeomMeanAnomalySun(t)
 
-        var mrad = degToRad(m)
-        var sinm = Math.sin(mrad)
-        var sin2m = Math.sin(mrad+mrad)
-        var sin3m = Math.sin(mrad+mrad+mrad)
+        val mrad = degToRad(m)
+        val sinm = Math.sin(mrad)
+        val sin2m = Math.sin(mrad+mrad)
+        val sin3m = Math.sin(mrad+mrad+mrad)
 
         return sinm * (1.914602 - t * (0.004817 + 0.000014 * t)) + sin2m * (0.019993 - 0.000101 * t) + sin3m * 0.000289
     }
@@ -135,8 +135,8 @@ object SunCalculator {
      * @return sun's true longitude in degrees
      */
     private fun calcSunTrueLong(t: Double): Double {
-        var l0 = calcGeomMeanLongSun(t)
-        var c = calcSunEqOfCenter(t)
+        val l0 = calcGeomMeanLongSun(t)
+        val c = calcSunEqOfCenter(t)
         return l0 + c
     }
 
@@ -146,8 +146,8 @@ object SunCalculator {
      * @return sun's apparent longitude in degrees
      */
     private fun calcSunApparentLong(t: Double): Double {
-        var o = calcSunTrueLong(t)
-        var omega = 125.04 - 1934.136 * t
+        val o = calcSunTrueLong(t)
+        val omega = 125.04 - 1934.136 * t
         return o - 0.00569 - 0.00478 * Math.sin(degToRad(omega))
     }
 
@@ -157,7 +157,7 @@ object SunCalculator {
      * @return mean obliquity in degrees
      */
     private fun calcMeanObliquityOfEcliptic(t: Double): Double {
-        var seconds = 21.448 - t*(46.8150 + t*(0.00059 - t*(0.001813)))
+        val seconds = 21.448 - t*(46.8150 + t*(0.00059 - t*(0.001813)))
         return 23.0 + (26.0 + (seconds/60.0))/60.0
     }
 
@@ -167,24 +167,10 @@ object SunCalculator {
      * @return corrected obliquity in degrees
      */
     private fun calcObliquityCorrection(t: Double): Double {
-        var e0 = calcMeanObliquityOfEcliptic(t)
+        val e0 = calcMeanObliquityOfEcliptic(t)
 
-        var omega = 125.04 - 1934.136 * t
+        val omega = 125.04 - 1934.136 * t
         return e0 + 0.00256 * Math.cos(degToRad(omega)) // in degrees
-    }
-
-	/**
-     * Calculate the right ascension of the sun
-     * @param t number of Julian centuries since J2000.0
-     * @return sun's right ascension in degrees
-     */
-    private fun calcSunRtAscension(t: Double): Double {
-        var e = calcObliquityCorrection(t)
-        var lambda = calcSunApparentLong(t)
- 
-        var tananum = (Math.cos(degToRad(e)) * Math.sin(degToRad(lambda)))
-        var tanadenom = (Math.cos(degToRad(lambda)))
-        return radToDeg(Math.atan2(tananum, tanadenom)) // alpha, in degrees
     }
 
 	/**
@@ -193,10 +179,10 @@ object SunCalculator {
      * @return sun's declination in degrees
      */
     private fun calcSunDeclination(t: Double): Double {
-        var e = calcObliquityCorrection(t)
-        var lambda = calcSunApparentLong(t)
+        val e = calcObliquityCorrection(t)
+        val lambda = calcSunApparentLong(t)
 
-        var sint = Math.sin(degToRad(e)) * Math.sin(degToRad(lambda))
+        val sint = Math.sin(degToRad(e)) * Math.sin(degToRad(lambda))
         return radToDeg(Math.asin(sint)) // theta in degrees
     }
 
@@ -206,49 +192,49 @@ object SunCalculator {
      * @return equation of time in minutes of time
      */
     private fun calcEquationOfTime(t: Double): Double {
-        var epsilon = calcObliquityCorrection(t)
-        var l0 = calcGeomMeanLongSun(t)
-        var e = calcEccentricityEarthOrbit(t)
-        var m = calcGeomMeanAnomalySun(t)
+        val epsilon = calcObliquityCorrection(t)
+        val l0 = calcGeomMeanLongSun(t)
+        val e = calcEccentricityEarthOrbit(t)
+        val m = calcGeomMeanAnomalySun(t)
 
         var y = Math.tan(degToRad(epsilon)/2.0)
         y *= y
 
-        var sin2l0 = Math.sin(2.0 * degToRad(l0))
-        var sinm   = Math.sin(degToRad(m))
-        var cos2l0 = Math.cos(2.0 * degToRad(l0))
-        var sin4l0 = Math.sin(4.0 * degToRad(l0))
-        var sin2m  = Math.sin(2.0 * degToRad(m))
+        val sin2l0 = Math.sin(2.0 * degToRad(l0))
+        val sinm   = Math.sin(degToRad(m))
+        val cos2l0 = Math.cos(2.0 * degToRad(l0))
+        val sin4l0 = Math.sin(4.0 * degToRad(l0))
+        val sin2m  = Math.sin(2.0 * degToRad(m))
 
-        var Etime = y * sin2l0 - 2.0 * e * sinm + 4.0 * e * y * sinm * cos2l0
+        val Etime = y * sin2l0 - 2.0 * e * sinm + 4.0 * e * y * sinm * cos2l0
                 - 0.5 * y * y * sin4l0 - 1.25 * e * e * sin2m
 
         return radToDeg(Etime)*4.0    // in minutes of time
     }
 
     private fun calcHourAngleUp(lat: Double, solarDec: Double, elevation: Double): Double {
-        var latRad = degToRad(lat)
-        var sdRad = degToRad(solarDec)
+        val latRad = degToRad(lat)
+        val sdRad = degToRad(solarDec)
         return (Math.acos(Math.cos(degToRad(elevation))/(Math.cos(latRad)*Math.cos(sdRad))-Math.tan(latRad) * Math.tan(sdRad)))
     }
 
     private fun calcHourAngleDown(lat: Double, solarDec: Double, elevation: Double): Double {
-        var latRad = degToRad(lat)
-        var sdRad  = degToRad(solarDec)
+        val latRad = degToRad(lat)
+        val sdRad  = degToRad(solarDec)
         return -(Math.acos(Math.cos(degToRad(elevation))/(Math.cos(latRad)*Math.cos(sdRad))-Math.tan(latRad) * Math.tan(sdRad)))
     }
 
     private fun calcUpUTC(JD: Double, latitude: Double, longitude: Double, elevation: Double): Double {
-        var t = calcTimeJulianCent(JD)
-        var noonmin = calcSolNoonUTC(t, longitude)
-        var tnoon = calcTimeJulianCent (JD+noonmin/1440.0)
+        val t = calcTimeJulianCent(JD)
+        val noonmin = calcSolNoonUTC(t, longitude)
+        val tnoon = calcTimeJulianCent (JD+noonmin/1440.0)
         var eqTime = calcEquationOfTime(tnoon)
         var solarDec = calcSunDeclination(tnoon)
         var hourAngle = calcHourAngleUp(latitude, solarDec, elevation)
         var delta = longitude - radToDeg(hourAngle)
         var timeDiff = 4 * delta
         var timeUTC = 720 + timeDiff - eqTime
-        var newt = calcTimeJulianCent(calcJDFromJulianCent(t) + timeUTC/1440.0)
+        val newt = calcTimeJulianCent(calcJDFromJulianCent(t) + timeUTC/1440.0)
         eqTime = calcEquationOfTime(newt)
         solarDec = calcSunDeclination(newt)
         hourAngle = calcHourAngleUp(latitude, solarDec, elevation)
@@ -266,11 +252,11 @@ object SunCalculator {
      */
     private fun calcSolNoonUTC(t: Double, longitude: Double): Double {
         // First pass uses approximate solar noon to calculate eqtime
-        var tnoon = calcTimeJulianCent(calcJDFromJulianCent(t) + longitude/360.0)
+        val tnoon = calcTimeJulianCent(calcJDFromJulianCent(t) + longitude/360.0)
         var eqTime = calcEquationOfTime(tnoon)
         var solNoonUTC = 720 + (longitude * 4) - eqTime // min
 
-        var newt = calcTimeJulianCent(calcJDFromJulianCent(t) -0.5 + solNoonUTC/1440.0)
+        val newt = calcTimeJulianCent(calcJDFromJulianCent(t) -0.5 + solNoonUTC/1440.0)
 
         eqTime = calcEquationOfTime(newt)
         // var solarNoonDec = calcSunDeclination(newt)
@@ -288,13 +274,13 @@ object SunCalculator {
      * @return time in minutes from zero Z
      */
     private fun calcDownUTC(JD: Double, latitude: Double, longitude: Double, elevation: Double): Double {
-        var t = calcTimeJulianCent(JD)
+        val t = calcTimeJulianCent(JD)
 
         // Find the time of solar noon at the location, and use that declination. This is better than
         // start of the Julian day
 
-        var noonmin = calcSolNoonUTC(t, longitude)
-        var tnoon = calcTimeJulianCent (JD+noonmin/1440.0)
+        val noonmin = calcSolNoonUTC(t, longitude)
+        val tnoon = calcTimeJulianCent (JD+noonmin/1440.0)
 
         // First calculates sunrise and approx length of day
 
@@ -308,7 +294,7 @@ object SunCalculator {
 
         // first pass used to include fractional day in gamma calc
 
-        var newt = calcTimeJulianCent(calcJDFromJulianCent(t) + timeUTC/1440.0)
+        val newt = calcTimeJulianCent(calcJDFromJulianCent(t) + timeUTC/1440.0)
         eqTime = calcEquationOfTime(newt)
         solarDec = calcSunDeclination(newt)
         hourAngle = calcHourAngleDown(latitude, solarDec, elevation)
@@ -328,12 +314,12 @@ object SunCalculator {
      */
     private fun createCalendar(dateMidnight: Calendar, minutes: Double, timeZone: TimeZone): Calendar {
     
-        var floatHour = minutes / 60.0
+        val floatHour = minutes / 60.0
         var hour = Math.floor(floatHour).toInt()
-        var floatMinute = 60.0 * (floatHour - Math.floor(floatHour))
+        val floatMinute = 60.0 * (floatHour - Math.floor(floatHour))
         var minute = Math.floor(floatMinute).toInt()
-        var floatSec = 60.0 * (floatMinute - Math.floor(floatMinute))
-        var second = Math.floor(floatSec + 0.5).toInt()
+        val floatSec = 60.0 * (floatMinute - Math.floor(floatMinute))
+        val second = Math.floor(floatSec + 0.5).toInt()
         var addDays = 0
 
         if (minute >= 60) {
@@ -369,11 +355,11 @@ object SunCalculator {
     fun calcDay(location: LatitudeLongitude, dateMidnight: Calendar, vararg events: Event): SunDay {
 
         var latitude = location.latitude.doubleValue
-        var longitude = -location.longitude.doubleValue
+        val longitude = -location.longitude.doubleValue
         
-        var year = dateMidnight.get(YEAR)
-        var month = dateMidnight.get(MONTH) + 1
-        var day = dateMidnight.get(DAY_OF_MONTH)
+        val year = dateMidnight.get(YEAR)
+        val month = dateMidnight.get(MONTH) + 1
+        val day = dateMidnight.get(DAY_OF_MONTH)
         val dateMidnightUtc = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
         dateMidnightUtc.set(year, month - 1, day, 0, 0, 0)
         dateMidnightUtc.set(MILLISECOND, 0)
@@ -385,23 +371,23 @@ object SunCalculator {
             latitude = 89.0
         }
         
-        var julianDay = calcJD(year, month, day)
-        var julianCent = calcTimeJulianCent(julianDay)
+        val julianDay = calcJD(year, month, day)
+        val julianCent = calcTimeJulianCent(julianDay)
 
         val sunDay = SunDay()
 
-        var solarNoon = calcSolNoonUTC(julianCent, longitude)
+        val solarNoon = calcSolNoonUTC(julianCent, longitude)
         val transit = createCalendar(dateMidnightUtc, solarNoon, dateMidnight.getTimeZone())
         val solarNoonPosition = calcPosition(location, transit)
         sunDay.transit = transit
         sunDay.transitAppElevation = solarNoonPosition.appElevation
 
-        if (events == null || events.size == 0 || events.contains(Event.RISESET)) {
-            var sunrise = calcUpUTC(julianDay, latitude, longitude, 90.833)
+        if (events.isEmpty() || events.contains(Event.RISESET)) {
+            val sunrise = calcUpUTC(julianDay, latitude, longitude, 90.833)
             if (!sunrise.isNaN()) {
                 sunDay.rise = createCalendar(dateMidnightUtc, sunrise, dateMidnight.getTimeZone())
             }
-            var sunset = calcDownUTC(julianDay, latitude, longitude, 90.833)
+            val sunset = calcDownUTC(julianDay, latitude, longitude, 90.833)
             if (!sunset.isNaN()) {
                 sunDay.set = createCalendar(dateMidnightUtc, sunset, dateMidnight.getTimeZone())
             }
@@ -432,12 +418,12 @@ object SunCalculator {
             
         }
 
-        if (events == null || events.size == 0 || events.contains(Event.CIVIL)) {
-            var civDusk = calcDownUTC(julianDay, latitude, longitude, 96.0)
+        if (events.isEmpty() || events.contains(Event.CIVIL)) {
+            val civDusk = calcDownUTC(julianDay, latitude, longitude, 96.0)
             if (!civDusk.isNaN()) {
                 sunDay.civDusk = createCalendar(dateMidnightUtc, civDusk, dateMidnight.getTimeZone())
             }
-            var civDawn = calcUpUTC(julianDay, latitude, longitude, 96.0)
+            val civDawn = calcUpUTC(julianDay, latitude, longitude, 96.0)
             if (!civDawn.isNaN()) {
                 sunDay.civDawn = createCalendar(dateMidnightUtc, civDawn, dateMidnight.getTimeZone())
             }
@@ -456,12 +442,12 @@ object SunCalculator {
             }
         }
         
-        if (events == null || events.size == 0 || events.contains(Event.NAUTICAL)) {
-            var ntcDawn = calcUpUTC(julianDay, latitude, longitude, 102.0)
+        if (events.isEmpty() || events.contains(Event.NAUTICAL)) {
+            val ntcDawn = calcUpUTC(julianDay, latitude, longitude, 102.0)
             if (!ntcDawn.isNaN()) {
                 sunDay.ntcDawn = createCalendar(dateMidnightUtc, ntcDawn, dateMidnight.getTimeZone())
             }
-            var ntcDusk = calcDownUTC(julianDay, latitude, longitude, 102.0)
+            val ntcDusk = calcDownUTC(julianDay, latitude, longitude, 102.0)
             if (!ntcDusk.isNaN()) {
                 sunDay.ntcDusk = createCalendar(dateMidnightUtc, ntcDusk, dateMidnight.getTimeZone())
             }
@@ -480,12 +466,12 @@ object SunCalculator {
             }
         }
 
-        if (events == null || events.size == 0 || events.contains(Event.ASTRONOMICAL)) {
-            var astDawn = calcUpUTC(julianDay, latitude, longitude, 108.0)
+        if (events.isEmpty() || events.contains(Event.ASTRONOMICAL)) {
+            val astDawn = calcUpUTC(julianDay, latitude, longitude, 108.0)
             if (!astDawn.isNaN()) {
                 sunDay.astDawn = createCalendar(dateMidnightUtc, astDawn, dateMidnight.getTimeZone())
             }
-            var astDusk = calcDownUTC(julianDay, latitude, longitude, 108.0)
+            val astDusk = calcDownUTC(julianDay, latitude, longitude, 108.0)
             if (!astDusk.isNaN()) {
                 sunDay.astDusk = createCalendar(dateMidnightUtc, astDusk, dateMidnight.getTimeZone())
             }
@@ -504,12 +490,12 @@ object SunCalculator {
             }
         }
         
-        if (events == null || events.size == 0 || events.contains(Event.GOLDENHOUR)) {
-            var ghEnd = calcUpUTC(julianDay, latitude, longitude, 84.0)
+        if (events.isEmpty() || events.contains(Event.GOLDENHOUR)) {
+            val ghEnd = calcUpUTC(julianDay, latitude, longitude, 84.0)
             if (!ghEnd.isNaN()) {
                 sunDay.ghEnd = createCalendar(dateMidnightUtc, ghEnd, dateMidnight.getTimeZone())
             }
-            var ghStart = calcDownUTC(julianDay, latitude, longitude, 84.0)
+            val ghStart = calcDownUTC(julianDay, latitude, longitude, 84.0)
             if (!ghStart.isNaN()) {
                 sunDay.ghStart = createCalendar(dateMidnightUtc, ghStart, dateMidnight.getTimeZone())
             }
@@ -535,9 +521,9 @@ object SunCalculator {
     /**
      * Calculates the sun's position at a given time.
      */
-    public fun calcPosition(location: LatitudeLongitude, dateTime: Calendar): Position {
+    fun calcPosition(location: LatitudeLongitude, dateTime: Calendar): Position {
         var latitude = location.latitude.doubleValue
-        var longitude = -location.longitude.doubleValue
+        val longitude = -location.longitude.doubleValue
         
         if ((latitude >= -90) && (latitude < -89.8)) {
             latitude = -89.8
@@ -550,15 +536,15 @@ object SunCalculator {
         dateTimeUtc.setTimeInMillis(dateTime.getTimeInMillis())
         
 
-        var timenow = dateTimeUtc.get(HOUR_OF_DAY) + dateTimeUtc.get(MINUTE)/60.0 + dateTimeUtc.get(SECOND)/3600.0
+        val timenow = dateTimeUtc.get(HOUR_OF_DAY) + dateTimeUtc.get(MINUTE)/60.0 + dateTimeUtc.get(SECOND)/3600.0
         
-        var JD = (calcJD(dateTimeUtc.get(YEAR), dateTimeUtc.get(MONTH) + 1, dateTimeUtc.get(DAY_OF_MONTH)))
-        var T = calcTimeJulianCent(JD + timenow/24.0)
-        var solarDec = calcSunDeclination(T)
-        var eqTime = calcEquationOfTime(T)
+        val JD = (calcJD(dateTimeUtc.get(YEAR), dateTimeUtc.get(MONTH) + 1, dateTimeUtc.get(DAY_OF_MONTH)))
+        val T = calcTimeJulianCent(JD + timenow/24.0)
+        val solarDec = calcSunDeclination(T)
+        val eqTime = calcEquationOfTime(T)
 
-        var offsetHours = 0
-        var solarTimeFix = eqTime - 4.0 * longitude + 60.0 * offsetHours
+        val offsetHours = 0
+        val solarTimeFix = eqTime - 4.0 * longitude + 60.0 * offsetHours
         var trueSolarTimeMins = dateTimeUtc.get(HOUR_OF_DAY) * 60.0 + dateTimeUtc.get(MINUTE) + dateTimeUtc.get(SECOND)/60.0 + solarTimeFix
 
         while (trueSolarTimeMins > 1440) {
@@ -570,7 +556,7 @@ object SunCalculator {
             hourAngle += 360.0
         }
 
-        var haRad = degToRad(hourAngle)
+        val haRad = degToRad(hourAngle)
 
         var csz = Math.sin(degToRad(latitude)) *
             Math.sin(degToRad(solarDec)) +
@@ -581,9 +567,9 @@ object SunCalculator {
         } else if (csz < -1.0) {
             csz = -1.0
         }
-        var zenith = radToDeg(Math.acos(csz))
+        val zenith = radToDeg(Math.acos(csz))
         var azimuth: Double
-        var azDenom = ( Math.cos(degToRad(latitude)) * Math.sin(degToRad(zenith)) )
+        val azDenom = ( Math.cos(degToRad(latitude)) * Math.sin(degToRad(zenith)) )
         if (Math.abs(azDenom) > 0.001) {
             var azRad = (( Math.sin(degToRad(latitude)) *
                 Math.cos(degToRad(zenith)) ) -
