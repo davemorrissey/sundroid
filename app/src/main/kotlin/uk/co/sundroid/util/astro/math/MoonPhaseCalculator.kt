@@ -14,8 +14,8 @@ object MoonPhaseCalculator {
     private var lastCalculatedZone: TimeZone? = null
     private var lastCalculatedEvents: List<MoonPhaseEvent>? = null
 
-    private fun jyear(td: Double): IntArray {
-        var td = td
+    private fun jyear(j: Double): IntArray {
+        var td = j
         val z: Double
         val f: Double
         val a: Double
@@ -43,10 +43,8 @@ object MoonPhaseCalculator {
     }
 
     private fun jhms(j: Double): IntArray {
-        var j = j
-        val ij: Double
-        j += 0.5
-        ij = (j - Math.floor(j)) * 86400.0
+        val j2 = j + 0.5
+        val ij = ((j2 + 0.5) - Math.floor(j2)) * 86400.0
         return intArrayOf(Math.floor(ij / 3600).toInt(), Math.floor(ij / 60 % 60).toInt(), Math.floor(ij % 60).toInt())
     }
 
@@ -62,8 +60,8 @@ object MoonPhaseCalculator {
         return Math.cos(dtr(x))
     }
 
-    private fun truephase(k: Double, phase: Double): Double {
-        var k = k
+    private fun truephase(y: Double, phase: Double): Double {
+        var k = y
         val t: Double
         val t2: Double
         val t3: Double
@@ -71,12 +69,12 @@ object MoonPhaseCalculator {
         val m: Double
         val mprime: Double
         val f: Double
-        val SynMonth = 29.53058868
+        val synMonth = 29.53058868
         k += phase
         t = k / 1236.85
         t2 = t * t
         t3 = t2 * t
-        pt = 2415020.75933 + SynMonth * k + 0.0001178 * t2 - 0.000000155 * t3 + 0.00033 * dsin(166.56 + 132.87 * t - 0.009173 * t2)
+        pt = 2415020.75933 + synMonth * k + 0.0001178 * t2 - 0.000000155 * t3 + 0.00033 * dsin(166.56 + 132.87 * t - 0.009173 * t2)
         m = 359.2242 + 29.10535608 * k - 0.0000333 * t2 - 0.00000347 * t3
         mprime = 306.0253 + 385.81691806 * k + 0.0107306 * t2 + 0.00001236 * t3
         f = 21.2964 + 390.67050646 * k - 0.0016528 * t2 - 0.00000239 * t3
@@ -97,10 +95,10 @@ object MoonPhaseCalculator {
                     + 0.0021 * dsin(2 * f - mprime)
                     + 0.0003 * dsin(m + 2 * mprime)
                     + 0.0004 * dsin(m - 2 * mprime)) - 0.0003 * dsin(2 * m + mprime)
-            if (phase < 0.5)
-                pt += 0.0028 - 0.0004 * dcos(m) + 0.0003 * dcos(mprime)
+            pt += if (phase < 0.5)
+                0.0028 - 0.0004 * dcos(m) + 0.0003 * dcos(mprime)
             else
-                pt += -0.0028 + 0.0004 * dcos(m) - 0.0003 * dcos(mprime)
+                -0.0028 + 0.0004 * dcos(m) - 0.0003 * dcos(mprime)
         }
         return pt
     }
@@ -189,14 +187,11 @@ object MoonPhaseCalculator {
      * @return An event, if any occurs.
      */
     fun getDayEvent(dateMidnight: Calendar, events: List<MoonPhaseEvent>): MoonPhaseEvent? {
-        for (event in events) {
-            if (event.time.get(Calendar.YEAR) == dateMidnight.get(Calendar.YEAR) &&
-                    event.time.get(Calendar.MONTH) == dateMidnight.get(Calendar.MONTH) &&
-                    event.time.get(Calendar.DAY_OF_MONTH) == dateMidnight.get(Calendar.DAY_OF_MONTH)) {
-                return event
-            }
+        return events.firstOrNull {
+                it.time.get(Calendar.YEAR) == dateMidnight.get(Calendar.YEAR) &&
+                it.time.get(Calendar.MONTH) == dateMidnight.get(Calendar.MONTH) &&
+                it.time.get(Calendar.DAY_OF_MONTH) == dateMidnight.get(Calendar.DAY_OF_MONTH)
         }
-        return null
     }
 
     /**
@@ -206,9 +201,8 @@ object MoonPhaseCalculator {
      */
     @Synchronized
     fun getDayEvent(dateMidnight: Calendar): MoonPhaseEvent? {
-
         val events: List<MoonPhaseEvent>
-        var lastCalculatedEvents = this.lastCalculatedEvents
+        val lastCalculatedEvents = this.lastCalculatedEvents
         if (lastCalculatedYear == dateMidnight.get(Calendar.YEAR) &&
                 lastCalculatedZone != null && lastCalculatedZone!!.id == dateMidnight.timeZone.id &&
                 lastCalculatedEvents != null) {
@@ -220,7 +214,6 @@ object MoonPhaseCalculator {
             this.lastCalculatedEvents = events
         }
         return getDayEvent(dateMidnight, events)
-
     }
 
     /**
