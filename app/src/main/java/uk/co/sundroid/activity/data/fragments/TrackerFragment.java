@@ -264,7 +264,7 @@ public class TrackerFragment extends AbstractTimeFragment implements Configurabl
             }
 
             Set<Event> tempEventsSet = null;
-            final Position position = body != null && SharedPrefsHelper.INSTANCE.getSunTrackerText(getApplicationContext()) ? BodyPositionCalculator.calcPosition(body, location.getLocation(), timeCalendar) : null;
+            final Position position = body != null && SharedPrefsHelper.INSTANCE.getSunTrackerText(getApplicationContext()) ? BodyPositionCalculator.INSTANCE.calcPosition(body, location.getLocation(), timeCalendar) : null;
 
             // Get the first two rise/set events that happen on this calendar day,
             // midnight to midnight.
@@ -274,7 +274,7 @@ public class TrackerFragment extends AbstractTimeFragment implements Configurabl
                 Calendar loopCalendar = TimeUtils.clone(dateCalendar);
                 loopCalendar.add(Calendar.DAY_OF_MONTH, -1);
                 for (int i = 0; i < 3; i++) {
-                    BodyDay bodyDay = BodyPositionCalculator.calcDay(body, location.getLocation(), loopCalendar, false);
+                    BodyDay bodyDay = BodyPositionCalculator.INSTANCE.calcDay(body, location.getLocation(), loopCalendar, false);
                     if (bodyDay.getRise() != null && TimeUtils.isSameDay(bodyDay.getRise(), dateCalendar) && tempEventsSet.size() < 2) {
                         tempEventsSet.add(new Event("RISE", bodyDay.getRise(), bodyDay.getRiseAzimuth()));
                     }

@@ -47,15 +47,15 @@ public class DayDetailMoonFragment extends AbstractDayFragment {
                     return;
                 }
 
-                final MoonDay moonDay = (MoonDay)BodyPositionCalculator.calcDay(Body.MOON, location.getLocation(), calendar, true);
+                final MoonDay moonDay = (MoonDay)BodyPositionCalculator.INSTANCE.calcDay(Body.MOON, location.getLocation(), calendar, true);
                 final List<MoonPhaseEvent> moonPhaseEvents = new ArrayList<>();
-                for (MoonPhaseEvent event : MoonPhaseCalculator.getYearEvents(calendar.get(Calendar.YEAR), calendar.getTimeZone())) {
+                for (MoonPhaseEvent event : MoonPhaseCalculator.INSTANCE.getYearEvents(calendar.get(Calendar.YEAR), calendar.getTimeZone())) {
                     if (event.getTime().get(Calendar.DAY_OF_YEAR) >= calendar.get(Calendar.DAY_OF_YEAR)) {
                         moonPhaseEvents.add(event);
                     }
                 }
                 if (moonPhaseEvents.size() < 4) {
-                    moonPhaseEvents.addAll(MoonPhaseCalculator.getYearEvents(calendar.get(Calendar.YEAR) + 1, calendar.getTimeZone()));
+                    moonPhaseEvents.addAll(MoonPhaseCalculator.INSTANCE.getYearEvents(calendar.get(Calendar.YEAR) + 1, calendar.getTimeZone()));
                 }
 
                 Set<Event> yearEvents = YearData.INSTANCE.getYearEvents(calendar.get(Calendar.YEAR), calendar.getTimeZone());

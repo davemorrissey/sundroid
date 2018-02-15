@@ -102,8 +102,8 @@ public class MonthCalendarsFragment extends AbstractMonthFragment<ArrayList<Mont
         prevCalendar.setTimeInMillis(calendar.getTimeInMillis());
         prevCalendar.set(Calendar.DAY_OF_MONTH, 1);
         prevCalendar.add(Calendar.DAY_OF_MONTH, -1);
-        SunDay previousSunDay = SunCalculator.calcDay(location.getLocation(), prevCalendar);
-        BodyDay previousBodyDay = body == null ? null : BodyPositionCalculator.calcDay(body, location.getLocation(), prevCalendar, false);
+        SunDay previousSunDay = SunCalculator.INSTANCE.calcDay(location.getLocation(), prevCalendar);
+        BodyDay previousBodyDay = body == null ? null : BodyPositionCalculator.INSTANCE.calcDay(body, location.getLocation(), prevCalendar, false);
 
         final ArrayList<DayEntry> entries = new ArrayList<>();
 
@@ -115,19 +115,19 @@ public class MonthCalendarsFragment extends AbstractMonthFragment<ArrayList<Mont
             SunDay sunDay = null;
             MoonDay moonDay = null;
             if (body != null) {
-                bodyDay = BodyPositionCalculator.calcDay(body, location.getLocation(), loopCalendar, false);
+                bodyDay = BodyPositionCalculator.INSTANCE.calcDay(body, location.getLocation(), loopCalendar, false);
             } else if (type.equals("daylight")) {
-                sunDay = SunCalculator.calcDay(location.getLocation(), loopCalendar, SunCalculator.Event.RISESET);
+                sunDay = SunCalculator.INSTANCE.calcDay(location.getLocation(), loopCalendar, SunCalculator.Event.RISESET);
             } else if (type.equals("civ")) {
-                sunDay = SunCalculator.calcDay(location.getLocation(), loopCalendar, SunCalculator.Event.CIVIL);
+                sunDay = SunCalculator.INSTANCE.calcDay(location.getLocation(), loopCalendar, SunCalculator.Event.CIVIL);
             } else if (type.equals("ntc")) {
-                sunDay = SunCalculator.calcDay(location.getLocation(), loopCalendar, SunCalculator.Event.NAUTICAL);
+                sunDay = SunCalculator.INSTANCE.calcDay(location.getLocation(), loopCalendar, SunCalculator.Event.NAUTICAL);
             } else if (type.equals("ast")) {
-                sunDay = SunCalculator.calcDay(location.getLocation(), loopCalendar, SunCalculator.Event.ASTRONOMICAL);
+                sunDay = SunCalculator.INSTANCE.calcDay(location.getLocation(), loopCalendar, SunCalculator.Event.ASTRONOMICAL);
             } else if (type.equals("golden")) {
-                sunDay = SunCalculator.calcDay(location.getLocation(), loopCalendar, SunCalculator.Event.GOLDENHOUR);
+                sunDay = SunCalculator.INSTANCE.calcDay(location.getLocation(), loopCalendar, SunCalculator.Event.GOLDENHOUR);
             } else if (type.equals("moon")) {
-                moonDay = (MoonDay)BodyPositionCalculator.calcDay(Body.MOON, location.getLocation(), loopCalendar, false);
+                moonDay = (MoonDay)BodyPositionCalculator.INSTANCE.calcDay(Body.MOON, location.getLocation(), loopCalendar, false);
             }
             boolean today = todayCalendar.get(Calendar.YEAR) == loopCalendar.get(Calendar.YEAR) &&
                     todayCalendar.get(Calendar.MONTH) == loopCalendar.get(Calendar.MONTH) &&

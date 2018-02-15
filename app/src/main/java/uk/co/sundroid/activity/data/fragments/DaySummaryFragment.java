@@ -36,8 +36,8 @@ public class DaySummaryFragment extends AbstractDayFragment {
 	@Override
 	protected void update(final LocationDetails location, final Calendar calendar, final View view) throws Exception {
 
-   		final SunDay sunDay = SunCalculator.calcDay(location.getLocation(), calendar);
-   		final MoonDay moonDay = (MoonDay)BodyPositionCalculator.calcDay(Body.MOON, location.getLocation(), calendar, true);
+   		final SunDay sunDay = SunCalculator.INSTANCE.calcDay(location.getLocation(), calendar);
+   		final MoonDay moonDay = (MoonDay)BodyPositionCalculator.INSTANCE.calcDay(Body.MOON, location.getLocation(), calendar, true);
 
 	   	// Asynchronously generate moon graphic to speed up response.
     	if (moonDay != null) {

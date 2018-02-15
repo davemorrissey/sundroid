@@ -38,7 +38,7 @@ public class DayDetailPlanetsFragment extends AbstractDayFragment {
                 final Map<Body, BodyDay> planetDays = new LinkedHashMap<>();
                 for (Body body : Body.values()) {
                     if (body != Body.SUN && body != Body.MOON) {
-                        planetDays.put(body, BodyPositionCalculator.calcDay(body, location.getLocation(), calendar, true));
+                        planetDays.put(body, BodyPositionCalculator.INSTANCE.calcDay(body, location.getLocation(), calendar, true));
                     }
                 }
 

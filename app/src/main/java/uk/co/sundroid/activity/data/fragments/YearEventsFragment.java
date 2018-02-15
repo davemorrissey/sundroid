@@ -66,7 +66,7 @@ public class YearEventsFragment extends AbstractYearFragment implements Configur
 
                 final Calendar todayCalendar = Calendar.getInstance(calendar.getTimeZone());
                 final Set<Event> eventsSet = YearData.INSTANCE.getYearEvents(calendar.get(Calendar.YEAR), location.getTimeZone().getZone());
-                List<MoonPhaseEvent> moonPhases = MoonPhaseCalculator.getYearEvents(calendar.get(Calendar.YEAR), location.getTimeZone().getZone());
+                List<MoonPhaseEvent> moonPhases = MoonPhaseCalculator.INSTANCE.getYearEvents(calendar.get(Calendar.YEAR), location.getTimeZone().getZone());
                 for (MoonPhaseEvent moonPhase : moonPhases) {
                     eventsSet.add(new Event(EventType.PHASE, moonPhase, moonPhase.getTime(), null));
                 }
@@ -123,7 +123,7 @@ public class YearEventsFragment extends AbstractYearFragment implements Configur
                                 if (!SharedPrefsHelper.INSTANCE.getShowElement(getApplicationContext(), "yearSolstice", true)) { continue; }
                                 title = event.getType().getDisplayName();
                                 if (Math.abs(location.getLocation().getLatitude().getDoubleValue()) > 23.44) {
-                                    SunDay sunDay = SunCalculator.calcDay(location.getLocation(), event.getTime(), SunCalculator.Event.RISESET);
+                                    SunDay sunDay = SunCalculator.INSTANCE.calcDay(location.getLocation(), event.getTime(), SunCalculator.Event.RISESET);
                                     String localExtreme = location.getLocation().getLatitude().getDoubleValue() >= 0 ? "Longest" : "Shortest";
                                     subtitle = localExtreme + " day: " + TimeUtils.formatDurationHMS(getApplicationContext(), sunDay.getUptimeHours(), true);
                                 }
@@ -134,7 +134,7 @@ public class YearEventsFragment extends AbstractYearFragment implements Configur
                                 if (!SharedPrefsHelper.INSTANCE.getShowElement(getApplicationContext(), "yearSolstice", true)) { continue; }
                                 title = event.getType().getDisplayName();
                                 if (Math.abs(location.getLocation().getLatitude().getDoubleValue()) > 23.44) {
-                                    SunDay sunDay = SunCalculator.calcDay(location.getLocation(), event.getTime(), SunCalculator.Event.RISESET);
+                                    SunDay sunDay = SunCalculator.INSTANCE.calcDay(location.getLocation(), event.getTime(), SunCalculator.Event.RISESET);
                                     String localExtreme = location.getLocation().getLatitude().getDoubleValue() >= 0 ? "Shortest" : "Longest";
                                     subtitle = localExtreme + " day: " + TimeUtils.formatDurationHMS(getApplicationContext(), sunDay.getUptimeHours(), true);
                                 }

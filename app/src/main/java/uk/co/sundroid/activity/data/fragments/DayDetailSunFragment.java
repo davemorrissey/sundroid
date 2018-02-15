@@ -52,7 +52,7 @@ public class DayDetailSunFragment extends AbstractDayFragment {
                         }
                     }
                 }
-                final SunDay sunDay = SunCalculator.calcDay(location.getLocation(), calendar);
+                final SunDay sunDay = SunCalculator.INSTANCE.calcDay(location.getLocation(), calendar);
                 final Event todayEvent = yearEventToday;
 
                 handler.post(() -> {

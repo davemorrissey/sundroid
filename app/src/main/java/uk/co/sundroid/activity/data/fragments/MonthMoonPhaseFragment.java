@@ -91,7 +91,7 @@ public class MonthMoonPhaseFragment extends AbstractMonthFragment {
                         imagesRow.addView(imageCell);
                     }
 
-                    List<MoonPhaseEvent> phaseEvents = MoonPhaseCalculator.getYearEvents(calendar.get(Calendar.YEAR), calendar.getTimeZone());
+                    List<MoonPhaseEvent> phaseEvents = MoonPhaseCalculator.INSTANCE.getYearEvents(calendar.get(Calendar.YEAR), calendar.getTimeZone());
 
                     for (int i = 0; i < 32 && loopCalendar.get(Calendar.MONTH) == month; i++) {
                         int col = loopCalendar.get(Calendar.DAY_OF_WEEK) + (7 - SharedPrefsHelper.INSTANCE.getFirstWeekday(getApplicationContext())) + 1;
@@ -107,7 +107,7 @@ public class MonthMoonPhaseFragment extends AbstractMonthFragment {
                         View dateCell = getActivity().getLayoutInflater().inflate(layout.frag_data_monthmoonphase_date, datesRow, false);
                         ((TextView)dateCell.findViewById(id.moonCalTitleText)).setText(Integer.toString(loopCalendar.get(Calendar.DAY_OF_MONTH)));
 
-                        MoonPhaseEvent phaseEvent = MoonPhaseCalculator.getDayEvent(loopCalendar, phaseEvents);
+                        MoonPhaseEvent phaseEvent = MoonPhaseCalculator.INSTANCE.getDayEvent(loopCalendar, phaseEvents);
                         if (phaseEvent != null) {
                             int phaseImg = ThemePalette.getPhaseFull();
                             if (phaseEvent.getPhase() == MoonPhase.NEW) {
@@ -127,7 +127,7 @@ public class MonthMoonPhaseFragment extends AbstractMonthFragment {
 
                         View imageCell = getActivity().getLayoutInflater().inflate(layout.frag_data_monthmoonphase_image, imagesRow, false);
 
-                        double phaseDbl = MoonPhaseCalculator.getNoonPhase(loopCalendar)/2;
+                        double phaseDbl = MoonPhaseCalculator.INSTANCE.getNoonPhase(loopCalendar)/2;
                         BigDecimal phaseBd = new BigDecimal(phaseDbl);
                         phaseBd = phaseBd.setScale(2, BigDecimal.ROUND_HALF_DOWN);
                         phaseBd = phaseBd.multiply(new BigDecimal(2));

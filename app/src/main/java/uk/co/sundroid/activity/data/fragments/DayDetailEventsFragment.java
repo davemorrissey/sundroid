@@ -57,16 +57,16 @@ public class DayDetailEventsFragment extends AbstractDayFragment implements Conf
                 Map<Body, BodyDay> planetDays = null;
 
                 if (SharedPrefsHelper.INSTANCE.getShowElement(getApplicationContext(), "evtByTimeSun", true)) {
-                    sunDay = SunCalculator.calcDay(location.getLocation(), calendar);
+                    sunDay = SunCalculator.INSTANCE.calcDay(location.getLocation(), calendar);
                 }
                 if (SharedPrefsHelper.INSTANCE.getShowElement(getApplicationContext(), "evtByTimeMoon", true)) {
-                    moonDay = (MoonDay)BodyPositionCalculator.calcDay(Body.MOON, location.getLocation(), calendar, false);
+                    moonDay = (MoonDay)BodyPositionCalculator.INSTANCE.calcDay(Body.MOON, location.getLocation(), calendar, false);
                 }
                 if (SharedPrefsHelper.INSTANCE.getShowElement(getApplicationContext(), "evtByTimePlanets", false)) {
                     planetDays = new LinkedHashMap<>();
                     for (Body body : Body.values()) {
                         if (body != Body.SUN && body != Body.MOON) {
-                            planetDays.put(body, BodyPositionCalculator.calcDay(body, location.getLocation(), calendar, true));
+                            planetDays.put(body, BodyPositionCalculator.INSTANCE.calcDay(body, location.getLocation(), calendar, true));
                         }
                     }
                 }
