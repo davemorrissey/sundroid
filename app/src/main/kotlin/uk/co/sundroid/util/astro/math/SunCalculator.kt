@@ -597,10 +597,7 @@ object SunCalculator {
             azimuth += 360.0
         }
 
-        val sunPosition = Position()
-        sunPosition.azimuth = azimuth
-        sunPosition.appElevation = 90.0 - zenith
-        return sunPosition
+        return Position(dateTime.timeInMillis, azimuth, 90.0 - zenith)
     }
 
 }

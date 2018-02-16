@@ -104,7 +104,6 @@ object BodyPositionCalculator {
                     val thisPosition = calcPosition(body, location, calendar)
                     val thisEl = thisPosition.appElevation
 
-                    //	System.out.println(TimeHelper.formatTime(calendar, true) + " " + thisEl + " " + direction);
                     if (sign(thisEl, radiusCorrection) != sign(initEl, radiusCorrection)) {
                         var azimuth = thisPosition.azimuth
                         if (Math.abs(thisEl + radiusCorrection) > Math.abs(initEl + radiusCorrection)) {
@@ -134,20 +133,16 @@ object BodyPositionCalculator {
                     initEl = thisEl
                     safety++
                 }
-
-                // Set calendar to continue hourly iteration.
-                //calendar.set(Calendar.HOUR_OF_DAY, hour);
-                //calendar.set(Calendar.MINUTE, 0);
-
             }
-
 
             // If rise and set already calculated and rise before set, use them to calculate uptime.
             // If there is no rise it's a risen or set day.
-            if (bodyDay.rise != null && bodyDay.set != null && (bodyDay.rise!!.timeInMillis < bodyDay.set!!.timeInMillis || !transitAndLength)) {
-                bodyDay.uptimeHours = (bodyDay.set!!.timeInMillis - bodyDay.rise!!.timeInMillis) / (1000.0 * 60.0 * 60.0)
+            val rise = bodyDay.rise
+            val set = bodyDay.set
+            if (rise != null && set != null && (rise.timeInMillis < set.timeInMillis || !transitAndLength)) {
+                bodyDay.uptimeHours = (set.timeInMillis - rise.timeInMillis) / (1000.0 * 60.0 * 60.0)
                 break
-            } else if (bodyDay.rise == null && hour == 24) {
+            } else if (rise == null && hour == 24) {
                 break
             }
         }
@@ -267,11 +262,7 @@ object BodyPositionCalculator {
         val topoRRADec = geoToTopo(geoRRADec, location, dateTime)
         val topoAzEl = raDecToAzEl(topoRRADec, location, dateTime)
 
-        val position = Position()
-        position.timestamp = dateTime.timeInMillis
-        position.azimuth = topoAzEl[0]
-        position.appElevation = refractionCorrection(topoAzEl[1])
-        return position
+        return Position(dateTime.timeInMillis, topoAzEl[0], refractionCorrection(topoAzEl[1]))
     }
 
     private fun calcPlanetPositionInternal(body: Body, location: LatitudeLongitude, dateTime: Calendar): Position {
@@ -400,11 +391,7 @@ object BodyPositionCalculator {
         val geoRRADec = rectangularToSpherical(geoRectEquat)
         val geoAzEl = raDecToAzEl(geoRRADec, location, dateTime)
 
-        val position = Position()
-        position.timestamp = dateTime.timeInMillis
-        position.azimuth = geoAzEl[0]
-        position.appElevation = refractionCorrection(geoAzEl[1])
-        return position
+        return Position(dateTime.timeInMillis, geoAzEl[0], refractionCorrection(geoAzEl[1]))
     }
 
     private fun refractionCorrection(elevation: Double): Double {
@@ -553,11 +540,9 @@ object BodyPositionCalculator {
         if (intervalMs < 15000 || depth > 10) {
             return thisPosition
         }
-        return if (thisSector == initialSector) {
-            binarySearchNoon(body, location, thisSector, thisTimestamp, intervalMs / 2, searchDirection, depth + 1)
-        } else {
-            binarySearchNoon(body, location, thisSector, thisTimestamp, intervalMs / 2, -searchDirection, depth + 1)
-        }
+
+        val directionChange = if (thisSector == initialSector) 1 else -1
+        return binarySearchNoon(body, location, thisSector, thisTimestamp, intervalMs / 2, searchDirection * directionChange, depth + 1)
     }
 
     //
