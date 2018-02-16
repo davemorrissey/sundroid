@@ -131,10 +131,12 @@ object MoonPhaseCalculator {
      */
     fun getYearEvents(year: Int, zone: TimeZone): List<MoonPhaseEvent> {
 
+        val lastZone = lastCalculatedZone
+        val lastEvents = lastCalculatedEvents
         if (lastCalculatedYear == year &&
-                lastCalculatedZone != null && lastCalculatedZone!!.id == zone.id &&
-                lastCalculatedEvents != null) {
-            return Collections.unmodifiableList(lastCalculatedEvents!!)
+                lastZone != null && lastZone.id == zone.id &&
+                lastEvents != null) {
+            return Collections.unmodifiableList(lastEvents)
         } else {
             val events = ArrayList<MoonPhaseEvent>()
             var k1 = Math.floor((year - 1900) * 12.3685) - 4
@@ -202,11 +204,12 @@ object MoonPhaseCalculator {
     @Synchronized
     fun getDayEvent(dateMidnight: Calendar): MoonPhaseEvent? {
         val events: List<MoonPhaseEvent>
-        val lastCalculatedEvents = this.lastCalculatedEvents
+        val lastZone = lastCalculatedZone
+        val lastEvents = lastCalculatedEvents
         if (lastCalculatedYear == dateMidnight.get(Calendar.YEAR) &&
-                lastCalculatedZone != null && lastCalculatedZone!!.id == dateMidnight.timeZone.id &&
-                lastCalculatedEvents != null) {
-            events = lastCalculatedEvents
+                lastZone != null && lastZone.id == dateMidnight.timeZone.id &&
+                lastEvents != null) {
+            events = lastEvents
         } else {
             events = getYearEvents(dateMidnight.get(Calendar.YEAR), dateMidnight.timeZone)
             lastCalculatedYear = dateMidnight.get(Calendar.YEAR)
@@ -263,8 +266,8 @@ object MoonPhaseCalculator {
             msBefore = before.time.timeInMillis.toFloat()
             phaseBefore = before.phaseDouble
             msAfter = msBefore + defaultPhaseMs
-        } else if (after != null) {
-            msBefore = before!!.time.timeInMillis.toFloat()
+        } else if (after != null && before != null) {
+            msBefore = before.time.timeInMillis.toFloat()
             phaseBefore = before.phaseDouble
             msAfter = after.time.timeInMillis.toFloat()
         }

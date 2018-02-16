@@ -391,14 +391,12 @@ object SunCalculator {
             if (!sunset.isNaN()) {
                 sunDay.set = createCalendar(dateMidnightUtc, sunset, dateMidnight.timeZone)
             }
-            val rise = sunDay.rise
-            if (rise != null) {
-                val risePosition = calcPosition(location, rise)
+            sunDay.rise?.let {
+                val risePosition = calcPosition(location, it)
                 sunDay.riseAzimuth = risePosition.azimuth
             }
-            val set = sunDay.set
-            if (set != null) {
-                val setPosition = calcPosition(location, set)
+            sunDay.set?.let {
+                val setPosition = calcPosition(location, it)
                 sunDay.setAzimuth = setPosition.azimuth
             }
             if (sunDay.rise != null && sunDay.set != null) {
