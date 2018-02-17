@@ -9,9 +9,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.view.View.OnClickListener;
-import uk.co.sundroid.Locater;
-import uk.co.sundroid.Locater.LocationType;
-import uk.co.sundroid.LocaterListener;
+import uk.co.sundroid.activity.Locater;
+import uk.co.sundroid.activity.LocaterListener;
 import uk.co.sundroid.R;
 import uk.co.sundroid.R.id;
 import uk.co.sundroid.domain.LocationDetails;
@@ -29,7 +28,6 @@ public class LocationSelectActivity extends AbstractLocationActivity implements 
 	public static final int DIALOG_LOCATING = 101;
 	public static final int DIALOG_LOCATION_ERROR = 103;
 	public static final int DIALOG_LOCATION_TIMEOUT = 105;
-	private LocationType locationType;
 	private Locater locater;
 	
 	private Handler handler = new Handler();
@@ -83,23 +81,11 @@ public class LocationSelectActivity extends AbstractLocationActivity implements 
 	protected void onPrepareDialog(int id, Dialog dialog) {
 		if (id == DIALOG_LOCATING) {
 			ProgressDialog progressDialog = (ProgressDialog)dialog;
-			if (locationType == LocationType.NETWORK) {
-				progressDialog.setMessage("GPS is unavailable, using wireless networks.");
-			} else if (locationType == LocationType.GPS) {
-				progressDialog.setMessage("Wireless networks location is unavailable, using GPS. This may take a few moments, and won't work indoors.");
-			} else {
-				progressDialog.setMessage("Finding location from wireless networks or GPS.");
-			}
+			progressDialog.setMessage("Finding your location, please wait...");
 			return;
 		} else if (id == DIALOG_LOCATION_TIMEOUT) {
             AlertDialog alertDialog = (AlertDialog)dialog;
-			if (locationType == LocationType.NETWORK) {
-				alertDialog.setMessage("Couldn't find network location. Enable GPS or wifi, or make sure you have a good signal.\n\nIf this problem continues, please try rebooting your phone to make sure your Google services are up to date.");
-			} else if (locationType == LocationType.GPS) {
-				alertDialog.setMessage("Couldn't find GPS location. Enable network location, or make sure you have a clear view of the sky.\n\nIf this problem continues, please try rebooting your phone to make sure your Google services are up to date.");
-			} else {
-				alertDialog.setMessage("Couldn't find your location. Make sure you have a good signal or a clear view of the sky.\n\nIf this problem continues, please try rebooting your phone to make sure your Google services are up to date.");
-			}
+			alertDialog.setMessage("Couldn't find your location. Make sure you have a good signal or a clear view of the sky.");
 			return;
 		}
 		super.onPrepareDialog(id, dialog);
@@ -109,14 +95,8 @@ public class LocationSelectActivity extends AbstractLocationActivity implements 
 	public Dialog onCreateDialog(int id) {
 		if (id == DIALOG_LOCATING) {
 			ProgressDialog progressDialog = new ProgressDialog(this);
-			progressDialog.setTitle("Locating...");
-			if (locationType == LocationType.NETWORK) {
-				progressDialog.setMessage("GPS is unavailable, using wireless networks.");
-			} else if (locationType == LocationType.GPS) {
-				progressDialog.setMessage("Wireless networks location is unavailable, using GPS. This may take a few moments, and won't work indoors.");
-			} else {
-				progressDialog.setMessage("Finding location from wireless networks or GPS.");
-			}
+			progressDialog.setTitle("Locating");
+			progressDialog.setMessage("Finding your location, please wait...");
 			progressDialog.setIndeterminate(true);
 			progressDialog.setCancelable(true);
 			progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", (dialog, id1) -> {
@@ -127,13 +107,7 @@ public class LocationSelectActivity extends AbstractLocationActivity implements 
 		} else if (id == DIALOG_LOCATION_TIMEOUT) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setTitle("Location lookup timeout");
-			if (locationType == LocationType.NETWORK) {
-				builder.setMessage("Couldn't find network location. Enable GPS or wifi, or make sure you have a good signal.\n\nIf this problem continues, please try rebooting your phone to make sure your Google services are up to date.");
-			} else if (locationType == LocationType.GPS) {
-				builder.setMessage("Couldn't find GPS location. Enable network location, or make sure you have a clear view of the sky.\n\nIf this problem continues, please try rebooting your phone to make sure your Google services are up to date.");
-			} else {
-				builder.setMessage("Couldn't find your location. Make sure you have a good signal or a clear view of the sky.\n\nIf this problem continues, please try rebooting your phone to make sure your Google services are up to date.");
-			}
+			builder.setMessage("Couldn't find your location. Make sure you have a good signal or a clear view of the sky.");
 			builder.setNeutralButton("OK", this);
 			return builder.create();
 		} else if (id == DIALOG_LOCATION_ERROR) {
@@ -183,8 +157,7 @@ public class LocationSelectActivity extends AbstractLocationActivity implements 
 			case R.id.locOptionMyLocation:
 				if (locater != null) { locater.cancel(); }
 				locater = new Locater(this, getApplicationContext());
-				locationType = locater.start();
-				if (locationType != LocationType.UNAVAILABLE) {
+				if (locater.start()) {
 					showDialog(DIALOG_LOCATING);
 				} else {
 					showDialog(DIALOG_LOCATION_ERROR);
