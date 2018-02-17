@@ -1,6 +1,5 @@
 package uk.co.sundroid
 
-import android.app.ActionBar
 import android.app.Activity
 import android.os.Bundle
 import android.view.*
@@ -23,7 +22,6 @@ abstract class AbstractActivity : Activity(), OnClickListener {
         onActivityCreateSetTheme(this)
         window.requestFeature(Window.FEATURE_ACTION_BAR)
         window.setBackgroundDrawableResource(getAppBg())
-        val actionBar = actionBar
         actionBar?.setBackgroundDrawable(resources.getDrawable(getActionBarBg()))
     }
 
@@ -35,13 +33,11 @@ abstract class AbstractActivity : Activity(), OnClickListener {
                 if (navItem.icon > 0) {
                     menuItem.setIcon(navItem.icon)
                 }
-                if (navItem.location === HEADER) {
-                    menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
-                } else if (navItem.location === HEADER_IF_ROOM) {
-                    menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM)
-                } else {
-                    menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
-                }
+                menuItem.setShowAsAction(when {
+                    navItem.location === HEADER -> MenuItem.SHOW_AS_ACTION_ALWAYS
+                    navItem.location === HEADER_IF_ROOM -> MenuItem.SHOW_AS_ACTION_IF_ROOM
+                    else -> MenuItem.SHOW_AS_ACTION_NEVER
+                })
             }
         }
         return true
@@ -87,7 +83,6 @@ abstract class AbstractActivity : Activity(), OnClickListener {
     }
 
     protected fun setDisplayHomeAsUpEnabled() {
-        val actionBar = actionBar
         actionBar?.setDisplayHomeAsUpEnabled(true)
     }
 

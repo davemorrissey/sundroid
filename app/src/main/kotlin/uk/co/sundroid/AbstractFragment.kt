@@ -1,12 +1,10 @@
 package uk.co.sundroid
 
-import android.app.Activity
 import android.app.Fragment
 import android.content.Context
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import uk.co.sundroid.R.id
 
 /**
  * Provides some helper functions for fragments.
@@ -15,7 +13,6 @@ abstract class AbstractFragment : Fragment() {
 
     protected val applicationContext: Context?
         get() {
-            val activity = activity
             return activity?.applicationContext
         }
 
@@ -52,14 +49,12 @@ abstract class AbstractFragment : Fragment() {
         (view.findViewById<View>(id) as ImageView).setImageResource(drawable)
     }
 
-    @Throws(IllegalArgumentException::class)
     protected fun view(name: String): Int {
         try {
             return id::class.java.getField(name).getInt(null)
         } catch (e: Exception) {
             throw IllegalArgumentException("No view with id $name exists")
         }
-
     }
 
 }
