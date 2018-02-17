@@ -29,13 +29,10 @@ class Locater(private val listener: LocaterListener, private val context: Contex
     @JvmOverloads
     fun start(allowLastKnown: Boolean = true): LocationType {
 
-        if (timeoutThread != null) {
-            timeoutThread!!.stop()
-            timeoutThread = null
-        }
+        timeoutThread?.stop()
+        timeoutThread = null
 
-        locationManager = listener.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-
+        val locationManager = listener.getSystemService(Context.LOCATION_SERVICE) as LocationManager?
         if (locationManager == null) {
             i(TAG, "No location manager service")
             return LocationType.UNAVAILABLE
@@ -50,14 +47,14 @@ class Locater(private val listener: LocaterListener, private val context: Contex
 
         var network = false
         try {
-            network = locationManager!!.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+            network = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) == true
         } catch (e: Exception) {
             // Presumably no network provider
         }
 
         var gps = false
         try {
-            gps = locationManager!!.isProviderEnabled(LocationManager.GPS_PROVIDER)
+            gps = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) == true
         } catch (e: Exception) {
             // Presumably no GPS provider
         }
@@ -66,15 +63,9 @@ class Locater(private val listener: LocaterListener, private val context: Contex
         criteria.accuracy = Criteria.ACCURACY_COARSE
         criteria.accuracy = Criteria.ACCURACY_FINE
 
-        provider = locationManager!!.getBestProvider(criteria, true)
+        val provider = locationManager.getBestProvider(criteria, true) ?: return LocationType.UNAVAILABLE
 
-        if (provider == null) {
-            i(TAG, "No provider matching criteria")
-            return LocationType.UNAVAILABLE
-        }
-        d(TAG, "Best provider: " + provider!!)
-
-        locationManager!!.requestLocationUpdates(
+        locationManager.requestLocationUpdates(
                 provider,
                 (1000 * 60 * 10).toLong(), 1000f,
                 this,
@@ -94,13 +85,16 @@ class Locater(private val listener: LocaterListener, private val context: Contex
             } catch (e: Exception) {
                 d(TAG, "Couldn't register for network lookup")
             }
-
         }
 
         d(TAG, "GPS: $gps, NETWORK: $network, provider: $provider")
 
-        timeoutThread = TimeoutThread()
-        timeoutThread!!.start()
+        val timeoutThread = TimeoutThread()
+        timeoutThread.start()
+
+        this.locationManager = locationManager
+        this.timeoutThread = timeoutThread
+        this.provider = provider
 
         return if (gps && network) {
             LocationType.UNKNOWN
@@ -112,12 +106,11 @@ class Locater(private val listener: LocaterListener, private val context: Contex
             // ??
             LocationType.UNKNOWN
         }
-
     }
 
-    fun startLastKnown(): LocationType {
+    private fun startLastKnown(): LocationType {
         try {
-            val gpsLocation = locationManager!!.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+            val gpsLocation = locationManager?.getLastKnownLocation(LocationManager.GPS_PROVIDER)
             if (gpsLocation != null) {
                 d(TAG, "GPS last known location received: " + gpsLocation.provider + ", " + gpsLocation.latitude + " " + gpsLocation.longitude)
                 val thread = object : Thread() {
@@ -132,7 +125,7 @@ class Locater(private val listener: LocaterListener, private val context: Contex
         }
 
         try {
-            val netLocation = locationManager!!.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+            val netLocation = locationManager?.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
             if (netLocation != null) {
                 d(TAG, "Network last known location received: " + netLocation.provider + ", " + netLocation.latitude + " " + netLocation.longitude)
                 val thread = object : Thread() {
@@ -152,16 +145,13 @@ class Locater(private val listener: LocaterListener, private val context: Contex
 
     fun cancel() {
         if (!finished) {
-            if (timeoutThread != null) {
-                timeoutThread!!.stop()
-                timeoutThread = null
-            }
+            timeoutThread?.stop()
+            timeoutThread = null
             finished = true
-            locationManager!!.removeUpdates(this)
+            locationManager?.removeUpdates(this)
             d(TAG, "Cancelled")
         }
     }
-
 
     override fun onLocationChanged(coords: Location?) {
         if (coords != null) {
@@ -189,7 +179,6 @@ class Locater(private val listener: LocaterListener, private val context: Contex
             cancel()
             listener.locationTimeout()
         }
-
     }
 
 
@@ -198,7 +187,6 @@ class Locater(private val listener: LocaterListener, private val context: Contex
             d(TAG, "Provider enabled: " + provider)
         }
     }
-
 
     override fun onStatusChanged(provider: String, status: Int, extra: Bundle) {
         if (!finished) {
