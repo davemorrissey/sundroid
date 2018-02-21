@@ -83,6 +83,12 @@ object SharedPrefsHelper {
                 .putString(LOC_ZONE_KEY, locationDetails.timeZone?.id)
                 .apply()
     }
+
+    fun saveSelectedLocationTimeZone(context: Context, timeZone: TimeZoneDetail) {
+        prefs(context).edit()
+                .putString(LOC_ZONE_KEY, timeZone.id)
+                .apply()
+    }
     
     fun initPreferences(context: Context) {
         val prefs = prefs(context)

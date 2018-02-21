@@ -22,8 +22,6 @@ import java.util.TreeSet
 
 class TimeZonePickerActivity : AbstractActivity(), OnItemClickListener {
 
-    private var location: LocationDetails? = null
-
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -62,11 +60,8 @@ class TimeZonePickerActivity : AbstractActivity(), OnItemClickListener {
 
     override fun onItemClick(parent: AdapterView<*>, view: View, position: Int, id: Long) {
         d(TAG, "onItemClick($position, $id)")
-
-        // Update the passed location and update the current location.
         val timeZone = parent.getItemAtPosition(position) as TimeZoneDetail
-        location!!.timeZone = timeZone
-        SharedPrefsHelper.saveSelectedLocation(this, location!!)
+        SharedPrefsHelper.saveSelectedLocationTimeZone(this, timeZone)
         setResult(RESULT_TIMEZONE_SELECTED)
         finish()
     }
