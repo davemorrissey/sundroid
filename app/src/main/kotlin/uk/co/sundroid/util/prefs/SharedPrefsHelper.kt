@@ -14,45 +14,45 @@ import uk.co.sundroid.util.theme.THEME_DARK
 
 object SharedPrefsHelper {
     
-    private val PREFS_KEY = "sundroid-prefs"
+    private const val PREFS_KEY = "sundroid-prefs"
     
-    private val LOC_LAT_KEY = "location-lat"
-    private val LOC_LON_KEY = "location-lon"
-    private val LOC_NAME_KEY = "location-name"
-    private val LOC_COUNTRY_KEY = "location-country"
-    private val LOC_STATE_KEY = "location-state"
-    private val LOC_ZONE_KEY = "location-zone"
+    private const val LOC_LAT_KEY = "location-lat"
+    private const val LOC_LON_KEY = "location-lon"
+    private const val LOC_NAME_KEY = "location-name"
+    private const val LOC_COUNTRY_KEY = "location-country"
+    private const val LOC_STATE_KEY = "location-state"
+    private const val LOC_ZONE_KEY = "location-zone"
 
-    private val LAST_DATA_GROUP_KEY = "lastDataGroup"
-    private val LAST_DETAIL_TAB_KEY = "lastDetailTab"
-    private val LAST_CALENDAR_KEY = "lastCalendar"
+    private const val LAST_DATA_GROUP_KEY = "lastDataGroup"
+    private const val LAST_DETAIL_TAB_KEY = "lastDetailTab"
+    private const val LAST_CALENDAR_KEY = "lastCalendar"
 
-    private val LOCATION_TIMEOUT_KEY = "locationTimeout"
-    private val SHOW_SECONDS_KEY = "showSeconds"
-    private val THEME_KEY = "theme"
-    private val CLOCK_KEY = "clock"
-    private val REVERSE_GEOCODE_KEY = "reverseGeocode"
-    private val LAST_KNOWN_LOCATION_KEY = "lastKnownLocation"
-    private val DEFAULT_ZONE_KEY = "defaultTimeZone"
-    private val DEFAULT_ZONE_OVERRIDE_KEY = "defaultTimeZoneOverride"
-    private val FIRST_WEEKDAY_KEY = "firstWeekday"
-    private val SHOW_ZONE_KEY = "showTimeZone"
-    private val MAGNETIC_BEARINGS_KEY = "magneticBearings"
-    private val ALARM_IN_SILENT_KEY = "alarmInSilent"
-    private val ALARM_SOUND_TIMEOUT_KEY = "alarmSoundTimeout"
-    private val ALARM_VIBRATION_TIMEOUT_KEY = "alarmVibrationTimeout"
+    private const val LOCATION_TIMEOUT_KEY = "locationTimeout"
+    private const val SHOW_SECONDS_KEY = "showSeconds"
+    private const val THEME_KEY = "theme"
+    private const val CLOCK_KEY = "clock"
+    private const val REVERSE_GEOCODE_KEY = "reverseGeocode"
+    private const val LAST_KNOWN_LOCATION_KEY = "lastKnownLocation"
+    private const val DEFAULT_ZONE_KEY = "defaultTimeZone"
+    private const val DEFAULT_ZONE_OVERRIDE_KEY = "defaultTimeZoneOverride"
+    private const val FIRST_WEEKDAY_KEY = "firstWeekday"
+    private const val SHOW_ZONE_KEY = "showTimeZone"
+    private const val MAGNETIC_BEARINGS_KEY = "magneticBearings"
+    private const val ALARM_IN_SILENT_KEY = "alarmInSilent"
+    private const val ALARM_SOUND_TIMEOUT_KEY = "alarmSoundTimeout"
+    private const val ALARM_VIBRATION_TIMEOUT_KEY = "alarmVibrationTimeout"
     
-    private val SUNTRACKER_BODY_KEY = "sunTrackerBody"
-    private val SUNTRACKER_MODE_KEY = "sunTrackerMode"
-    private val SUNTRACKER_MAPMODE_KEY = "sunTrackerMapMode"
-    private val SUNTRACKER_COMPASS_KEY = "sunTrackerCompass"
-    private val SUNTRACKER_LINEARELEVATION_KEY = "sunTrackerLinearElevation"
-    private val SUNTRACKER_HOURMARKERS_KEY = "sunTrackerHourMarkers"
-    private val SUNTRACKER_TEXT_KEY = "sunTrackerText"
+    private const val SUNTRACKER_BODY_KEY = "sunTrackerBody"
+    private const val SUNTRACKER_MODE_KEY = "sunTrackerMode"
+    private const val SUNTRACKER_MAPMODE_KEY = "sunTrackerMapMode"
+    private const val SUNTRACKER_COMPASS_KEY = "sunTrackerCompass"
+    private const val SUNTRACKER_LINEARELEVATION_KEY = "sunTrackerLinearElevation"
+    private const val SUNTRACKER_HOURMARKERS_KEY = "sunTrackerHourMarkers"
+    private const val SUNTRACKER_TEXT_KEY = "sunTrackerText"
     
-    private val LOCMAP_MODE_KEY = "locMapMode"
+    private const val LOCMAP_MODE_KEY = "locMapMode"
 
-    private val MAP_LOCATION_PERMISSION_DENIED_KEY = "mapLocationPermissionDenied"
+    private const val MAP_LOCATION_PERMISSION_DENIED_KEY = "mapLocationPermissionDenied"
     
     fun getSelectedLocation(context: Context): LocationDetails? {
         val prefs = context.getSharedPreferences(PREFS_KEY, Context.MODE_PRIVATE)
@@ -75,16 +75,14 @@ object SharedPrefsHelper {
         
     fun saveSelectedLocation(context: Context, locationDetails: LocationDetails) {
         val location = locationDetails.location
-        if (location != null) {
-            prefs(context).edit()
-                    .putFloat(LOC_LAT_KEY, location.latitude.doubleValue.toFloat())
-                    .putFloat(LOC_LON_KEY, location.longitude.doubleValue.toFloat())
-                    .putString(LOC_NAME_KEY, locationDetails.name)
-                    .putString(LOC_COUNTRY_KEY, locationDetails.country)
-                    .putString(LOC_STATE_KEY, locationDetails.state)
-                    .putString(LOC_ZONE_KEY, locationDetails.timeZone?.id)
-                    .apply()
-        }
+        prefs(context).edit()
+                .putFloat(LOC_LAT_KEY, location.latitude.doubleValue.toFloat())
+                .putFloat(LOC_LON_KEY, location.longitude.doubleValue.toFloat())
+                .putString(LOC_NAME_KEY, locationDetails.name)
+                .putString(LOC_COUNTRY_KEY, locationDetails.country)
+                .putString(LOC_STATE_KEY, locationDetails.state)
+                .putString(LOC_ZONE_KEY, locationDetails.timeZone?.id)
+                .apply()
     }
     
     fun initPreferences(context: Context) {
