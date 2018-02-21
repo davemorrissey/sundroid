@@ -3,24 +3,18 @@ package uk.co.sundroid.activity.location
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
 import android.widget.ListView
 
 import uk.co.sundroid.AbstractActivity
 import uk.co.sundroid.R
-import uk.co.sundroid.domain.LocationDetails
 import uk.co.sundroid.domain.TimeZoneDetail
 import uk.co.sundroid.util.prefs.SharedPrefsHelper
 import uk.co.sundroid.util.log.*
 import uk.co.sundroid.util.view.MergeAdapter
 import uk.co.sundroid.util.time.TimeZoneResolver
 
-import java.util.ArrayList
-import java.util.TreeSet
-
-class TimeZonePickerActivity : AbstractActivity(), OnItemClickListener {
+class TimeZonePickerActivity : AbstractActivity() {
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,26 +38,24 @@ class TimeZonePickerActivity : AbstractActivity(), OnItemClickListener {
 
         val list = findViewById<ListView>(R.id.timeZoneList)
         val adapter = MergeAdapter()
-        if (location.possibleTimeZones != null && location.possibleTimeZones!!.size > 0 && location.possibleTimeZones!!.size < 20) {
+
+        val possible = location.possibleTimeZones
+        if (possible != null && possible.size > 0 && possible.size < 20) {
             adapter.addView(View.inflate(this, R.layout.zone_best_header, null))
-            val sortedTimeZones = TreeSet(location.possibleTimeZones!!)
-            adapter.addAdapter(TimeZoneAdapter(ArrayList(sortedTimeZones)))
+            adapter.addAdapter(TimeZoneAdapter(possible.sorted()))
             adapter.addView(View.inflate(this, R.layout.zone_all_header, null))
         }
 
-        val sortedTimeZones = TreeSet(TimeZoneResolver.getAllTimeZones())
-        adapter.addAdapter(TimeZoneAdapter(ArrayList(sortedTimeZones)))
+        adapter.addAdapter(TimeZoneAdapter(TimeZoneResolver.getAllTimeZones().sorted()))
 
         list.adapter = adapter
-        list.onItemClickListener = this
-    }
-
-    override fun onItemClick(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-        d(TAG, "onItemClick($position, $id)")
-        val timeZone = parent.getItemAtPosition(position) as TimeZoneDetail
-        SharedPrefsHelper.saveSelectedLocationTimeZone(this, timeZone)
-        setResult(RESULT_TIMEZONE_SELECTED)
-        finish()
+        list.setOnItemClickListener({ parent, _, position, id ->
+            d(TAG, "onItemClick($position, $id)")
+            val timeZone = parent.getItemAtPosition(position) as TimeZoneDetail
+            SharedPrefsHelper.saveSelectedLocationTimeZone(this, timeZone)
+            setResult(RESULT_TIMEZONE_SELECTED)
+            finish()
+        })
     }
 
     override fun onNavBackSelected() {
@@ -71,7 +63,7 @@ class TimeZonePickerActivity : AbstractActivity(), OnItemClickListener {
         finish()
     }
 
-    private inner class TimeZoneAdapter constructor(list: ArrayList<TimeZoneDetail>) : ArrayAdapter<TimeZoneDetail>(this@TimeZonePickerActivity, R.layout.zone_row, list) {
+    private inner class TimeZoneAdapter constructor(list: List<TimeZoneDetail>) : ArrayAdapter<TimeZoneDetail>(this@TimeZonePickerActivity, R.layout.zone_row, list) {
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
             val row = convertView ?: layoutInflater.inflate(R.layout.zone_row, parent, false)
             textInView(row, R.id.timeZoneRowOffset, getItem(position).getOffset(System.currentTimeMillis()))
