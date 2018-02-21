@@ -2,7 +2,6 @@ package uk.co.sundroid.activity.location
 
 import android.Manifest
 import android.app.AlertDialog
-import android.app.Dialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -11,7 +10,6 @@ import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.view.View
 import android.widget.TextView
-import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter
@@ -26,14 +24,12 @@ import uk.co.sundroid.util.location.Geocoder
 import uk.co.sundroid.R
 import uk.co.sundroid.R.drawable
 import uk.co.sundroid.R.id
-import uk.co.sundroid.R.layout
 import uk.co.sundroid.NavItem
 import uk.co.sundroid.domain.LocationDetails
 import uk.co.sundroid.util.location.LatitudeLongitude
 import uk.co.sundroid.util.prefs.SharedPrefsHelper
 
 import java.util.Arrays
-import java.util.Collections
 
 import uk.co.sundroid.NavItem.NavItemLocation.*
 
@@ -48,10 +44,10 @@ class MapActivity : AbstractLocationActivity(), OnMapClickListener, OnInfoWindow
     private var mapLocation: LatitudeLongitude? = null
     private var mapLocationDetails: LocationDetails? = null
 
-    protected override val layout: Int
-        get() = layout.loc_mapv2
+    override val layout: Int
+        get() = R.layout.loc_mapv2
 
-    protected override val viewTitle: String
+    override val viewTitle: String
         get() = "Map"
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,8 +61,8 @@ class MapActivity : AbstractLocationActivity(), OnMapClickListener, OnInfoWindow
                 val builder = AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert)
                 builder.setTitle("Location required")
                         .setMessage("Location permission is required to look up names and time zones. Proceed?")
-                        .setPositiveButton(android.R.string.yes) { dialog, which -> requestLocationPermission() }
-                        .setNegativeButton(android.R.string.no) { dialog, which -> }
+                        .setPositiveButton(android.R.string.yes) { _, _ -> requestLocationPermission() }
+                        .setNegativeButton(android.R.string.no) { _, _ -> }
                         .setIcon(android.R.drawable.ic_dialog_info)
                         .show()
             } else {
@@ -83,7 +79,7 @@ class MapActivity : AbstractLocationActivity(), OnMapClickListener, OnInfoWindow
         when (requestCode) {
             REQUEST_LOCATION -> {
                 // If request is cancelled, the result arrays are empty.
-                if (grantResults.size > 0) {
+                if (grantResults.isNotEmpty()) {
                     if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
                         // Show alert only if this is the first time the user has denied permission,
                         // later calls to this method happen without interaction if they selected
@@ -93,7 +89,7 @@ class MapActivity : AbstractLocationActivity(), OnMapClickListener, OnInfoWindow
                             val builder = AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert)
                             builder.setTitle("Location denied")
                                     .setMessage("Location name and time zone lookup will be unavailable. To fix this, you can grant this app location permission from Android settings.")
-                                    .setPositiveButton(android.R.string.ok) { dialog, which -> }
+                                    .setPositiveButton(android.R.string.ok) { _, _ -> }
                                     .setIcon(android.R.drawable.ic_dialog_info)
                                     .show()
                         }
@@ -199,12 +195,13 @@ class MapActivity : AbstractLocationActivity(), OnMapClickListener, OnInfoWindow
     }
 
     override fun onMapClick(latLng: LatLng) {
-        mapLocation = LatitudeLongitude(latLng.latitude, latLng.longitude)
+        val location = LatitudeLongitude(latLng.latitude, latLng.longitude)
+        mapLocation = location
         mapLocationDetails = null
         addMarker()
-        startPointLookup(mapLocation)
+        startPointLookup(location)
         val cameraUpdate = CameraUpdateFactory.newLatLng(latLng)
-        map!!.animateCamera(cameraUpdate)
+        map?.animateCamera(cameraUpdate)
     }
 
     override fun onInfoWindowClick(marker: Marker) {
@@ -248,20 +245,15 @@ class MapActivity : AbstractLocationActivity(), OnMapClickListener, OnInfoWindow
 
         mapLocationDetails = locationDetails
         if (mapMarker != null) {
-            handler.post { mapMarker!!.showInfoWindow() }
+            handler.post { mapMarker?.showInfoWindow() }
         }
 
     }
 
     internal inner class CustomInfoWindowAdapter : InfoWindowAdapter {
 
-        private val window: View
-        private val contents: View
-
-        init {
-            window = layoutInflater.inflate(layout.loc_mapv2_infowindow, null)
-            contents = layoutInflater.inflate(layout.loc_mapv2_infowindow, null)
-        }
+        private val window: View = View.inflate(this@MapActivity, R.layout.loc_mapv2_infowindow, null)
+        private val contents: View = View.inflate(this@MapActivity, R.layout.loc_mapv2_infowindow, null)
 
         override fun getInfoWindow(marker: Marker): View {
             render(window)
@@ -286,56 +278,52 @@ class MapActivity : AbstractLocationActivity(), OnMapClickListener, OnInfoWindow
         }
     }
 
-    override fun onNavItemSelected(navItemAction: Int) {
-        showDialog(DIALOG_MAPVIEW)
-    }
+    override fun onNavItemSelected(itemPosition: Int) {
+        val names = Arrays.asList("Map", "Satellite", "Terrain", "Hybrid")
+        val selectedIndex: Int
+        val currentMapMode = SharedPrefsHelper.getLocMapMode(applicationContext)
+        selectedIndex = when (currentMapMode) {
+            "normal" -> 0
+            "satellite" -> 1
+            "terrain" -> 2
+            "hybrid" -> 3
+            else -> 4
+        }
 
-    public override fun onCreateDialog(id: Int): Dialog {
-        if (id == DIALOG_MAPVIEW) {
-            val names = Arrays.asList("Map", "Satellite", "Terrain", "Hybrid")
-            val selectedIndex: Int
-            val currentMapMode = SharedPrefsHelper.getLocMapMode(applicationContext)
-            when (currentMapMode) {
-                "normal" -> selectedIndex = 0
-                "satellite" -> selectedIndex = 1
-                "terrain" -> selectedIndex = 2
-                "hybrid" -> selectedIndex = 3
-                else -> selectedIndex = 4
-            }
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Map view")
 
-            val builder = AlertDialog.Builder(this)
-            builder.setTitle("Map view")
-
-            builder.setSingleChoiceItems(names.toTypedArray<CharSequence>(), selectedIndex, null)
-            builder.setNegativeButton("Cancel") { dialog, id1 -> removeDialog(DIALOG_MAPVIEW) }
-            builder.setPositiveButton("OK") { dialog, id12 ->
-                if (dialog is AlertDialog) {
-                    val selectedItem = dialog.listView.checkedItemPosition
-                    if (selectedItem == 0) {
+        builder.setSingleChoiceItems(names.toTypedArray<CharSequence>(), selectedIndex, null)
+        builder.setNegativeButton("Cancel") { _, _ -> }
+        builder.setPositiveButton("OK") { dialog, _ ->
+            if (dialog is AlertDialog) {
+                val selectedItem = dialog.listView.checkedItemPosition
+                when (selectedItem) {
+                    0 -> {
                         SharedPrefsHelper.setLocMapMode(applicationContext, "normal")
-                        map!!.mapType = GoogleMap.MAP_TYPE_NORMAL
-                    } else if (selectedItem == 1) {
+                        map?.mapType = GoogleMap.MAP_TYPE_NORMAL
+                    }
+                    1 -> {
                         SharedPrefsHelper.setLocMapMode(applicationContext, "satellite")
-                        map!!.mapType = GoogleMap.MAP_TYPE_SATELLITE
-                    } else if (selectedItem == 2) {
+                        map?.mapType = GoogleMap.MAP_TYPE_SATELLITE
+                    }
+                    2 -> {
                         SharedPrefsHelper.setLocMapMode(applicationContext, "terrain")
-                        map!!.mapType = GoogleMap.MAP_TYPE_TERRAIN
-                    } else if (selectedItem == 3) {
+                        map?.mapType = GoogleMap.MAP_TYPE_TERRAIN
+                    }
+                    3 -> {
                         SharedPrefsHelper.setLocMapMode(applicationContext, "hybrid")
-                        map!!.mapType = GoogleMap.MAP_TYPE_HYBRID
+                        map?.mapType = GoogleMap.MAP_TYPE_HYBRID
                     }
                 }
-                removeDialog(DIALOG_MAPVIEW)
             }
-            return builder.create()
+            dialog.dismiss()
         }
-        return super.onCreateDialog(id)
+        builder.create().show()
     }
 
     companion object {
-
-        private val DIALOG_MAPVIEW = 39879
-        private val REQUEST_LOCATION = 87648
+        private const val REQUEST_LOCATION = 87648
     }
 
 }

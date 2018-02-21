@@ -1,7 +1,6 @@
 package uk.co.sundroid.activity.location
 
 import android.app.AlertDialog
-import android.app.Dialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
@@ -12,9 +11,7 @@ import android.widget.TextView
 import uk.co.sundroid.R
 import uk.co.sundroid.R.attr
 import uk.co.sundroid.R.id
-import uk.co.sundroid.R.layout
 import uk.co.sundroid.util.dao.DatabaseHelper
-import uk.co.sundroid.domain.LocationDetails
 import uk.co.sundroid.util.prefs.SharedPrefsHelper
 import uk.co.sundroid.util.geometry.Accuracy
 
@@ -24,10 +21,10 @@ class SavedLocationsActivity : AbstractLocationActivity(), OnClickListener, Dial
 
     private var contextSavedLocationId: Long = 0
 
-    protected override val layout: Int
+    override val layout: Int
         get() = R.layout.loc_saved
 
-    protected override val viewTitle: String
+    override val viewTitle: String
         get() = "Saved locations"
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,16 +35,14 @@ class SavedLocationsActivity : AbstractLocationActivity(), OnClickListener, Dial
 
     override fun onDestroy() {
         super.onDestroy()
-        if (db != null) {
-            db!!.close()
-        }
+        db?.close()
     }
 
     override fun onClick(view: View) {
-        val savedLocationId = view.getTag(TAG_LOCATION_ID) as String
-        val action = view.getTag(TAG_ACTION) as String
+        val savedLocationId = view.getTag(TAG_LOCATION_ID) as String?
+        val action = view.getTag(TAG_ACTION) as String?
         if (savedLocationId != null && action != null && db != null) {
-            val locationDetails = db!!.getSavedLocation(Integer.parseInt(savedLocationId))
+            val locationDetails = db?.getSavedLocation(Integer.parseInt(savedLocationId))
             if (action == ACTION_VIEW) {
                 SharedPrefsHelper.saveSelectedLocation(this, locationDetails!!)
                 if (locationDetails.timeZone == null) {
@@ -73,21 +68,10 @@ class SavedLocationsActivity : AbstractLocationActivity(), OnClickListener, Dial
         dialogInterface.dismiss()
     }
 
-    public override fun onCreateDialog(id: Int): Dialog {
-        if (id == DIALOG_DELETE) {
-            val builder = AlertDialog.Builder(this)
-            builder.setTitle("Delete")
-            builder.setMessage("Delete this saved location?")
-            builder.setPositiveButton("OK", this)
-            builder.setNegativeButton("Cancel", this)
-            return builder.create()
-        }
-        return super.onCreateDialog(id)
-    }
-
     private fun populateSavedLocations() {
+        val db = this.db ?: return
 
-        val locations = db!!.savedLocations
+        val locations = db.savedLocations
         val list = findViewById<LinearLayout>(id.savedLocationsList)
         list.removeAllViews()
 
@@ -110,10 +94,10 @@ class SavedLocationsActivity : AbstractLocationActivity(), OnClickListener, Dial
             val coords = row.findViewById<TextView>(R.id.savedLocCoords)
             coords.text = location.location.getPunctuatedValue(Accuracy.MINUTES)
 
-            row.findViewById<View>(id.savedLocText).setTag(TAG_LOCATION_ID, Integer.toString(location.id))
+            row.findViewById<View>(id.savedLocText).setTag(TAG_LOCATION_ID, location.id.toString())
             row.findViewById<View>(id.savedLocText).setTag(TAG_ACTION, ACTION_VIEW)
             row.findViewById<View>(id.savedLocText).setOnClickListener(this)
-            row.findViewById<View>(id.savedLocDelete).setTag(TAG_LOCATION_ID, Integer.toString(location.id))
+            row.findViewById<View>(id.savedLocDelete).setTag(TAG_LOCATION_ID, location.id.toString())
             row.findViewById<View>(id.savedLocDelete).setTag(TAG_ACTION, ACTION_DELETE)
             row.findViewById<View>(id.savedLocDelete).setOnClickListener(this)
             list.addView(row)
@@ -125,23 +109,26 @@ class SavedLocationsActivity : AbstractLocationActivity(), OnClickListener, Dial
 
     private fun confirmDelete(savedLocationId: Int) {
         contextSavedLocationId = savedLocationId.toLong()
-        showDialog(DIALOG_DELETE)
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Delete")
+        builder.setMessage("Delete this saved location?")
+        builder.setPositiveButton("OK", this)
+        builder.setNegativeButton("Cancel", this)
+        builder.create().show()
     }
 
     private fun delete() {
-        if (contextSavedLocationId > 0 && db != null) {
-            db!!.deleteSavedLocation(contextSavedLocationId)
+        if (contextSavedLocationId > 0) {
+            db?.deleteSavedLocation(contextSavedLocationId)
             populateSavedLocations()
         }
     }
 
     companion object {
-
-        private val DIALOG_DELETE = 204
-        private val TAG_ACTION = attr.sundroid_custom_1
-        private val TAG_LOCATION_ID = attr.sundroid_custom_2
-        private val ACTION_DELETE = "delete"
-        private val ACTION_VIEW = "view"
+        private const val TAG_ACTION = attr.sundroid_custom_1
+        private const val TAG_LOCATION_ID = attr.sundroid_custom_2
+        private const val ACTION_DELETE = "delete"
+        private const val ACTION_VIEW = "view"
     }
 
 }

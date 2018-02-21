@@ -115,9 +115,9 @@ abstract class AbstractActivity : Activity(), OnClickListener {
         }
     }
 
-    protected fun textInView(view: View, id: Int, text: String) {
+    protected fun textInView(view: View, id: Int, text: String?) {
         val child = view.findViewById<TextView>(id)
-        child.text = text
+        child.text = text.orEmpty()
     }
 
     protected fun showInView(view: View, id: Int, text: CharSequence) {

@@ -22,10 +22,10 @@ class LocationSelectActivity : AbstractLocationActivity(), LocaterListener, OnCl
 
     private val handler = Handler()
 
-    protected override val viewTitle: String
+    override val viewTitle: String
         get() = "Change location"
 
-    protected override val layout: Int
+    override val layout: Int
         get() = R.layout.loc_options
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -174,13 +174,13 @@ class LocationSelectActivity : AbstractLocationActivity(), LocaterListener, OnCl
 
         private val TAG = LocationSelectActivity::class.java.simpleName
 
-        val REQUEST_LOCATION = 1110
-        val RESULT_LOCATION_SELECTED = 2220
-        val RESULT_CANCELLED = 2223
+        const val REQUEST_LOCATION = 1110
+        const val RESULT_LOCATION_SELECTED = 2220
+        const val RESULT_CANCELLED = 2223
 
-        val DIALOG_LOCATING = 101
-        val DIALOG_LOCATION_ERROR = 103
-        val DIALOG_LOCATION_TIMEOUT = 105
+        const val DIALOG_LOCATING = 101
+        const val DIALOG_LOCATION_ERROR = 103
+        const val DIALOG_LOCATION_TIMEOUT = 105
     }
 
 }

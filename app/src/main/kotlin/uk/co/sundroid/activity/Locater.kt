@@ -25,7 +25,7 @@ class Locater(private val listener: LocaterListener, private val context: Contex
         criteria.accuracy = Criteria.ACCURACY_FINE
 
         val locationManager = listener.getSystemService(Context.LOCATION_SERVICE) as LocationManager? ?: return false
-        locationManager.requestSingleUpdate(criteria, this, listener.mainLooper)
+        locationManager.requestSingleUpdate(criteria, this, listener.getMainLooper())
 
         val timeoutThread = TimeoutThread()
         timeoutThread.start()

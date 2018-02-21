@@ -5,7 +5,7 @@ import android.os.Looper
 
 interface LocaterListener {
 
-    val mainLooper: Looper
+    fun getMainLooper(): Looper
 
     fun locationError()
 

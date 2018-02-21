@@ -2,11 +2,9 @@ package uk.co.sundroid.activity.location
 
 import uk.co.sundroid.util.location.Geocoder
 import uk.co.sundroid.R
-import uk.co.sundroid.domain.LocationDetails
 import uk.co.sundroid.util.location.LatitudeLongitude
 import uk.co.sundroid.util.prefs.SharedPrefsHelper
 import uk.co.sundroid.util.log.*
-import android.app.Activity
 import android.app.Dialog
 import android.app.ProgressDialog
 import android.content.Intent
@@ -24,10 +22,10 @@ import android.widget.Toast
 
 class CoordsActivity : AbstractLocationActivity(), OnClickListener {
 
-    protected override val layout: Int
+    override val layout: Int
         get() = R.layout.loc_coords
 
-    protected override val viewTitle: String
+    override val viewTitle: String
         get() = "Enter coordinates"
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,7 +47,6 @@ class CoordsActivity : AbstractLocationActivity(), OnClickListener {
                     show(R.id.coordsInvalid)
                     hide(R.id.coordsValid)
                 }
-
             }
 
             override fun beforeTextChanged(string: CharSequence, start: Int, count: Int, after: Int) {}
@@ -57,14 +54,14 @@ class CoordsActivity : AbstractLocationActivity(), OnClickListener {
         })
     }
 
-    override fun onClick(button: View) {
-        when (button.id) {
+    override fun onClick(view: View) {
+        when (view.id) {
             R.id.coordsSubmit -> {
                 startSubmit()
                 return
             }
         }
-        super.onClick(button)
+        super.onClick(view)
     }
 
     private fun startSubmit() {
@@ -84,39 +81,29 @@ class CoordsActivity : AbstractLocationActivity(), OnClickListener {
         val coordsField = findViewById<EditText>(R.id.coordsField)
         val coordsValue = coordsField.text.toString().toUpperCase()
 
-        val location: LatitudeLongitude
-
         if (coordsValue.matches("[NS][0-9]+(\\.[0-9]+)? [WE][0-9]+(\\.[0-9]+)?".toRegex())) {
 
-            val lat = coordsValue.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0]
-            val lon = coordsValue.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[1]
-
-            var latDbl = java.lang.Double.parseDouble(lat.substring(1))
-            var lonDbl = java.lang.Double.parseDouble(lon.substring(1))
-            if (lat.startsWith("S")) {
+            val parts = coordsValue.split(" ")
+            var latDbl = parts[0].substring(1).toDouble()
+            var lonDbl = parts[1].substring(1).toDouble()
+            if (parts[0].startsWith("S")) {
                 latDbl = -latDbl
             }
-            if (lon.startsWith("W")) {
+            if (parts[1].startsWith("W")) {
                 lonDbl = -lonDbl
             }
-
-            location = LatitudeLongitude(latDbl, lonDbl)
+            return LatitudeLongitude(latDbl, lonDbl)
 
         } else if (coordsValue.matches("-?[0-9]+(\\.[0-9]+)? -?[0-9]+(\\.[0-9]+)?".toRegex())) {
 
-            val lat = coordsValue.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0]
-            val lon = coordsValue.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[1]
-            val latDbl = java.lang.Double.parseDouble(lat)
-            val lonDbl = java.lang.Double.parseDouble(lon)
-            location = LatitudeLongitude(latDbl, lonDbl)
+            val parts = coordsValue.split(" ")
+            return LatitudeLongitude(parts[0].toDouble(), parts[1].toDouble())
 
         } else {
 
-            location = LatitudeLongitude(coordsValue)
+            return LatitudeLongitude(coordsValue)
 
         }
-
-        return location
 
     }
 
@@ -167,10 +154,8 @@ class CoordsActivity : AbstractLocationActivity(), OnClickListener {
     }
 
     companion object {
-
         private val TAG = CoordsActivity::class.java.simpleName
-
-        val DIALOG_LOOKINGUP = 101
+        const val DIALOG_LOOKINGUP = 101
     }
 
 }

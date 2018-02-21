@@ -7,7 +7,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.view.KeyEvent
-import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
@@ -31,10 +30,10 @@ class SearchActivity : AbstractLocationActivity(), OnClickListener, OnItemClickL
 
     private val handler = Handler()
 
-    protected override val viewTitle: String
+    override val viewTitle: String
         get() = "Search"
 
-    protected override val layout: Int
+    override val layout: Int
         get() = R.layout.loc_search
 
     /** Called when the activity is first created.  */
@@ -54,14 +53,14 @@ class SearchActivity : AbstractLocationActivity(), OnClickListener, OnItemClickL
         searchField.setOnEditorActionListener(SearchActionListener())
     }
 
-    override fun onClick(button: View) {
-        when (button.id) {
+    override fun onClick(view: View) {
+        when (view.id) {
             R.id.searchSubmit -> {
                 startSearch()
                 return
             }
         }
-        super.onClick(button)
+        super.onClick(view)
     }
 
     private fun startSearch() {
@@ -88,9 +87,9 @@ class SearchActivity : AbstractLocationActivity(), OnClickListener, OnItemClickL
                         handler.post {
                             remove(R.id.searchNotes, R.id.searchNotes2)
                             dismissDialog(DIALOG_SEARCHING)
-                            listAdapter!!.clear()
+                            listAdapter?.clear()
                             for (result in results) {
-                                listAdapter!!.add(result)
+                                listAdapter?.add(result)
                             }
                         }
 
@@ -119,8 +118,8 @@ class SearchActivity : AbstractLocationActivity(), OnClickListener, OnItemClickL
                 if (isNotEmpty(item.state)) {
                     extra = item.state + ", " + extra
                 }
-                textInView(row!!, R.id.searchLocName, item.name!!)
-                textInView(row, R.id.searchLocExtra, extra!!)
+                textInView(row, R.id.searchLocName, item.name)
+                textInView(row, R.id.searchLocExtra, extra)
             }
             return row
         }
@@ -151,13 +150,13 @@ class SearchActivity : AbstractLocationActivity(), OnClickListener, OnItemClickL
             val builder = AlertDialog.Builder(this)
             builder.setTitle("Search failed")
             builder.setMessage("There was a problem searching for matching locations. Please check your network signal and reboot your phone to make sure Google services are up to date.")
-            builder.setNeutralButton("OK") { d, i -> }
+            builder.setNeutralButton("OK", { _, _ -> })
             return builder.create()
         } else if (id == DIALOG_SEARCH_NONE) {
             val builder = AlertDialog.Builder(this)
             builder.setTitle("No matches")
             builder.setMessage("There were no locations matching your search. Please try another search term.")
-            builder.setNeutralButton("OK") { d, i -> }
+            builder.setNeutralButton("OK") { _, _ -> }
             return builder.create()
         }
         return super.onCreateDialog(id)
@@ -174,12 +173,10 @@ class SearchActivity : AbstractLocationActivity(), OnClickListener, OnItemClickL
     }
 
     companion object {
-
         private val TAG = SearchActivity::class.java.simpleName
-
-        val DIALOG_SEARCHING = 101
-        val DIALOG_SEARCH_ERROR = 103
-        val DIALOG_SEARCH_NONE = 105
+        const val DIALOG_SEARCHING = 101
+        const val DIALOG_SEARCH_ERROR = 103
+        const val DIALOG_SEARCH_NONE = 105
     }
 
 }
