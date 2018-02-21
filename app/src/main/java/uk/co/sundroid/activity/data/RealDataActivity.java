@@ -529,7 +529,7 @@ public class RealDataActivity extends AbstractActivity implements OnClickListene
  
 	private void startLocationOptions() {
 		Intent intent = new Intent(this, LocationSelectActivity.class);
-		startActivityForResult(intent, LocationSelectActivity.REQUEST_LOCATION);
+		startActivityForResult(intent, LocationSelectActivity.Companion.getREQUEST_LOCATION());
 	}
     
 	private void startSaveLocation() {
@@ -538,8 +538,8 @@ public class RealDataActivity extends AbstractActivity implements OnClickListene
 
     private void startTimeZone() {
         Intent intent = new Intent(getApplicationContext(), TimeZonePickerActivity.class);
-        intent.putExtra(TimeZonePickerActivity.INTENT_MODE, TimeZonePickerActivity.MODE_CHANGE);
-        startActivityForResult(intent, TimeZonePickerActivity.REQUEST_TIMEZONE);
+        intent.putExtra(TimeZonePickerActivity.Companion.getINTENT_MODE(), TimeZonePickerActivity.Companion.getMODE_CHANGE());
+        startActivityForResult(intent, TimeZonePickerActivity.Companion.getREQUEST_TIMEZONE());
     }
 
     /******************************** LIST NAV *********************************/

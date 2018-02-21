@@ -34,8 +34,8 @@ public abstract class AbstractDataFragment extends AbstractFragment implements O
 
     protected void startTimeZone() {
         Intent intent = new Intent(getActivity(), TimeZonePickerActivity.class);
-        intent.putExtra(TimeZonePickerActivity.INTENT_MODE, TimeZonePickerActivity.MODE_CHANGE);
-        getActivity().startActivityForResult(intent, TimeZonePickerActivity.REQUEST_TIMEZONE);
+        intent.putExtra(TimeZonePickerActivity.Companion.getINTENT_MODE(), TimeZonePickerActivity.Companion.getMODE_CHANGE());
+        getActivity().startActivityForResult(intent, TimeZonePickerActivity.Companion.getREQUEST_TIMEZONE());
     }
 
     protected boolean isSafe() {
