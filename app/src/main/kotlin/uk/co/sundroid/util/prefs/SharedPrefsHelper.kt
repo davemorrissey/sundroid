@@ -32,7 +32,6 @@ object SharedPrefsHelper {
     private const val THEME_KEY = "theme"
     private const val CLOCK_KEY = "clock"
     private const val REVERSE_GEOCODE_KEY = "reverseGeocode"
-    private const val LAST_KNOWN_LOCATION_KEY = "lastKnownLocation"
     private const val DEFAULT_ZONE_KEY = "defaultTimeZone"
     private const val DEFAULT_ZONE_OVERRIDE_KEY = "defaultTimeZoneOverride"
     private const val FIRST_WEEKDAY_KEY = "firstWeekday"
@@ -106,9 +105,6 @@ object SharedPrefsHelper {
         if (!prefs.contains(DEFAULT_ZONE_OVERRIDE_KEY)) {
             editor.putBoolean(DEFAULT_ZONE_OVERRIDE_KEY, false)
         }
-        if (!prefs.contains(LAST_KNOWN_LOCATION_KEY)) {
-            editor.putBoolean(LAST_KNOWN_LOCATION_KEY, false)
-        }
         if (!prefs.contains(FIRST_WEEKDAY_KEY)) {
             editor.putString(FIRST_WEEKDAY_KEY, "1")
         }
@@ -172,10 +168,6 @@ object SharedPrefsHelper {
     
     fun getDefaultZoneOverride(context: Context): Boolean {
         return prefs(context).getBoolean(DEFAULT_ZONE_OVERRIDE_KEY, false)
-    }
-    
-    fun getLastKnownLocation(context: Context): Boolean {
-        return prefs(context).getBoolean(LAST_KNOWN_LOCATION_KEY, false)
     }
     
     fun getShowTimeZone(context: Context): Boolean {

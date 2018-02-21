@@ -2,10 +2,6 @@
 
 	<PreferenceCategory android:title="Location and time zones">
 		<CheckBoxPreference
-			android:key="lastKnownLocation"
-			android:title="Last known location"
-			android:summary="Uses fast but often less accurate location" />
-		<CheckBoxPreference
 			android:key="reverseGeocode"
 			android:title="Lookup locations"
 			android:summary="Enables geocoding and auto time zone, requires connection" />
