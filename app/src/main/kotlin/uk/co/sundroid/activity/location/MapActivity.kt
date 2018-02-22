@@ -150,46 +150,46 @@ class MapActivity : AbstractLocationActivity(), OnMapClickListener, OnInfoWindow
         if (map == null) {
             (fragmentManager.findFragmentById(R.id.map) as MapFragment).getMapAsync { googleMap ->
                 map = googleMap
-                setUpMap()
+                setUpMap(googleMap)
             }
         }
     }
 
-    private fun setUpMap() {
+    private fun setUpMap(map: GoogleMap) {
 
         val location = SharedPrefsHelper.getSelectedLocation(this)
 
         // Hide the zoom controls as the button panel will cover it.
-        map!!.uiSettings.isZoomControlsEnabled = true
-        map!!.uiSettings.isCompassEnabled = false
-        map!!.uiSettings.isMyLocationButtonEnabled = false
-        map!!.uiSettings.isRotateGesturesEnabled = false
-        map!!.uiSettings.isTiltGesturesEnabled = false
+        map.uiSettings.isZoomControlsEnabled = true
+        map.uiSettings.isCompassEnabled = false
+        map.uiSettings.isMyLocationButtonEnabled = false
+        map.uiSettings.isRotateGesturesEnabled = false
+        map.uiSettings.isTiltGesturesEnabled = false
 
-        map!!.setInfoWindowAdapter(CustomInfoWindowAdapter())
+        map.setInfoWindowAdapter(CustomInfoWindowAdapter())
 
-        map!!.setOnInfoWindowClickListener(this)
-        map!!.setOnMapClickListener(this)
-        map!!.clear()
+        map.setOnInfoWindowClickListener(this)
+        map.setOnMapClickListener(this)
+        map.clear()
 
         val mapMode = SharedPrefsHelper.getLocMapMode(applicationContext)
         when (mapMode) {
-            "normal" -> map!!.mapType = GoogleMap.MAP_TYPE_NORMAL
-            "satellite" -> map!!.mapType = GoogleMap.MAP_TYPE_SATELLITE
-            "terrain" -> map!!.mapType = GoogleMap.MAP_TYPE_TERRAIN
-            "hybrid" -> map!!.mapType = GoogleMap.MAP_TYPE_HYBRID
+            "normal" -> map.mapType = GoogleMap.MAP_TYPE_NORMAL
+            "satellite" -> map.mapType = GoogleMap.MAP_TYPE_SATELLITE
+            "terrain" -> map.mapType = GoogleMap.MAP_TYPE_TERRAIN
+            "hybrid" -> map.mapType = GoogleMap.MAP_TYPE_HYBRID
         }
 
         if (mapCentre != null) {
             val cameraUpdate = CameraUpdateFactory.newLatLngZoom(mapCentre, mapZoom)
-            map!!.moveCamera(cameraUpdate)
+            map.moveCamera(cameraUpdate)
         } else if (location != null) {
             val cameraUpdate = CameraUpdateFactory.newLatLngZoom(LatLng(location.location.latitude.doubleValue, location.location.longitude.doubleValue), 6f)
-            map!!.moveCamera(cameraUpdate)
+            map.moveCamera(cameraUpdate)
         }
 
         if (mapLocation != null) {
-            addMarker()
+            addMarker(mapLocation!!)
         }
 
     }
@@ -198,33 +198,32 @@ class MapActivity : AbstractLocationActivity(), OnMapClickListener, OnInfoWindow
         val location = LatitudeLongitude(latLng.latitude, latLng.longitude)
         mapLocation = location
         mapLocationDetails = null
-        addMarker()
+        addMarker(location)
         startPointLookup(location)
         val cameraUpdate = CameraUpdateFactory.newLatLng(latLng)
         map?.animateCamera(cameraUpdate)
     }
 
     override fun onInfoWindowClick(marker: Marker) {
-        if (mapLocation != null && mapLocationDetails != null) {
-            SharedPrefsHelper.saveSelectedLocation(this, mapLocationDetails!!)
-            if (mapLocationDetails!!.timeZone == null) {
-                val intent = Intent(applicationContext, TimeZonePickerActivity::class.java)
-                intent.putExtra(TimeZonePickerActivity.INTENT_MODE, TimeZonePickerActivity.MODE_SELECT)
-                startActivityForResult(intent, TimeZonePickerActivity.REQUEST_TIMEZONE)
-            } else {
-                setResult(LocationSelectActivity.RESULT_LOCATION_SELECTED)
-                finish()
-            }
+        val mapLocationDetails = this.mapLocationDetails ?: return
+        SharedPrefsHelper.saveSelectedLocation(this, mapLocationDetails)
+        if (mapLocationDetails.timeZone == null) {
+            val intent = Intent(applicationContext, TimeZonePickerActivity::class.java)
+            intent.putExtra(TimeZonePickerActivity.INTENT_MODE, TimeZonePickerActivity.MODE_SELECT)
+            startActivityForResult(intent, TimeZonePickerActivity.REQUEST_TIMEZONE)
+        } else {
+            setResult(LocationSelectActivity.RESULT_LOCATION_SELECTED)
+            finish()
         }
     }
 
-    private fun addMarker() {
-        map!!.clear()
-        mapMarker = map!!.addMarker(MarkerOptions()
-                .position(LatLng(mapLocation!!.latitude.doubleValue, mapLocation!!.longitude.doubleValue))
+    private fun addMarker(mapLocation: LatitudeLongitude) {
+        map?.clear()
+        mapMarker = map?.addMarker(MarkerOptions()
+                .position(LatLng(mapLocation.latitude.doubleValue, mapLocation.longitude.doubleValue))
                 .title("Fetching location")
                 .icon(BitmapDescriptorFactory.fromResource(drawable.pixel)))
-        mapMarker!!.showInfoWindow()
+        mapMarker?.showInfoWindow()
     }
 
     private fun startPointLookup(location: LatitudeLongitude) {
@@ -279,46 +278,30 @@ class MapActivity : AbstractLocationActivity(), OnMapClickListener, OnInfoWindow
     }
 
     override fun onNavItemSelected(itemPosition: Int) {
-        val names = Arrays.asList("Map", "Satellite", "Terrain", "Hybrid")
-        val selectedIndex: Int
-        val currentMapMode = SharedPrefsHelper.getLocMapMode(applicationContext)
-        selectedIndex = when (currentMapMode) {
-            "normal" -> 0
-            "satellite" -> 1
-            "terrain" -> 2
-            "hybrid" -> 3
-            else -> 4
-        }
-
         val builder = AlertDialog.Builder(this)
-        builder.setTitle("Map view")
-
-        builder.setSingleChoiceItems(names.toTypedArray<CharSequence>(), selectedIndex, null)
-        builder.setNegativeButton("Cancel") { _, _ -> }
-        builder.setPositiveButton("OK") { dialog, _ ->
-            if (dialog is AlertDialog) {
-                val selectedItem = dialog.listView.checkedItemPosition
-                when (selectedItem) {
-                    0 -> {
-                        SharedPrefsHelper.setLocMapMode(applicationContext, "normal")
-                        map?.mapType = GoogleMap.MAP_TYPE_NORMAL
-                    }
-                    1 -> {
-                        SharedPrefsHelper.setLocMapMode(applicationContext, "satellite")
-                        map?.mapType = GoogleMap.MAP_TYPE_SATELLITE
-                    }
-                    2 -> {
-                        SharedPrefsHelper.setLocMapMode(applicationContext, "terrain")
-                        map?.mapType = GoogleMap.MAP_TYPE_TERRAIN
-                    }
-                    3 -> {
-                        SharedPrefsHelper.setLocMapMode(applicationContext, "hybrid")
-                        map?.mapType = GoogleMap.MAP_TYPE_HYBRID
-                    }
+        builder.setTitle("Map type")
+        builder.setItems(arrayOf("Map", "Satellite", "Terrain", "Hybrid"), { _, index ->
+            when (index) {
+                0 -> {
+                    SharedPrefsHelper.setLocMapMode(applicationContext, "normal")
+                    map?.mapType = GoogleMap.MAP_TYPE_NORMAL
+                }
+                1 -> {
+                    SharedPrefsHelper.setLocMapMode(applicationContext, "satellite")
+                    map?.mapType = GoogleMap.MAP_TYPE_SATELLITE
+                }
+                2 -> {
+                    SharedPrefsHelper.setLocMapMode(applicationContext, "terrain")
+                    map?.mapType = GoogleMap.MAP_TYPE_TERRAIN
+                }
+                3 -> {
+                    SharedPrefsHelper.setLocMapMode(applicationContext, "hybrid")
+                    map?.mapType = GoogleMap.MAP_TYPE_HYBRID
                 }
             }
-            dialog.dismiss()
-        }
+
+        })
+        builder.setNegativeButton("Cancel") { _, _ -> }
         builder.create().show()
     }
 
