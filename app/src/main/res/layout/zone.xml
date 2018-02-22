@@ -3,13 +3,10 @@
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent">
 
-    <include android:id="@+id/actionBar" layout="@layout/inc_actionbar" android:layout_alignParentTop="true"/>
-
     <ListView
 		android:id="@+id/timeZoneList"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-        android:layout_below="@id/actionBar"
 		android:listSelector="?disclosure"
         android:divider="?list_divider"
         android:dividerHeight="1px"

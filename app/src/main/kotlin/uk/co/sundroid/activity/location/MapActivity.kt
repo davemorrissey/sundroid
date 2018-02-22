@@ -45,7 +45,7 @@ class MapActivity : AbstractLocationActivity(), OnMapClickListener, OnInfoWindow
     private var mapLocationDetails: LocationDetails? = null
 
     override val layout: Int
-        get() = R.layout.loc_mapv2
+        get() = R.layout.loc_map
 
     override val viewTitle: String
         get() = "Map"
@@ -252,8 +252,8 @@ class MapActivity : AbstractLocationActivity(), OnMapClickListener, OnInfoWindow
 
     internal inner class CustomInfoWindowAdapter : InfoWindowAdapter {
 
-        private val window: View = View.inflate(this@MapActivity, R.layout.loc_mapv2_infowindow, null)
-        private val contents: View = View.inflate(this@MapActivity, R.layout.loc_mapv2_infowindow, null)
+        private val window: View = View.inflate(this@MapActivity, R.layout.loc_map_infowindow, null)
+        private val contents: View = View.inflate(this@MapActivity, R.layout.loc_map_infowindow, null)
 
         override fun getInfoWindow(marker: Marker): View {
             render(window)

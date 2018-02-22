@@ -3,13 +3,10 @@
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent">
 
-    <include android:id="@+id/actionBar" layout="@layout/inc_actionbar" android:layout_alignParentTop="true"/>
-	
     <LinearLayout
         android:id="@+id/dayDetailTabs"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/actionBar"
         android:background="?tab_bar_bg"
         android:orientation="horizontal">
 	    <TextView

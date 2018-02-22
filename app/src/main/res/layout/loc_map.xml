@@ -3,14 +3,11 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent">
 
-    <include android:id="@+id/actionBar" layout="@layout/inc_actionbar" android:layout_alignParentTop="true"/>
-
     <fragment
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/map"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_below="@id/actionBar"
             class="com.google.android.gms.maps.MapFragment"/>
 
 </RelativeLayout>
