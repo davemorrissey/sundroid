@@ -9,20 +9,11 @@ import android.view.ViewGroup
 
 import uk.co.sundroid.AbstractFragment
 import uk.co.sundroid.BuildConfig
-import uk.co.sundroid.R
 import uk.co.sundroid.R.layout
 
-class AboutFragment : AbstractFragment() {
+import kotlinx.android.synthetic.main.frag_info_about.*
 
-    val versionCodes: String
-        get() = "Build: " +
-                BuildConfig.VERSION_CODE +
-                ", API: " +
-                VERSION.SDK_INT +
-                "\n" +
-                Build.MANUFACTURER +
-                " " +
-                Build.DEVICE
+class AboutFragment : AbstractFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, state: Bundle): View? {
         if (container == null) {
@@ -30,8 +21,9 @@ class AboutFragment : AbstractFragment() {
         }
         val view = inflater.inflate(layout.frag_info_about, container, false)
         val version = String.format("Sundroid %s$1", BuildConfig.VERSION_NAME)
-        textInView(view, R.id.aboutVersion, version)
-        textInView(view, R.id.aboutCodes, versionCodes)
+        val info = "Build: ${BuildConfig.VERSION_CODE}, API: ${VERSION.SDK_INT}\n${Build.MANUFACTURER} ${Build.DEVICE}"
+        aboutVersion.text = version
+        aboutCodes.text = info
         return view
     }
 

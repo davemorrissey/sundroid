@@ -18,7 +18,7 @@
 			>
 			<TextView
 				style="@style/bodyText"
-                android:id="@+id/infGuideDisclaimerText"
+                android:text="THIS DATA IS PROVIDED WITH NO GUARANTEE OF ACCURACY AND NO WARRANTY OF FITNESS FOR ANY PURPOSE.\n\nTimes are usually accurate to within a few minutes, but they do not take into account local geography or your altitude, so the observed times in hilly regions may be different. Errors in the far North and South can be much greater."
 				/>
 		</LinearLayout>
 		<View style="@style/listMenuDivider" android:id="@+id/infGuideWidgetsDivider"/>

@@ -10,7 +10,7 @@ import uk.co.sundroid.AbstractFragment
 import uk.co.sundroid.R
 import uk.co.sundroid.util.theme.*
 
-import uk.co.sundroid.R.id.*
+import kotlinx.android.synthetic.main.frag_info_glossary.*
 
 class GlossaryFragment : AbstractFragment() {
 
@@ -19,34 +19,32 @@ class GlossaryFragment : AbstractFragment() {
             return null
         }
         val view = inflater.inflate(R.layout.frag_info_glossary, container, false)
-        view.findViewById<View>(infGlossaryApsisDisclosure).setOnClickListener { v -> toggle(v, infGlossaryApsisBody) }
-        view.findViewById<View>(infGlossaryAzimuthDisclosure).setOnClickListener { v -> toggle(v, infGlossaryAzimuthBody) }
-        view.findViewById<View>(infGlossaryCivTwiDisclosure).setOnClickListener { v -> toggle(v, infGlossaryCivTwiBody) }
-        view.findViewById<View>(infGlossaryNtcTwiDisclosure).setOnClickListener { v -> toggle(v, infGlossaryNtcTwiBody) }
-        view.findViewById<View>(infGlossaryAstTwiDisclosure).setOnClickListener { v -> toggle(v, infGlossaryAstTwiBody) }
-        view.findViewById<View>(infGlossarySolNoonDisclosure).setOnClickListener { v -> toggle(v, infGlossarySolNoonBody) }
-        view.findViewById<View>(infGlossaryGoldenDisclosure).setOnClickListener { v -> toggle(v, infGlossaryGoldenBody) }
-        view.findViewById<View>(infGlossarySolsticeDisclosure).setOnClickListener { v -> toggle(v, infGlossarySolsticeBody) }
-        view.findViewById<View>(infGlossaryEquinoxDisclosure).setOnClickListener { v -> toggle(v, infGlossaryEquinoxBody) }
-        view.findViewById<View>(infGlossarySolEclipseDisclosure).setOnClickListener { v -> toggle(v, infGlossarySolEclipseBody) }
-        view.findViewById<View>(infGlossaryLunarEclipseDisclosure).setOnClickListener { v -> toggle(v, infGlossaryLunarEclipseBody) }
+        infGlossaryApsisDisclosure.setOnClickListener { v -> toggle(v, infGlossaryApsisBody) }
+        infGlossaryAzimuthDisclosure.setOnClickListener { v -> toggle(v, infGlossaryAzimuthBody) }
+        infGlossaryCivTwiDisclosure.setOnClickListener { v -> toggle(v, infGlossaryCivTwiBody) }
+        infGlossaryNtcTwiDisclosure.setOnClickListener { v -> toggle(v, infGlossaryNtcTwiBody) }
+        infGlossaryAstTwiDisclosure.setOnClickListener { v -> toggle(v, infGlossaryAstTwiBody) }
+        infGlossarySolNoonDisclosure.setOnClickListener { v -> toggle(v, infGlossarySolNoonBody) }
+        infGlossaryGoldenDisclosure.setOnClickListener { v -> toggle(v, infGlossaryGoldenBody) }
+        infGlossarySolsticeDisclosure.setOnClickListener { v -> toggle(v, infGlossarySolsticeBody) }
+        infGlossaryEquinoxDisclosure.setOnClickListener { v -> toggle(v, infGlossaryEquinoxBody) }
+        infGlossarySolEclipseDisclosure.setOnClickListener { v -> toggle(v, infGlossarySolEclipseBody) }
+        infGlossaryLunarEclipseDisclosure.setOnClickListener { v -> toggle(v, infGlossaryLunarEclipseBody) }
         return view
     }
 
-    private fun toggle(disclosure: View, bodyId: Int) {
+    private fun toggle(disclosure: View, body: View) {
         val view = view
         if (view == null || isDetached) {
             return
         }
-        val bodyView = view.findViewById<View>(bodyId)
-        if (bodyView.visibility == View.GONE) {
-            bodyView.visibility = View.VISIBLE
+        if (body.visibility == View.GONE) {
+            body.visibility = View.VISIBLE
             (disclosure as TextView).setCompoundDrawablesWithIntrinsicBounds(0, 0, getDisclosureOpen(), 0)
         } else {
-            bodyView.visibility = View.GONE
+            body.visibility = View.GONE
             (disclosure as TextView).setCompoundDrawablesWithIntrinsicBounds(0, 0, getDisclosureClosed(), 0)
         }
     }
-
 
 }
