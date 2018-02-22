@@ -14,18 +14,17 @@ import kotlinx.android.synthetic.main.frag_info_guide.*
 
 class GuideFragment : AbstractFragment() {
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, state: Bundle): View? {
-        if (container == null) {
-            return null
-        }
-        val view = inflater.inflate(R.layout.frag_info_guide, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup, state: Bundle?): View? {
+        return inflater.inflate(R.layout.frag_info_guide, container, false)
+    }
+
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         infGuideDisclaimerDisclosure.setOnClickListener { v -> toggle(v, infGuideDisclaimerBody) }
         infGuideLocationDisclosure.setOnClickListener { v -> toggle(v, infGuideLocationBody) }
         infGuideOfflineDisclosure.setOnClickListener { v -> toggle(v, infGuideOfflineBody) }
         infGuideTimeDisclosure.setOnClickListener { v -> toggle(v, infGuideTimeBody) }
         infGuideZonesDisclosure.setOnClickListener { v -> toggle(v, infGuideZonesBody) }
         infGuideTrackerDisclosure.setOnClickListener { v -> toggle(v, infGuideTrackerBody) }
-        return view
     }
 
     private fun toggle(disclosure: View, body: View) {

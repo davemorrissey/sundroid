@@ -14,11 +14,11 @@ import kotlinx.android.synthetic.main.frag_info_glossary.*
 
 class GlossaryFragment : AbstractFragment() {
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, state: Bundle): View? {
-        if (container == null) {
-            return null
-        }
-        val view = inflater.inflate(R.layout.frag_info_glossary, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup, state: Bundle?): View? {
+        return inflater.inflate(R.layout.frag_info_glossary, container, false)
+    }
+
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         infGlossaryApsisDisclosure.setOnClickListener { v -> toggle(v, infGlossaryApsisBody) }
         infGlossaryAzimuthDisclosure.setOnClickListener { v -> toggle(v, infGlossaryAzimuthBody) }
         infGlossaryCivTwiDisclosure.setOnClickListener { v -> toggle(v, infGlossaryCivTwiBody) }
@@ -30,7 +30,6 @@ class GlossaryFragment : AbstractFragment() {
         infGlossaryEquinoxDisclosure.setOnClickListener { v -> toggle(v, infGlossaryEquinoxBody) }
         infGlossarySolEclipseDisclosure.setOnClickListener { v -> toggle(v, infGlossarySolEclipseBody) }
         infGlossaryLunarEclipseDisclosure.setOnClickListener { v -> toggle(v, infGlossaryLunarEclipseBody) }
-        return view
     }
 
     private fun toggle(disclosure: View, body: View) {

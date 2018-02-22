@@ -21,20 +21,6 @@
                 android:text="THIS DATA IS PROVIDED WITH NO GUARANTEE OF ACCURACY AND NO WARRANTY OF FITNESS FOR ANY PURPOSE.\n\nTimes are usually accurate to within a few minutes, but they do not take into account local geography or your altitude, so the observed times in hilly regions may be different. Errors in the far North and South can be much greater."
 				/>
 		</LinearLayout>
-		<View style="@style/listMenuDivider" android:id="@+id/infGuideWidgetsDivider"/>
-		<TextView
-			style="@style/listMenuDisclosureButton"
-			android:id="@+id/infGuideWidgetsDisclosure"
-			android:text="Widgets"/>
-		<LinearLayout
-			style="@style/listMenuDisclosureContent"
-			android:id="@+id/infGuideWidgetsBody"
-			>
-			<TextView
-				style="@style/bodyText"
-				android:text="This app includes four widgets, one for sunrise and sunset, one for moonrise, moonset and phases of the moon, and two more that show the moon phase in small (1x1) and large (2x2) sizes. To add them to your home screen, press and hold an empty space, then select Widgets and scroll down to Sundroid.\n\nBy default these widgets update to your current location shortly after midnight every day, and you can also tap them at any time to select a saved location or refresh the current location. If you leave your phone in airplane mode or turn off location overnight, the widgets will use the best available saved location, which may be out of date."
-				/>
-		</LinearLayout>
 		<View style="@style/listMenuDivider"/>
 		<TextView
 			style="@style/listMenuDisclosureButton"
