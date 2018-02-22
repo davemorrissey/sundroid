@@ -22,7 +22,7 @@ abstract class AbstractLocationActivity : AbstractActivity() {
         finish()
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
         if (resultCode == LocationSelectActivity.RESULT_LOCATION_SELECTED || resultCode == TimeZonePickerActivity.RESULT_TIMEZONE_SELECTED) {
             setResult(LocationSelectActivity.RESULT_LOCATION_SELECTED)
             finish()
