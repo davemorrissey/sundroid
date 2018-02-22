@@ -51,7 +51,7 @@ abstract class AbstractFragment : Fragment() {
 
     protected fun view(name: String): Int {
         try {
-            return id::class.java.getField(name).getInt(null)
+            return R.id::class.java.getField(name).getInt(null)
         } catch (e: Exception) {
             throw IllegalArgumentException("No view with id $name exists")
         }
