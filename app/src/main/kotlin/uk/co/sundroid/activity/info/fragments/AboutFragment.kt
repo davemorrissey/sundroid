@@ -20,7 +20,7 @@ class AboutFragment : AbstractFragment() {
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
-        val version = String.format("Sundroid %s$1", BuildConfig.VERSION_NAME)
+        val version = String.format("Sundroid %s", BuildConfig.VERSION_NAME)
         val info = "Build: ${BuildConfig.VERSION_CODE}, API: ${VERSION.SDK_INT}\n${Build.MANUFACTURER} ${Build.DEVICE}"
         aboutVersion.text = version
         aboutCodes.text = info
