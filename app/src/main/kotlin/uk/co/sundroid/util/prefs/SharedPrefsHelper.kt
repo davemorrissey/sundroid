@@ -9,6 +9,7 @@ import uk.co.sundroid.util.time.TimeZoneResolver
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.preference.PreferenceManager
 import android.text.format.DateFormat
 import uk.co.sundroid.util.theme.THEME_DARK
 
@@ -303,6 +304,6 @@ object SharedPrefsHelper {
         prefs(context).edit().putBoolean(MAP_LOCATION_PERMISSION_DENIED_KEY, denied).apply()
     }
 
-	private fun prefs(context: Context): SharedPreferences = context.getSharedPreferences(PREFS_KEY, Context.MODE_PRIVATE)
+	private fun prefs(context: Context): SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
 
 }
