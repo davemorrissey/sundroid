@@ -21,7 +21,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
             val savedLocations = ArrayList<LocationDetails>()
             while (!cursor.isAfterLast) {
                 val savedLocation = LocationDetails(LatitudeLongitude(cursor.getDouble(1), cursor.getDouble(2)))
-                savedLocation.id = cursor.getInt(0)
+                savedLocation.id = cursor.getLong(0)
                 savedLocation.name = cursor.getString(3)
                 savedLocation.country = cursor.getString(4)
                 savedLocation.timeZone = TimeZoneResolver.getTimeZone(cursor.getString(5))
@@ -60,7 +60,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         cursor.moveToFirst()
         if (!cursor.isAfterLast) {
             savedLocation = LocationDetails(LatitudeLongitude(cursor.getDouble(1), cursor.getDouble(2)))
-            savedLocation.id = cursor.getInt(0)
+            savedLocation.id = cursor.getLong(0)
             savedLocation.name = cursor.getString(3)
             savedLocation.country = cursor.getString(4)
             savedLocation.timeZone = TimeZoneResolver.getTimeZone(cursor.getString(5))

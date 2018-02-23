@@ -8,7 +8,7 @@ import uk.co.sundroid.util.location.LatitudeLongitude
 
 class LocationDetails(val location: LatitudeLongitude) : Serializable {
 
-    var id: Int = 0
+    var id: Long = 0
 
     var name: String? = null
 
