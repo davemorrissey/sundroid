@@ -199,13 +199,13 @@ public abstract class AbstractTimeFragment extends AbstractDataFragment implemen
     }
 
     private void showDatePicker() {
-        DatePickerFragment datePickerFragment = DatePickerFragment.newInstance(getDateCalendar());
+        DatePickerFragment datePickerFragment = DatePickerFragment.Companion.newInstance(getDateCalendar());
         datePickerFragment.setTargetFragment(this, 0);
         datePickerFragment.show(getFragmentManager(), "datePicker");
     }
 
     private void showTimePicker() {
-        TimePickerFragment timePickerFragment = TimePickerFragment.newInstance(getTimeCalendar());
+        TimePickerFragment timePickerFragment = TimePickerFragment.Companion.newInstance(getTimeCalendar());
         timePickerFragment.setTargetFragment(this, 0);
         timePickerFragment.show(getFragmentManager(), "timePicker");
     }

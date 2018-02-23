@@ -129,7 +129,7 @@ public abstract class AbstractMonthFragment<T> extends AbstractDataFragment impl
     }
 
     private void showMonthPicker() {
-        MonthPickerFragment monthPickerFragment = MonthPickerFragment.newInstance(getDateCalendar());
+        MonthPickerFragment monthPickerFragment = MonthPickerFragment.Companion.newInstance(getDateCalendar());
         monthPickerFragment.setTargetFragment(this, 0);
         monthPickerFragment.show(getFragmentManager(), "monthPicker");
     }
