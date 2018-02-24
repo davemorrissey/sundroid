@@ -3,25 +3,18 @@ package uk.co.sundroid.activity.data.fragments.dialogs.date
 import android.app.AlertDialog
 import android.app.Dialog
 import android.app.DialogFragment
-import android.content.DialogInterface
 import android.os.Bundle
 import android.view.View
 import android.widget.TimePicker
 import uk.co.sundroid.R
 import uk.co.sundroid.R.layout
 import uk.co.sundroid.util.prefs.SharedPrefsHelper
+import java.util.*
+import java.util.Calendar.*
 
-import java.util.Calendar
+class TimePickerFragment : DialogFragment() {
 
-import java.util.Calendar.HOUR_OF_DAY
-import java.util.Calendar.MINUTE
-import java.util.Calendar.getInstance
-
-class TimePickerFragment : DialogFragment(), DialogInterface.OnClickListener {
-
-    private var hour: Int = 0
-    private var minute: Int = 0
-    private var timePicker: TimePicker? = null
+    private var calendar: Calendar = Calendar.getInstance()
 
     @FunctionalInterface
     interface OnTimeSelectedListener {
@@ -30,51 +23,70 @@ class TimePickerFragment : DialogFragment(), DialogInterface.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val today = getInstance()
-        this.hour = arguments.getInt("h", today.get(HOUR_OF_DAY))
-        this.minute = arguments.getInt("m", today.get(MINUTE))
+        restore(arguments)
     }
 
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        Companion.save(calendar, outState)
+    }
+
+    @Suppress("DEPRECATION") // currentHour/Minute deprecated in 23
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        retainInstance = true // TODO may not be required
-        val builder = AlertDialog.Builder(activity)
+        restore(savedInstanceState)
 
         val view = View.inflate(activity, layout.dialog_timepicker, null)
-        timePicker = view.findViewById(R.id.timePicker)
-        timePicker!!.setIs24HourView(SharedPrefsHelper.getClockType24(activity.applicationContext))
-        timePicker!!.currentHour = hour
-        timePicker!!.currentMinute = minute
-        builder.setView(view)
-        builder.setTitle("Set time")
 
-        builder.setPositiveButton("Set", this)
-        builder.setNeutralButton("Now", this)
-        builder.setNegativeButton("Cancel", this)
-        return builder.create()
+        view.findViewById<TimePicker>(R.id.timePicker)?.apply {
+            currentHour = calendar.get(HOUR_OF_DAY)
+            currentMinute = calendar.get(MINUTE)
+            setIs24HourView(SharedPrefsHelper.getClockType24(activity.applicationContext))
+            setOnTimeChangedListener { _, hour, minute -> run {
+                calendar.set(HOUR_OF_DAY, hour)
+                calendar.set(MINUTE, minute)
+            }}
+        }
+        
+        return AlertDialog.Builder(activity).apply {
+            setView(view)
+            setTitle("Set time")
+            setPositiveButton("Set", { _, _ -> set(calendar) })
+            setNeutralButton("Now", { _, _ -> set(Calendar.getInstance()) })
+            setNegativeButton("Cancel", { _, _ -> })
+        }.create()
     }
 
-    override fun onClick(dialogInterface: DialogInterface, button: Int) {
+    private fun set(calendar: Calendar) {
         val target = targetFragment
-        if (target != null && target is OnTimeSelectedListener) {
-            if (button == DialogInterface.BUTTON_NEUTRAL) {
-                val today = Calendar.getInstance()
-                (target as OnTimeSelectedListener).onTimeSet(today.get(HOUR_OF_DAY), today.get(MINUTE))
-            } else if (button == DialogInterface.BUTTON_POSITIVE) {
-                (target as OnTimeSelectedListener).onTimeSet(timePicker!!.currentHour, timePicker!!.currentMinute)
+        if (target is OnTimeSelectedListener) {
+            (target as OnTimeSelectedListener).onTimeSet(calendar.get(HOUR_OF_DAY), calendar.get(MINUTE))
+        }
+    }
+
+    private fun restore(bundle: Bundle?) {
+        if (bundle != null) {
+            val hm = bundle.getIntArray("hm")
+            val tz = bundle.getString("tz")
+            if (hm != null && tz != null) {
+                calendar.timeZone = TimeZone.getTimeZone(tz)
+                calendar.set(HOUR_OF_DAY, hm[0])
+                calendar.set(MINUTE, hm[1])
             }
         }
-        dismiss()
     }
 
     companion object {
-
         fun newInstance(calendar: Calendar): TimePickerFragment {
-            val fragment = TimePickerFragment()
-            val args = Bundle()
-            args.putInt("h", calendar.get(HOUR_OF_DAY))
-            args.putInt("m", calendar.get(MINUTE))
-            fragment.arguments = args
-            return fragment
+            return TimePickerFragment().apply {
+                arguments = save(calendar)
+            }
+        }
+
+        private fun save(calendar: Calendar, bundle: Bundle? = Bundle()): Bundle? {
+            return bundle?.apply {
+                putIntArray("hm", intArrayOf(calendar.get(HOUR_OF_DAY), calendar.get(MINUTE)))
+                putString("tz", calendar.timeZone.id)
+            }
         }
     }
 

@@ -3,23 +3,17 @@ package uk.co.sundroid.activity.data.fragments.dialogs.date
 import android.app.AlertDialog
 import android.app.Dialog
 import android.app.DialogFragment
-import android.content.DialogInterface
 import android.os.Bundle
 import android.view.View
 import android.widget.NumberPicker
 import uk.co.sundroid.R
 import uk.co.sundroid.R.layout
-
-import java.util.Calendar
-
+import java.util.*
 import java.util.Calendar.*
 
-class MonthPickerFragment : DialogFragment(), DialogInterface.OnClickListener {
+class MonthPickerFragment : DialogFragment(){
 
-    private var year: Int = 0
-    private var month: Int = 0
-    private var monthPicker: NumberPicker? = null
-    private var yearPicker: NumberPicker? = null
+    private var calendar: Calendar = Calendar.getInstance()
 
     @FunctionalInterface
     interface OnMonthSelectedListener {
@@ -28,57 +22,74 @@ class MonthPickerFragment : DialogFragment(), DialogInterface.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val today = getInstance()
-        this.year = arguments.getInt("y", today.get(YEAR))
-        this.month = arguments.getInt("m", today.get(MONTH))
+        restore(arguments)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        Companion.save(calendar, outState)
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        retainInstance = true // TODO may not be required
-        val builder = AlertDialog.Builder(activity)
+        restore(savedInstanceState)
 
-        val content = View.inflate(activity, layout.dialog_monthpicker, null)
-        monthPicker = content.findViewById(R.id.monthPicker)
-        monthPicker!!.minValue = 0
-        monthPicker!!.maxValue = 11
-        monthPicker!!.wrapSelectorWheel = true
-        monthPicker!!.displayedValues = arrayOf("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
-        monthPicker!!.value = month
-        yearPicker = content.findViewById(R.id.yearPicker)
-        yearPicker!!.minValue = 1900
-        yearPicker!!.maxValue = 2100
-        yearPicker!!.wrapSelectorWheel = false
-        yearPicker!!.value = year
+        val view = View.inflate(activity, layout.dialog_monthpicker, null)
 
-        builder.setView(content)
-        builder.setTitle("Set month")
-        builder.setPositiveButton("Set", this)
-        builder.setNeutralButton("This month", this)
-        builder.setNegativeButton("Cancel", this)
-        return builder.create()
+        view.findViewById<NumberPicker>(R.id.monthPicker).apply {
+            minValue = 0
+            maxValue = 11
+            wrapSelectorWheel = true
+            displayedValues = arrayOf("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+            value = calendar.get(MONTH)
+            setOnValueChangedListener { _, _, month -> calendar.set(MONTH, month) }
+        }
+        view.findViewById<NumberPicker>(R.id.yearPicker)?.apply {
+            minValue = 1900
+            maxValue = 2100
+            wrapSelectorWheel = false
+            value = calendar.get(YEAR)
+            setOnValueChangedListener { _, _, year -> calendar.set(YEAR, year) }
+        }
+
+        return AlertDialog.Builder(activity).apply {
+            setView(view)
+            setTitle("Set month")
+            setPositiveButton("Set", { _, _ -> set(calendar) })
+            setNeutralButton("This month", { _, _ -> set(Calendar.getInstance()) })
+            setNegativeButton("Cancel", { _, _ -> })
+        }.create()
     }
 
-    override fun onClick(dialogInterface: DialogInterface, button: Int) {
+    private fun set(calendar: Calendar) {
         val target = targetFragment
-        if (target != null && target is OnMonthSelectedListener) {
-            if (button == DialogInterface.BUTTON_NEUTRAL) {
-                val today = getInstance()
-                (target as OnMonthSelectedListener).onMonthSet(today.get(YEAR), today.get(MONTH))
-            } else if (button == DialogInterface.BUTTON_POSITIVE) {
-                (target as OnMonthSelectedListener).onMonthSet(yearPicker!!.value, monthPicker!!.value)
+        if (target is OnMonthSelectedListener) {
+            (target as OnMonthSelectedListener).onMonthSet(calendar.get(YEAR), calendar.get(MONTH))
+        }
+    }
+
+    private fun restore(bundle: Bundle?) {
+        if (bundle != null) {
+            val ymd = bundle.getIntArray("ymd")
+            val tz = bundle.getString("tz")
+            if (ymd != null && tz != null) {
+                calendar.timeZone = TimeZone.getTimeZone(tz)
+                calendar.set(ymd[0], ymd[1], ymd[2])
             }
         }
-        dismiss()
     }
 
     companion object {
         fun newInstance(calendar: Calendar): MonthPickerFragment {
-            val fragment = MonthPickerFragment()
-            val args = Bundle()
-            args.putInt("y", calendar.get(YEAR))
-            args.putInt("m", calendar.get(MONTH))
-            fragment.arguments = args
-            return fragment
+            return MonthPickerFragment().apply {
+                arguments = save(calendar)
+            }
+        }
+
+        private fun save(calendar: Calendar, bundle: Bundle? = Bundle()): Bundle? {
+            return bundle?.apply {
+                putIntArray("ymd", intArrayOf(calendar.get(YEAR), calendar.get(MONTH), calendar.get(DAY_OF_MONTH)))
+                putString("tz", calendar.timeZone.id)
+            }
         }
     }
 

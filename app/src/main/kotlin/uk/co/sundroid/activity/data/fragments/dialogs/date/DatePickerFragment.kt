@@ -54,9 +54,9 @@ class DatePickerFragment : DialogFragment(), OnDateChangedListener, OnSeekBarCha
         return AlertDialog.Builder(activity).apply {
             setView(view)
             setTitle("Set date")
-            setPositiveButton("Set", { _, _ -> set() })
-            setNeutralButton("Today", { _, _ -> calendar.timeInMillis = System.currentTimeMillis(); set() })
-            setNegativeButton("Cancel", { _, _  -> })
+            setPositiveButton("Set", { _, _ -> set(calendar) })
+            setNeutralButton("Today", { _, _ -> set(Calendar.getInstance()) })
+            setNegativeButton("Cancel", { _, _ -> })
         }.create()
     }
 
@@ -76,7 +76,7 @@ class DatePickerFragment : DialogFragment(), OnDateChangedListener, OnSeekBarCha
 
     override fun onStopTrackingTouch(seekBar: SeekBar) {}
 
-    fun set() {
+    private fun set(calendar: Calendar) {
         val target = targetFragment
         if (target is OnDateSelectedListener) {
             (target as OnDateSelectedListener).onDateSet(calendar.get(YEAR), calendar.get(MONTH), calendar.get(DAY_OF_MONTH))
