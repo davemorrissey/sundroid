@@ -33,12 +33,7 @@ public class DayDetailEventsFragment extends AbstractDayFragment implements Conf
 
     @Override
     public void openSettingsDialog() {
-        boolean[] currentEvents = new boolean[7];
-        currentEvents[0] = SharedPrefsHelper.INSTANCE.getShowElement(getApplicationContext(), "evtByTimeSun", true);
-        currentEvents[1] = SharedPrefsHelper.INSTANCE.getShowElement(getApplicationContext(), "evtByTimeMoon", true);
-        currentEvents[2] = SharedPrefsHelper.INSTANCE.getShowElement(getApplicationContext(), "evtByTimePlanets", false);
-
-        DayEventsPickerFragment settingsDialog = DayEventsPickerFragment.Companion.newInstance(currentEvents);
+        DayEventsPickerFragment settingsDialog = DayEventsPickerFragment.Companion.newInstance(getActivity());
         settingsDialog.setTargetFragment(this, 0);
         settingsDialog.show(getFragmentManager(), "dayEventsSettings");
     }
