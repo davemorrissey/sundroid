@@ -52,7 +52,7 @@ class TimePickerFragment : DialogFragment() {
             setTitle("Set time")
             setPositiveButton("Set", { _, _ -> set(calendar) })
             setNeutralButton("Now", { _, _ -> set(Calendar.getInstance()) })
-            setNegativeButton("Cancel", { _, _ -> })
+            setNegativeButton("Cancel", null)
         }.create()
     }
 

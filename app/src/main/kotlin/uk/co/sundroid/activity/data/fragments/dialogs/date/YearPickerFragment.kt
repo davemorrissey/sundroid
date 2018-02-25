@@ -48,7 +48,7 @@ class YearPickerFragment : DialogFragment() {
             setTitle("Set year")
             setPositiveButton("Set", { _, _ -> set(calendar) })
             setNeutralButton("This year", { _, _ -> set(Calendar.getInstance()) })
-            setNegativeButton("Cancel", { _, _ -> })
+            setNegativeButton("Cancel", null)
         }.create()
     }
 

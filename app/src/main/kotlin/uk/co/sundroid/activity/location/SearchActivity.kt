@@ -150,13 +150,13 @@ class SearchActivity : AbstractLocationActivity(), OnClickListener, OnItemClickL
             val builder = AlertDialog.Builder(this)
             builder.setTitle("Search failed")
             builder.setMessage("There was a problem searching for matching locations. Please check your network signal and reboot your phone to make sure Google services are up to date.")
-            builder.setNeutralButton("OK", { _, _ -> })
+            builder.setNeutralButton("OK", null)
             return builder.create()
         } else if (id == DIALOG_SEARCH_NONE) {
             val builder = AlertDialog.Builder(this)
             builder.setTitle("No matches")
             builder.setMessage("There were no locations matching your search. Please try another search term.")
-            builder.setNeutralButton("OK") { _, _ -> }
+            builder.setNeutralButton("OK", null)
             return builder.create()
         }
         return super.onCreateDialog(id)

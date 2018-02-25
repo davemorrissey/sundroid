@@ -83,7 +83,7 @@ class SavedLocationsActivity : AbstractLocationActivity() {
         builder.setTitle("Delete")
         builder.setMessage("Delete this saved location?")
         builder.setPositiveButton("OK", { _, _ -> delete(location) })
-        builder.setNegativeButton("Cancel", { _, _ -> })
+        builder.setNegativeButton("Cancel", null)
         builder.create().show()
     }
 

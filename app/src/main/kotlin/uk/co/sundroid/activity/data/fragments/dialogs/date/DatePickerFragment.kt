@@ -56,7 +56,7 @@ class DatePickerFragment : DialogFragment(), OnDateChangedListener, OnSeekBarCha
             setTitle("Set date")
             setPositiveButton("Set", { _, _ -> set(calendar) })
             setNeutralButton("Today", { _, _ -> set(Calendar.getInstance()) })
-            setNegativeButton("Cancel", { _, _ -> })
+            setNegativeButton("Cancel", null)
         }.create()
     }
 

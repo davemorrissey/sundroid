@@ -12,7 +12,7 @@ class SimpleAlertFragment : DialogFragment() {
 
         return AlertDialog.Builder(activity)
                 .setTitle(title)
-                .setPositiveButton("OK", { _, _ -> dismiss() })
+                .setPositiveButton("OK", null)
                 .create()
     }
 

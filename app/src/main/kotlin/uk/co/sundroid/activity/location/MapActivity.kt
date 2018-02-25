@@ -62,7 +62,7 @@ class MapActivity : AbstractLocationActivity(), OnMapClickListener, OnInfoWindow
                 builder.setTitle("Location required")
                         .setMessage("Location permission is required to look up names and time zones. Proceed?")
                         .setPositiveButton(android.R.string.yes) { _, _ -> requestLocationPermission() }
-                        .setNegativeButton(android.R.string.no) { _, _ -> }
+                        .setNegativeButton(android.R.string.no, null)
                         .setIcon(android.R.drawable.ic_dialog_info)
                         .show()
             } else {
@@ -89,7 +89,7 @@ class MapActivity : AbstractLocationActivity(), OnMapClickListener, OnInfoWindow
                             val builder = AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert)
                             builder.setTitle("Location denied")
                                     .setMessage("Location name and time zone lookup will be unavailable. To fix this, you can grant this app location permission from Android settings.")
-                                    .setPositiveButton(android.R.string.ok) { _, _ -> }
+                                    .setPositiveButton(android.R.string.ok, null)
                                     .setIcon(android.R.drawable.ic_dialog_info)
                                     .show()
                         }
@@ -301,7 +301,7 @@ class MapActivity : AbstractLocationActivity(), OnMapClickListener, OnInfoWindow
             }
 
         })
-        builder.setNegativeButton("Cancel") { _, _ -> }
+        builder.setNegativeButton("Cancel", null)
         builder.create().show()
     }
 

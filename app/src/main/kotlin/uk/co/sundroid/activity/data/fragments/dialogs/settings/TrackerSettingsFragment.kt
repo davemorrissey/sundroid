@@ -80,7 +80,7 @@ class TrackerSettingsFragment : DialogFragment() {
         val builder = AlertDialog.Builder(activity, android.R.style.Theme_Material_Dialog_Alert)
         builder.setTitle("Settings")
         builder.setView(view)
-        builder.setNegativeButton("Cancel") { _, _ -> dismiss() }
+        builder.setNegativeButton("Cancel", null)
         builder.setPositiveButton("OK") { _, _ ->
             if (body.selectedItemPosition >= Body.values().size) {
                 SharedPrefsHelper.setSunTrackerBody(context, null)
