@@ -3,69 +3,76 @@ package uk.co.sundroid.activity.data.fragments.dialogs.settings
 import android.app.AlertDialog
 import android.app.Dialog
 import android.app.DialogFragment
-import android.app.Fragment
 import android.content.Context
-import android.content.DialogInterface
-import android.content.DialogInterface.OnClickListener
-import android.content.DialogInterface.OnMultiChoiceClickListener
 import android.os.Bundle
 import uk.co.sundroid.activity.data.fragments.dialogs.OnViewPrefsChangedListener
 import uk.co.sundroid.util.prefs.SharedPrefsHelper
 
-class YearEventsPickerFragment : DialogFragment(), OnClickListener, OnMultiChoiceClickListener {
+class YearEventsPickerFragment : DialogFragment() {
 
-    private val currentEvents = BooleanArray(8)
+    private enum class Setting(val ref: String, val displayName: String) {
+        NEW_MOON("yearNewMoon", "New moons"),
+        FULL_MOON("yearFullMoon", "Full moons"),
+        QUARTER_MOON("yearQuarterMoon", "Quarter moons"),
+        SOLSTICE("yearSolstice", "Solstices"),
+        EQUINOX("yearEquinox", "Equinoxes"),
+        LUNAR_ECLIPSE("yearLunarEclipse", "Lunar eclipses"),
+        SOLAR_ECLIPSE("yearSolarEclipse", "Solar eclipses"),
+        EARTH_APSIS("yearEarthApsis", "Earth aphelion and perihelion")
+    }
+
+    private val currentEvents = BooleanArray(8, { _ -> true })
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        restore(arguments)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        Companion.save(currentEvents, outState)
+    }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        retainInstance = true// TODO Redundant?
-
-        currentEvents[0] = SharedPrefsHelper.getShowElement(activity, "yearNewMoon", true)
-        currentEvents[1] = SharedPrefsHelper.getShowElement(activity, "yearFullMoon", true)
-        currentEvents[2] = SharedPrefsHelper.getShowElement(activity, "yearQuarterMoon", true)
-        currentEvents[3] = SharedPrefsHelper.getShowElement(activity, "yearSolstice", true)
-        currentEvents[4] = SharedPrefsHelper.getShowElement(activity, "yearEquinox", true)
-        currentEvents[5] = SharedPrefsHelper.getShowElement(activity, "yearLunarEclipse", true)
-        currentEvents[6] = SharedPrefsHelper.getShowElement(activity, "yearSolarEclipse", true)
-        currentEvents[7] = SharedPrefsHelper.getShowElement(activity, "yearEarthApsis", true)
+        restore(savedInstanceState)
 
         val builder = AlertDialog.Builder(activity)
         builder.setMultiChoiceItems(
-                arrayOf<CharSequence>("New moons", "Full moons", "Quarter moons", "Solstices", "Equinoxes", "Lunar eclipses", "Solar eclipses", "Earth aphelion and perihelion"),
+                Setting.values().map { it.displayName }.toTypedArray(),
                 currentEvents,
-                this)
+                { _, i, value -> currentEvents[i] = value })
         builder.setTitle("Select events")
-        builder.setPositiveButton("OK", this)
-        builder.setNegativeButton("Cancel", this)
+        builder.setPositiveButton("OK", { _, _ -> run {
+            Setting.values().forEachIndexed { i, setting -> SharedPrefsHelper.setShowElement(activity, setting.ref, currentEvents[i]) }
+            val parent = targetFragment
+            if (parent is OnViewPrefsChangedListener) {
+                (parent as OnViewPrefsChangedListener).onViewPrefsUpdated()
+            }
+        }})
+        builder.setNegativeButton("Cancel", null)
         return builder.create()
     }
 
-    override fun onClick(dialogInterface: DialogInterface, id: Int, value: Boolean) {
-        currentEvents[id] = value
-    }
-
-    override fun onClick(dialogInterface: DialogInterface, button: Int) {
-        if (button == DialogInterface.BUTTON_POSITIVE) {
-            SharedPrefsHelper.setShowElement(activity, "yearNewMoon", currentEvents[0])
-            SharedPrefsHelper.setShowElement(activity, "yearFullMoon", currentEvents[1])
-            SharedPrefsHelper.setShowElement(activity, "yearQuarterMoon", currentEvents[2])
-            SharedPrefsHelper.setShowElement(activity, "yearSolstice", currentEvents[3])
-            SharedPrefsHelper.setShowElement(activity, "yearEquinox", currentEvents[4])
-            SharedPrefsHelper.setShowElement(activity, "yearLunarEclipse", currentEvents[5])
-            SharedPrefsHelper.setShowElement(activity, "yearSolarEclipse", currentEvents[6])
-            SharedPrefsHelper.setShowElement(activity, "yearEarthApsis", currentEvents[7])
-
-            val parent = targetFragment
-            if (parent != null && parent is OnViewPrefsChangedListener) {
-                (parent as OnViewPrefsChangedListener).onViewPrefsUpdated()
-            }
+    private fun restore(bundle: Bundle?) {
+        if (bundle != null) {
+            val events = bundle.getBooleanArray("events")
+            events?.forEachIndexed { i, on -> currentEvents[i] = on }
         }
-        dismiss()
     }
 
     companion object {
+        fun newInstance(context: Context): YearEventsPickerFragment {
+            val currentEvents = BooleanArray(Setting.values().size)
+            Setting.values().forEachIndexed { i, setting -> currentEvents[i] = SharedPrefsHelper.getShowElement(context, setting.ref, true) }
+            return YearEventsPickerFragment().apply {
+                arguments = save(currentEvents)
+            }
+        }
 
-        fun newInstance(): YearEventsPickerFragment {
-            return YearEventsPickerFragment()
+        private fun save(events: BooleanArray, bundle: Bundle? = Bundle()): Bundle? {
+            return bundle?.apply {
+                putBooleanArray("events", events)
+            }
         }
     }
 
