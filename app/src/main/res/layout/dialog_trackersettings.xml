@@ -61,25 +61,24 @@
         </RelativeLayout>
 
         <RelativeLayout
-                android:id="@+id/trackerSettingMapModeWrapper"
+                android:id="@+id/trackerSettingMapTypeWrapper"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp">
 
             <Spinner
-                    android:id="@+id/trackerSettingMapMode"
+                    android:id="@+id/trackerSettingMapType"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:entries="@array/trackerSettingMapModes"
                     />
 
             <TextView
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
-                    android:layout_toLeftOf="@id/trackerSettingMapMode"
-                    android:layout_alignBaseline="@id/trackerSettingMapMode"
+                    android:layout_toLeftOf="@id/trackerSettingMapType"
+                    android:layout_alignBaseline="@id/trackerSettingMapType"
                     android:textSize="18sp"
                     android:textColor="?dialog_text"
                     android:text="Map type"/>

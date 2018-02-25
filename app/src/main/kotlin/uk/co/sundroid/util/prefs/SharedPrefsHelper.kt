@@ -11,6 +11,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import android.text.format.DateFormat
+import uk.co.sundroid.domain.MapType
 import uk.co.sundroid.util.theme.THEME_DARK
 
 object SharedPrefsHelper {
@@ -42,7 +43,7 @@ object SharedPrefsHelper {
     
     private const val SUNTRACKER_BODY_KEY = "sunTrackerBody"
     private const val SUNTRACKER_MODE_KEY = "sunTrackerMode"
-    private const val SUNTRACKER_MAPMODE_KEY = "sunTrackerMapMode"
+    private const val SUNTRACKER_MAPTYPE_KEY = "sunTrackerMapType"
     private const val SUNTRACKER_COMPASS_KEY = "sunTrackerCompass"
     private const val SUNTRACKER_LINEARELEVATION_KEY = "sunTrackerLinearElevation"
     private const val SUNTRACKER_HOURMARKERS_KEY = "sunTrackerHourMarkers"
@@ -253,13 +254,13 @@ object SharedPrefsHelper {
     fun setSunTrackerMode(context: Context, mode: String) {
         prefs(context).edit().putString(SUNTRACKER_MODE_KEY, mode).apply()
     }
-    
-    fun getSunTrackerMapMode(context: Context): String {
-        return prefs(context).getString(SUNTRACKER_MAPMODE_KEY, "normal")
+
+    fun getSunTrackerMapType(context: Context): MapType {
+        return MapType.valueOf(prefs(context).getString(SUNTRACKER_MAPTYPE_KEY, MapType.NORMAL.name).toUpperCase())
     }
     
-    fun setSunTrackerMapMode(context: Context, mode: String) {
-        prefs(context).edit().putString(SUNTRACKER_MAPMODE_KEY, mode).apply()
+    fun setSunTrackerMapType(context: Context, mode: MapType) {
+        prefs(context).edit().putString(SUNTRACKER_MAPTYPE_KEY, mode.name).apply()
     }
     
     fun getSunTrackerLinearElevation(context: Context): Boolean {

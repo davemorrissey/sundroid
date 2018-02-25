@@ -24,6 +24,7 @@ import android.graphics.Paint.Style
 import android.graphics.Path
 import android.graphics.Typeface
 import android.view.View
+import uk.co.sundroid.domain.MapType
 
 
 class TrackerImage(val style: TrackerStyle, val context: Context, val location: LatitudeLongitude) {
@@ -66,12 +67,12 @@ class TrackerImage(val style: TrackerStyle, val context: Context, val location: 
                     false
             )
 
-            fun forMode(mode: String, mapMode: String): TrackerStyle {
+            fun forMode(mode: String, mapType: MapType): TrackerStyle {
                 if (mode == "radar") {
                     return getTrackerRadarStyle()
-                } else if (mapMode == "normal" || mapMode == "terrain") {
+                } else if (mapType == MapType.NORMAL || mapType == MapType.TERRAIN) {
                     return NORMAL_MAP
-                } else if (mapMode == "satellite" || mapMode == "hybrid") {
+                } else if (mapType == MapType.SATELLITE || mapType == MapType.HYBRID) {
                     return SATELLITE_MAP
                 }
                 return getTrackerRadarStyle()

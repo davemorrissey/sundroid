@@ -19,6 +19,7 @@ import android.view.WindowManager;
 import uk.co.sundroid.R.id;
 import uk.co.sundroid.R.layout;
 import uk.co.sundroid.activity.data.fragments.dialogs.settings.TrackerSettingsFragment;
+import uk.co.sundroid.domain.MapType;
 import uk.co.sundroid.util.astro.image.TrackerImageView;
 import uk.co.sundroid.util.astro.Body;
 import uk.co.sundroid.util.astro.BodyDay;
@@ -123,7 +124,7 @@ public class TrackerFragment extends AbstractTimeFragment implements Configurabl
 
         Body body = SharedPrefsHelper.INSTANCE.getSunTrackerBody(getApplicationContext());
         String mode = SharedPrefsHelper.INSTANCE.getSunTrackerMode(getApplicationContext());
-        String mapMode = SharedPrefsHelper.INSTANCE.getSunTrackerMapMode(getApplicationContext());
+        MapType mapType = SharedPrefsHelper.INSTANCE.getSunTrackerMapType(getApplicationContext());
 
         if (mode.equals("radar") && SharedPrefsHelper.INSTANCE.getSunTrackerCompass(getApplicationContext())) {
             magneticDeclination = GeometryUtils.getMagneticDeclination(location.getLocation(), dateCalendar);
@@ -143,7 +144,7 @@ public class TrackerFragment extends AbstractTimeFragment implements Configurabl
             removeInView(view, id.trackerText);
         }
 
-        trackerImage = new TrackerImage(TrackerImage.TrackerStyle.Companion.forMode(mode, mapMode), getApplicationContext(), location.getLocation());
+        trackerImage = new TrackerImage(TrackerImage.TrackerStyle.Companion.forMode(mode, mapType), getApplicationContext(), location.getLocation());
         trackerImage.setDate(dateCalendar, timeCalendar);
         trackerImageView = new TrackerImageView(getApplicationContext());
         trackerImageView.setTrackerImage(trackerImage);

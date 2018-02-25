@@ -21,12 +21,12 @@
 		<item>Neptune</item>
 		<item>All</item>
 	</string-array>
-    <string-array name="trackerSettingMapModes">
-        <item>Map</item>
-        <item>Satellite</item>
-        <item>Terrain</item>
-        <item>Hybrid</item>
-    </string-array>
+    <!--<string-array name="trackerSettingMapModes">-->
+        <!--<item>Map</item>-->
+        <!--<item>Satellite</item>-->
+        <!--<item>Terrain</item>-->
+        <!--<item>Hybrid</item>-->
+    <!--</string-array>-->
     <string-array name="monthCalendars">
         <item>Sunrise and sunset</item>
         <item>Civil dawn and dusk</item>

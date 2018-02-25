@@ -7,11 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import uk.co.sundroid.domain.LocationDetails;
+import uk.co.sundroid.domain.MapType;
 import uk.co.sundroid.util.prefs.SharedPrefsHelper;
 
 public class TrackerMapFragment extends MapFragment {
@@ -55,21 +55,8 @@ public class TrackerMapFragment extends MapFragment {
                 uiSettings.setRotateGesturesEnabled(false);
                 uiSettings.setTiltGesturesEnabled(false);
 
-                String mapMode = SharedPrefsHelper.INSTANCE.getSunTrackerMapMode(getActivity().getApplicationContext());
-                switch (mapMode) {
-                    case "normal":
-                        map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-                        break;
-                    case "satellite":
-                        map.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
-                        break;
-                    case "terrain":
-                        map.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
-                        break;
-                    case "hybrid":
-                        map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-                        break;
-                }
+                MapType mapType = SharedPrefsHelper.INSTANCE.getSunTrackerMapType(getActivity().getApplicationContext());
+                map.setMapType(mapType.getGoogleId());
 
                 if (location != null) {
                     CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(convertToGoogle(location), 6);
