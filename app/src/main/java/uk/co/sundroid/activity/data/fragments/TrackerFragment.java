@@ -208,7 +208,7 @@ public class TrackerFragment extends AbstractTimeFragment implements Configurabl
 
     @Override
     public void openSettingsDialog() {
-        TrackerSettingsFragment settingsDialog = TrackerSettingsFragment.newInstance();
+        TrackerSettingsFragment settingsDialog = TrackerSettingsFragment.Companion.newInstance();
         settingsDialog.setTargetFragment(this, 0);
         settingsDialog.show(getFragmentManager(), "trackerSettings");
     }

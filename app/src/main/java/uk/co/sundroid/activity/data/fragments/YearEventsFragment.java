@@ -49,7 +49,7 @@ public class YearEventsFragment extends AbstractYearFragment implements Configur
 //        currentEvents[6] = SharedPrefsHelper.INSTANCE.getShowElement(getApplicationContext(), "yearSolarEclipse", true);
 //        currentEvents[7] = SharedPrefsHelper.INSTANCE.getShowElement(getApplicationContext(), "yearEarthApsis", true);
 
-        YearEventsPickerFragment settingsDialog = YearEventsPickerFragment.newInstance();
+        YearEventsPickerFragment settingsDialog = YearEventsPickerFragment.Companion.newInstance();
         settingsDialog.setTargetFragment(this, 0);
         settingsDialog.show(getFragmentManager(), "yearEventsSettings");
     }
