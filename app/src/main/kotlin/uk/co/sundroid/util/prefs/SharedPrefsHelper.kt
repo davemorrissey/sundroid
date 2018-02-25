@@ -15,8 +15,6 @@ import uk.co.sundroid.util.theme.THEME_DARK
 
 object SharedPrefsHelper {
     
-    private const val PREFS_KEY = "sundroid-prefs"
-    
     private const val LOC_LAT_KEY = "location-lat"
     private const val LOC_LON_KEY = "location-lon"
     private const val LOC_NAME_KEY = "location-name"
@@ -55,7 +53,7 @@ object SharedPrefsHelper {
     private const val MAP_LOCATION_PERMISSION_DENIED_KEY = "mapLocationPermissionDenied"
     
     fun getSelectedLocation(context: Context): LocationDetails? {
-        val prefs = context.getSharedPreferences(PREFS_KEY, Context.MODE_PRIVATE)
+        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
         if (prefs.contains(LOC_LAT_KEY) && prefs.contains(LOC_LON_KEY)) {
             try {
                 val location = LatitudeLongitude(prefs.getFloat(LOC_LAT_KEY, 0f).toDouble(), prefs.getFloat(LOC_LON_KEY, 0f).toDouble())
