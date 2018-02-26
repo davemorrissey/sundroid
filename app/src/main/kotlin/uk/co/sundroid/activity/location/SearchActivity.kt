@@ -24,7 +24,7 @@ import uk.co.sundroid.util.log.*
 
 import java.util.ArrayList
 
-class SearchActivity : AbstractLocationActivity(), OnClickListener, OnItemClickListener {
+class SearchActivity : AbstractLocationActivity(), OnClickListener, OnItemClickListener, OnEditorActionListener {
 
     private var listAdapter: SearchResultAdapter? = null
 
@@ -47,20 +47,10 @@ class SearchActivity : AbstractLocationActivity(), OnClickListener, OnItemClickL
         list.onItemClickListener = this
 
         val submit = findViewById<View>(R.id.searchSubmit)
-        submit.setOnClickListener(this)
+        submit.setOnClickListener({ _ -> startSearch() })
 
         val searchField = findViewById<EditText>(R.id.searchField)
-        searchField.setOnEditorActionListener(SearchActionListener())
-    }
-
-    override fun onClick(view: View) {
-        when (view.id) {
-            R.id.searchSubmit -> {
-                startSearch()
-                return
-            }
-        }
-        super.onClick(view)
+        searchField.setOnEditorActionListener(this)
     }
 
     private fun startSearch() {
@@ -138,6 +128,14 @@ class SearchActivity : AbstractLocationActivity(), OnClickListener, OnItemClickL
         }
     }
 
+    override fun onEditorAction(view: TextView, id: Int, arg2: KeyEvent): Boolean {
+        if (id == EditorInfo.IME_ACTION_SEARCH) {
+            startSearch()
+            return true
+        }
+        return false
+    }
+
     public override fun onCreateDialog(id: Int): Dialog {
         if (id == DIALOG_SEARCHING) {
             val progressDialog = ProgressDialog(this)
@@ -147,29 +145,19 @@ class SearchActivity : AbstractLocationActivity(), OnClickListener, OnItemClickL
             progressDialog.setCancelable(false)
             return progressDialog
         } else if (id == DIALOG_SEARCH_ERROR) {
-            val builder = AlertDialog.Builder(this)
-            builder.setTitle("Search failed")
-            builder.setMessage("There was a problem searching for matching locations. Please check your network signal and reboot your phone to make sure Google services are up to date.")
-            builder.setNeutralButton("OK", null)
-            return builder.create()
+            return AlertDialog.Builder(this).apply {
+                setTitle("Search failed")
+                setMessage("There was a problem searching for matching locations. Please check your network signal and reboot your phone to make sure Google services are up to date.")
+                setNeutralButton("OK", null)
+            }.create()
         } else if (id == DIALOG_SEARCH_NONE) {
-            val builder = AlertDialog.Builder(this)
-            builder.setTitle("No matches")
-            builder.setMessage("There were no locations matching your search. Please try another search term.")
-            builder.setNeutralButton("OK", null)
-            return builder.create()
+            return AlertDialog.Builder(this).apply {
+                setTitle("No matches")
+                setMessage("There were no locations matching your search. Please try another search term.")
+                setNeutralButton("OK", null)
+            }.create()
         }
         return super.onCreateDialog(id)
-    }
-
-    private inner class SearchActionListener : OnEditorActionListener {
-        override fun onEditorAction(view: TextView, id: Int, arg2: KeyEvent): Boolean {
-            if (id == EditorInfo.IME_ACTION_SEARCH) {
-                startSearch()
-                return true
-            }
-            return false
-        }
     }
 
     companion object {
