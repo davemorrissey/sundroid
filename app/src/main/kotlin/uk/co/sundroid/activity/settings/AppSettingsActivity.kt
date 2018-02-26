@@ -9,7 +9,7 @@ import android.view.KeyEvent
 import android.view.MenuItem
 
 import uk.co.sundroid.R
-import uk.co.sundroid.activity.data.RealDataActivity
+import uk.co.sundroid.activity.data.DataActivity
 import uk.co.sundroid.util.log.*
 import uk.co.sundroid.util.theme.*
 
@@ -36,13 +36,13 @@ class AppSettingsActivity : PreferenceActivity(), SharedPreferences.OnSharedPref
     }
 
     private fun onNavBackSelected() {
-        val intent = Intent(this, RealDataActivity::class.java)
+        val intent = Intent(this, DataActivity::class.java)
         startActivity(intent)
         finish()
     }
 
     override fun onBackPressed() {
-        val intent = Intent(this, RealDataActivity::class.java)
+        val intent = Intent(this, DataActivity::class.java)
         startActivity(intent)
         finish()
     }
@@ -71,7 +71,7 @@ class AppSettingsActivity : PreferenceActivity(), SharedPreferences.OnSharedPref
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            startActivity(Intent(applicationContext, RealDataActivity::class.java))
+            startActivity(Intent(applicationContext, DataActivity::class.java))
         }
         return super.onKeyDown(keyCode, event)
     }

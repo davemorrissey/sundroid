@@ -29,7 +29,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="uk.co.sundroid.activity.data.RealDataActivity" />
         <activity
             android:name="uk.co.sundroid.activity.location.SearchActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />

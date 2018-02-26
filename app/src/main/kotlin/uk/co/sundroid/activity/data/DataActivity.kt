@@ -1,0 +1,548 @@
+package uk.co.sundroid.activity.data
+
+import android.app.ActionBar
+import android.app.ActionBar.OnNavigationListener
+import android.app.AlertDialog
+import android.app.Dialog
+import android.content.Context
+import android.content.Intent
+import android.os.Bundle
+import android.view.Menu
+import android.view.View
+import android.view.View.OnClickListener
+import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.EditText
+import android.widget.TextView
+import android.widget.Toast
+
+import uk.co.sundroid.AbstractActivity
+import uk.co.sundroid.BuildConfig
+import uk.co.sundroid.NavItem
+import uk.co.sundroid.R
+import uk.co.sundroid.activity.data.fragments.*
+import uk.co.sundroid.activity.info.InfoActivity
+import uk.co.sundroid.activity.location.LocationSelectActivity
+import uk.co.sundroid.activity.location.TimeZonePickerActivity
+import uk.co.sundroid.activity.settings.AppSettingsActivity
+import uk.co.sundroid.util.dao.DatabaseHelper
+import uk.co.sundroid.domain.LocationDetails
+import uk.co.sundroid.util.location.LatitudeLongitude
+import uk.co.sundroid.util.*
+import uk.co.sundroid.util.log.*
+import uk.co.sundroid.util.prefs.SharedPrefsHelper
+import uk.co.sundroid.util.time.TimeZoneResolver
+
+import java.util.ArrayList
+import java.util.Calendar
+
+import uk.co.sundroid.R.*
+import uk.co.sundroid.NavItem.NavItemLocation.*
+
+class DataActivity : AbstractActivity(), OnClickListener, OnNavigationListener {
+
+    private var selectorItems: List<SelectorItem>? = null
+
+    private var ignoreNextNavigation: Boolean = false
+
+    private var fragment: AbstractDataFragment? = null
+
+    private var dataGroup: DataGroup? = null
+
+    private var dayDetailTab: String? = null
+
+    private var location: LocationDetails? = null
+
+    var dateCalendar: Calendar? = null
+        private set
+    var timeCalendar: Calendar? = null
+        private set
+
+    private val isFragmentConfigurable: Boolean
+        get() = fragment is ConfigurableFragment
+
+    inner class SelectorItem(val title: String, val subtitle: String, val action: Int)
+
+    public override fun onStop() {
+        super.onStop()
+        d(TAG, "onStop()")
+    }
+
+    public override fun onPause() {
+        super.onPause()
+        d(TAG, "onPause()")
+    }
+
+    public override fun onCreate(state: Bundle?) {
+        super.onCreate(state)
+        d(TAG, "onCreate()")
+        setContentView(R.layout.data)
+        setActionBarTitle("")
+        var forceDateUpdate = false
+        i(TAG, "Action: " + intent.action!!)
+        if (intent.action != null && intent.action == Intent.ACTION_MAIN) {
+            i(TAG, "Opened from launcher, forcing date update")
+            forceDateUpdate = true
+            intent.action = null
+        }
+
+        SharedPrefsHelper.initPreferences(this)
+        initCalendarAndLocation(forceDateUpdate)
+        restoreState(state)
+        initDayDetailTabs()
+        updateDataFragment(state == null)
+        ignoreNextNavigation = true
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        i(TAG, "New intent action: " + getIntent().action!!)
+        if (intent.action != null && intent.action == Intent.ACTION_MAIN) {
+            i(TAG, "Opened from launcher, forcing date update")
+            intent.action = null
+            initCalendarAndLocation(true)
+        }
+    }
+
+    public override fun onResume() {
+        super.onResume()
+        d(TAG, "onResume()")
+
+        val prefs = getSharedPreferences("sundroid-prefs", Context.MODE_PRIVATE)
+        val lastVersion = prefs.getInt("last-version", 0)
+        d(TAG, "Last version: " + lastVersion + ", current version: " + BuildConfig.VERSION_CODE)
+        prefs.edit().putInt("last-version", BuildConfig.VERSION_CODE).apply()
+
+        refreshSelector()
+        initCalendarAndLocation(false)
+        initialiseDataFragmentView()
+
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+        d(TAG, "onActivityResult($requestCode, $resultCode)")
+        super.onActivityResult(requestCode, resultCode, data)
+        initCalendarAndLocation(false)
+        initialiseDataFragmentView()
+        updateDataFragmentView()
+    }
+
+    override fun onNavigationItemSelected(itemPosition: Int, itemId: Long): Boolean {
+        if (this.ignoreNextNavigation) {
+            this.ignoreNextNavigation = false
+            return true
+        }
+        if (selectorItems != null && selectorItems!!.size >= itemPosition + 1) {
+            val dataGroup = DataGroup.forIndex(selectorItems!![itemPosition].action)
+            if (dataGroup != null) {
+                setDataGroup(dataGroup)
+            }
+        }
+        return true
+    }
+
+    private fun initCalendarAndLocation(forceDateUpdate: Boolean) {
+        location = SharedPrefsHelper.getSelectedLocation(this)
+        if (location == null) {
+            location = LocationDetails(LatitudeLongitude(37.779093, -122.419109))
+            location!!.name = "San Francisco"
+            location!!.timeZone = TimeZoneResolver.getTimeZone("US/Pacific")
+            SharedPrefsHelper.saveSelectedLocation(this, location!!)
+        }
+        if (location!!.timeZone == null) {
+            location!!.timeZone = TimeZoneResolver.getTimeZone("UTC")
+        }
+
+        if (dateCalendar == null || timeCalendar == null || forceDateUpdate) {
+            val localCalendar = Calendar.getInstance()
+            dateCalendar = Calendar.getInstance(location!!.timeZone!!.zone)
+            dateCalendar!!.set(localCalendar.get(Calendar.YEAR), localCalendar.get(Calendar.MONTH), localCalendar.get(Calendar.DAY_OF_MONTH), 0, 0, 0)
+            dateCalendar!!.set(Calendar.MILLISECOND, 0)
+            dateCalendar!!.timeInMillis
+            timeCalendar = Calendar.getInstance(location!!.timeZone!!.zone)
+            timeCalendar!!.set(localCalendar.get(Calendar.YEAR), localCalendar.get(Calendar.MONTH), localCalendar.get(Calendar.DAY_OF_MONTH), localCalendar.get(Calendar.HOUR_OF_DAY), localCalendar.get(Calendar.MINUTE), 0)
+            timeCalendar!!.set(Calendar.MILLISECOND, 0)
+            timeCalendar!!.timeInMillis
+        } else {
+            val year = dateCalendar!!.get(Calendar.YEAR)
+            val month = dateCalendar!!.get(Calendar.MONTH)
+            val day = dateCalendar!!.get(Calendar.DAY_OF_MONTH)
+            val hour = timeCalendar!!.get(Calendar.HOUR_OF_DAY)
+            val minute = timeCalendar!!.get(Calendar.MINUTE)
+            dateCalendar = Calendar.getInstance(location!!.timeZone!!.zone)
+            dateCalendar!!.set(year, month, day, 0, 0, 0)
+            dateCalendar!!.set(Calendar.MILLISECOND, 0)
+            dateCalendar!!.timeInMillis
+            timeCalendar = Calendar.getInstance(location!!.timeZone!!.zone)
+            timeCalendar!!.set(year, month, day, hour, minute, 0)
+            timeCalendar!!.set(Calendar.MILLISECOND, 0)
+            timeCalendar!!.timeInMillis
+        }
+
+    }
+
+    public override fun onSaveInstanceState(state: Bundle) {
+        super.onSaveInstanceState(state)
+        state.putSerializable(STATE_DATA_GROUP, this.dataGroup)
+        state.putString(STATE_DAY_DETAIL_TAB, this.dayDetailTab)
+        if (this.dateCalendar != null && this.timeCalendar != null) {
+            state.putLong(STATE_DATE_TIMESTAMP, this.dateCalendar!!.timeInMillis)
+            state.putLong(STATE_TIME_TIMESTAMP, this.timeCalendar!!.timeInMillis)
+        }
+    }
+
+    private fun restoreState(state: Bundle?) {
+        this.dayDetailTab = "sun"
+        this.dataGroup = DataGroup.DAY_SUMMARY
+        if (state != null) {
+            if (state.containsKey(STATE_DAY_DETAIL_TAB)) {
+                this.dayDetailTab = state.getString(STATE_DAY_DETAIL_TAB)
+            }
+            if (state.containsKey(STATE_DATA_GROUP)) {
+                this.dataGroup = state.get(STATE_DATA_GROUP) as DataGroup
+            }
+            if (state.containsKey(STATE_DATE_TIMESTAMP) && state.containsKey(STATE_TIME_TIMESTAMP)) {
+                this.dateCalendar!!.timeInMillis = state.getLong(STATE_DATE_TIMESTAMP)
+                this.timeCalendar!!.timeInMillis = state.getLong(STATE_TIME_TIMESTAMP)
+            }
+        } else {
+            this.dataGroup = SharedPrefsHelper.getLastDataGroup(this)
+            if (this.dataGroup == DataGroup.DAY_DETAIL) {
+                this.dayDetailTab = SharedPrefsHelper.getLastDetailTab(this)
+            }
+        }
+    }
+
+    private fun setDataGroup(dataGroup: DataGroup) {
+        if (dataGroup != this.dataGroup) {
+            d(TAG, "Changing data group to " + dataGroup)
+            this.dataGroup = dataGroup
+            SharedPrefsHelper.setLastDataGroup(this, dataGroup)
+            updateDataFragment(true)
+        }
+    }
+
+    private fun setDayDetailTab(dayDetailTab: String) {
+        if (dayDetailTab != this.dayDetailTab) {
+            d(TAG, "Changing day detail tab to " + dayDetailTab)
+            this.dayDetailTab = dayDetailTab
+            SharedPrefsHelper.setLastDayDetailTab(this, dayDetailTab)
+            updateDayDetailTabs()
+            updateDataFragment(true)
+        }
+    }
+
+    private fun updateDataFragment(recreateFragment: Boolean) {
+        d(TAG, "updateDataFragment($recreateFragment)")
+
+        if (this.dataGroup == DataGroup.DAY_DETAIL) {
+            updateDayDetailTabs()
+        } else {
+            hideDayDetailTabs()
+        }
+
+        if (recreateFragment) {
+
+            remove(R.id.dataFragment)
+
+            fragment = null
+
+            if (this.dataGroup == DataGroup.DAY_SUMMARY) {
+                fragment = DaySummaryFragment()
+            } else if (this.dataGroup == DataGroup.DAY_DETAIL) {
+                when (this.dayDetailTab) {
+                    "sun" -> fragment = DayDetailSunFragment()
+                    "moon" -> fragment = DayDetailMoonFragment()
+                    "planets" -> fragment = DayDetailPlanetsFragment()
+                    else -> fragment = DayDetailEventsFragment()
+                }
+            } else if (this.dataGroup == DataGroup.TRACKER) {
+                fragment = TrackerFragment()
+            } else if (this.dataGroup == DataGroup.MONTH_CALENDARS) {
+                fragment = MonthCalendarsFragment()
+            } else if (this.dataGroup == DataGroup.MONTH_MOONPHASE) {
+                fragment = MonthMoonPhaseFragment()
+            } else if (this.dataGroup == DataGroup.YEAR_EVENTS) {
+                fragment = YearEventsFragment()
+            }
+
+            if (fragment != null) {
+                d(TAG, "Changing fragment to " + fragment!!.javaClass.simpleName)
+                fragmentManager
+                        .beginTransaction()
+                        .replace(id.dataFragment, fragment, DATA_TAG)
+                        .commit()
+            }
+            show(R.id.dataFragment)
+
+        } else {
+
+            fragment = fragmentManager.findFragmentByTag(DATA_TAG) as AbstractDataFragment
+
+        }
+
+        updateNavItems()
+
+    }
+
+    private fun initialiseDataFragmentView() {
+        val fragment = fragmentManager.findFragmentByTag(DATA_TAG)
+        if (fragment is AbstractDataFragment) {
+            try {
+                fragment.initialise()
+            } catch (e: Exception) {
+                // Unlikely. Inform user?
+                e(TAG, "Failed to init fragment " + fragment.javaClass.simpleName, e)
+            }
+
+        }
+    }
+
+    private fun updateDataFragmentView() {
+        val fragment = fragmentManager.findFragmentByTag(DATA_TAG)
+        if (fragment is AbstractDataFragment) {
+            d(TAG, "Updating data in fragment " + fragment.javaClass.simpleName)
+            try {
+                fragment.update()
+            } catch (e: Exception) {
+                // Unlikely. Inform user?
+                e(TAG, "Failed to update data in fragment " + fragment.javaClass.simpleName, e)
+            }
+
+        }
+    }
+
+    // All data activities are root level so back exits.
+    override fun onBackPressed() {
+        moveTaskToBack(true)
+    }
+
+    private fun hideDayDetailTabs() {
+        remove(R.id.dayDetailTabs)
+    }
+
+    private fun initDayDetailTabs() {
+        show(R.id.dayDetailTabs)
+        findViewById<View>(R.id.sunTabActive).setOnClickListener(this)
+        findViewById<View>(R.id.sunTabInactive).setOnClickListener(this)
+        findViewById<View>(R.id.moonTabActive).setOnClickListener(this)
+        findViewById<View>(R.id.moonTabInactive).setOnClickListener(this)
+        findViewById<View>(R.id.planetsTabActive).setOnClickListener(this)
+        findViewById<View>(R.id.planetsTabInactive).setOnClickListener(this)
+        findViewById<View>(R.id.eventsTabActive).setOnClickListener(this)
+        findViewById<View>(R.id.eventsTabInactive).setOnClickListener(this)
+        updateDayDetailTabs()
+    }
+
+    private fun updateDayDetailTabs() {
+        show(R.id.dayDetailTabs)
+        findViewById<View>(R.id.sunTabActive).visibility = if (dayDetailTab == "sun") View.VISIBLE else View.GONE
+        findViewById<View>(R.id.sunTabInactive).visibility = if (dayDetailTab == "sun") View.GONE else View.VISIBLE
+        findViewById<View>(R.id.moonTabActive).visibility = if (dayDetailTab == "moon") View.VISIBLE else View.GONE
+        findViewById<View>(R.id.moonTabInactive).visibility = if (dayDetailTab == "moon") View.GONE else View.VISIBLE
+        findViewById<View>(R.id.planetsTabActive).visibility = if (dayDetailTab == "planets") View.VISIBLE else View.GONE
+        findViewById<View>(R.id.planetsTabInactive).visibility = if (dayDetailTab == "planets") View.GONE else View.VISIBLE
+        findViewById<View>(R.id.eventsTabActive).visibility = if (dayDetailTab == "events") View.VISIBLE else View.GONE
+        findViewById<View>(R.id.eventsTabInactive).visibility = if (dayDetailTab == "events") View.GONE else View.VISIBLE
+    }
+
+    override fun onClick(button: View) {
+        when (button.id) {
+            R.id.sunTabActive, R.id.sunTabInactive -> {
+                setDayDetailTab("sun")
+                return
+            }
+            R.id.moonTabActive, R.id.moonTabInactive -> {
+                setDayDetailTab("moon")
+                return
+            }
+            R.id.planetsTabActive, R.id.planetsTabInactive -> {
+                setDayDetailTab("planets")
+                return
+            }
+            R.id.eventsTabActive, R.id.eventsTabInactive -> {
+                setDayDetailTab("events")
+                return
+            }
+        }
+        super.onClick(button)
+    }
+
+    override fun onCreateDialog(id: Int): Dialog {
+        when (id) {
+            DIALOG_SAVE -> {
+                val dialog = AlertDialog.Builder(this)
+                dialog.setTitle("Save location")
+
+                val view = layoutInflater.inflate(R.layout.dialog_save, null)
+                val saveField = view.findViewById<EditText>(R.id.saveField)
+                if (isNotEmpty(location!!.name) && isEmpty(saveField.text.toString())) {
+                    saveField.setText(location!!.name)
+                } else {
+                    saveField.setText("")
+                }
+                dialog.setView(view)
+
+                dialog.setPositiveButton("OK") { d, b ->
+                    val saveName = saveField.text.toString()
+                    var db: DatabaseHelper? = null
+                    try {
+                        if (isNotEmpty(saveName)) {
+                            db = DatabaseHelper(this@DataActivity)
+                            location!!.name = saveName
+                            SharedPrefsHelper.saveSelectedLocation(this@DataActivity, location!!)
+                            db.addSavedLocation(location!!)
+                            Toast.makeText(this@DataActivity, "This location has been saved", Toast.LENGTH_SHORT).show()
+                            refreshSelector()
+                        } else {
+                            Toast.makeText(this@DataActivity, "Please enter a name for this location", Toast.LENGTH_SHORT).show()
+                        }
+                    } finally {
+                        if (db != null) {
+                            db.close()
+                        }
+                    }
+                    removeDialog(DIALOG_SAVE)
+                }
+                dialog.setNegativeButton("Cancel") { d, b -> removeDialog(DIALOG_SAVE) }
+                return dialog.create()
+            }
+        }
+        return super.onCreateDialog(id)
+    }
+
+    /********************************** M E N U  */
+
+    private fun updateNavItems() {
+        val navItems = ArrayList<NavItem>()
+        if (isFragmentConfigurable) {
+            navItems.add(NavItem("Page settings", drawable.icn_bar_viewsettings, HEADER, MENU_VIEW_SETTINGS))
+        }
+        navItems.add(NavItem("Change location", drawable.icn_bar_location, HEADER, MENU_CHANGE_LOCATION))
+        navItems.add(NavItem("Save location", drawable.icn_menu_myplaces, HEADER_IF_ROOM, MENU_SAVE_LOCATION))
+        navItems.add(NavItem("Time zone", drawable.icn_menu_timezone, MENU, MENU_TIME_ZONE))
+        navItems.add(NavItem("Help", drawable.icn_menu_help, MENU, MENU_HELP))
+        navItems.add(NavItem("Settings", drawable.icn_menu_preferences, MENU, MENU_SETTINGS))
+        setNavItems(navItems)
+    }
+
+    override fun onNavItemSelected(navItemAction: Int) {
+        when (navItemAction) {
+            MENU_CHANGE_LOCATION -> startLocationOptions()
+            MENU_SAVE_LOCATION -> startSaveLocation()
+            MENU_TIME_ZONE -> startTimeZone()
+            MENU_HELP -> startActivity(Intent(this, InfoActivity::class.java))
+            MENU_SETTINGS -> startActivity(Intent(this, AppSettingsActivity::class.java))
+            MENU_VIEW_SETTINGS -> if (isFragmentConfigurable) {
+                (fragmentManager.findFragmentByTag(DATA_TAG) as ConfigurableFragment).openSettingsDialog()
+            }
+        }
+    }
+
+    /********************************* NAVIGATION  */
+
+    private fun startLocationOptions() {
+        val intent = Intent(this, LocationSelectActivity::class.java)
+        startActivityForResult(intent, LocationSelectActivity.REQUEST_LOCATION)
+    }
+
+    private fun startSaveLocation() {
+        showDialog(DIALOG_SAVE)
+    }
+
+    private fun startTimeZone() {
+        val intent = Intent(applicationContext, TimeZonePickerActivity::class.java)
+        intent.putExtra(TimeZonePickerActivity.INTENT_MODE, TimeZonePickerActivity.MODE_CHANGE)
+        startActivityForResult(intent, TimeZonePickerActivity.REQUEST_TIMEZONE)
+    }
+
+    /******************************** LIST NAV  */
+
+    private fun refreshSelector() {
+        val selectorItems = ArrayList<SelectorItem>()
+        for (dataGroup in DataGroup.values()) {
+            selectorItems.add(SelectorItem(location!!.displayName, dataGroup.displayName, dataGroup.index))
+        }
+        this.selectorItems = selectorItems
+        actionBar!!.navigationMode = ActionBar.NAVIGATION_MODE_LIST
+        refreshSelector(dataGroup!!.index)
+    }
+
+    private fun refreshSelector(activeSelectorItem: Int) {
+        val actionBar = actionBar
+        if (actionBar != null) {
+            val context = actionBar.themedContext
+            val listNavigationAdaptor = ListNavigationAdaptor(context, R.layout.nav_item_selected, selectorItems!!)
+            listNavigationAdaptor.setDropDownViewResource(R.layout.nav_item)
+            getActionBar()!!.setListNavigationCallbacks(listNavigationAdaptor, this)
+            if (selectorItems != null) {
+                for (i in selectorItems!!.indices) {
+                    if (selectorItems!![i].action == activeSelectorItem) {
+                        getActionBar()!!.setSelectedNavigationItem(i)
+                    }
+                }
+            }
+        }
+    }
+
+    inner class ListNavigationAdaptor constructor(context: Context, private val viewResource: Int, list: List<SelectorItem>) : ArrayAdapter<SelectorItem>(context, viewResource, list) {
+        private var dropDownViewResource: Int = 0
+
+        override fun setDropDownViewResource(dropDownViewResource: Int) {
+            this.dropDownViewResource = dropDownViewResource
+            super.setDropDownViewResource(dropDownViewResource)
+        }
+
+        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+            return getView(position, convertView, parent, viewResource)
+        }
+
+        override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
+            return getView(position, convertView, parent, dropDownViewResource)
+        }
+
+        private fun getView(position: Int, convertView: View?, parent: ViewGroup, resource: Int): View {
+            var row = convertView
+            if (row == null) {
+                val inflater = layoutInflater
+                row = inflater.inflate(resource, parent, false)
+            }
+            val item = getItem(position)
+            if (item != null) {
+                val loc = row!!.findViewById<TextView>(R.id.location)
+                if (loc != null) {
+                    loc.text = item.title
+                }
+                val data = row.findViewById<TextView>(R.id.data)
+                if (data != null) {
+                    data.text = item.subtitle
+                }
+            }
+            return row!!
+        }
+
+    }
+
+    companion object {
+
+        private val DIALOG_SAVE = 746
+
+        private val MENU_CHANGE_LOCATION = Menu.FIRST + 1
+        private val MENU_SAVE_LOCATION = Menu.FIRST + 2
+        private val MENU_HELP = Menu.FIRST + 5
+        private val MENU_SETTINGS = Menu.FIRST + 6
+        private val MENU_VIEW_SETTINGS = Menu.FIRST + 10
+        private val MENU_TIME_ZONE = Menu.FIRST + 12
+
+        private val STATE_DATA_GROUP = "dataView"
+        private val STATE_DAY_DETAIL_TAB = "dayDetailTab"
+        private val STATE_DATE_TIMESTAMP = "dateTimestamp"
+        private val STATE_TIME_TIMESTAMP = "timeTimestamp"
+
+        private val DATA_TAG = "dataFragment"
+
+        private val TAG = DataActivity::class.java.simpleName
+    }
+
+
+}

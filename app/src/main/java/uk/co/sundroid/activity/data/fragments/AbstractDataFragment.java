@@ -2,7 +2,7 @@ package uk.co.sundroid.activity.data.fragments;
 
 import android.content.Intent;
 import uk.co.sundroid.AbstractFragment;
-import uk.co.sundroid.activity.data.RealDataActivity;
+import uk.co.sundroid.activity.data.DataActivity;
 import uk.co.sundroid.activity.data.fragments.dialogs.OnViewPrefsChangedListener;
 import uk.co.sundroid.activity.location.TimeZonePickerActivity;
 import uk.co.sundroid.domain.LocationDetails;
@@ -47,15 +47,15 @@ public abstract class AbstractDataFragment extends AbstractFragment implements O
     }
 
     protected Calendar getDateCalendar() {
-        if (getActivity() instanceof RealDataActivity) {
-            return ((RealDataActivity)getActivity()).getDateCalendar();
+        if (getActivity() instanceof DataActivity) {
+            return ((DataActivity)getActivity()).getDateCalendar();
         }
         return null;
     }
 
     protected Calendar getTimeCalendar() {
-        if (getActivity() instanceof RealDataActivity) {
-            return ((RealDataActivity)getActivity()).getTimeCalendar();
+        if (getActivity() instanceof DataActivity) {
+            return ((DataActivity)getActivity()).getTimeCalendar();
         }
         return null;
     }
