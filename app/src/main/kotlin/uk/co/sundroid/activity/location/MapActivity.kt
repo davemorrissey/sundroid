@@ -29,9 +29,8 @@ import uk.co.sundroid.domain.LocationDetails
 import uk.co.sundroid.util.location.LatitudeLongitude
 import uk.co.sundroid.util.prefs.SharedPrefsHelper
 
-import java.util.Arrays
-
 import uk.co.sundroid.NavItem.NavItemLocation.*
+import uk.co.sundroid.domain.MapType
 
 class MapActivity : AbstractLocationActivity(), OnMapClickListener, OnInfoWindowClickListener {
 
@@ -58,13 +57,13 @@ class MapActivity : AbstractLocationActivity(), OnMapClickListener, OnInfoWindow
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
-                val builder = AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert)
-                builder.setTitle("Location required")
-                        .setMessage("Location permission is required to look up names and time zones. Proceed?")
-                        .setPositiveButton(android.R.string.yes) { _, _ -> requestLocationPermission() }
-                        .setNegativeButton(android.R.string.no, null)
-                        .setIcon(android.R.drawable.ic_dialog_info)
-                        .show()
+                AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert).apply {
+                    setTitle("Location required")
+                    setMessage("Location permission is required to look up names and time zones. Proceed?")
+                    setPositiveButton(android.R.string.yes) { _, _ -> requestLocationPermission() }
+                    setNegativeButton(android.R.string.no, null)
+                    setIcon(android.R.drawable.ic_dialog_info)
+                }.show()
             } else {
                 requestLocationPermission()
             }
@@ -86,12 +85,12 @@ class MapActivity : AbstractLocationActivity(), OnMapClickListener, OnInfoWindow
                         // "always deny".
                         if (!SharedPrefsHelper.getMapLocationPermissionDenied(this)) {
                             SharedPrefsHelper.setMapLocationPermissionDenied(this, true)
-                            val builder = AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert)
-                            builder.setTitle("Location denied")
-                                    .setMessage("Location name and time zone lookup will be unavailable. To fix this, you can grant this app location permission from Android settings.")
-                                    .setPositiveButton(android.R.string.ok, null)
-                                    .setIcon(android.R.drawable.ic_dialog_info)
-                                    .show()
+                            AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert).apply {
+                                setTitle("Location denied")
+                                setMessage("Location name and time zone lookup will be unavailable. To fix this, you can grant this app location permission from Android settings.")
+                                setPositiveButton(android.R.string.ok, null)
+                                setIcon(android.R.drawable.ic_dialog_info)
+                            }.show()
                         }
                     } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                         // Unset denied flag so next time permission is denied, the alert is displayed again
@@ -103,12 +102,12 @@ class MapActivity : AbstractLocationActivity(), OnMapClickListener, OnInfoWindow
     }
 
     override fun onSaveInstanceState(state: Bundle?) {
-        if (state != null && map != null && map!!.cameraPosition != null) {
-            state.putDouble("mapCentreLat", map!!.cameraPosition.target.latitude)
-            state.putDouble("mapCentreLon", map!!.cameraPosition.target.longitude)
-            state.putFloat("mapZoom", map!!.cameraPosition.zoom)
-            state.putSerializable("mapLocation", mapLocation)
-            state.putSerializable("mapLocationDetails", mapLocationDetails)
+        map?.let {
+            state?.putDouble("mapCentreLat", it.cameraPosition.target.latitude)
+            state?.putDouble("mapCentreLon", it.cameraPosition.target.longitude)
+            state?.putFloat("mapZoom", it.cameraPosition.zoom)
+            state?.putSerializable("mapLocation", mapLocation)
+            state?.putSerializable("mapLocationDetails", mapLocationDetails)
         }
         super.onSaveInstanceState(state)
     }
@@ -137,7 +136,6 @@ class MapActivity : AbstractLocationActivity(), OnMapClickListener, OnInfoWindow
             } catch (e: Exception) {
                 // Default map
             }
-
         }
     }
 
@@ -172,13 +170,7 @@ class MapActivity : AbstractLocationActivity(), OnMapClickListener, OnInfoWindow
         map.setOnMapClickListener(this)
         map.clear()
 
-        val mapMode = SharedPrefsHelper.getLocMapMode(applicationContext)
-        when (mapMode) {
-            "normal" -> map.mapType = GoogleMap.MAP_TYPE_NORMAL
-            "satellite" -> map.mapType = GoogleMap.MAP_TYPE_SATELLITE
-            "terrain" -> map.mapType = GoogleMap.MAP_TYPE_TERRAIN
-            "hybrid" -> map.mapType = GoogleMap.MAP_TYPE_HYBRID
-        }
+        map.mapType = SharedPrefsHelper.getLocMapType(applicationContext).googleId
 
         if (mapCentre != null) {
             val cameraUpdate = CameraUpdateFactory.newLatLngZoom(mapCentre, mapZoom)
@@ -188,8 +180,8 @@ class MapActivity : AbstractLocationActivity(), OnMapClickListener, OnInfoWindow
             map.moveCamera(cameraUpdate)
         }
 
-        if (mapLocation != null) {
-            addMarker(mapLocation!!)
+        mapLocation?.let {
+            addMarker(it)
         }
 
     }
@@ -238,7 +230,7 @@ class MapActivity : AbstractLocationActivity(), OnMapClickListener, OnInfoWindow
         }
 
         // Data may be received after a new point has been tapped. Discard if so.
-        if (mapLocation == null || mapLocation!!.getAbbreviatedValue() != locationDetails.location.getAbbreviatedValue()) {
+        if (mapLocation?.getAbbreviatedValue() != locationDetails.location.getAbbreviatedValue()) {
             return
         }
 
@@ -267,42 +259,21 @@ class MapActivity : AbstractLocationActivity(), OnMapClickListener, OnInfoWindow
         private fun render(view: View) {
             val title = view.findViewById<TextView>(id.title)
             val button = view.findViewById<View>(id.button)
-            if (mapLocationDetails != null) {
-                title.text = mapLocationDetails!!.displayName
+            title.text = "Loading..."
+            button.visibility = View.INVISIBLE
+            mapLocationDetails?.let {
+                title.text = it.displayName
                 button.visibility = View.VISIBLE
-            } else {
-                title.text = "Loading..."
-                button.visibility = View.INVISIBLE
             }
         }
     }
 
     override fun onNavItemSelected(itemPosition: Int) {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("Map type")
-        builder.setItems(arrayOf("Map", "Satellite", "Terrain", "Hybrid"), { _, index ->
-            when (index) {
-                0 -> {
-                    SharedPrefsHelper.setLocMapMode(applicationContext, "normal")
-                    map?.mapType = GoogleMap.MAP_TYPE_NORMAL
-                }
-                1 -> {
-                    SharedPrefsHelper.setLocMapMode(applicationContext, "satellite")
-                    map?.mapType = GoogleMap.MAP_TYPE_SATELLITE
-                }
-                2 -> {
-                    SharedPrefsHelper.setLocMapMode(applicationContext, "terrain")
-                    map?.mapType = GoogleMap.MAP_TYPE_TERRAIN
-                }
-                3 -> {
-                    SharedPrefsHelper.setLocMapMode(applicationContext, "hybrid")
-                    map?.mapType = GoogleMap.MAP_TYPE_HYBRID
-                }
-            }
-
-        })
-        builder.setNegativeButton("Cancel", null)
-        builder.create().show()
+        AlertDialog.Builder(this).apply {
+            setTitle("Map type")
+            setItems(MapType.displayNames().toTypedArray(), { _, index -> SharedPrefsHelper.setLocMapType(applicationContext, MapType.values()[index]) })
+            setNegativeButton("Cancel", null)
+        }.show()
     }
 
     companion object {

@@ -38,7 +38,7 @@ class TrackerSettingsFragment : DialogFragment() {
         }
 
         val mapType = view.findViewById<Spinner>(R.id.trackerSettingMapType)
-        val mapTypeAdapter = ArrayAdapter(activity, android.R.layout.simple_spinner_item, MapType.values().map({ it.displayName }))
+        val mapTypeAdapter = ArrayAdapter(activity, android.R.layout.simple_spinner_item, MapType.displayNames())
         mapTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         mapType.adapter = mapTypeAdapter
 

@@ -49,7 +49,7 @@ object SharedPrefsHelper {
     private const val SUNTRACKER_HOURMARKERS_KEY = "sunTrackerHourMarkers"
     private const val SUNTRACKER_TEXT_KEY = "sunTrackerText"
     
-    private const val LOCMAP_MODE_KEY = "locMapMode"
+    private const val LOCMAP_TYPE_KEY = "locMapType"
 
     private const val MAP_LOCATION_PERMISSION_DENIED_KEY = "mapLocationPermissionDenied"
     
@@ -226,12 +226,12 @@ object SharedPrefsHelper {
         prefs(context).edit().putInt(LAST_CALENDAR_KEY, calendar).apply()
     }
 
-    fun getLocMapMode(context: Context): String {
-        return prefs(context).getString(LOCMAP_MODE_KEY, "normal")
+    fun getLocMapType(context: Context): MapType {
+        return MapType.valueOf(prefs(context).getString(LOCMAP_TYPE_KEY, MapType.NORMAL.name))
     }
     
-    fun setLocMapMode(context: Context, mode: String) {
-        prefs(context).edit().putString(LOCMAP_MODE_KEY, mode).apply()
+    fun setLocMapType(context: Context, type: MapType) {
+        prefs(context).edit().putString(LOCMAP_TYPE_KEY, type.name).apply()
     }
     
     fun getSunTrackerBody(context: Context): Body? {
@@ -256,7 +256,7 @@ object SharedPrefsHelper {
     }
 
     fun getSunTrackerMapType(context: Context): MapType {
-        return MapType.valueOf(prefs(context).getString(SUNTRACKER_MAPTYPE_KEY, MapType.NORMAL.name).toUpperCase())
+        return MapType.valueOf(prefs(context).getString(SUNTRACKER_MAPTYPE_KEY, MapType.NORMAL.name))
     }
     
     fun setSunTrackerMapType(context: Context, mode: MapType) {
