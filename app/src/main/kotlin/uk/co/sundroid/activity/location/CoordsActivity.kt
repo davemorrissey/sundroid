@@ -13,14 +13,13 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.KeyEvent
 import android.view.View
-import android.view.View.OnClickListener
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.TextView.OnEditorActionListener
 import android.widget.Toast
 
-class CoordsActivity : AbstractLocationActivity(), OnClickListener {
+class CoordsActivity : AbstractLocationActivity() {
 
     override val layout: Int
         get() = R.layout.loc_coords
@@ -30,10 +29,9 @@ class CoordsActivity : AbstractLocationActivity(), OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        d(TAG, "onCreate()")
 
         val coordsSubmit = findViewById<View>(R.id.coordsSubmit)
-        coordsSubmit.setOnClickListener(this)
+        coordsSubmit.setOnClickListener({ _ -> startSubmit() })
 
         val coordsField = findViewById<EditText>(R.id.coordsField)
         coordsField.setOnEditorActionListener(CoordsActionListener())
@@ -52,16 +50,6 @@ class CoordsActivity : AbstractLocationActivity(), OnClickListener {
             override fun beforeTextChanged(string: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(string: CharSequence, start: Int, before: Int, count: Int) {}
         })
-    }
-
-    override fun onClick(view: View) {
-        when (view.id) {
-            R.id.coordsSubmit -> {
-                startSubmit()
-                return
-            }
-        }
-        super.onClick(view)
     }
 
     private fun startSubmit() {
