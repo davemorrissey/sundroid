@@ -7,6 +7,7 @@ import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.view.Menu
 import android.view.View
 import android.view.View.OnClickListener
@@ -35,6 +36,7 @@ import uk.co.sundroid.util.time.TimeZoneResolver
 
 import java.util.ArrayList
 import java.util.Calendar
+import java.util.Calendar.*
 
 import uk.co.sundroid.R.*
 import uk.co.sundroid.NavItem.NavItemLocation.*
@@ -53,10 +55,8 @@ class DataActivity : AbstractActivity(), OnClickListener, OnNavigationListener {
 
     private var location: LocationDetails? = null
 
-    var dateCalendar: Calendar? = null
-        private set
-    var timeCalendar: Calendar? = null
-        private set
+    var dateCalendar: Calendar = Calendar.getInstance()
+    var timeCalendar: Calendar = Calendar.getInstance()
 
     private val isFragmentConfigurable: Boolean
         get() = fragment is ConfigurableFragment
@@ -73,13 +73,12 @@ class DataActivity : AbstractActivity(), OnClickListener, OnNavigationListener {
         d(TAG, "onPause()")
     }
 
-    public override fun onCreate(state: Bundle?) {
-        super.onCreate(state)
+    public override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         d(TAG, "onCreate()")
         setContentView(R.layout.data)
         setActionBarTitle("")
         var forceDateUpdate = false
-        i(TAG, "Action: " + intent.action!!)
         if (intent.action != null && intent.action == Intent.ACTION_MAIN) {
             i(TAG, "Opened from launcher, forcing date update")
             forceDateUpdate = true
@@ -88,15 +87,14 @@ class DataActivity : AbstractActivity(), OnClickListener, OnNavigationListener {
 
         SharedPrefsHelper.initPreferences(this)
         initCalendarAndLocation(forceDateUpdate)
-        restoreState(state)
+        restoreState(savedInstanceState)
         initDayDetailTabs()
-        updateDataFragment(state == null)
+        updateDataFragment(savedInstanceState == null)
         ignoreNextNavigation = true
     }
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        i(TAG, "New intent action: " + getIntent().action!!)
         if (intent.action != null && intent.action == Intent.ACTION_MAIN) {
             i(TAG, "Opened from launcher, forcing date update")
             intent.action = null
@@ -108,7 +106,7 @@ class DataActivity : AbstractActivity(), OnClickListener, OnNavigationListener {
         super.onResume()
         d(TAG, "onResume()")
 
-        val prefs = getSharedPreferences("sundroid-prefs", Context.MODE_PRIVATE)
+        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
         val lastVersion = prefs.getInt("last-version", 0)
         d(TAG, "Last version: " + lastVersion + ", current version: " + BuildConfig.VERSION_CODE)
         prefs.edit().putInt("last-version", BuildConfig.VERSION_CODE).apply()
@@ -119,7 +117,7 @@ class DataActivity : AbstractActivity(), OnClickListener, OnNavigationListener {
 
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         d(TAG, "onActivityResult($requestCode, $resultCode)")
         super.onActivityResult(requestCode, resultCode, data)
         initCalendarAndLocation(false)
@@ -142,53 +140,38 @@ class DataActivity : AbstractActivity(), OnClickListener, OnNavigationListener {
     }
 
     private fun initCalendarAndLocation(forceDateUpdate: Boolean) {
-        location = SharedPrefsHelper.getSelectedLocation(this)
-        if (location == null) {
-            location = LocationDetails(LatitudeLongitude(37.779093, -122.419109))
-            location!!.name = "San Francisco"
-            location!!.timeZone = TimeZoneResolver.getTimeZone("US/Pacific")
-            SharedPrefsHelper.saveSelectedLocation(this, location!!)
+        val location = SharedPrefsHelper.getSelectedLocation(this) ?: LocationDetails(LatitudeLongitude(37.779093, -122.419109)).apply {
+            name = "San Francisco"
+            timeZone = TimeZoneResolver.getTimeZone("US/Pacific")
+            SharedPrefsHelper.saveSelectedLocation(this@DataActivity, this)
         }
-        if (location!!.timeZone == null) {
-            location!!.timeZone = TimeZoneResolver.getTimeZone("UTC")
+        if (location.timeZone == null) {
+            location.timeZone = TimeZoneResolver.getTimeZone("UTC")
         }
+        this.location = location
 
-        if (dateCalendar == null || timeCalendar == null || forceDateUpdate) {
-            val localCalendar = Calendar.getInstance()
-            dateCalendar = Calendar.getInstance(location!!.timeZone!!.zone)
-            dateCalendar!!.set(localCalendar.get(Calendar.YEAR), localCalendar.get(Calendar.MONTH), localCalendar.get(Calendar.DAY_OF_MONTH), 0, 0, 0)
-            dateCalendar!!.set(Calendar.MILLISECOND, 0)
-            dateCalendar!!.timeInMillis
-            timeCalendar = Calendar.getInstance(location!!.timeZone!!.zone)
-            timeCalendar!!.set(localCalendar.get(Calendar.YEAR), localCalendar.get(Calendar.MONTH), localCalendar.get(Calendar.DAY_OF_MONTH), localCalendar.get(Calendar.HOUR_OF_DAY), localCalendar.get(Calendar.MINUTE), 0)
-            timeCalendar!!.set(Calendar.MILLISECOND, 0)
-            timeCalendar!!.timeInMillis
-        } else {
-            val year = dateCalendar!!.get(Calendar.YEAR)
-            val month = dateCalendar!!.get(Calendar.MONTH)
-            val day = dateCalendar!!.get(Calendar.DAY_OF_MONTH)
-            val hour = timeCalendar!!.get(Calendar.HOUR_OF_DAY)
-            val minute = timeCalendar!!.get(Calendar.MINUTE)
-            dateCalendar = Calendar.getInstance(location!!.timeZone!!.zone)
-            dateCalendar!!.set(year, month, day, 0, 0, 0)
-            dateCalendar!!.set(Calendar.MILLISECOND, 0)
-            dateCalendar!!.timeInMillis
-            timeCalendar = Calendar.getInstance(location!!.timeZone!!.zone)
-            timeCalendar!!.set(year, month, day, hour, minute, 0)
-            timeCalendar!!.set(Calendar.MILLISECOND, 0)
-            timeCalendar!!.timeInMillis
+        var dateDonor = dateCalendar
+        var timeDonor = timeCalendar
+        if (forceDateUpdate) {
+            dateDonor = Calendar.getInstance()
+            timeDonor = Calendar.getInstance()
         }
-
+        dateCalendar.timeZone = location.timeZone!!.zone
+        dateCalendar.set(dateDonor.get(YEAR), dateDonor.get(MONTH), dateDonor.get(DAY_OF_MONTH), 0, 0, 0)
+        dateCalendar.set(Calendar.MILLISECOND, 0)
+        dateCalendar.timeInMillis
+        timeCalendar.timeZone = location.timeZone!!.zone
+        timeCalendar.set(dateDonor.get(YEAR), dateDonor.get(MONTH), dateDonor.get(DAY_OF_MONTH), timeDonor.get(HOUR_OF_DAY), timeDonor.get(MINUTE), 0)
+        timeCalendar.set(Calendar.MILLISECOND, 0)
+        timeCalendar.timeInMillis
     }
 
-    public override fun onSaveInstanceState(state: Bundle) {
+    override fun onSaveInstanceState(state: Bundle) {
         super.onSaveInstanceState(state)
         state.putSerializable(STATE_DATA_GROUP, this.dataGroup)
         state.putString(STATE_DAY_DETAIL_TAB, this.dayDetailTab)
-        if (this.dateCalendar != null && this.timeCalendar != null) {
-            state.putLong(STATE_DATE_TIMESTAMP, this.dateCalendar!!.timeInMillis)
-            state.putLong(STATE_TIME_TIMESTAMP, this.timeCalendar!!.timeInMillis)
-        }
+        state.putLong(STATE_DATE_TIMESTAMP, this.dateCalendar.timeInMillis)
+        state.putLong(STATE_TIME_TIMESTAMP, this.timeCalendar.timeInMillis)
     }
 
     private fun restoreState(state: Bundle?) {
@@ -202,8 +185,8 @@ class DataActivity : AbstractActivity(), OnClickListener, OnNavigationListener {
                 this.dataGroup = state.get(STATE_DATA_GROUP) as DataGroup
             }
             if (state.containsKey(STATE_DATE_TIMESTAMP) && state.containsKey(STATE_TIME_TIMESTAMP)) {
-                this.dateCalendar!!.timeInMillis = state.getLong(STATE_DATE_TIMESTAMP)
-                this.timeCalendar!!.timeInMillis = state.getLong(STATE_TIME_TIMESTAMP)
+                this.dateCalendar.timeInMillis = state.getLong(STATE_DATE_TIMESTAMP)
+                this.timeCalendar.timeInMillis = state.getLong(STATE_TIME_TIMESTAMP)
             }
         } else {
             this.dataGroup = SharedPrefsHelper.getLastDataGroup(this)
@@ -245,34 +228,27 @@ class DataActivity : AbstractActivity(), OnClickListener, OnNavigationListener {
 
             remove(R.id.dataFragment)
 
-            fragment = null
-
-            if (this.dataGroup == DataGroup.DAY_SUMMARY) {
-                fragment = DaySummaryFragment()
-            } else if (this.dataGroup == DataGroup.DAY_DETAIL) {
-                when (this.dayDetailTab) {
-                    "sun" -> fragment = DayDetailSunFragment()
-                    "moon" -> fragment = DayDetailMoonFragment()
-                    "planets" -> fragment = DayDetailPlanetsFragment()
-                    else -> fragment = DayDetailEventsFragment()
+            var fragment: AbstractDataFragment = DaySummaryFragment()
+            when {
+                this.dataGroup == DataGroup.DAY_SUMMARY -> fragment = DaySummaryFragment()
+                this.dataGroup == DataGroup.DAY_DETAIL -> fragment = when (this.dayDetailTab) {
+                    "sun" -> DayDetailSunFragment()
+                    "moon" -> DayDetailMoonFragment()
+                    "planets" -> DayDetailPlanetsFragment()
+                    else -> DayDetailEventsFragment()
                 }
-            } else if (this.dataGroup == DataGroup.TRACKER) {
-                fragment = TrackerFragment()
-            } else if (this.dataGroup == DataGroup.MONTH_CALENDARS) {
-                fragment = MonthCalendarsFragment()
-            } else if (this.dataGroup == DataGroup.MONTH_MOONPHASE) {
-                fragment = MonthMoonPhaseFragment()
-            } else if (this.dataGroup == DataGroup.YEAR_EVENTS) {
-                fragment = YearEventsFragment()
+                this.dataGroup == DataGroup.TRACKER -> fragment = TrackerFragment()
+                this.dataGroup == DataGroup.MONTH_CALENDARS -> fragment = MonthCalendarsFragment()
+                this.dataGroup == DataGroup.MONTH_MOONPHASE -> fragment = MonthMoonPhaseFragment()
+                this.dataGroup == DataGroup.YEAR_EVENTS -> fragment = YearEventsFragment()
             }
+            this.fragment = fragment
 
-            if (fragment != null) {
-                d(TAG, "Changing fragment to " + fragment!!.javaClass.simpleName)
-                fragmentManager
-                        .beginTransaction()
-                        .replace(id.dataFragment, fragment, DATA_TAG)
-                        .commit()
-            }
+            d(TAG, "Changing fragment to " + fragment.javaClass.simpleName)
+            fragmentManager
+                    .beginTransaction()
+                    .replace(id.dataFragment, fragment, DATA_TAG)
+                    .commit()
             show(R.id.dataFragment)
 
         } else {
@@ -294,7 +270,6 @@ class DataActivity : AbstractActivity(), OnClickListener, OnNavigationListener {
                 // Unlikely. Inform user?
                 e(TAG, "Failed to init fragment " + fragment.javaClass.simpleName, e)
             }
-
         }
     }
 
@@ -323,14 +298,10 @@ class DataActivity : AbstractActivity(), OnClickListener, OnNavigationListener {
 
     private fun initDayDetailTabs() {
         show(R.id.dayDetailTabs)
-        findViewById<View>(R.id.sunTabActive).setOnClickListener(this)
-        findViewById<View>(R.id.sunTabInactive).setOnClickListener(this)
-        findViewById<View>(R.id.moonTabActive).setOnClickListener(this)
-        findViewById<View>(R.id.moonTabInactive).setOnClickListener(this)
-        findViewById<View>(R.id.planetsTabActive).setOnClickListener(this)
-        findViewById<View>(R.id.planetsTabInactive).setOnClickListener(this)
-        findViewById<View>(R.id.eventsTabActive).setOnClickListener(this)
-        findViewById<View>(R.id.eventsTabInactive).setOnClickListener(this)
+        findViewById<View>(R.id.sunTabInactive).setOnClickListener { _ -> setDayDetailTab("sun") }
+        findViewById<View>(R.id.moonTabInactive).setOnClickListener { _ -> setDayDetailTab("moon") }
+        findViewById<View>(R.id.planetsTabInactive).setOnClickListener { _ -> setDayDetailTab("planets") }
+        findViewById<View>(R.id.eventsTabInactive).setOnClickListener { _ -> setDayDetailTab("events") }
         updateDayDetailTabs()
     }
 
@@ -344,28 +315,6 @@ class DataActivity : AbstractActivity(), OnClickListener, OnNavigationListener {
         findViewById<View>(R.id.planetsTabInactive).visibility = if (dayDetailTab == "planets") View.GONE else View.VISIBLE
         findViewById<View>(R.id.eventsTabActive).visibility = if (dayDetailTab == "events") View.VISIBLE else View.GONE
         findViewById<View>(R.id.eventsTabInactive).visibility = if (dayDetailTab == "events") View.GONE else View.VISIBLE
-    }
-
-    override fun onClick(button: View) {
-        when (button.id) {
-            R.id.sunTabActive, R.id.sunTabInactive -> {
-                setDayDetailTab("sun")
-                return
-            }
-            R.id.moonTabActive, R.id.moonTabInactive -> {
-                setDayDetailTab("moon")
-                return
-            }
-            R.id.planetsTabActive, R.id.planetsTabInactive -> {
-                setDayDetailTab("planets")
-                return
-            }
-            R.id.eventsTabActive, R.id.eventsTabInactive -> {
-                setDayDetailTab("events")
-                return
-            }
-        }
-        super.onClick(button)
     }
 
     override fun onCreateDialog(id: Int): Dialog {
@@ -426,8 +375,8 @@ class DataActivity : AbstractActivity(), OnClickListener, OnNavigationListener {
         setNavItems(navItems)
     }
 
-    override fun onNavItemSelected(navItemAction: Int) {
-        when (navItemAction) {
+    override fun onNavItemSelected(itemPosition: Int) {
+        when (itemPosition) {
             MENU_CHANGE_LOCATION -> startLocationOptions()
             MENU_SAVE_LOCATION -> startSaveLocation()
             MENU_TIME_ZONE -> startTimeZone()
