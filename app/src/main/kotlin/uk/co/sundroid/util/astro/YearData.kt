@@ -10,7 +10,7 @@ object YearData {
     
     private const val WIKI = "http://en.m.wikipedia.org/wiki/"
 
-    fun getYearEvents(year: Int, timeZone: TimeZone): Set<Event> {
+    fun getYearEvents(year: Int, timeZone: TimeZone): MutableSet<Event> {
 
         val eventsSet = TreeSet<Event>()
 
