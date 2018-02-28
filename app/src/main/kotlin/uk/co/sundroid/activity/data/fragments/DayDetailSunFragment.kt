@@ -7,13 +7,11 @@ import android.view.View
 import uk.co.sundroid.R
 import uk.co.sundroid.util.astro.Body
 import uk.co.sundroid.util.astro.RiseSetType
-import uk.co.sundroid.util.astro.SunDay
 import uk.co.sundroid.util.astro.YearData
 import uk.co.sundroid.util.astro.math.SunCalculator
 import uk.co.sundroid.domain.LocationDetails
 import uk.co.sundroid.util.geometry.*
 import uk.co.sundroid.util.theme.*
-import uk.co.sundroid.util.time.Time
 import uk.co.sundroid.util.astro.YearData.Event
 import uk.co.sundroid.util.astro.YearData.EventType
 import uk.co.sundroid.util.time.*
@@ -27,7 +25,7 @@ class DayDetailSunFragment : AbstractDayFragment() {
 
     private val handler = Handler()
 
-    protected override val layout: Int
+    override val layout: Int
         get() = R.layout.frag_data_daydetail_sun
 
     @Throws(Exception::class)
@@ -40,33 +38,25 @@ class DayDetailSunFragment : AbstractDayFragment() {
                 }
 
                 val yearEvents = YearData.getYearEvents(calendar.get(Calendar.YEAR), calendar.timeZone)
-                var yearEventToday: Event? = null
-                for (yearEvent in yearEvents) {
-                    if (yearEvent.type.body === Body.SUN) {
-                        if (isSameDay(calendar, yearEvent.time)) {
-                            yearEventToday = yearEvent
-                        }
-                    }
-                }
+                val yearEventToday: Event? = yearEvents.lastOrNull { it.type.body === Body.SUN && isSameDay(calendar, it.time) }
                 val sunDay = SunCalculator.calcDay(location.location, calendar)
-                val todayEvent = yearEventToday
 
                 handler.post {
                     if (isSafe) {
-                        if (todayEvent != null) {
+                        if (yearEventToday != null) {
                             view.findViewById<View>(R.id.sunEvent).setOnClickListener(null)
                             showInView(view, R.id.sunEvent)
-                            showInView(view, R.id.sunEventTitle, todayEvent.type.displayName)
-                            if (todayEvent.type === EventType.NORTHERN_SOLSTICE && Math.abs(location.location.latitude.doubleValue) > 23.44) {
+                            showInView(view, R.id.sunEventTitle, yearEventToday.type.displayName)
+                            if (yearEventToday.type === EventType.NORTHERN_SOLSTICE && Math.abs(location.location.latitude.doubleValue) > 23.44) {
                                 val localExtreme = if (location.location.latitude.doubleValue >= 0) "Longest" else "Shortest"
                                 showInView(view, R.id.sunEventSubtitle, localExtreme + " day")
-                            } else if (todayEvent.type === EventType.SOUTHERN_SOLSTICE && Math.abs(location.location.latitude.doubleValue) > 23.44) {
+                            } else if (yearEventToday.type === EventType.SOUTHERN_SOLSTICE && Math.abs(location.location.latitude.doubleValue) > 23.44) {
                                 val localExtreme = if (location.location.latitude.doubleValue >= 0) "Shortest" else "Longest"
                                 showInView(view, R.id.sunEventSubtitle, localExtreme + " day")
-                            } else if (todayEvent.type === EventType.ANNULAR_SOLAR || todayEvent.type === EventType.HYBRID_SOLAR || todayEvent.type === EventType.PARTIAL_SOLAR || todayEvent.type === EventType.TOTAL_SOLAR) {
+                            } else if (yearEventToday.type === EventType.ANNULAR_SOLAR || yearEventToday.type === EventType.HYBRID_SOLAR || yearEventToday.type === EventType.PARTIAL_SOLAR || yearEventToday.type === EventType.TOTAL_SOLAR) {
                                 showInView(view, R.id.sunEventSubtitle, "Tap to check Wikipedia for visibility")
-                                val finalLink = todayEvent.link
-                                view.findViewById<View>(R.id.sunEvent).setOnClickListener { view1 ->
+                                val finalLink = yearEventToday.link
+                                view.findViewById<View>(R.id.sunEvent).setOnClickListener { _ ->
                                     val intent = Intent(Intent.ACTION_VIEW)
                                     intent.data = Uri.parse(finalLink)
                                     startActivity(intent)

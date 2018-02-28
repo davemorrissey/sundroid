@@ -7,12 +7,9 @@ import android.text.Html
 import android.view.View
 import android.view.ViewGroup
 import uk.co.sundroid.R
-import uk.co.sundroid.R.id
-import uk.co.sundroid.R.layout
 import uk.co.sundroid.activity.data.fragments.dialogs.settings.YearEventsPickerFragment
 import uk.co.sundroid.util.*
 import uk.co.sundroid.util.astro.MoonPhaseEvent
-import uk.co.sundroid.util.astro.SunDay
 import uk.co.sundroid.util.astro.math.MoonPhaseCalculator
 import uk.co.sundroid.util.astro.math.SunCalculator
 import uk.co.sundroid.domain.LocationDetails
@@ -20,7 +17,6 @@ import uk.co.sundroid.util.astro.MoonPhase
 import uk.co.sundroid.util.prefs.SharedPrefsHelper
 import uk.co.sundroid.util.theme.*
 import uk.co.sundroid.util.time.*
-import uk.co.sundroid.util.time.Time
 import uk.co.sundroid.util.astro.YearData
 import uk.co.sundroid.util.astro.YearData.Event
 import uk.co.sundroid.util.astro.YearData.EventType
@@ -32,20 +28,10 @@ class YearEventsFragment : AbstractYearFragment(), ConfigurableFragment {
 
     private val handler = Handler()
 
-    protected override val layout: Int
+    override val layout: Int
         get() = R.layout.frag_data_yearevents
 
     override fun openSettingsDialog() {
-        //        boolean[] currentEvents = new boolean[8];
-        //        currentEvents[0] = SharedPrefsHelper.INSTANCE.getShowElement(getApplicationContext(), "yearNewMoon", true);
-        //        currentEvents[1] = SharedPrefsHelper.INSTANCE.getShowElement(getApplicationContext(), "yearFullMoon", true);
-        //        currentEvents[2] = SharedPrefsHelper.INSTANCE.getShowElement(getApplicationContext(), "yearQuarterMoon", true);
-        //        currentEvents[3] = SharedPrefsHelper.INSTANCE.getShowElement(getApplicationContext(), "yearSolstice", true);
-        //        currentEvents[4] = SharedPrefsHelper.INSTANCE.getShowElement(getApplicationContext(), "yearEquinox", true);
-        //        currentEvents[5] = SharedPrefsHelper.INSTANCE.getShowElement(getApplicationContext(), "yearLunarEclipse", true);
-        //        currentEvents[6] = SharedPrefsHelper.INSTANCE.getShowElement(getApplicationContext(), "yearSolarEclipse", true);
-        //        currentEvents[7] = SharedPrefsHelper.INSTANCE.getShowElement(getApplicationContext(), "yearEarthApsis", true);
-
         val settingsDialog = YearEventsPickerFragment.newInstance(activity)
         settingsDialog.setTargetFragment(this, 0)
         settingsDialog.show(fragmentManager, "yearEventsSettings")
@@ -55,6 +41,7 @@ class YearEventsFragment : AbstractYearFragment(), ConfigurableFragment {
     override fun update(location: LocationDetails, calendar: Calendar, view: View) {
 
         val thread = object : Thread() {
+            @Suppress("DEPRECATION")
             override fun run() {
                 if (!isSafe) {
                     return
@@ -63,9 +50,7 @@ class YearEventsFragment : AbstractYearFragment(), ConfigurableFragment {
                 val todayCalendar = Calendar.getInstance(calendar.timeZone)
                 val eventsSet = YearData.getYearEvents(calendar.get(Calendar.YEAR), location.timeZone!!.zone)
                 val moonPhases = MoonPhaseCalculator.getYearEvents(calendar.get(Calendar.YEAR), location.timeZone!!.zone)
-                for (moonPhase in moonPhases) {
-                    eventsSet.add(Event(EventType.PHASE, moonPhase, moonPhase.time, null))
-                }
+                moonPhases.mapTo(eventsSet) { Event(EventType.PHASE, it, it.time, null) }
 
                 handler.post {
                     if (isSafe) {
@@ -155,6 +140,7 @@ class YearEventsFragment : AbstractYearFragment(), ConfigurableFragment {
                                                 image = if (location.location.latitude.doubleValue >= 0) getPhaseLeft() else getPhaseRight()
                                             }
                                         }
+                                        else -> { }
                                     }
                                 }
                             }
@@ -188,7 +174,7 @@ class YearEventsFragment : AbstractYearFragment(), ConfigurableFragment {
                             if (isNotEmpty(link)) {
                                 val finalLink = link
                                 showInView(eventRow, R.id.yearEventLink)
-                                eventRow.setOnClickListener { view1 ->
+                                eventRow.setOnClickListener { _ ->
                                     val intent = Intent(Intent.ACTION_VIEW)
                                     intent.data = Uri.parse(finalLink)
                                     startActivity(intent)

@@ -13,7 +13,6 @@ import uk.co.sundroid.domain.LocationDetails
 import uk.co.sundroid.util.geometry.*
 import uk.co.sundroid.util.theme.*
 import uk.co.sundroid.util.time.*
-import uk.co.sundroid.util.time.Time
 
 import java.util.*
 
@@ -21,7 +20,7 @@ class DayDetailPlanetsFragment : AbstractDayFragment() {
 
     private val handler = Handler()
 
-    protected override val layout: Int
+    override val layout: Int
         get() = R.layout.frag_data_daydetail_planets
 
     @Throws(Exception::class)
@@ -34,11 +33,9 @@ class DayDetailPlanetsFragment : AbstractDayFragment() {
                 }
 
                 val planetDays = LinkedHashMap<Body, BodyDay>()
-                for (body in Body.values()) {
-                    if (body !== Body.SUN && body !== Body.MOON) {
-                        planetDays[body] = BodyPositionCalculator.calcDay(body, location.location, calendar, true)
-                    }
-                }
+                Body.values()
+                        .filter { it !== Body.SUN && it !== Body.MOON }
+                        .forEach { planetDays[it] = BodyPositionCalculator.calcDay(it, location.location, calendar, true) }
 
                 handler.post {
                     if (isSafe) {

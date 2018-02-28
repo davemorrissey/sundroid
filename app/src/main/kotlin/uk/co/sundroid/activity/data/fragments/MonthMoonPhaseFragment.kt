@@ -6,10 +6,7 @@ import android.widget.ImageView
 import android.widget.TableRow
 import android.widget.TextView
 import uk.co.sundroid.R
-import uk.co.sundroid.R.id
-import uk.co.sundroid.R.layout
 import uk.co.sundroid.util.astro.MoonPhase
-import uk.co.sundroid.util.astro.MoonPhaseEvent
 import uk.co.sundroid.util.astro.math.MoonPhaseCalculator
 import uk.co.sundroid.domain.LocationDetails
 import uk.co.sundroid.util.prefs.SharedPrefsHelper
@@ -22,7 +19,7 @@ class MonthMoonPhaseFragment : AbstractMonthFragment<Any>() {
 
     private val handler = Handler()
 
-    protected override val layout: Int
+    override val layout: Int
         get() = R.layout.frag_data_monthmoonphase
 
     @Throws(Exception::class)
@@ -81,11 +78,11 @@ class MonthMoonPhaseFragment : AbstractMonthFragment<Any>() {
                         for (i in 1 until firstCol) {
                             val datesRow = view.findViewById<TableRow>(R.id.moonCalDates1)
                             val dateCell = activity.layoutInflater.inflate(R.layout.frag_data_monthmoonphase_date, datesRow, false)
-                            dateCell.setVisibility(View.INVISIBLE)
+                            dateCell.visibility = View.INVISIBLE
                             datesRow.addView(dateCell)
                             val imagesRow = view.findViewById<TableRow>(R.id.moonCalImages1)
                             val imageCell = activity.layoutInflater.inflate(R.layout.frag_data_monthmoonphase_image, imagesRow, false)
-                            imageCell.setVisibility(View.INVISIBLE)
+                            imageCell.visibility = View.INVISIBLE
                             imagesRow.addView(imageCell)
                         }
 
@@ -107,22 +104,20 @@ class MonthMoonPhaseFragment : AbstractMonthFragment<Any>() {
                                 val imagesRow = view.findViewById<TableRow>(view("moonCalImages" + row))
 
                                 val dateCell = activity.layoutInflater.inflate(R.layout.frag_data_monthmoonphase_date, datesRow, false)
-                                (dateCell.findViewById(R.id.moonCalTitleText) as TextView).text = Integer.toString(loopCalendar.get(Calendar.DAY_OF_MONTH))
+                                (dateCell.findViewById(R.id.moonCalTitleText) as TextView).text = loopCalendar.get(Calendar.DAY_OF_MONTH).toString()
 
                                 val phaseEvent = MoonPhaseCalculator.getDayEvent(loopCalendar, phaseEvents)
                                 if (phaseEvent != null) {
                                     var phaseImg = getPhaseFull()
-                                    if (phaseEvent.phase === MoonPhase.NEW) {
-                                        phaseImg = getPhaseNew()
-                                    } else if (phaseEvent.phase === MoonPhase.FIRST_QUARTER) {
-                                        phaseImg = if (location.location.latitude.doubleValue >= 0) getPhaseRight() else getPhaseLeft()
-                                    } else if (phaseEvent.phase === MoonPhase.LAST_QUARTER) {
-                                        phaseImg = if (location.location.latitude.doubleValue >= 0) getPhaseLeft() else getPhaseRight()
+                                    when {
+                                        phaseEvent.phase === MoonPhase.NEW -> phaseImg = getPhaseNew()
+                                        phaseEvent.phase === MoonPhase.FIRST_QUARTER -> phaseImg = if (location.location.latitude.doubleValue >= 0) getPhaseRight() else getPhaseLeft()
+                                        phaseEvent.phase === MoonPhase.LAST_QUARTER -> phaseImg = if (location.location.latitude.doubleValue >= 0) getPhaseLeft() else getPhaseRight()
                                     }
                                     (dateCell.findViewById(R.id.moonCalTitlePhase) as ImageView).setImageResource(phaseImg)
-                                    dateCell.findViewById<View>(R.id.moonCalTitlePhase).setVisibility(View.VISIBLE)
+                                    dateCell.findViewById<View>(R.id.moonCalTitlePhase).visibility = View.VISIBLE
                                 } else {
-                                    dateCell.findViewById<View>(R.id.moonCalTitlePhase).setVisibility(View.GONE)
+                                    dateCell.findViewById<View>(R.id.moonCalTitlePhase).visibility = View.GONE
                                 }
 
                                 datesRow.addView(dateCell)
@@ -167,11 +162,11 @@ class MonthMoonPhaseFragment : AbstractMonthFragment<Any>() {
                         for (i in lastCol + 1..7) {
                             val datesRow = view.findViewById<TableRow>(view("moonCalDates" + row))
                             val dateCell = activity.layoutInflater.inflate(R.layout.frag_data_monthmoonphase_date, datesRow, false)
-                            dateCell.setVisibility(View.INVISIBLE)
+                            dateCell.visibility = View.INVISIBLE
                             datesRow.addView(dateCell)
                             val imagesRow = view.findViewById<TableRow>(view("moonCalImages" + row))
                             val imageCell = activity.layoutInflater.inflate(R.layout.frag_data_monthmoonphase_image, imagesRow, false)
-                            imageCell.setVisibility(View.INVISIBLE)
+                            imageCell.visibility = View.INVISIBLE
                             imagesRow.addView(imageCell)
                         }
                     }
