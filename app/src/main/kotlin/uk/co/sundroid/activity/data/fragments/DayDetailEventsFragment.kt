@@ -5,7 +5,6 @@ import android.view.View
 import android.widget.TableLayout
 import android.widget.TextView
 import uk.co.sundroid.R
-import uk.co.sundroid.R.id
 import uk.co.sundroid.activity.data.fragments.dialogs.settings.DayEventsPickerFragment
 import uk.co.sundroid.util.astro.Body
 import uk.co.sundroid.util.astro.BodyDay
@@ -18,7 +17,6 @@ import uk.co.sundroid.domain.LocationDetails
 import uk.co.sundroid.util.prefs.SharedPrefsHelper
 import uk.co.sundroid.util.geometry.*
 import uk.co.sundroid.util.time.*
-import uk.co.sundroid.util.time.Time
 
 import java.util.*
 
@@ -26,7 +24,7 @@ class DayDetailEventsFragment : AbstractDayFragment(), ConfigurableFragment {
 
     private val handler = Handler()
 
-    protected override val layout: Int
+    override val layout: Int
         get() = R.layout.frag_data_daydetail_events
 
     override fun openSettingsDialog() {
@@ -141,7 +139,7 @@ class DayDetailEventsFragment : AbstractDayFragment(), ConfigurableFragment {
                                 val time = formatTime(applicationContext!!, event.time, true)
                                 (eventRow.findViewById<View>(R.id.eventTime) as TextView).text = time.time + time.marker
                                 if (event.azimuth != null) {
-                                    val azimuth = formatBearing(applicationContext!!, event.azimuth!!, location.location, calendar)
+                                    val azimuth = formatBearing(applicationContext!!, event.azimuth, location.location, calendar)
                                     (eventRow.findViewById<View>(R.id.eventAz) as TextView).text = azimuth
                                 } else {
                                     (eventRow.findViewById<View>(R.id.eventAz) as TextView).text = " "

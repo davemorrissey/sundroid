@@ -101,14 +101,12 @@ abstract class AbstractDayFragment : AbstractDataFragment(), DatePickerFragment.
             dateDetector = GestureDetector(applicationContext, ButtonDragGestureDetector(dateListener, applicationContext!!))
         }
 
-        view.findViewById<View>(R.id.datePrev).setOnClickListener { v -> prevDate() }
-        view.findViewById<View>(R.id.dateNext).setOnClickListener { v -> nextDate() }
-        view.findViewById<View>(R.id.zoneButton).setOnClickListener { v -> startTimeZone() }
-        view.findViewById<View>(R.id.dateButton).setOnClickListener { v -> showDatePicker() }
-        view.findViewById<View>(R.id.dateButton).setOnTouchListener { v, e -> dateDetector?.onTouchEvent(e) ?: false }
+        view.findViewById<View>(R.id.datePrev).setOnClickListener { _ -> prevDate() }
+        view.findViewById<View>(R.id.dateNext).setOnClickListener { _ -> nextDate() }
+        view.findViewById<View>(R.id.zoneButton).setOnClickListener { _ -> startTimeZone() }
+        view.findViewById<View>(R.id.dateButton).setOnClickListener { _ -> showDatePicker() }
+        view.findViewById<View>(R.id.dateButton).setOnTouchListener { _, e -> dateDetector?.onTouchEvent(e) ?: false }
     }
-
-    inner class
 
     private fun updateDate(location: LocationDetails, calendar: Calendar, view: View) {
         if (SharedPrefsHelper.getShowTimeZone(applicationContext!!)) {

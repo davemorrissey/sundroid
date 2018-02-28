@@ -1,7 +1,6 @@
 package uk.co.sundroid.activity.data.fragments
 
 import android.content.Intent
-import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Handler
 import android.view.View
@@ -11,7 +10,6 @@ import uk.co.sundroid.R
 import uk.co.sundroid.util.astro.Body
 import uk.co.sundroid.util.astro.MoonDay
 import uk.co.sundroid.util.astro.MoonPhase
-import uk.co.sundroid.util.astro.MoonPhaseEvent
 import uk.co.sundroid.util.astro.YearData
 import uk.co.sundroid.util.astro.image.MoonPhaseImage
 import uk.co.sundroid.util.astro.RiseSetType
@@ -22,7 +20,6 @@ import uk.co.sundroid.util.geometry.*
 import uk.co.sundroid.util.log.*
 import uk.co.sundroid.util.theme.*
 import uk.co.sundroid.util.time.*
-import uk.co.sundroid.util.time.Time
 import uk.co.sundroid.util.astro.YearData.Event
 
 import java.util.*
@@ -31,7 +28,7 @@ class DayDetailMoonFragment : AbstractDayFragment() {
 
     private val handler = Handler()
 
-    protected override val layout: Int
+    override val layout: Int
         get() = R.layout.frag_data_daydetail_moon
 
     @Throws(Exception::class)
@@ -44,26 +41,15 @@ class DayDetailMoonFragment : AbstractDayFragment() {
                 }
 
                 val moonDay = BodyPositionCalculator.calcDay(Body.MOON, location.location, calendar, true) as MoonDay
-                val moonPhaseEvents = ArrayList<MoonPhaseEvent>()
-                for (event in MoonPhaseCalculator.getYearEvents(calendar.get(Calendar.YEAR), calendar.timeZone)) {
-                    if (event.time.get(Calendar.DAY_OF_YEAR) >= calendar.get(Calendar.DAY_OF_YEAR)) {
-                        moonPhaseEvents.add(event)
-                    }
-                }
+                val moonPhaseEvents = MoonPhaseCalculator.getYearEvents(calendar.get(Calendar.YEAR), calendar.timeZone)
+                        .filter { it.time.get(Calendar.DAY_OF_YEAR) >= calendar.get(Calendar.DAY_OF_YEAR) }
+                        .toMutableList()
                 if (moonPhaseEvents.size < 4) {
                     moonPhaseEvents.addAll(MoonPhaseCalculator.getYearEvents(calendar.get(Calendar.YEAR) + 1, calendar.timeZone))
                 }
 
                 val yearEvents = YearData.getYearEvents(calendar.get(Calendar.YEAR), calendar.timeZone)
-                var yearEventToday: Event? = null
-                for (yearEvent in yearEvents) {
-                    if (yearEvent.type.body === Body.MOON) {
-                        if (isSameDay(calendar, yearEvent.time)) {
-                            yearEventToday = yearEvent
-                        }
-                    }
-                }
-                val todayEvent = yearEventToday
+                val yearEventToday: Event? = yearEvents.lastOrNull { it.type.body === Body.MOON && isSameDay(calendar, it.time) }
 
                 // Asynchronously generate moon graphic to speed up response.
                 val moonThread = object : Thread() {
@@ -94,13 +80,13 @@ class DayDetailMoonFragment : AbstractDayFragment() {
 
                 handler.post {
                     if (isSafe) {
-                        if (todayEvent != null) {
+                        if (yearEventToday != null) {
                             view.findViewById<View>(R.id.moonEvent).setOnClickListener(null)
                             showInView(view, R.id.moonEvent)
-                            showInView(view, R.id.moonEventTitle, todayEvent.type.displayName)
+                            showInView(view, R.id.moonEventTitle, yearEventToday.type.displayName)
                             showInView(view, R.id.moonEventSubtitle, "Tap to check Wikipedia for visibility")
-                            val finalLink = todayEvent.link
-                            view.findViewById<View>(R.id.moonEvent).setOnClickListener { view1 ->
+                            val finalLink = yearEventToday.link
+                            view.findViewById<View>(R.id.moonEvent).setOnClickListener { _ ->
                                 val intent = Intent(Intent.ACTION_VIEW)
                                 intent.data = Uri.parse(finalLink)
                                 startActivity(intent)
@@ -114,12 +100,10 @@ class DayDetailMoonFragment : AbstractDayFragment() {
                             val phaseImgView = view("moonPhase" + i + "Img")
                             val phaseLabelView = view("moonPhase" + i + "Label")
                             var phaseImg = getPhaseFull()
-                            if (phaseEvent.phase === MoonPhase.NEW) {
-                                phaseImg = getPhaseNew()
-                            } else if (phaseEvent.phase === MoonPhase.FIRST_QUARTER) {
-                                phaseImg = if (location.location.latitude.doubleValue >= 0) getPhaseRight() else getPhaseLeft()
-                            } else if (phaseEvent.phase === MoonPhase.LAST_QUARTER) {
-                                phaseImg = if (location.location.latitude.doubleValue >= 0) getPhaseLeft() else getPhaseRight()
+                            when {
+                                phaseEvent.phase === MoonPhase.NEW -> phaseImg = getPhaseNew()
+                                phaseEvent.phase === MoonPhase.FIRST_QUARTER -> phaseImg = if (location.location.latitude.doubleValue >= 0) getPhaseRight() else getPhaseLeft()
+                                phaseEvent.phase === MoonPhase.LAST_QUARTER -> phaseImg = if (location.location.latitude.doubleValue >= 0) getPhaseLeft() else getPhaseRight()
                             }
                             (view.findViewById<View>(phaseImgView) as ImageView).setImageResource(phaseImg)
                             (view.findViewById<View>(phaseLabelView) as TextView).text = shortDateAndMonth(phaseEvent.time)

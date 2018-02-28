@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.view.*
 import uk.co.sundroid.R
-import uk.co.sundroid.R.id
 import uk.co.sundroid.activity.data.fragments.dialogs.date.MonthPickerFragment
 import uk.co.sundroid.domain.LocationDetails
 import uk.co.sundroid.util.prefs.SharedPrefsHelper
@@ -111,11 +110,11 @@ abstract class AbstractMonthFragment<T> : AbstractDataFragment(), MonthPickerFra
             monthDetector = GestureDetector(applicationContext, ButtonDragGestureDetector(monthListener, applicationContext!!))
         }
 
-        view.findViewById<View>(R.id.monthPrev).setOnClickListener { v -> prevMonth() }
-        view.findViewById<View>(R.id.monthNext).setOnClickListener { v -> nextMonth() }
-        view.findViewById<View>(R.id.zoneButton).setOnClickListener { v -> startTimeZone() }
-        view.findViewById<View>(R.id.monthButton).setOnClickListener { v -> showMonthPicker() }
-        view.findViewById<View>(R.id.monthButton).setOnTouchListener { v, event -> monthDetector != null && monthDetector!!.onTouchEvent(event) }
+        view.findViewById<View>(R.id.monthPrev).setOnClickListener { _ -> prevMonth() }
+        view.findViewById<View>(R.id.monthNext).setOnClickListener { _ -> nextMonth() }
+        view.findViewById<View>(R.id.zoneButton).setOnClickListener { _ -> startTimeZone() }
+        view.findViewById<View>(R.id.monthButton).setOnClickListener { _ -> showMonthPicker() }
+        view.findViewById<View>(R.id.monthButton).setOnTouchListener { _, event -> monthDetector != null && monthDetector!!.onTouchEvent(event) }
     }
 
     private fun updateMonth(location: LocationDetails, calendar: Calendar, view: View) {

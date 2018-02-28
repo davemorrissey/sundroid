@@ -7,7 +7,6 @@ import android.view.View.OnTouchListener
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import uk.co.sundroid.R
-import uk.co.sundroid.R.id
 import uk.co.sundroid.activity.data.fragments.dialogs.date.DatePickerFragment
 import uk.co.sundroid.activity.data.fragments.dialogs.date.TimePickerFragment
 import uk.co.sundroid.domain.LocationDetails
@@ -17,7 +16,6 @@ import uk.co.sundroid.util.view.ButtonDragGestureDetector
 import uk.co.sundroid.util.view.ButtonDragGestureDetector.ButtonDragGestureDetectorListener
 import uk.co.sundroid.util.log.*
 import uk.co.sundroid.util.time.*
-import uk.co.sundroid.util.time.Time
 
 import java.text.SimpleDateFormat
 import java.util.Calendar

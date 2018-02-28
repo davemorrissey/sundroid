@@ -6,7 +6,6 @@ import android.view.View.OnClickListener
 import android.view.View.OnTouchListener
 import uk.co.sundroid.R
 import uk.co.sundroid.R.drawable
-import uk.co.sundroid.R.id
 import uk.co.sundroid.activity.data.fragments.dialogs.date.YearPickerFragment
 import uk.co.sundroid.domain.LocationDetails
 import uk.co.sundroid.util.prefs.SharedPrefsHelper
