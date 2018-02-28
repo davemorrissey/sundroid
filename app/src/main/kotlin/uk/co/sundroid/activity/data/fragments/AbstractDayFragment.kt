@@ -27,56 +27,36 @@ abstract class AbstractDayFragment : AbstractDataFragment(), DatePickerFragment.
     protected abstract val layout: Int
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, state: Bundle?): View? {
-        val view = inflater.inflate(layout, container, false)
-        safeUpdate(view)
-        return view
+        return inflater.inflate(layout, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        initGestures(view)
+        updateDate(view)
+        update()
     }
 
     override fun initialise() {
-        if (view != null) {
-            safeInit(view)
-        }
+//        val view = view
+//        if (isSafe && view != null) {
+//            initGestures(view)
+//            updateDate(view)
+//        }
     }
 
     override fun update() {
-        if (view != null) {
-            safeUpdate(view)
+        val view = view
+        if (isSafe && view != null) {
+            initGestures(view)
+            updateDate(view)
+            update(view)
         }
     }
 
     override fun onDateSet(year: Int, month: Int, date: Int) {
-        dateCalendar!!.set(year, month, date)
-        timeCalendar!!.set(year, month, date)
+        getDateCalendar().set(year, month, date)
+        getTimeCalendar().set(year, month, date)
         update()
-    }
-
-    private fun safeInit(view: View?) {
-        val location = location
-        val calendar = dateCalendar
-        try {
-            if (location != null && calendar != null && view != null && !isDetached) {
-                initGestures(view)
-                updateDate(location, calendar, view)
-            }
-        } catch (e: Exception) {
-            e(TAG, "Failed to update data view", e)
-        }
-
-    }
-
-    private fun safeUpdate(view: View?) {
-        val location = location
-        val calendar = dateCalendar
-        try {
-            if (location != null && calendar != null && view != null && !isDetached) {
-                initGestures(view)
-                updateDate(location, calendar, view)
-                update(location, calendar, view)
-            }
-        } catch (e: Exception) {
-            e(TAG, "Failed to update data view", e)
-        }
-
     }
 
     private fun initGestures(view: View) {
@@ -108,7 +88,9 @@ abstract class AbstractDayFragment : AbstractDataFragment(), DatePickerFragment.
         view.findViewById<View>(R.id.dateButton).setOnTouchListener { _, e -> dateDetector?.onTouchEvent(e) ?: false }
     }
 
-    private fun updateDate(location: LocationDetails, calendar: Calendar, view: View) {
+    private fun updateDate(view: View) {
+        val location = getLocation()
+        val calendar = getDateCalendar()
         if (SharedPrefsHelper.getShowTimeZone(applicationContext!!)) {
             showInView(view, R.id.zoneButton)
             val zone = location.timeZone!!.zone
@@ -134,40 +116,38 @@ abstract class AbstractDayFragment : AbstractDataFragment(), DatePickerFragment.
     }
 
     private fun showDatePicker() {
-        val datePickerFragment = DatePickerFragment.newInstance(dateCalendar!!)
+        val datePickerFragment = DatePickerFragment.newInstance(getDateCalendar())
         datePickerFragment.setTargetFragment(this, 0)
         datePickerFragment.show(fragmentManager, "datePicker")
     }
 
     private fun nextDate() {
-        dateCalendar!!.add(Calendar.DAY_OF_MONTH, 1)
-        timeCalendar!!.add(Calendar.DAY_OF_MONTH, 1)
+        getDateCalendar().add(Calendar.DAY_OF_MONTH, 1)
+        getTimeCalendar().add(Calendar.DAY_OF_MONTH, 1)
         update()
     }
 
     private fun nextMonth() {
-        dateCalendar!!.add(Calendar.MONTH, 1)
-        timeCalendar!!.add(Calendar.MONTH, 1)
+        getDateCalendar().add(Calendar.MONTH, 1)
+        getTimeCalendar().add(Calendar.MONTH, 1)
         update()
     }
 
     private fun prevDate() {
-        dateCalendar!!.add(Calendar.DAY_OF_MONTH, -1)
-        timeCalendar!!.add(Calendar.DAY_OF_MONTH, -1)
+        getDateCalendar().add(Calendar.DAY_OF_MONTH, -1)
+        getTimeCalendar().add(Calendar.DAY_OF_MONTH, -1)
         update()
     }
 
     private fun prevMonth() {
-        dateCalendar!!.add(Calendar.MONTH, -1)
-        timeCalendar!!.add(Calendar.MONTH, -1)
+        getDateCalendar().add(Calendar.MONTH, -1)
+        getTimeCalendar().add(Calendar.MONTH, -1)
         update()
     }
 
-    @Throws(Exception::class)
-    protected abstract fun update(location: LocationDetails, calendar: Calendar, view: View)
+    protected abstract fun update(view: View)
 
     companion object {
-
         private val TAG = AbstractDayFragment::class.java.simpleName
     }
 

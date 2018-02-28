@@ -11,7 +11,6 @@ import uk.co.sundroid.util.prefs.SharedPrefsHelper
 import uk.co.sundroid.util.*
 import uk.co.sundroid.util.view.ButtonDragGestureDetector
 import uk.co.sundroid.util.view.ButtonDragGestureDetector.ButtonDragGestureDetectorListener
-import uk.co.sundroid.util.log.*
 
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -29,64 +28,38 @@ abstract class AbstractMonthFragment<T> : AbstractDataFragment(), MonthPickerFra
 
     private val handler = Handler()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, state: Bundle?): View? {
-        if (container == null) {
-            return null
-        }
-        val view = inflater.inflate(layout, container, false)
-        safeUpdate(view)
-        return view
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup, state: Bundle?): View? {
+        return inflater.inflate(layout, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        update()
     }
 
     override fun initialise() {
-        if (view != null) {
-            safeInit(view)
+        val view = view
+        if (isSafe && view != null) {
+            initGestures(view)
+            updateMonth(view)
         }
     }
 
     override fun update() {
-        if (view != null) {
-            safeUpdate(view)
+        val view = view
+        if (isSafe && view != null) {
+            initGestures(view)
+            updateMonth(view)
+            update(view)
         }
     }
 
     override fun onMonthSet(year: Int, month: Int) {
-        dateCalendar!!.set(Calendar.YEAR, year)
-        dateCalendar!!.set(Calendar.MONTH, month)
-        timeCalendar!!.set(Calendar.YEAR, year)
-        timeCalendar!!.set(Calendar.MONTH, month)
+        getDateCalendar().set(Calendar.YEAR, year)
+        getDateCalendar().set(Calendar.MONTH, month)
+        getTimeCalendar().set(Calendar.YEAR, year)
+        getTimeCalendar().set(Calendar.MONTH, month)
         update()
-    }
-
-    private fun safeInit(view: View?) {
-        val location = location
-        val calendar = dateCalendar
-        try {
-            if (location != null && calendar != null && view != null && !isDetached) {
-                d(TAG, hashCode().toString() + " running safeUpdate")
-                initGestures(view)
-                updateMonth(location, calendar, view)
-            }
-        } catch (e: Exception) {
-            e(TAG, hashCode().toString() + " Failed to update data view", e)
-        }
-
-    }
-
-    private fun safeUpdate(view: View?) {
-        val location = location
-        val calendar = dateCalendar
-        try {
-            if (location != null && calendar != null && view != null && !isDetached) {
-                d(TAG, hashCode().toString() + " running safeUpdate")
-                initGestures(view)
-                updateMonth(location, calendar, view)
-                update(location, calendar, view)
-            }
-        } catch (e: Exception) {
-            e(TAG, hashCode().toString() + " Failed to update data view", e)
-        }
-
     }
 
     private fun initGestures(view: View) {
@@ -118,7 +91,9 @@ abstract class AbstractMonthFragment<T> : AbstractDataFragment(), MonthPickerFra
         view.findViewById<View>(R.id.monthButton).setOnTouchListener { _, event -> monthDetector != null && monthDetector!!.onTouchEvent(event) }
     }
 
-    private fun updateMonth(location: LocationDetails, calendar: Calendar, view: View) {
+    private fun updateMonth(view: View) {
+        val location = getLocation()
+        val calendar = getDateCalendar()
         if (SharedPrefsHelper.getShowTimeZone(applicationContext!!)) {
             showInView(view, R.id.zoneButton)
             val zone = location.timeZone!!.zone
@@ -141,37 +116,36 @@ abstract class AbstractMonthFragment<T> : AbstractDataFragment(), MonthPickerFra
     }
 
     private fun showMonthPicker() {
-        val monthPickerFragment = MonthPickerFragment.newInstance(dateCalendar!!)
+        val monthPickerFragment = MonthPickerFragment.newInstance(getDateCalendar())
         monthPickerFragment.setTargetFragment(this, 0)
         monthPickerFragment.show(fragmentManager, "monthPicker")
     }
 
     private fun nextMonth() {
-        dateCalendar!!.add(Calendar.MONTH, 1)
-        timeCalendar!!.add(Calendar.MONTH, 1)
+        getDateCalendar().add(Calendar.MONTH, 1)
+        getTimeCalendar().add(Calendar.MONTH, 1)
         update()
     }
 
     private fun prevMonth() {
-        dateCalendar!!.add(Calendar.MONTH, -1)
-        timeCalendar!!.add(Calendar.MONTH, -1)
+        getDateCalendar().add(Calendar.MONTH, -1)
+        getTimeCalendar().add(Calendar.MONTH, -1)
         update()
     }
 
     private fun nextYear() {
-        dateCalendar!!.add(Calendar.YEAR, 1)
-        timeCalendar!!.add(Calendar.YEAR, 1)
+        getDateCalendar().add(Calendar.YEAR, 1)
+        getTimeCalendar().add(Calendar.YEAR, 1)
         update()
     }
 
     private fun prevYear() {
-        dateCalendar!!.add(Calendar.YEAR, -1)
-        timeCalendar!!.add(Calendar.YEAR, -1)
+        getDateCalendar().add(Calendar.YEAR, -1)
+        getTimeCalendar().add(Calendar.YEAR, -1)
         update()
     }
 
-    @Throws(Exception::class)
-    protected abstract fun update(location: LocationDetails, calendar: Calendar, view: View)
+    protected abstract fun update(view: View)
 
     protected fun offThreadUpdate(location: LocationDetails, calendar: Calendar, view: View) {
         data class Params(val location: LocationDetails, val calendar: Calendar)

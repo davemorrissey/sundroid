@@ -19,18 +19,17 @@ abstract class AbstractDataFragment : AbstractFragment(), OnViewPrefsChangedList
     protected var isSafe: Boolean = false
         get() = activity != null && !isDetached && applicationContext != null
 
-    protected var location: LocationDetails? = null
-        get() = SharedPrefsHelper.getSelectedLocation(applicationContext!!)
+    protected fun getLocation(): LocationDetails {
+        return SharedPrefsHelper.getSelectedLocation(applicationContext!!)!!
+    }
 
-    protected var dateCalendar: Calendar? = null
-        get() = if (activity is DataActivity) {
-            (activity as DataActivity).dateCalendar
-        } else null
+    protected fun getDateCalendar(): Calendar {
+        return (activity as DataActivity).dateCalendar
+    }
 
-    protected var timeCalendar: Calendar? = null
-        get() = if (activity is DataActivity) {
-            (activity as DataActivity).timeCalendar
-        } else null
+    protected fun getTimeCalendar(): Calendar {
+        return (activity as DataActivity).timeCalendar
+    }
 
     abstract fun initialise()
 
@@ -43,7 +42,6 @@ abstract class AbstractDataFragment : AbstractFragment(), OnViewPrefsChangedList
         } catch (e: Exception) {
             e(TAG, "Initialise for settings change failed", e)
         }
-
     }
 
     protected fun startTimeZone() {

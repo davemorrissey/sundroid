@@ -181,9 +181,8 @@ class MonthCalendarsFragment : AbstractMonthFragment<ArrayList<MonthCalendarsFra
         list.adapter = listAdapter
     }
 
-    @Throws(Exception::class)
-    override fun update(location: LocationDetails, calendar: Calendar, view: View) {
-        offThreadUpdate(location, calendar, view)
+    override fun update(view: View) {
+        offThreadUpdate(getLocation(), getDateCalendar(), view)
     }
 
     class DayEntry {
@@ -200,6 +199,7 @@ class MonthCalendarsFragment : AbstractMonthFragment<ArrayList<MonthCalendarsFra
     inner class DayEntryAdapter constructor(list: ArrayList<DayEntry?>) : ArrayAdapter<DayEntry>(applicationContext, R.layout.frag_data_monthcalendars_row, list) {
 
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+            val location = getLocation()
             var row = convertView
             if (row == null) {
                 val inflater = activity.layoutInflater

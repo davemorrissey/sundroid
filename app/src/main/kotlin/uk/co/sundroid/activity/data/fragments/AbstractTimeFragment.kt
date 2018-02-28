@@ -33,10 +33,8 @@ abstract class AbstractTimeFragment : AbstractDataFragment(), OnClickListener, O
 
     protected abstract val layout: Int
 
-    @Throws(Exception::class)
     protected abstract fun initialise(location: LocationDetails, dateCalendar: Calendar, timeCalendar: Calendar, view: View)
 
-    @Throws(Exception::class)
     protected abstract fun update(location: LocationDetails, dateCalendar: Calendar, timeCalendar: Calendar, view: View, timeOnly: Boolean)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, state: Bundle?): View? {
@@ -62,14 +60,14 @@ abstract class AbstractTimeFragment : AbstractDataFragment(), OnClickListener, O
     }
 
     override fun onDateSet(year: Int, month: Int, date: Int) {
-        dateCalendar!!.set(year, month, date)
-        timeCalendar!!.set(year, month, date)
+        getDateCalendar().set(year, month, date)
+        getTimeCalendar().set(year, month, date)
         update()
     }
 
     override fun onTimeSet(hour: Int, minute: Int) {
-        timeCalendar!!.set(Calendar.HOUR_OF_DAY, hour)
-        timeCalendar!!.set(Calendar.MINUTE, minute)
+        getTimeCalendar().set(Calendar.HOUR_OF_DAY, hour)
+        getTimeCalendar().set(Calendar.MINUTE, minute)
         update()
     }
 
@@ -100,11 +98,11 @@ abstract class AbstractTimeFragment : AbstractDataFragment(), OnClickListener, O
     }
 
     private fun safeInitialise(view: View?) {
-        val location = location
-        val dateCalendar = dateCalendar
-        val timeCalendar = timeCalendar
+        val location = getLocation()
+        val dateCalendar = getDateCalendar()
+        val timeCalendar = getTimeCalendar()
         try {
-            if (location != null && dateCalendar != null && timeCalendar != null && view != null && !isDetached) {
+            if (view != null && !isDetached) {
                 initGestures(view)
                 updateDateAndTime(view, dateCalendar, timeCalendar)
                 initialise(location, dateCalendar, timeCalendar, view)
@@ -116,11 +114,11 @@ abstract class AbstractTimeFragment : AbstractDataFragment(), OnClickListener, O
     }
 
     private fun safeUpdate(view: View?, timeOnly: Boolean) {
-        val location = location
-        val dateCalendar = dateCalendar
-        val timeCalendar = timeCalendar
+        val location = getLocation()
+        val dateCalendar = getDateCalendar()
+        val timeCalendar = getTimeCalendar()
         try {
-            if (location != null && dateCalendar != null && timeCalendar != null && view != null && !isDetached) {
+            if (view != null && !isDetached) {
                 updateDateAndTime(view, dateCalendar, timeCalendar)
                 update(location, dateCalendar, timeCalendar, view, timeOnly)
             }
@@ -181,7 +179,7 @@ abstract class AbstractTimeFragment : AbstractDataFragment(), OnClickListener, O
     }
 
     private fun updateDateAndTime(view: View?, dateCalendar: Calendar, timeCalendar: Calendar) {
-        val location = location
+        val location = getLocation()
         if (location == null || view == null) {
             return
         }
@@ -218,23 +216,23 @@ abstract class AbstractTimeFragment : AbstractDataFragment(), OnClickListener, O
     }
 
     private fun showDatePicker() {
-        val datePickerFragment = DatePickerFragment.newInstance(dateCalendar!!)
+        val datePickerFragment = DatePickerFragment.newInstance(getDateCalendar())
         datePickerFragment.setTargetFragment(this, 0)
         datePickerFragment.show(fragmentManager, "datePicker")
     }
 
     private fun showTimePicker() {
-        val timePickerFragment = TimePickerFragment.newInstance(timeCalendar!!)
+        val timePickerFragment = TimePickerFragment.newInstance(getTimeCalendar())
         timePickerFragment.setTargetFragment(this, 0)
         timePickerFragment.show(fragmentManager, "timePicker")
     }
 
     override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-        if (fromUser && timeCalendar != null) {
+        if (fromUser) {
             val hours = progress / 60
             val minutes = progress - hours * 60
-            timeCalendar!!.set(Calendar.HOUR_OF_DAY, hours)
-            timeCalendar!!.set(Calendar.MINUTE, minutes)
+            getTimeCalendar().set(Calendar.HOUR_OF_DAY, hours)
+            getTimeCalendar().set(Calendar.MINUTE, minutes)
             safeUpdate(view, false)
         }
     }
@@ -248,37 +246,37 @@ abstract class AbstractTimeFragment : AbstractDataFragment(), OnClickListener, O
     }
 
     private fun nextDate() {
-        dateCalendar!!.add(Calendar.DAY_OF_MONTH, 1)
-        timeCalendar!!.add(Calendar.DAY_OF_MONTH, 1)
+        getDateCalendar().add(Calendar.DAY_OF_MONTH, 1)
+        getTimeCalendar().add(Calendar.DAY_OF_MONTH, 1)
         safeUpdate(view, false)
     }
 
     private fun nextMonth() {
-        dateCalendar!!.add(Calendar.MONTH, 1)
-        timeCalendar!!.add(Calendar.MONTH, 1)
+        getDateCalendar().add(Calendar.MONTH, 1)
+        getTimeCalendar().add(Calendar.MONTH, 1)
         safeUpdate(view, false)
     }
 
     private fun prevDate() {
-        dateCalendar!!.add(Calendar.DAY_OF_MONTH, -1)
-        timeCalendar!!.add(Calendar.DAY_OF_MONTH, -1)
+        getDateCalendar().add(Calendar.DAY_OF_MONTH, -1)
+        getTimeCalendar().add(Calendar.DAY_OF_MONTH, -1)
         safeUpdate(view, false)
     }
 
     private fun prevMonth() {
-        dateCalendar!!.add(Calendar.MONTH, -1)
-        timeCalendar!!.add(Calendar.MONTH, -1)
+        getDateCalendar().add(Calendar.MONTH, -1)
+        getTimeCalendar().add(Calendar.MONTH, -1)
         safeUpdate(view, false)
     }
 
     private fun nextMinute() {
         if (view != null) {
-            val dayOfYear = timeCalendar!!.get(Calendar.DAY_OF_YEAR)
-            timeCalendar!!.add(Calendar.MINUTE, 1)
-            val minutes = timeCalendar!!.get(Calendar.HOUR_OF_DAY) * 60 + timeCalendar!!.get(Calendar.MINUTE)
+            val dayOfYear = getTimeCalendar().get(Calendar.DAY_OF_YEAR)
+            getTimeCalendar().add(Calendar.MINUTE, 1)
+            val minutes = getTimeCalendar().get(Calendar.HOUR_OF_DAY) * 60 + getTimeCalendar().get(Calendar.MINUTE)
             (view!!.findViewById<View>(R.id.timeSeeker) as SeekBar).progress = minutes
-            if (timeCalendar!!.get(Calendar.DAY_OF_YEAR) != dayOfYear) {
-                dateCalendar!!.add(Calendar.DAY_OF_MONTH, 1)
+            if (getTimeCalendar().get(Calendar.DAY_OF_YEAR) != dayOfYear) {
+                getDateCalendar().add(Calendar.DAY_OF_MONTH, 1)
                 safeUpdate(view, false)
             } else {
                 safeUpdate(view, true)
@@ -288,12 +286,12 @@ abstract class AbstractTimeFragment : AbstractDataFragment(), OnClickListener, O
 
     private fun prevMinute() {
         if (view != null) {
-            val dayOfYear = timeCalendar!!.get(Calendar.DAY_OF_YEAR)
-            timeCalendar!!.add(Calendar.MINUTE, -1)
-            val minutes = timeCalendar!!.get(Calendar.HOUR_OF_DAY) * 60 + timeCalendar!!.get(Calendar.MINUTE)
+            val dayOfYear = getTimeCalendar().get(Calendar.DAY_OF_YEAR)
+            getTimeCalendar().add(Calendar.MINUTE, -1)
+            val minutes = getTimeCalendar().get(Calendar.HOUR_OF_DAY) * 60 + getTimeCalendar().get(Calendar.MINUTE)
             (view!!.findViewById<View>(R.id.timeSeeker) as SeekBar).progress = minutes
-            if (timeCalendar!!.get(Calendar.DAY_OF_YEAR) != dayOfYear) {
-                dateCalendar!!.add(Calendar.DAY_OF_MONTH, -1)
+            if (getTimeCalendar().get(Calendar.DAY_OF_YEAR) != dayOfYear) {
+                getDateCalendar().add(Calendar.DAY_OF_MONTH, -1)
                 safeUpdate(view, false)
             } else {
                 safeUpdate(view, true)
@@ -303,12 +301,12 @@ abstract class AbstractTimeFragment : AbstractDataFragment(), OnClickListener, O
 
     private fun nextHour() {
         if (view != null) {
-            val dayOfYear = timeCalendar!!.get(Calendar.DAY_OF_YEAR)
-            timeCalendar!!.add(Calendar.HOUR_OF_DAY, 1)
-            val minutes = timeCalendar!!.get(Calendar.HOUR_OF_DAY) * 60 + timeCalendar!!.get(Calendar.MINUTE)
+            val dayOfYear = getTimeCalendar().get(Calendar.DAY_OF_YEAR)
+            getTimeCalendar().add(Calendar.HOUR_OF_DAY, 1)
+            val minutes = getTimeCalendar().get(Calendar.HOUR_OF_DAY) * 60 + getTimeCalendar().get(Calendar.MINUTE)
             (view!!.findViewById<View>(R.id.timeSeeker) as SeekBar).progress = minutes
-            if (timeCalendar!!.get(Calendar.DAY_OF_YEAR) != dayOfYear) {
-                dateCalendar!!.add(Calendar.DAY_OF_MONTH, 1)
+            if (getTimeCalendar().get(Calendar.DAY_OF_YEAR) != dayOfYear) {
+                getDateCalendar().add(Calendar.DAY_OF_MONTH, 1)
                 safeUpdate(view, false)
             } else {
                 safeUpdate(view, true)
@@ -318,12 +316,12 @@ abstract class AbstractTimeFragment : AbstractDataFragment(), OnClickListener, O
 
     private fun prevHour() {
         if (view != null) {
-            val dayOfYear = timeCalendar!!.get(Calendar.DAY_OF_YEAR)
-            timeCalendar!!.add(Calendar.HOUR_OF_DAY, -1)
-            val minutes = timeCalendar!!.get(Calendar.HOUR_OF_DAY) * 60 + timeCalendar!!.get(Calendar.MINUTE)
+            val dayOfYear = getTimeCalendar().get(Calendar.DAY_OF_YEAR)
+            getTimeCalendar().add(Calendar.HOUR_OF_DAY, -1)
+            val minutes = getTimeCalendar().get(Calendar.HOUR_OF_DAY) * 60 + getTimeCalendar().get(Calendar.MINUTE)
             (view!!.findViewById<View>(R.id.timeSeeker) as SeekBar).progress = minutes
-            if (timeCalendar!!.get(Calendar.DAY_OF_YEAR) != dayOfYear) {
-                dateCalendar!!.add(Calendar.DAY_OF_MONTH, -1)
+            if (getTimeCalendar().get(Calendar.DAY_OF_YEAR) != dayOfYear) {
+                getDateCalendar().add(Calendar.DAY_OF_MONTH, -1)
                 safeUpdate(view, false)
             } else {
                 safeUpdate(view, true)

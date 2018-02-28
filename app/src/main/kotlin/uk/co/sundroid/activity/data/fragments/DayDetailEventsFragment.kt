@@ -13,7 +13,6 @@ import uk.co.sundroid.util.astro.RiseSetType
 import uk.co.sundroid.util.astro.SunDay
 import uk.co.sundroid.util.astro.math.BodyPositionCalculator
 import uk.co.sundroid.util.astro.math.SunCalculator
-import uk.co.sundroid.domain.LocationDetails
 import uk.co.sundroid.util.prefs.SharedPrefsHelper
 import uk.co.sundroid.util.geometry.*
 import uk.co.sundroid.util.time.*
@@ -33,8 +32,9 @@ class DayDetailEventsFragment : AbstractDayFragment(), ConfigurableFragment {
         settingsDialog.show(fragmentManager, "dayEventsSettings")
     }
 
-    @Throws(Exception::class)
-    override fun update(location: LocationDetails, calendar: Calendar, view: View) {
+    override fun update(view: View) {
+        val location = getLocation()
+        val calendar = getDateCalendar()
 
         val thread = object : Thread() {
             override fun run() {

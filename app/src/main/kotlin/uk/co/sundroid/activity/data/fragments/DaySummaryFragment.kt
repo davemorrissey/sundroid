@@ -10,12 +10,10 @@ import uk.co.sundroid.util.astro.RiseSetType
 import uk.co.sundroid.util.astro.image.MoonPhaseImage
 import uk.co.sundroid.util.astro.math.BodyPositionCalculator
 import uk.co.sundroid.util.astro.math.SunCalculator
-import uk.co.sundroid.domain.LocationDetails
 import uk.co.sundroid.util.log.*
 import uk.co.sundroid.util.theme.*
 import uk.co.sundroid.util.time.*
 
-import java.util.Calendar
 import java.util.TreeSet
 
 class DaySummaryFragment : AbstractDayFragment() {
@@ -25,8 +23,9 @@ class DaySummaryFragment : AbstractDayFragment() {
     override val layout: Int
         get() = R.layout.frag_data_daysummary
 
-    @Throws(Exception::class)
-    override fun update(location: LocationDetails, calendar: Calendar, view: View) {
+    override fun update(view: View) {
+        val location = getLocation()
+        val calendar = getDateCalendar()
 
         val sunDay = SunCalculator.calcDay(location.location, calendar)
         val moonDay = BodyPositionCalculator.calcDay(Body.MOON, location.location, calendar, true) as MoonDay

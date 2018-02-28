@@ -22,8 +22,9 @@ class MonthMoonPhaseFragment : AbstractMonthFragment<Any>() {
     override val layout: Int
         get() = R.layout.frag_data_monthmoonphase
 
-    @Throws(Exception::class)
-    override fun update(location: LocationDetails, calendar: Calendar, view: View) {
+    override fun update(view: View) {
+        val location = getLocation()
+        val calendar = getDateCalendar()
 
         val thread = object : Thread() {
             override fun run() {
