@@ -1,5 +1,6 @@
 package uk.co.sundroid.activity.data.fragments
 
+import android.os.AsyncTask
 import android.os.Bundle
 import android.os.Handler
 import android.view.*
@@ -173,20 +174,18 @@ abstract class AbstractMonthFragment<T> : AbstractDataFragment(), MonthPickerFra
     protected abstract fun update(location: LocationDetails, calendar: Calendar, view: View)
 
     protected fun offThreadUpdate(location: LocationDetails, calendar: Calendar, view: View) {
-        val thread = object : Thread() {
-            override fun run() {
-                if (!isSafe) {
-                    return
-                }
-                val data = calculate(location, calendar)
-                handler.post {
-                    if (isSafe) {
-                        post(view, data)
-                    }
+        data class Params(val location: LocationDetails, val calendar: Calendar)
+        class Task : AsyncTask<Params, Void, T>() {
+            override fun doInBackground(vararg params: Params): T {
+                return calculate(params[0].location, params[0].calendar)
+            }
+            override fun onPostExecute(data: T) {
+                if (isSafe) {
+                    post(view, data)
                 }
             }
         }
-        thread.start()
+        Task().execute(Params(location, calendar))
     }
 
     abstract fun calculate(location: LocationDetails, calendar: Calendar): T
@@ -198,6 +197,5 @@ abstract class AbstractMonthFragment<T> : AbstractDataFragment(), MonthPickerFra
     companion object {
         private val TAG = AbstractMonthFragment::class.java.simpleName
     }
-
 
 }

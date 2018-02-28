@@ -60,7 +60,7 @@ class YearEventsFragment : AbstractYearFragment(), ConfigurableFragment {
 
                         var first = true
                         for (event in eventsList) {
-                            val eventTime = formatTime(applicationContext!!, event.time, false)
+                            val eventTime = formatTime(activity, event.time, false)
                             var title = ""
                             var time = eventTime.time + eventTime.marker.toLowerCase()
                             var subtitle = ""
@@ -68,20 +68,20 @@ class YearEventsFragment : AbstractYearFragment(), ConfigurableFragment {
                             var image = 0
                             when (event.type) {
                                 YearData.EventType.EARTH_APHELION, YearData.EventType.EARTH_PERIHELION -> {
-                                    if (SharedPrefsHelper.getShowElement(applicationContext!!, "yearEarthApsis", true)) {
+                                    if (SharedPrefsHelper.getShowElement(activity, "yearEarthApsis", true)) {
                                         title = event.type.displayName
                                         link = event.link
                                     }
                                 }
                                 YearData.EventType.PARTIAL_LUNAR, YearData.EventType.TOTAL_LUNAR, YearData.EventType.PENUMBRAL_LUNAR -> {
-                                    if (SharedPrefsHelper.getShowElement(applicationContext!!, "yearLunarEclipse", true)) {
+                                    if (SharedPrefsHelper.getShowElement(activity, "yearLunarEclipse", true)) {
                                         title = event.type.displayName
                                         time = "Greatest eclipse: " + time
                                         link = event.link
                                     }
                                 }
                                 YearData.EventType.PARTIAL_SOLAR, YearData.EventType.TOTAL_SOLAR, YearData.EventType.ANNULAR_SOLAR, YearData.EventType.HYBRID_SOLAR -> {
-                                    if (!SharedPrefsHelper.getShowElement(applicationContext!!, "yearSolarEclipse", true)) {
+                                    if (!SharedPrefsHelper.getShowElement(activity, "yearSolarEclipse", true)) {
                                         title = event.type.displayName
                                         time = "Greatest eclipse: " + time
                                         subtitle = event.extra as String
@@ -89,53 +89,53 @@ class YearEventsFragment : AbstractYearFragment(), ConfigurableFragment {
                                     }
                                 }
                                 YearData.EventType.MARCH_EQUINOX, YearData.EventType.SEPTEMBER_EQUINOX -> {
-                                    if (SharedPrefsHelper.getShowElement(applicationContext!!, "yearEquinox", true)) {
+                                    if (SharedPrefsHelper.getShowElement(activity, "yearEquinox", true)) {
                                         title = event.type.displayName
                                     }
                                 }
                                 YearData.EventType.NORTHERN_SOLSTICE -> {
-                                    if (SharedPrefsHelper.getShowElement(applicationContext!!, "yearSolstice", true)) {
+                                    if (SharedPrefsHelper.getShowElement(activity, "yearSolstice", true)) {
                                         title = event.type.displayName
                                         if (Math.abs(location.location.latitude.doubleValue) > 23.44) {
                                             val sunDay = SunCalculator.calcDay(location.location, event.time, SunCalculator.Event.RISESET)
                                             val localExtreme = if (location.location.latitude.doubleValue >= 0) "Longest" else "Shortest"
-                                            subtitle = localExtreme + " day: " + formatDurationHMS(applicationContext!!, sunDay.uptimeHours, true)
+                                            subtitle = localExtreme + " day: " + formatDurationHMS(activity, sunDay.uptimeHours, true)
                                         }
                                     }
                                 }
                                 YearData.EventType.SOUTHERN_SOLSTICE -> {
-                                    if (SharedPrefsHelper.getShowElement(applicationContext!!, "yearSolstice", true)) {
+                                    if (SharedPrefsHelper.getShowElement(activity, "yearSolstice", true)) {
                                         title = event.type.displayName
                                         if (Math.abs(location.location.latitude.doubleValue) > 23.44) {
                                             val sunDay = SunCalculator.calcDay(location.location, event.time, SunCalculator.Event.RISESET)
                                             val localExtreme = if (location.location.latitude.doubleValue >= 0) "Shortest" else "Longest"
-                                            subtitle = localExtreme + " day: " + formatDurationHMS(applicationContext!!, sunDay.uptimeHours, true)
+                                            subtitle = localExtreme + " day: " + formatDurationHMS(activity, sunDay.uptimeHours, true)
                                         }
                                     }
                                 }
                                 YearData.EventType.PHASE -> {
                                     val moonPhase = event.extra as MoonPhaseEvent?
-                                    when (moonPhase!!.phase) {
+                                    when (moonPhase?.phase) {
                                         MoonPhase.FULL -> {
-                                            if (SharedPrefsHelper.getShowElement(applicationContext!!, "yearFullMoon", true)) {
+                                            if (SharedPrefsHelper.getShowElement(activity, "yearFullMoon", true)) {
                                                 title = "Full Moon"
                                                 image = getPhaseFull()
                                             }
                                         }
                                         MoonPhase.NEW -> {
-                                            if (SharedPrefsHelper.getShowElement(applicationContext!!, "yearNewMoon", true)) {
+                                            if (SharedPrefsHelper.getShowElement(activity, "yearNewMoon", true)) {
                                                 title = "New Moon"
                                                 image = getPhaseNew()
                                             }
                                         }
                                         MoonPhase.FIRST_QUARTER -> {
-                                            if (SharedPrefsHelper.getShowElement(applicationContext!!, "yearQuarterMoon", true)) {
+                                            if (SharedPrefsHelper.getShowElement(activity, "yearQuarterMoon", true)) {
                                                 title = "First Quarter"
                                                 image = if (location.location.latitude.doubleValue >= 0) getPhaseRight() else getPhaseLeft()
                                             }
                                         }
                                         MoonPhase.LAST_QUARTER -> {
-                                            if (SharedPrefsHelper.getShowElement(applicationContext!!, "yearQuarterMoon", true)) {
+                                            if (SharedPrefsHelper.getShowElement(activity, "yearQuarterMoon", true)) {
                                                 title = "Last Quarter"
                                                 image = if (location.location.latitude.doubleValue >= 0) getPhaseLeft() else getPhaseRight()
                                             }
@@ -164,7 +164,7 @@ class YearEventsFragment : AbstractYearFragment(), ConfigurableFragment {
                                 showInView(eventRow, R.id.yearEventImg)
                             }
                             textInView(eventRow, R.id.yearEventDate, Integer.toString(event.time.get(Calendar.DAY_OF_MONTH)))
-                            textInView(eventRow, R.id.yearEventMonth, getShortMonth(event.time))
+                            textInView(eventRow, R.id.yearEventMonth, getShortMonth(event.time).toUpperCase())
                             textInView(eventRow, R.id.yearEventTitle, Html.fromHtml(title))
                             textInView(eventRow, R.id.yearEventTime, Html.fromHtml(time))
                             if (isNotEmpty(subtitle)) {
@@ -199,25 +199,6 @@ class YearEventsFragment : AbstractYearFragment(), ConfigurableFragment {
             }
         }
         thread.start()
-    }
-
-    private fun getShortMonth(calendar: Calendar): String {
-        when (calendar.get(Calendar.MONTH)) {
-            0 -> return "JAN"
-            1 -> return "FEB"
-            2 -> return "MAR"
-            3 -> return "APR"
-            4 -> return "MAY"
-            5 -> return "JUN"
-            6 -> return "JUL"
-            7 -> return "AUG"
-            8 -> return "SEP"
-            9 -> return "OCT"
-            10 -> return "NOV"
-            11 -> return "DEC"
-        }
-        return ""
-
     }
 
 }
