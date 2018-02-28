@@ -105,7 +105,7 @@ class MonthCalendarsFragment : AbstractMonthFragment<ArrayList<MonthCalendarsFra
 
     }
 
-    override fun calculate(location: LocationDetails, calendar: Calendar): ArrayList<DayEntry?>? {
+    override fun calculate(location: LocationDetails, calendar: Calendar): ArrayList<DayEntry?> {
         val type = type
         val body = body
 
@@ -175,8 +175,8 @@ class MonthCalendarsFragment : AbstractMonthFragment<ArrayList<MonthCalendarsFra
 
     }
 
-    fun post(view: View, entries: ArrayList<DayEntry?>) {
-        val listAdapter = DayEntryAdapter(entries)
+    override fun post(view: View, data: ArrayList<MonthCalendarsFragment.DayEntry?>) {
+        val listAdapter = DayEntryAdapter(data)
         val list = view.findViewById<ListView>(R.id.monthCalList)
         list.adapter = listAdapter
     }

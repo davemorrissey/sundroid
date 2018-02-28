@@ -182,5 +182,7 @@ class MonthMoonPhaseFragment : AbstractMonthFragment<Any>() {
         thread.start()
     }
 
-
+    override fun calculate(location: LocationDetails, calendar: Calendar): Any {
+        return "NOT IMPLEMENTED"
+    }
 }

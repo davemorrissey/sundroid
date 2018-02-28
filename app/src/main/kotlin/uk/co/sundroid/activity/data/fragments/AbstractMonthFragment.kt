@@ -188,14 +188,11 @@ abstract class AbstractMonthFragment<T> : AbstractDataFragment(), MonthPickerFra
             }
         }
         thread.start()
-
     }
 
-    protected open fun calculate(location: LocationDetails, calendar: Calendar): T? {
-        return null
-    }
+    abstract fun calculate(location: LocationDetails, calendar: Calendar): T
 
-    protected open fun post(view: View, data: T?) {
+    protected open fun post(view: View, data: T) {
 
     }
 
