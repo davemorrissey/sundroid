@@ -32,6 +32,10 @@ class DayDetailEventsFragment : AbstractDayFragment(), ConfigurableFragment {
         settingsDialog.show(fragmentManager, "dayEventsSettings")
     }
 
+    override fun initialise() {
+
+    }
+
     override fun update(view: View) {
         val location = getLocation()
         val calendar = getDateCalendar()

@@ -31,7 +31,7 @@ abstract class AbstractDataFragment : AbstractFragment(), OnViewPrefsChangedList
         return (activity as DataActivity).timeCalendar
     }
 
-    abstract fun initialise()
+    open fun initialise() { }
 
     abstract fun update()
 

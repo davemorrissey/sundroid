@@ -1,21 +1,22 @@
 package uk.co.sundroid.activity.data.fragments
 
 import android.os.Bundle
-import android.view.*
-import uk.co.sundroid.R
+import android.view.GestureDetector
+import android.view.LayoutInflater
+import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
+import android.view.ViewGroup
+import kotlinx.android.synthetic.main.inc_datebar.*
 import uk.co.sundroid.activity.data.fragments.dialogs.date.DatePickerFragment
-import uk.co.sundroid.domain.LocationDetails
+import uk.co.sundroid.util.isNotEmpty
 import uk.co.sundroid.util.prefs.SharedPrefsHelper
-import uk.co.sundroid.util.*
 import uk.co.sundroid.util.view.ButtonDragGestureDetector
 import uk.co.sundroid.util.view.ButtonDragGestureDetector.ButtonDragGestureDetectorListener
-import uk.co.sundroid.util.log.*
-
 import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Date
-import java.util.Locale
-import java.util.TimeZone
+import java.util.*
+import java.util.Calendar.DAY_OF_MONTH
+import java.util.Calendar.MONTH
 
 abstract class AbstractDayFragment : AbstractDataFragment(), DatePickerFragment.OnDateSelectedListener {
 
@@ -31,24 +32,16 @@ abstract class AbstractDayFragment : AbstractDataFragment(), DatePickerFragment.
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        initGestures(view)
-        updateDate(view)
+        initGestures()
+        updateDate()
         update()
-    }
-
-    override fun initialise() {
-//        val view = view
-//        if (isSafe && view != null) {
-//            initGestures(view)
-//            updateDate(view)
-//        }
     }
 
     override fun update() {
         val view = view
         if (isSafe && view != null) {
-            initGestures(view)
-            updateDate(view)
+            initGestures()
+            updateDate()
             update(view)
         }
     }
@@ -59,60 +52,49 @@ abstract class AbstractDayFragment : AbstractDataFragment(), DatePickerFragment.
         update()
     }
 
-    private fun initGestures(view: View) {
+    private fun initGestures() {
         if (dateDetector == null) {
             val dateListener = object : ButtonDragGestureDetectorListener {
-                override fun onButtonDragUp() {
-                    prevMonth()
-                }
-
-                override fun onButtonDragDown() {
-                    nextMonth()
-                }
-
-                override fun onButtonDragLeft() {
-                    prevDate()
-                }
-
-                override fun onButtonDragRight() {
-                    nextDate()
-                }
+                override fun onButtonDragUp() = changeCalendars(MONTH, -1)
+                override fun onButtonDragDown() = changeCalendars(MONTH, 1)
+                override fun onButtonDragLeft() = changeCalendars(DAY_OF_MONTH, -1)
+                override fun onButtonDragRight() = changeCalendars(DAY_OF_MONTH, 1)
             }
             dateDetector = GestureDetector(applicationContext, ButtonDragGestureDetector(dateListener, applicationContext!!))
         }
 
-        view.findViewById<View>(R.id.datePrev).setOnClickListener { _ -> prevDate() }
-        view.findViewById<View>(R.id.dateNext).setOnClickListener { _ -> nextDate() }
-        view.findViewById<View>(R.id.zoneButton).setOnClickListener { _ -> startTimeZone() }
-        view.findViewById<View>(R.id.dateButton).setOnClickListener { _ -> showDatePicker() }
-        view.findViewById<View>(R.id.dateButton).setOnTouchListener { _, e -> dateDetector?.onTouchEvent(e) ?: false }
+        datePrev.setOnClickListener { _ -> changeCalendars(DAY_OF_MONTH, -1) }
+        dateNext.setOnClickListener { _ -> changeCalendars(DAY_OF_MONTH, 1) }
+        zoneButton.setOnClickListener { _ -> startTimeZone() }
+        dateButton.setOnClickListener { _ -> showDatePicker() }
+        dateButton.setOnTouchListener { _, e -> dateDetector?.onTouchEvent(e) ?: false }
     }
 
-    private fun updateDate(view: View) {
+    private fun updateDate() {
         val location = getLocation()
         val calendar = getDateCalendar()
         if (SharedPrefsHelper.getShowTimeZone(applicationContext!!)) {
-            showInView(view, R.id.zoneButton)
+            zoneButton.visibility = VISIBLE
             val zone = location.timeZone!!.zone
-            val zoneDST = zone.inDaylightTime(Date(calendar.timeInMillis + 12 * 60 * 60 * 1000))
-            val zoneName = zone.getDisplayName(zoneDST, TimeZone.LONG)
-            textInView(view, R.id.zoneName, zoneName)
+            val dst = zone.inDaylightTime(Date(calendar.timeInMillis + 12 * 60 * 60 * 1000))
+            val name = zone.getDisplayName(dst, TimeZone.LONG)
+            zoneName.text = name
 
-            var zoneCities = location.timeZone!!.getOffset(calendar.timeInMillis + 12 * 60 * 60 * 1000) // Get day's main offset.
+            var cities = location.timeZone!!.getOffset(calendar.timeInMillis + 12 * 60 * 60 * 1000) // Get day's main offset.
             if (isNotEmpty(location.timeZone!!.cities)) {
-                zoneCities += " " + location.timeZone!!.cities!!
+                cities += " " + location.timeZone!!.cities!!
             }
-            textInView(view, R.id.zoneCities, zoneCities)
+            zoneCities.text = cities
         } else {
-            removeInView(view, R.id.zoneButton)
+            zoneButton.visibility = GONE
         }
 
         dateFormat.timeZone = calendar.timeZone
         weekdayFormat.timeZone = calendar.timeZone
         val date = dateFormat.format(Date(calendar.timeInMillis))
         val weekday = weekdayFormat.format(Date(calendar.timeInMillis))
-        showInView(view, R.id.dateDMY, date)
-        showInView(view, R.id.dateWeekday, weekday)
+        dateDMY.text = date
+        dateWeekday.text = weekday
     }
 
     private fun showDatePicker() {
@@ -121,27 +103,8 @@ abstract class AbstractDayFragment : AbstractDataFragment(), DatePickerFragment.
         datePickerFragment.show(fragmentManager, "datePicker")
     }
 
-    private fun nextDate() {
-        getDateCalendar().add(Calendar.DAY_OF_MONTH, 1)
-        getTimeCalendar().add(Calendar.DAY_OF_MONTH, 1)
-        update()
-    }
-
-    private fun nextMonth() {
-        getDateCalendar().add(Calendar.MONTH, 1)
-        getTimeCalendar().add(Calendar.MONTH, 1)
-        update()
-    }
-
-    private fun prevDate() {
-        getDateCalendar().add(Calendar.DAY_OF_MONTH, -1)
-        getTimeCalendar().add(Calendar.DAY_OF_MONTH, -1)
-        update()
-    }
-
-    private fun prevMonth() {
-        getDateCalendar().add(Calendar.MONTH, -1)
-        getTimeCalendar().add(Calendar.MONTH, -1)
+    private fun changeCalendars(field: Int, diff: Int) {
+        arrayOf(getDateCalendar(), getTimeCalendar()).forEach { it.add(field, diff) }
         update()
     }
 
