@@ -3,24 +3,23 @@ package uk.co.sundroid.activity.data.fragments
 import android.os.AsyncTask
 import android.os.Bundle
 import android.os.Handler
-import android.view.*
-import uk.co.sundroid.R
+import android.view.GestureDetector
+import android.view.LayoutInflater
+import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
+import android.view.ViewGroup
+import kotlinx.android.synthetic.main.inc_monthbar.*
 import uk.co.sundroid.activity.data.fragments.dialogs.date.MonthPickerFragment
 import uk.co.sundroid.domain.LocationDetails
+import uk.co.sundroid.util.isNotEmpty
 import uk.co.sundroid.util.prefs.SharedPrefsHelper
-import uk.co.sundroid.util.*
 import uk.co.sundroid.util.view.ButtonDragGestureDetector
 import uk.co.sundroid.util.view.ButtonDragGestureDetector.ButtonDragGestureDetectorListener
-
 import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Date
-import java.util.Locale
-import java.util.TimeZone
-import java.util.Calendar.*
-import android.view.View.*
-
-import kotlinx.android.synthetic.main.inc_monthbar.*
+import java.util.*
+import java.util.Calendar.MONTH
+import java.util.Calendar.YEAR
 
 abstract class AbstractMonthFragment<T> : AbstractDataFragment(), MonthPickerFragment.OnMonthSelectedListener {
 

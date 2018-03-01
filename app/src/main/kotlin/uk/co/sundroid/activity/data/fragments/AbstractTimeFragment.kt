@@ -1,35 +1,32 @@
 package uk.co.sundroid.activity.data.fragments
 
 import android.os.Bundle
-import android.view.*
-import android.view.View.OnClickListener
-import android.view.View.OnTouchListener
+import android.view.GestureDetector
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
+import kotlinx.android.synthetic.main.inc_timebar.*
 import uk.co.sundroid.R
 import uk.co.sundroid.activity.data.fragments.dialogs.date.DatePickerFragment
 import uk.co.sundroid.activity.data.fragments.dialogs.date.TimePickerFragment
 import uk.co.sundroid.domain.LocationDetails
+import uk.co.sundroid.util.isNotEmpty
+import uk.co.sundroid.util.log.e
 import uk.co.sundroid.util.prefs.SharedPrefsHelper
-import uk.co.sundroid.util.*
+import uk.co.sundroid.util.time.formatTime
 import uk.co.sundroid.util.view.ButtonDragGestureDetector
 import uk.co.sundroid.util.view.ButtonDragGestureDetector.ButtonDragGestureDetectorListener
-import uk.co.sundroid.util.log.*
-import uk.co.sundroid.util.time.*
-
 import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Date
-import java.util.Locale
-import java.util.TimeZone
+import java.util.*
+import java.util.Calendar.DAY_OF_MONTH
+import java.util.Calendar.MONTH
 
-abstract class AbstractTimeFragment : AbstractDataFragment(), OnClickListener, OnTouchListener, OnSeekBarChangeListener, DatePickerFragment.OnDateSelectedListener, TimePickerFragment.OnTimeSelectedListener {
+abstract class AbstractTimeFragment : AbstractDataFragment(), OnSeekBarChangeListener, DatePickerFragment.OnDateSelectedListener, TimePickerFragment.OnTimeSelectedListener {
 
     private val dateFormat = SimpleDateFormat("dd MMM yyyy", Locale.US)
     private val weekdayFormat = SimpleDateFormat("EEEE", Locale.US)
-
-    private var dateDetector: GestureDetector? = null
-    private var timeDetector: GestureDetector? = null
 
     protected abstract val layout: Int
 
@@ -71,32 +68,6 @@ abstract class AbstractTimeFragment : AbstractDataFragment(), OnClickListener, O
         update()
     }
 
-    override fun onClick(button: View) {
-        when (button.id) {
-            R.id.timeButton -> {
-                showTimePicker()
-                return
-            }
-            R.id.dateButton -> {
-                showDatePicker()
-                return
-            }
-            R.id.zoneButton -> {
-                startTimeZone()
-                return
-            }
-        }
-    }
-
-    override fun onTouch(view: View, event: MotionEvent): Boolean {
-        if (view.id == R.id.dateButton) {
-            return dateDetector!!.onTouchEvent(event)
-        } else if (view.id == R.id.timeButton) {
-            return timeDetector!!.onTouchEvent(event)
-        }
-        return false
-    }
-
     private fun safeInitialise(view: View?) {
         val location = getLocation()
         val dateCalendar = getDateCalendar()
@@ -129,58 +100,32 @@ abstract class AbstractTimeFragment : AbstractDataFragment(), OnClickListener, O
     }
 
     private fun initGestures(view: View) {
-        if (dateDetector == null) {
-            val dateListener = object : ButtonDragGestureDetectorListener {
-                override fun onButtonDragUp() {
-                    prevMonth()
-                }
-
-                override fun onButtonDragDown() {
-                    nextMonth()
-                }
-
-                override fun onButtonDragLeft() {
-                    prevDate()
-                }
-
-                override fun onButtonDragRight() {
-                    nextDate()
-                }
-            }
-            dateDetector = GestureDetector(applicationContext, ButtonDragGestureDetector(dateListener, applicationContext!!))
+        val dateListener = object : ButtonDragGestureDetectorListener {
+            override fun onButtonDragUp() = changeCalendars(MONTH, -1)
+            override fun onButtonDragDown() = changeCalendars(MONTH, 1)
+            override fun onButtonDragLeft() = changeCalendars(DAY_OF_MONTH, -1)
+            override fun onButtonDragRight() = changeCalendars(DAY_OF_MONTH, 1)
         }
-        view.findViewById<View>(R.id.dateButton).setOnClickListener(this)
-        view.findViewById<View>(R.id.dateButton).setOnTouchListener(this)
-        view.findViewById<View>(R.id.zoneButton).setOnClickListener(this)
+        val dateDetector = GestureDetector(applicationContext, ButtonDragGestureDetector(dateListener, applicationContext!!))
+        dateButton.setOnClickListener({ _ -> showDatePicker() })
+        dateButton.setOnTouchListener({ _, e -> dateDetector.onTouchEvent(e) })
+        zoneButton.setOnClickListener({ _ -> startTimeZone() })
 
-        if (timeDetector == null) {
-            val timeListener = object : ButtonDragGestureDetectorListener {
-                override fun onButtonDragUp() {
-                    prevHour()
-                }
-
-                override fun onButtonDragDown() {
-                    nextHour()
-                }
-
-                override fun onButtonDragLeft() {
-                    prevMinute()
-                }
-
-                override fun onButtonDragRight() {
-                    nextMinute()
-                }
-            }
-            timeDetector = GestureDetector(applicationContext, ButtonDragGestureDetector(timeListener, applicationContext!!))
+        val timeListener = object : ButtonDragGestureDetectorListener {
+            override fun onButtonDragUp() = prevHour()
+            override fun onButtonDragDown() = nextHour()
+            override fun onButtonDragLeft() = prevMinute()
+            override fun onButtonDragRight() = nextMinute()
         }
-        view.findViewById<View>(R.id.timeButton).setOnClickListener(this)
-        view.findViewById<View>(R.id.timeButton).setOnTouchListener(this)
-        (view.findViewById<View>(R.id.timeSeeker) as SeekBar).setOnSeekBarChangeListener(this)
+        val timeDetector = GestureDetector(applicationContext, ButtonDragGestureDetector(timeListener, applicationContext!!))
+        timeButton.setOnClickListener({ _ -> showTimePicker() })
+        timeButton.setOnTouchListener({ _, e -> timeDetector.onTouchEvent(e) })
+        timeSeeker.setOnSeekBarChangeListener(this)
     }
 
     private fun updateDateAndTime(view: View?, dateCalendar: Calendar, timeCalendar: Calendar) {
         val location = getLocation()
-        if (location == null || view == null) {
+        if (view == null) {
             return
         }
 
@@ -245,28 +190,9 @@ abstract class AbstractTimeFragment : AbstractDataFragment(), OnClickListener, O
         // No action.
     }
 
-    private fun nextDate() {
-        getDateCalendar().add(Calendar.DAY_OF_MONTH, 1)
-        getTimeCalendar().add(Calendar.DAY_OF_MONTH, 1)
-        safeUpdate(view, false)
-    }
-
-    private fun nextMonth() {
-        getDateCalendar().add(Calendar.MONTH, 1)
-        getTimeCalendar().add(Calendar.MONTH, 1)
-        safeUpdate(view, false)
-    }
-
-    private fun prevDate() {
-        getDateCalendar().add(Calendar.DAY_OF_MONTH, -1)
-        getTimeCalendar().add(Calendar.DAY_OF_MONTH, -1)
-        safeUpdate(view, false)
-    }
-
-    private fun prevMonth() {
-        getDateCalendar().add(Calendar.MONTH, -1)
-        getTimeCalendar().add(Calendar.MONTH, -1)
-        safeUpdate(view, false)
+    private fun changeCalendars(field: Int, diff: Int) {
+        arrayOf(getDateCalendar(), getTimeCalendar()).forEach { it.add(field, diff) }
+        update()
     }
 
     private fun nextMinute() {
