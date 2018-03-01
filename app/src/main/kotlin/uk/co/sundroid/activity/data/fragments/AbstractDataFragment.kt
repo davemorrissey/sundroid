@@ -31,6 +31,16 @@ abstract class AbstractDataFragment : AbstractFragment(), OnViewPrefsChangedList
         return (activity as DataActivity).timeCalendar
     }
 
+    protected fun calendarDiff(field: Int, diff: Int) {
+        arrayOf(getDateCalendar(), getTimeCalendar()).forEach { it.add(field, diff) }
+        update()
+    }
+
+    protected fun calendarSet(year: Int, month: Int, day: Int) {
+        arrayOf(getDateCalendar(), getTimeCalendar()).forEach { it.set(year, month, day) }
+        update()
+    }
+
     open fun initialise() { }
 
     abstract fun update()

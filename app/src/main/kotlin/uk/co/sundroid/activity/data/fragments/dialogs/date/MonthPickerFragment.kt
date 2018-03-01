@@ -1,8 +1,6 @@
 package uk.co.sundroid.activity.data.fragments.dialogs.date
 
-import android.app.AlertDialog
-import android.app.Dialog
-import android.app.DialogFragment
+import android.app.*
 import android.os.Bundle
 import android.view.View
 import android.widget.NumberPicker
@@ -83,6 +81,12 @@ class MonthPickerFragment : DialogFragment(){
             return MonthPickerFragment().apply {
                 arguments = save(calendar)
             }
+        }
+
+        fun show(calendar: Calendar, listener: Fragment, activity: Activity) {
+            val fragment = newInstance(calendar)
+            fragment.setTargetFragment(listener, 0)
+            fragment.show(activity.fragmentManager, "monthPicker")
         }
 
         private fun save(calendar: Calendar, bundle: Bundle? = Bundle()): Bundle? {

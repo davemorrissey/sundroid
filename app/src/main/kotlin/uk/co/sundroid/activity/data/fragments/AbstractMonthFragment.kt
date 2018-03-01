@@ -2,7 +2,6 @@ package uk.co.sundroid.activity.data.fragments
 
 import android.os.AsyncTask
 import android.os.Bundle
-import android.os.Handler
 import android.view.GestureDetector
 import android.view.LayoutInflater
 import android.view.View
@@ -18,18 +17,13 @@ import uk.co.sundroid.util.view.ButtonDragGestureDetector
 import uk.co.sundroid.util.view.ButtonDragGestureDetector.ButtonDragGestureDetectorListener
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.Calendar.MONTH
-import java.util.Calendar.YEAR
+import java.util.Calendar.*
 
 abstract class AbstractMonthFragment<T> : AbstractDataFragment(), MonthPickerFragment.OnMonthSelectedListener {
 
     private val monthFormat = SimpleDateFormat("MMM yyyy", Locale.US)
 
-    private var monthDetector: GestureDetector? = null
-
     protected abstract val layout: Int
-
-    private val handler = Handler()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup, state: Bundle?): View? {
         return inflater.inflate(layout, container, false)
@@ -58,29 +52,23 @@ abstract class AbstractMonthFragment<T> : AbstractDataFragment(), MonthPickerFra
     }
 
     override fun onMonthSet(year: Int, month: Int) {
-        getDateCalendar().set(Calendar.YEAR, year)
-        getDateCalendar().set(Calendar.MONTH, month)
-        getTimeCalendar().set(Calendar.YEAR, year)
-        getTimeCalendar().set(Calendar.MONTH, month)
-        update()
+        calendarSet(year, month, getDateCalendar().get(DAY_OF_MONTH))
     }
 
     private fun initGestures() {
-        if (monthDetector == null) {
-            val monthListener = object : ButtonDragGestureDetectorListener {
-                override fun onButtonDragUp() = changeCalendars(YEAR, -1)
-                override fun onButtonDragDown() = changeCalendars(YEAR, 1)
-                override fun onButtonDragLeft() = changeCalendars(MONTH, -1)
-                override fun onButtonDragRight() = changeCalendars(MONTH, 1)
-            }
-            monthDetector = GestureDetector(applicationContext, ButtonDragGestureDetector(monthListener, applicationContext!!))
+        val monthListener = object : ButtonDragGestureDetectorListener {
+            override fun onButtonDragUp() = calendarDiff(YEAR, -1)
+            override fun onButtonDragDown() = calendarDiff(YEAR, 1)
+            override fun onButtonDragLeft() = calendarDiff(MONTH, -1)
+            override fun onButtonDragRight() = calendarDiff(MONTH, 1)
         }
+        val monthDetector = GestureDetector(applicationContext, ButtonDragGestureDetector(monthListener, applicationContext!!))
 
-        monthPrev.setOnClickListener { _ -> changeCalendars(MONTH, -1) }
-        monthNext.setOnClickListener { _ -> changeCalendars(MONTH, 1) }
+        monthPrev.setOnClickListener { _ -> calendarDiff(MONTH, -1) }
+        monthNext.setOnClickListener { _ -> calendarDiff(MONTH, 1) }
         zoneButton.setOnClickListener { _ -> startTimeZone() }
-        monthButton.setOnClickListener { _ -> showMonthPicker() }
-        monthButton.setOnTouchListener { _, event -> monthDetector != null && monthDetector!!.onTouchEvent(event) }
+        monthButton.setOnClickListener { _ -> MonthPickerFragment.show(getDateCalendar(), this, activity) }
+        monthButton.setOnTouchListener { _, event -> monthDetector.onTouchEvent(event) }
     }
 
     private fun updateMonth() {
@@ -106,19 +94,6 @@ abstract class AbstractMonthFragment<T> : AbstractDataFragment(), MonthPickerFra
         month.text = monthFormat.format(Date(calendar.timeInMillis))
     }
 
-    private fun showMonthPicker() {
-        val monthPickerFragment = MonthPickerFragment.newInstance(getDateCalendar())
-        monthPickerFragment.setTargetFragment(this, 0)
-        monthPickerFragment.show(fragmentManager, "monthPicker")
-    }
-
-    private fun changeCalendars(field: Int, diff: Int) {
-        arrayOf(getDateCalendar(), getTimeCalendar()).forEach { it.add(field, diff) }
-        update()
-    }
-
-    protected abstract fun update(view: View)
-
     protected fun offThreadUpdate(location: LocationDetails, calendar: Calendar, view: View) {
         data class Params(val location: LocationDetails, val calendar: Calendar)
         class Task : AsyncTask<Params, Void, T>() {
@@ -134,14 +109,10 @@ abstract class AbstractMonthFragment<T> : AbstractDataFragment(), MonthPickerFra
         Task().execute(Params(location, calendar))
     }
 
-    abstract fun calculate(location: LocationDetails, calendar: Calendar): T
+    protected abstract fun update(view: View)
 
-    protected open fun post(view: View, data: T) {
+    protected abstract fun calculate(location: LocationDetails, calendar: Calendar): T
 
-    }
-
-    companion object {
-        private val TAG = AbstractMonthFragment::class.java.simpleName
-    }
+    protected open fun post(view: View, data: T) { }
 
 }

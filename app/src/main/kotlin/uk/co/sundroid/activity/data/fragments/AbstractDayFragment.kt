@@ -55,16 +55,16 @@ abstract class AbstractDayFragment : AbstractDataFragment(), DatePickerFragment.
     private fun initGestures() {
         if (dateDetector == null) {
             val dateListener = object : ButtonDragGestureDetectorListener {
-                override fun onButtonDragUp() = changeCalendars(MONTH, -1)
-                override fun onButtonDragDown() = changeCalendars(MONTH, 1)
-                override fun onButtonDragLeft() = changeCalendars(DAY_OF_MONTH, -1)
-                override fun onButtonDragRight() = changeCalendars(DAY_OF_MONTH, 1)
+                override fun onButtonDragUp() = calendarDiff(MONTH, -1)
+                override fun onButtonDragDown() = calendarDiff(MONTH, 1)
+                override fun onButtonDragLeft() = calendarDiff(DAY_OF_MONTH, -1)
+                override fun onButtonDragRight() = calendarDiff(DAY_OF_MONTH, 1)
             }
             dateDetector = GestureDetector(applicationContext, ButtonDragGestureDetector(dateListener, applicationContext!!))
         }
 
-        datePrev.setOnClickListener { _ -> changeCalendars(DAY_OF_MONTH, -1) }
-        dateNext.setOnClickListener { _ -> changeCalendars(DAY_OF_MONTH, 1) }
+        datePrev.setOnClickListener { _ -> calendarDiff(DAY_OF_MONTH, -1) }
+        dateNext.setOnClickListener { _ -> calendarDiff(DAY_OF_MONTH, 1) }
         zoneButton.setOnClickListener { _ -> startTimeZone() }
         dateButton.setOnClickListener { _ -> showDatePicker() }
         dateButton.setOnTouchListener { _, e -> dateDetector?.onTouchEvent(e) ?: false }
@@ -103,15 +103,6 @@ abstract class AbstractDayFragment : AbstractDataFragment(), DatePickerFragment.
         datePickerFragment.show(fragmentManager, "datePicker")
     }
 
-    private fun changeCalendars(field: Int, diff: Int) {
-        arrayOf(getDateCalendar(), getTimeCalendar()).forEach { it.add(field, diff) }
-        update()
-    }
-
     protected abstract fun update(view: View)
-
-    companion object {
-        private val TAG = AbstractDayFragment::class.java.simpleName
-    }
 
 }
