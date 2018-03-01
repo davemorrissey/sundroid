@@ -1,15 +1,17 @@
 package uk.co.sundroid.activity.data.fragments
 
 import android.content.Intent
+import android.view.View
+import kotlinx.android.synthetic.main.inc_datebar.*
 import uk.co.sundroid.AbstractFragment
 import uk.co.sundroid.activity.data.DataActivity
 import uk.co.sundroid.activity.data.fragments.dialogs.OnViewPrefsChangedListener
 import uk.co.sundroid.activity.location.TimeZonePickerActivity
 import uk.co.sundroid.domain.LocationDetails
+import uk.co.sundroid.util.isNotEmpty
 import uk.co.sundroid.util.log.*
 import uk.co.sundroid.util.prefs.SharedPrefsHelper
-
-import java.util.Calendar
+import java.util.*
 
 /**
  * Parent class for fragments that show data.
@@ -41,9 +43,29 @@ abstract class AbstractDataFragment : AbstractFragment(), OnViewPrefsChangedList
         update()
     }
 
+    protected fun updateTimeZone() {
+        val location = getLocation()
+        val calendar = getDateCalendar()
+        if (SharedPrefsHelper.getShowTimeZone(applicationContext!!)) {
+            zoneButton.visibility = View.VISIBLE
+            val zone = location.timeZone!!.zone
+            val dst = zone.inDaylightTime(Date(calendar.timeInMillis + 12 * 60 * 60 * 1000))
+            val name = zone.getDisplayName(dst, TimeZone.LONG)
+            zoneName.text = name
+
+            var cities = location.timeZone!!.getOffset(calendar.timeInMillis + 12 * 60 * 60 * 1000) // Get day's main offset.
+            if (isNotEmpty(location.timeZone!!.cities)) {
+                cities += " " + location.timeZone!!.cities!!
+            }
+            zoneCities.text = cities
+        } else {
+            zoneButton.visibility = View.GONE
+        }
+    }
+
     open fun initialise() { }
 
-    abstract fun update()
+    open fun update() { }
 
     override fun onViewPrefsUpdated() {
         try {
