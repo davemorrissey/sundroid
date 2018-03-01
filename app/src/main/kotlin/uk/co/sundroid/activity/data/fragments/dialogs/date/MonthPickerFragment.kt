@@ -7,6 +7,7 @@ import android.widget.NumberPicker
 import uk.co.sundroid.R
 import uk.co.sundroid.R.layout
 import uk.co.sundroid.activity.data.fragments.AbstractMonthFragment
+import uk.co.sundroid.util.time.shortMonths
 import java.util.*
 import java.util.Calendar.*
 
@@ -33,7 +34,7 @@ class MonthPickerFragment : DialogFragment() {
             minValue = 0
             maxValue = 11
             wrapSelectorWheel = true
-            displayedValues = arrayOf("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+            displayedValues = shortMonths
             value = calendar.get(MONTH)
             setOnValueChangedListener { _, _, month -> calendar.set(MONTH, month) }
         }
