@@ -18,6 +18,7 @@ import uk.co.sundroid.util.geometry.*
 import uk.co.sundroid.util.time.*
 
 import java.util.*
+import kotlin.collections.ArrayList
 
 class DayDetailEventsFragment : AbstractDayFragment(), ConfigurableFragment {
 
@@ -50,13 +51,13 @@ class DayDetailEventsFragment : AbstractDayFragment(), ConfigurableFragment {
                 var moonDay: MoonDay? = null
                 var planetDays: MutableMap<Body, BodyDay>? = null
 
-                if (SharedPrefsHelper.getShowElement(applicationContext!!, "evtByTimeSun", true)) {
+                if (SharedPrefsHelper.getShowElement(activity, "evtByTimeSun", true)) {
                     sunDay = SunCalculator.calcDay(location.location, calendar)
                 }
-                if (SharedPrefsHelper.getShowElement(applicationContext!!, "evtByTimeMoon", true)) {
+                if (SharedPrefsHelper.getShowElement(activity, "evtByTimeMoon", true)) {
                     moonDay = BodyPositionCalculator.calcDay(Body.MOON, location.location, calendar, false) as MoonDay
                 }
-                if (SharedPrefsHelper.getShowElement(applicationContext!!, "evtByTimePlanets", false)) {
+                if (SharedPrefsHelper.getShowElement(activity, "evtByTimePlanets", false)) {
                     planetDays = LinkedHashMap()
                     for (body in Body.values()) {
                         if (body !== Body.SUN && body !== Body.MOON) {
@@ -65,63 +66,26 @@ class DayDetailEventsFragment : AbstractDayFragment(), ConfigurableFragment {
                     }
                 }
 
-                val eventsSet = TreeSet<SummaryEvent>()
-
-                if (sunDay != null) {
-                    if (sunDay.rise != null) {
-                        eventsSet.add(SummaryEvent("Sunrise", sunDay.rise!!, sunDay.riseAzimuth))
-                    }
-                    if (sunDay.set != null) {
-                        eventsSet.add(SummaryEvent("Sunset", sunDay.set!!, sunDay.setAzimuth))
-                    }
-                    if (sunDay.astDawn != null) {
-                        eventsSet.add(SummaryEvent("Astro. dawn", sunDay.astDawn!!, null))
-                    }
-                    if (sunDay.astDusk != null) {
-                        eventsSet.add(SummaryEvent("Astro. dusk", sunDay.astDusk!!, null))
-                    }
-                    if (sunDay.ntcDawn != null) {
-                        eventsSet.add(SummaryEvent("Nautical dawn", sunDay.ntcDawn!!, null))
-                    }
-                    if (sunDay.ntcDusk != null) {
-                        eventsSet.add(SummaryEvent("Nautical dusk", sunDay.ntcDusk!!, null))
-                    }
-                    if (sunDay.civDawn != null) {
-                        eventsSet.add(SummaryEvent("Civil dawn", sunDay.civDawn!!, null))
-                    }
-                    if (sunDay.civDusk != null) {
-                        eventsSet.add(SummaryEvent("Civil dusk", sunDay.civDusk!!, null))
-                    }
-                    if (sunDay.transit != null && sunDay.riseSetType !== RiseSetType.SET) {
-                        eventsSet.add(SummaryEvent("Solar noon", sunDay.transit!!, null))
-                    }
-                    if (sunDay.ghEnd != null) {
-                        eventsSet.add(SummaryEvent("Golden hr end", sunDay.ghEnd!!, null))
-                    }
-                    if (sunDay.ghStart != null) {
-                        eventsSet.add(SummaryEvent("Golden hr start", sunDay.ghStart!!, null))
-                    }
-                }
-                if (moonDay != null) {
-                    if (moonDay.rise != null) {
-                        eventsSet.add(SummaryEvent("Moonrise", moonDay.rise!!, moonDay.riseAzimuth))
-                    }
-                    if (moonDay.set != null) {
-                        eventsSet.add(SummaryEvent("Moonset", moonDay.set!!, moonDay.setAzimuth))
-                    }
-                }
-                if (planetDays != null) {
-                    for ((planet, planetDay) in planetDays) {
-                        if (planetDay.rise != null) {
-                            eventsSet.add(SummaryEvent(planet.displayName + " rise", planetDay.rise!!, planetDay.riseAzimuth))
-                        }
-                        if (planetDay.set != null) {
-                            eventsSet.add(SummaryEvent(planet.displayName + " set", planetDay.set!!, planetDay.setAzimuth))
-                        }
-                    }
-                }
-
-                val eventsList = ArrayList(eventsSet)
+                val eventsList = ArrayList<SummaryEvent>()
+                fun add(e: String, t: Calendar, az: Double? = null) = eventsList.add(SummaryEvent(e, t, az))
+                sunDay?.rise?.let { add("Sunrise", it, sunDay.riseAzimuth) }
+                sunDay?.set?.let { add("Sunset", it, sunDay.setAzimuth) }
+                sunDay?.astDawn?.let { add("Astro. dawn", it) }
+                sunDay?.astDusk?.let { add("Astro. dusk", it) }
+                sunDay?.ntcDawn?.let { add("Nautical dawn", it) }
+                sunDay?.ntcDusk?.let { add("Nautical dusk", it) }
+                sunDay?.civDawn?.let { add("Civil dawn", it) }
+                sunDay?.civDusk?.let { add("Civil dusk", it) }
+                sunDay?.ghEnd?.let { add("Golden hr end", it) }
+                sunDay?.ghStart?.let {add("Golden hr start", it) }
+                sunDay?.transit?.let { if (sunDay.riseSetType !== RiseSetType.SET) { add("Solar noon", it) }}
+                moonDay?.rise?.let { add("Moonrise", it, moonDay.riseAzimuth) }
+                moonDay?.set?.let { add("Moonset", it, moonDay.setAzimuth) }
+                planetDays?.forEach { (planet, planetDay) -> run {
+                    planetDay.rise?.let { add(planet.displayName + " rise", it, planetDay.riseAzimuth) }
+                    planetDay.set?.let { add(planet.displayName + " set", it, planetDay.setAzimuth) }
+                }}
+                Collections.sort(eventsList)
 
                 handler.post {
                     if (isSafe) {
