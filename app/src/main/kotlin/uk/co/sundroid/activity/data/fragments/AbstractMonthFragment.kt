@@ -17,6 +17,10 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
+import java.util.Calendar.*
+import android.view.View.*
+
+import kotlinx.android.synthetic.main.inc_monthbar.*
 
 abstract class AbstractMonthFragment<T> : AbstractDataFragment(), MonthPickerFragment.OnMonthSelectedListener {
 
@@ -40,16 +44,16 @@ abstract class AbstractMonthFragment<T> : AbstractDataFragment(), MonthPickerFra
     override fun initialise() {
         val view = view
         if (isSafe && view != null) {
-            initGestures(view)
-            updateMonth(view)
+            initGestures()
+            updateMonth()
         }
     }
 
     override fun update() {
         val view = view
         if (isSafe && view != null) {
-            initGestures(view)
-            updateMonth(view)
+            initGestures()
+            updateMonth()
             update(view)
         }
     }
@@ -62,57 +66,45 @@ abstract class AbstractMonthFragment<T> : AbstractDataFragment(), MonthPickerFra
         update()
     }
 
-    private fun initGestures(view: View) {
+    private fun initGestures() {
         if (monthDetector == null) {
             val monthListener = object : ButtonDragGestureDetectorListener {
-                override fun onButtonDragUp() {
-                    prevYear()
-                }
-
-                override fun onButtonDragDown() {
-                    nextYear()
-                }
-
-                override fun onButtonDragLeft() {
-                    prevMonth()
-                }
-
-                override fun onButtonDragRight() {
-                    nextMonth()
-                }
+                override fun onButtonDragUp() = changeCalendars(YEAR, -1)
+                override fun onButtonDragDown() = changeCalendars(YEAR, 1)
+                override fun onButtonDragLeft() = changeCalendars(MONTH, -1)
+                override fun onButtonDragRight() = changeCalendars(MONTH, 1)
             }
             monthDetector = GestureDetector(applicationContext, ButtonDragGestureDetector(monthListener, applicationContext!!))
         }
 
-        view.findViewById<View>(R.id.monthPrev).setOnClickListener { _ -> prevMonth() }
-        view.findViewById<View>(R.id.monthNext).setOnClickListener { _ -> nextMonth() }
-        view.findViewById<View>(R.id.zoneButton).setOnClickListener { _ -> startTimeZone() }
-        view.findViewById<View>(R.id.monthButton).setOnClickListener { _ -> showMonthPicker() }
-        view.findViewById<View>(R.id.monthButton).setOnTouchListener { _, event -> monthDetector != null && monthDetector!!.onTouchEvent(event) }
+        monthPrev.setOnClickListener { _ -> changeCalendars(MONTH, -1) }
+        monthNext.setOnClickListener { _ -> changeCalendars(MONTH, 1) }
+        zoneButton.setOnClickListener { _ -> startTimeZone() }
+        monthButton.setOnClickListener { _ -> showMonthPicker() }
+        monthButton.setOnTouchListener { _, event -> monthDetector != null && monthDetector!!.onTouchEvent(event) }
     }
 
-    private fun updateMonth(view: View) {
+    private fun updateMonth() {
         val location = getLocation()
         val calendar = getDateCalendar()
         if (SharedPrefsHelper.getShowTimeZone(applicationContext!!)) {
-            showInView(view, R.id.zoneButton)
+            zoneButton.visibility = VISIBLE
             val zone = location.timeZone!!.zone
-            val zoneDST = zone.inDaylightTime(Date(calendar.timeInMillis + 12 * 60 * 60 * 1000))
-            val zoneName = zone.getDisplayName(zoneDST, TimeZone.LONG)
-            textInView(view, R.id.zoneName, zoneName)
+            val dst = zone.inDaylightTime(Date(calendar.timeInMillis + 12 * 60 * 60 * 1000))
+            val name = zone.getDisplayName(dst, TimeZone.LONG)
+            zoneName.text = name
 
-            var zoneCities = location.timeZone!!.getOffset(calendar.timeInMillis + 12 * 60 * 60 * 1000) // Get day's main offset.
+            var cities = location.timeZone!!.getOffset(calendar.timeInMillis + 12 * 60 * 60 * 1000) // Get day's main offset.
             if (isNotEmpty(location.timeZone!!.cities)) {
-                zoneCities += " " + location.timeZone!!.cities!!
+                cities += " " + location.timeZone!!.cities!!
             }
-            textInView(view, R.id.zoneCities, zoneCities)
+            zoneCities.text = cities
         } else {
-            removeInView(view, R.id.zoneButton)
+            zoneButton.visibility = GONE
         }
 
         monthFormat.timeZone = calendar.timeZone
-        val month = monthFormat.format(Date(calendar.timeInMillis))
-        showInView(view, R.id.month, month)
+        month.text = monthFormat.format(Date(calendar.timeInMillis))
     }
 
     private fun showMonthPicker() {
@@ -121,27 +113,8 @@ abstract class AbstractMonthFragment<T> : AbstractDataFragment(), MonthPickerFra
         monthPickerFragment.show(fragmentManager, "monthPicker")
     }
 
-    private fun nextMonth() {
-        getDateCalendar().add(Calendar.MONTH, 1)
-        getTimeCalendar().add(Calendar.MONTH, 1)
-        update()
-    }
-
-    private fun prevMonth() {
-        getDateCalendar().add(Calendar.MONTH, -1)
-        getTimeCalendar().add(Calendar.MONTH, -1)
-        update()
-    }
-
-    private fun nextYear() {
-        getDateCalendar().add(Calendar.YEAR, 1)
-        getTimeCalendar().add(Calendar.YEAR, 1)
-        update()
-    }
-
-    private fun prevYear() {
-        getDateCalendar().add(Calendar.YEAR, -1)
-        getTimeCalendar().add(Calendar.YEAR, -1)
+    private fun changeCalendars(field: Int, diff: Int) {
+        arrayOf(getDateCalendar(), getTimeCalendar()).forEach { it.add(field, diff) }
         update()
     }
 
