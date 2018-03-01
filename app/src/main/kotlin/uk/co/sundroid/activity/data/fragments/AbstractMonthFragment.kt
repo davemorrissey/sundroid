@@ -5,21 +5,17 @@ import android.os.Bundle
 import android.view.GestureDetector
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.GONE
-import android.view.View.VISIBLE
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.inc_monthbar.*
 import uk.co.sundroid.activity.data.fragments.dialogs.date.MonthPickerFragment
 import uk.co.sundroid.domain.LocationDetails
-import uk.co.sundroid.util.isNotEmpty
-import uk.co.sundroid.util.prefs.SharedPrefsHelper
 import uk.co.sundroid.util.view.ButtonDragGestureDetector
 import uk.co.sundroid.util.view.ButtonDragGestureDetector.ButtonDragGestureDetectorListener
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.Calendar.*
 
-abstract class AbstractMonthFragment<T> : AbstractDataFragment(), MonthPickerFragment.OnMonthSelectedListener {
+abstract class AbstractMonthFragment<T> : AbstractDataFragment() {
 
     private val monthFormat = SimpleDateFormat("MMM yyyy", Locale.US)
 
@@ -51,10 +47,6 @@ abstract class AbstractMonthFragment<T> : AbstractDataFragment(), MonthPickerFra
         }
     }
 
-    override fun onMonthSet(year: Int, month: Int) {
-        calendarSet(year, month, getDateCalendar().get(DAY_OF_MONTH))
-    }
-
     private fun initGestures() {
         val monthListener = object : ButtonDragGestureDetectorListener {
             override fun onButtonDragUp() = calendarDiff(YEAR, -1)
@@ -67,34 +59,18 @@ abstract class AbstractMonthFragment<T> : AbstractDataFragment(), MonthPickerFra
         monthPrev.setOnClickListener { _ -> calendarDiff(MONTH, -1) }
         monthNext.setOnClickListener { _ -> calendarDiff(MONTH, 1) }
         zoneButton.setOnClickListener { _ -> startTimeZone() }
-        monthButton.setOnClickListener { _ -> MonthPickerFragment.show(getDateCalendar(), this, activity) }
+        monthButton.setOnClickListener { _ -> MonthPickerFragment.show(this) }
         monthButton.setOnTouchListener { _, event -> monthDetector.onTouchEvent(event) }
     }
 
     private fun updateMonth() {
-        val location = getLocation()
+        updateTimeZone()
         val calendar = getDateCalendar()
-        if (SharedPrefsHelper.getShowTimeZone(applicationContext!!)) {
-            zoneButton.visibility = VISIBLE
-            val zone = location.timeZone!!.zone
-            val dst = zone.inDaylightTime(Date(calendar.timeInMillis + 12 * 60 * 60 * 1000))
-            val name = zone.getDisplayName(dst, TimeZone.LONG)
-            zoneName.text = name
-
-            var cities = location.timeZone!!.getOffset(calendar.timeInMillis + 12 * 60 * 60 * 1000) // Get day's main offset.
-            if (isNotEmpty(location.timeZone!!.cities)) {
-                cities += " " + location.timeZone!!.cities!!
-            }
-            zoneCities.text = cities
-        } else {
-            zoneButton.visibility = GONE
-        }
-
         monthFormat.timeZone = calendar.timeZone
         month.text = monthFormat.format(Date(calendar.timeInMillis))
     }
 
-    protected fun offThreadUpdate(location: LocationDetails, calendar: Calendar, view: View) {
+    protected fun asyncCalculate(location: LocationDetails, calendar: Calendar, view: View) {
         data class Params(val location: LocationDetails, val calendar: Calendar)
         class Task : AsyncTask<Params, Void, T>() {
             override fun doInBackground(vararg params: Params): T {

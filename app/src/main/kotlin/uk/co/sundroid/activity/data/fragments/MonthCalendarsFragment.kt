@@ -1,20 +1,16 @@
 package uk.co.sundroid.activity.data.fragments
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
 import uk.co.sundroid.R
 import uk.co.sundroid.R.array
-import uk.co.sundroid.R.id
-import uk.co.sundroid.R.layout
 import uk.co.sundroid.util.astro.Body
 import uk.co.sundroid.util.astro.BodyDay
 import uk.co.sundroid.util.astro.MoonDay
 import uk.co.sundroid.util.astro.MoonPhase
-import uk.co.sundroid.util.astro.MoonPhaseEvent
 import uk.co.sundroid.util.astro.RiseSetType
 import uk.co.sundroid.util.astro.SunDay
 import uk.co.sundroid.util.astro.TwilightType
@@ -26,7 +22,6 @@ import uk.co.sundroid.util.geometry.*
 import uk.co.sundroid.util.log.*
 import uk.co.sundroid.util.prefs.SharedPrefsHelper
 import uk.co.sundroid.util.theme.*
-import uk.co.sundroid.util.time.Time
 import uk.co.sundroid.util.time.*
 
 import java.math.BigDecimal
@@ -91,7 +86,7 @@ class MonthCalendarsFragment : AbstractMonthFragment<ArrayList<MonthCalendarsFra
         super.onViewCreated(view, savedInstanceState)
     }
 
-    override fun onItemSelected(adapterView: AdapterView<*>, view: View, index: Int, l: Long) {
+    override fun onItemSelected(adapterView: AdapterView<*>, view: View?, index: Int, l: Long) {
         if (selectorActive) {
             d(TAG, "Item selected " + index)
             SharedPrefsHelper.setLastCalendar(activity, index)
@@ -182,7 +177,7 @@ class MonthCalendarsFragment : AbstractMonthFragment<ArrayList<MonthCalendarsFra
     }
 
     override fun update(view: View) {
-        offThreadUpdate(getLocation(), getDateCalendar(), view)
+        asyncCalculate(getLocation(), getDateCalendar(), view)
     }
 
     class DayEntry {

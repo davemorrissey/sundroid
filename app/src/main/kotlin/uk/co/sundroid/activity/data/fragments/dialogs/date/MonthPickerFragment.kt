@@ -6,17 +6,13 @@ import android.view.View
 import android.widget.NumberPicker
 import uk.co.sundroid.R
 import uk.co.sundroid.R.layout
+import uk.co.sundroid.activity.data.fragments.AbstractMonthFragment
 import java.util.*
 import java.util.Calendar.*
 
-class MonthPickerFragment : DialogFragment(){
+class MonthPickerFragment : DialogFragment() {
 
     private var calendar: Calendar = Calendar.getInstance()
-
-    @FunctionalInterface
-    interface OnMonthSelectedListener {
-        fun onMonthSet(year: Int, month: Int)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,8 +56,8 @@ class MonthPickerFragment : DialogFragment(){
 
     private fun set(calendar: Calendar) {
         val target = targetFragment
-        if (target is OnMonthSelectedListener) {
-            (target as OnMonthSelectedListener).onMonthSet(calendar.get(YEAR), calendar.get(MONTH))
+        if (target is AbstractMonthFragment<*>) {
+            target.calendarSet(calendar.get(YEAR), calendar.get(MONTH), target.getDateCalendar().get(DAY_OF_MONTH))
         }
     }
 
@@ -77,16 +73,12 @@ class MonthPickerFragment : DialogFragment(){
     }
 
     companion object {
-        fun newInstance(calendar: Calendar): MonthPickerFragment {
-            return MonthPickerFragment().apply {
-                arguments = save(calendar)
+        fun show(target: AbstractMonthFragment<*>) {
+            MonthPickerFragment().apply {
+                arguments = save(target.getDateCalendar())
+                setTargetFragment(target, 0)
+                show(target.activity.fragmentManager, "monthPicker")
             }
-        }
-
-        fun show(calendar: Calendar, listener: Fragment, activity: Activity) {
-            val fragment = newInstance(calendar)
-            fragment.setTargetFragment(listener, 0)
-            fragment.show(activity.fragmentManager, "monthPicker")
         }
 
         private fun save(calendar: Calendar, bundle: Bundle? = Bundle()): Bundle? {

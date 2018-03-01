@@ -21,24 +21,24 @@ abstract class AbstractDataFragment : AbstractFragment(), OnViewPrefsChangedList
     protected var isSafe: Boolean = false
         get() = activity != null && !isDetached && applicationContext != null
 
-    protected fun getLocation(): LocationDetails {
+    fun getLocation(): LocationDetails {
         return SharedPrefsHelper.getSelectedLocation(applicationContext!!)!!
     }
 
-    protected fun getDateCalendar(): Calendar {
+    fun getDateCalendar(): Calendar {
         return (activity as DataActivity).dateCalendar
     }
 
-    protected fun getTimeCalendar(): Calendar {
+    fun getTimeCalendar(): Calendar {
         return (activity as DataActivity).timeCalendar
     }
 
-    protected fun calendarDiff(field: Int, diff: Int) {
+    fun calendarDiff(field: Int, diff: Int) {
         arrayOf(getDateCalendar(), getTimeCalendar()).forEach { it.add(field, diff) }
         update()
     }
 
-    protected fun calendarSet(year: Int, month: Int, day: Int) {
+    fun calendarSet(year: Int, month: Int, day: Int) {
         arrayOf(getDateCalendar(), getTimeCalendar()).forEach { it.set(year, month, day) }
         update()
     }
