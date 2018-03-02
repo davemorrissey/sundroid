@@ -8,7 +8,7 @@ package uk.co.sundroid.util.astro
 class MoonDay : BodyDay() {
 
     /** Phase at noon.  */
-    var phase: MoonPhase? = null
+    var phase: MoonPhase = MoonPhase.MORNING_CRESCENT
 
     /** Exact phase at noon as a double (0 = new, 0.5 = full).  */
     var phaseDouble: Double = 0.0

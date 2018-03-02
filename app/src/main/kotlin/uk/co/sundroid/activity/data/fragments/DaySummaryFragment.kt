@@ -122,10 +122,10 @@ class DaySummaryFragment : AbstractDayFragment() {
 
         }
         if (moonDay.phaseEvent == null) {
-            showInView(view, R.id.moonPhase, moonDay.phase!!.shortDisplayName)
+            showInView(view, R.id.moonPhase, moonDay.phase.shortDisplayName)
         } else {
             val time = formatTime(applicationContext!!, moonDay.phaseEvent!!.time, false)
-            showInView(view, R.id.moonPhase, moonDay.phase!!.shortDisplayName + " at " + time.time + time.marker)
+            showInView(view, R.id.moonPhase, moonDay.phase.shortDisplayName + " at " + time.time + time.marker)
         }
         showInView(view, R.id.moonIllumination, Integer.toString(moonDay.illumination) + "%")
     }
