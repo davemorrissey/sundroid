@@ -20,6 +20,8 @@ import java.util.TreeSet
 
 import uk.co.sundroid.util.time.formatDurationHMS
 
+import kotlinx.android.synthetic.main.frag_data_daydetail_sun.*
+
 class DayDetailSunFragment : AbstractDayFragment() {
 
     private val handler = Handler()
@@ -128,43 +130,18 @@ class DayDetailSunFragment : AbstractDayFragment() {
                             showInView(view, R.id.sunTransitUptime, R.id.sunTransitUptimeDivider)
                         }
 
-                        if (sunDay.civDawn == null) {
-                            textInView(view, R.id.sunCivDawnTime, "-")
-                        } else {
-                            val time = formatTime(applicationContext!!, sunDay.civDawn!!, false)
-                            textInView(view, R.id.sunCivDawnTime, time.time + time.marker)
+                        sunDay.apply {
+                            hashMapOf(
+                                    sunCivDawnTime to civDawn,
+                                    sunCivDuskTime to civDusk,
+                                    sunNtcDawnTime to ntcDawn,
+                                    sunNtcDuskTime to ntcDusk,
+                                    sunAstDawnTime to astDawn,
+                                    sunAstDuskTime to astDusk
+                            ).forEach {
+                                (view, time) -> view.text = time?.let { formatTimeStr(activity, it) } ?: "-"
+                            }
                         }
-                        if (sunDay.civDusk == null) {
-                            textInView(view, R.id.sunCivDuskTime, "-")
-                        } else {
-                            val time = formatTime(applicationContext!!, sunDay.civDusk!!, false)
-                            textInView(view, R.id.sunCivDuskTime, time.time + time.marker)
-                        }
-                        if (sunDay.ntcDawn == null) {
-                            textInView(view, R.id.sunNtcDawnTime, "-")
-                        } else {
-                            val time = formatTime(applicationContext!!, sunDay.ntcDawn!!, false)
-                            textInView(view, R.id.sunNtcDawnTime, time.time + time.marker)
-                        }
-                        if (sunDay.ntcDusk == null) {
-                            textInView(view, R.id.sunNtcDuskTime, "-")
-                        } else {
-                            val time = formatTime(applicationContext!!, sunDay.ntcDusk!!, false)
-                            textInView(view, R.id.sunNtcDuskTime, time.time + time.marker)
-                        }
-                        if (sunDay.astDawn == null) {
-                            textInView(view, R.id.sunAstDawnTime, "-")
-                        } else {
-                            val time = formatTime(applicationContext!!, sunDay.astDawn!!, false)
-                            textInView(view, R.id.sunAstDawnTime, time.time + time.marker)
-                        }
-                        if (sunDay.astDusk == null) {
-                            textInView(view, R.id.sunAstDuskTime, "-")
-                        } else {
-                            val time = formatTime(applicationContext!!, sunDay.astDusk!!, false)
-                            textInView(view, R.id.sunAstDuskTime, time.time + time.marker)
-                        }
-
                         showInView(view, R.id.sunDataBox)
                     }
                 }

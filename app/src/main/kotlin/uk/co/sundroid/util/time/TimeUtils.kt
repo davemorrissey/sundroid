@@ -65,6 +65,11 @@ fun formatTime(context: Context, calendar: Calendar, allowSeconds: Boolean, allo
     return Time(time, if (is24) "" else marker)
 }
 
+fun formatTimeStr(context: Context, calendar: Calendar, allowSeconds: Boolean = false): String {
+    val time = formatTime(context, calendar, allowSeconds, true)
+    return time.time + time.marker
+}
+
 fun formatTime(context: Context, calendar: Calendar, allowSeconds: Boolean = false): Time {
     return formatTime(context, calendar, allowSeconds, true)
 }
