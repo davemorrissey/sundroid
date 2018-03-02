@@ -27,29 +27,25 @@ abstract class AbstractActivity : Activity(), OnClickListener {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menu.clear()
-        if (navItems != null) {
-            for (navItem in navItems!!) {
-                val menuItem = menu.add(Menu.NONE, navItem.action, Menu.NONE, navItem.title)
-                if (navItem.icon > 0) {
-                    menuItem.setIcon(navItem.icon)
-                }
-                menuItem.setShowAsAction(when {
-                    navItem.location === HEADER -> MenuItem.SHOW_AS_ACTION_ALWAYS
-                    navItem.location === HEADER_IF_ROOM -> MenuItem.SHOW_AS_ACTION_IF_ROOM
-                    else -> MenuItem.SHOW_AS_ACTION_NEVER
-                })
+        navItems?.forEach {
+            val menuItem = menu.add(Menu.NONE, it.action, Menu.NONE, it.title)
+            if (it.icon > 0) {
+                menuItem.setIcon(it.icon)
             }
+            menuItem.setShowAsAction(when {
+                it.location === HEADER -> MenuItem.SHOW_AS_ACTION_ALWAYS
+                it.location === HEADER_IF_ROOM -> MenuItem.SHOW_AS_ACTION_IF_ROOM
+                else -> MenuItem.SHOW_AS_ACTION_NEVER
+            })
         }
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (navItems != null) {
-            for (navItem in navItems!!) {
-                if (navItem.action == item.itemId) {
-                    onNavItemSelected(navItem.action)
-                    return true
-                }
+        navItems?.forEach {
+            if (it.action == item.itemId) {
+                onNavItemSelected(it.action)
+                return true
             }
         }
         onNavBackSelected()
@@ -75,20 +71,17 @@ abstract class AbstractActivity : Activity(), OnClickListener {
 
     @JvmOverloads
     protected fun setActionBarTitle(title: String, subtitle: String? = null) {
-        val actionBar = actionBar
-        if (actionBar != null) {
-            actionBar.title = title
-            actionBar.subtitle = subtitle
-        }
+        actionBar?.title = title
+        actionBar?.subtitle = subtitle
     }
 
     protected fun setDisplayHomeAsUpEnabled() {
         actionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
-    protected fun text(id: Int, text: String) {
+    protected fun text(id: Int, text: String?) {
         val view = findViewById<TextView>(id)
-        view.text = text
+        view.text = text.orEmpty()
     }
 
     protected fun show(id: Int, text: CharSequence) {
