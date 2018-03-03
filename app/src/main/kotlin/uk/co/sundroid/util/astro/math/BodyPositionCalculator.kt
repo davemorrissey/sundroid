@@ -335,7 +335,7 @@ object BodyPositionCalculator {
                 e = 0.008606 + 2.15E-9 * day
                 m = norm360(260.2471 + 0.005995147 * day)
             }
-            else -> throw IllegalArgumentException("Unrecognised body: " + body)
+            else -> throw IllegalArgumentException("Unrecognised body: $body")
         }
 
         // Calculate eccentric anomaly using iteration to produce accurate value.

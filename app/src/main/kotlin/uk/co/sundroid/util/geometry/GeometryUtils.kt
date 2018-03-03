@@ -1,4 +1,3 @@
-@file:JvmName("GeometryUtils")
 package uk.co.sundroid.util.geometry
 
 import android.content.Context

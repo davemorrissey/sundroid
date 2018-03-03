@@ -40,7 +40,7 @@ object TimeZoneResolver {
         // Step 2: Look up country code. Countries with state mappings aren't in this map.
         if (isNotEmpty(countryCode)) {
             for ((key, value) in countryCodeMap) {
-                if (key.contains(countryCode + ",")) {
+                if (key.contains("$countryCode,")) {
                     return resolve(value.toMutableList())
                 }
             }
@@ -56,13 +56,13 @@ object TimeZoneResolver {
         }
         
         // Step 3: Use state to resolve some ambiguous countries.
-        if (isNotEmpty(countryCode) && isNotEmpty(state) && stateMap.containsKey(countryCode + ":" + state)) {
-            return resolve(stateMap[countryCode + ":" + state]!!.toMutableList())
+        if (isNotEmpty(countryCode) && isNotEmpty(state) && stateMap.containsKey("$countryCode:$state")) {
+            return resolve(stateMap["$countryCode:$state"]!!.toMutableList())
         }
         
         // Step 4: Country might be known but state wasn't - if so use the catch-all state mapping.
-        if (isNotEmpty(countryCode) && stateMap.containsKey(countryCode + ":*")) {
-            return resolve(stateMap[countryCode + ":*"]!!.toMutableList())
+        if (isNotEmpty(countryCode) && stateMap.containsKey("$countryCode:*")) {
+            return resolve(stateMap["$countryCode:*"]!!.toMutableList())
         }
         
         // Step 4: Use location to resolve remaining countries (not implemented)

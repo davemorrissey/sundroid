@@ -1,4 +1,3 @@
-@file:JvmName("TimeUtils")
 package uk.co.sundroid.util.time
 
 import android.content.Context

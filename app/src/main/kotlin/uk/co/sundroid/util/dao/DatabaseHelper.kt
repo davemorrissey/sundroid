@@ -52,36 +52,19 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         db.insert("saved_locations", NAME, cv)
     }
 
-    fun getSavedLocation(id: Int): LocationDetails? {
-        val db = readableDatabase
-        val cursor = db.rawQuery("SELECT id, lat, lon, name, country, zoneId FROM saved_locations WHERE id = " + id, null)
-
-        var savedLocation: LocationDetails? = null
-        cursor.moveToFirst()
-        if (!cursor.isAfterLast) {
-            savedLocation = LocationDetails(LatitudeLongitude(cursor.getDouble(1), cursor.getDouble(2)))
-            savedLocation.id = cursor.getLong(0)
-            savedLocation.name = cursor.getString(3)
-            savedLocation.country = cursor.getString(4)
-            savedLocation.timeZone = TimeZoneResolver.getTimeZone(cursor.getString(5))
-        }
-        cursor.close()
-        return savedLocation
-    }
-
     fun deleteSavedLocation(rowId: Long) {
         val db = readableDatabase
         db.delete("saved_locations", "id = ?", arrayOf(rowId.toString()))
     }
 
     companion object {
-        private val DATABASE_NAME = "sundroid"
-        private val LAT = "lat"
-        private val LON = "lon"
-        private val NAME = "name"
-        private val COUNTRY = "country"
-        private val TIMEZONE_ID = "zoneId"
-        private val TIMESTAMP = "tstamp"
+        private const val DATABASE_NAME = "sundroid"
+        private const val LAT = "lat"
+        private const val LON = "lon"
+        private const val NAME = "name"
+        private const val COUNTRY = "country"
+        private const val TIMEZONE_ID = "zoneId"
+        private const val TIMESTAMP = "tstamp"
     }
 
 }

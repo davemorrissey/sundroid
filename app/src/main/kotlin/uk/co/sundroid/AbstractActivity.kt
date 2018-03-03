@@ -69,7 +69,6 @@ abstract class AbstractActivity : Activity(), OnClickListener {
         invalidateOptionsMenu()
     }
 
-    @JvmOverloads
     protected fun setActionBarTitle(title: String, subtitle: String? = null) {
         actionBar?.title = title
         actionBar?.subtitle = subtitle

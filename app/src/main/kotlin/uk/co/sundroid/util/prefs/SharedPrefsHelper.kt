@@ -189,11 +189,11 @@ object SharedPrefsHelper {
     }
     
     fun setShowElement(context: Context, ref: String, show: Boolean) {
-        prefs(context).edit().putBoolean("show-" + ref, show).apply()
+        prefs(context).edit().putBoolean("show-$ref", show).apply()
     }
     
     fun getShowElement(context: Context, ref: String, def: Boolean): Boolean {
-        return prefs(context).getBoolean("show-" + ref, def)
+        return prefs(context).getBoolean("show-$ref", def)
     }
     
     fun getLastDataGroup(context: Context): DataGroup {

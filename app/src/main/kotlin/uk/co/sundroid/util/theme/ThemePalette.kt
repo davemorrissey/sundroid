@@ -1,4 +1,3 @@
-@file:JvmName("ThemePalette")
 package uk.co.sundroid.util.theme
 
 import android.app.Activity

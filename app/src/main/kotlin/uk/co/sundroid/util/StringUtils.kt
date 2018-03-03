@@ -1,4 +1,3 @@
-@file:JvmName("StringUtils")
 package uk.co.sundroid.util
 
 fun isEmpty(string: String?): Boolean {
