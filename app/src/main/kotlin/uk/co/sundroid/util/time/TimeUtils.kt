@@ -1,7 +1,7 @@
 package uk.co.sundroid.util.time
 
 import android.content.Context
-import uk.co.sundroid.util.prefs.SharedPrefsHelper
+import uk.co.sundroid.util.prefs.Prefs
 import uk.co.sundroid.util.zeroPad
 import java.util.Calendar
 import java.util.Calendar.*
@@ -40,8 +40,8 @@ fun formatTime(context: Context, calendar: Calendar, allowSeconds: Boolean, allo
     val clone = Calendar.getInstance(calendar.timeZone)
     clone.timeInMillis = calendar.timeInMillis
 
-    val showSeconds = SharedPrefsHelper.getShowSeconds(context) && allowSeconds
-    val is24 = SharedPrefsHelper.getClockType24(context)
+    val showSeconds = Prefs.showSeconds(context) && allowSeconds
+    val is24 = Prefs.clockType24(context)
 
     // If more than half way through a minute, roll forward into next minute.
     if (allowRounding && !showSeconds && clone.get(Calendar.SECOND) >= 30) {
@@ -74,11 +74,11 @@ fun formatTime(context: Context, calendar: Calendar, allowSeconds: Boolean = fal
 }
 
 fun formatDuration(context: Context, durationHours: Double, allowSeconds: Boolean = false): String {
-    return Clock(durationHours, SharedPrefsHelper.getShowSeconds(context) && allowSeconds).toClock()
+    return Clock(durationHours, Prefs.showSeconds(context) && allowSeconds).toClock()
 }
 
 fun formatDurationHMS(context: Context, durationHours: Double, allowSeconds: Boolean = false): String {
-    return Clock(durationHours, SharedPrefsHelper.getShowSeconds(context) && allowSeconds).toHMS()
+    return Clock(durationHours, Prefs.showSeconds(context) && allowSeconds).toHMS()
 }
 
 fun formatDiff(context: Context, diffHours: Double, allowSeconds: Boolean = false): String {
@@ -86,7 +86,7 @@ fun formatDiff(context: Context, diffHours: Double, allowSeconds: Boolean = fals
     val sign = if (diff == 0.0) "\u00b1" else if (diff < 0) "-" else "+"
     diff = Math.abs(diff)
 
-    val clock = Clock(diff, SharedPrefsHelper.getShowSeconds(context) && allowSeconds)
+    val clock = Clock(diff, Prefs.showSeconds(context) && allowSeconds)
     return sign + clock.toClock()
 }
 

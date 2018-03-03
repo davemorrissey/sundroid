@@ -2,7 +2,7 @@ package uk.co.sundroid.activity
 
 import uk.co.sundroid.util.location.Geocoder
 import uk.co.sundroid.util.location.LatitudeLongitude
-import uk.co.sundroid.util.prefs.SharedPrefsHelper
+import uk.co.sundroid.util.prefs.Prefs
 import uk.co.sundroid.util.log.*
 import android.content.Context
 import android.location.Criteria
@@ -90,7 +90,7 @@ class Locater(private val listener: LocaterListener, private val context: Contex
         override fun run() {
             val thisThread = Thread.currentThread()
             try {
-                Thread.sleep((1000 * SharedPrefsHelper.getLocationTimeout(context)).toLong())
+                Thread.sleep((1000 * Prefs.locationTimeout(context)).toLong())
                 if (thread === thisThread) {
                     onTimeout()
                 }

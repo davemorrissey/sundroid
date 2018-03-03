@@ -1,7 +1,6 @@
 package uk.co.sundroid.activity.data.fragments
 
 import android.app.Activity
-import android.app.Fragment
 import android.graphics.Point
 import android.hardware.Sensor
 import android.hardware.SensorEvent
@@ -9,28 +8,21 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.Bundle
 import android.os.Handler
-import android.view.Display
 import android.view.Surface
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams
 import android.view.WindowManager
 import uk.co.sundroid.R
-import uk.co.sundroid.R.id
-import uk.co.sundroid.R.layout
 import uk.co.sundroid.activity.data.fragments.dialogs.settings.TrackerSettingsFragment
-import uk.co.sundroid.domain.MapType
 import uk.co.sundroid.util.astro.image.TrackerImageView
 import uk.co.sundroid.util.astro.Body
-import uk.co.sundroid.util.astro.BodyDay
-import uk.co.sundroid.util.astro.Position
 import uk.co.sundroid.util.astro.image.TrackerImage
 import uk.co.sundroid.util.astro.math.BodyPositionCalculator
 import uk.co.sundroid.util.geometry.*
 import uk.co.sundroid.domain.LocationDetails
 import uk.co.sundroid.util.log.*
-import uk.co.sundroid.util.prefs.SharedPrefsHelper
-import uk.co.sundroid.util.time.Time
+import uk.co.sundroid.util.prefs.Prefs
 import uk.co.sundroid.util.time.*
 
 import java.math.BigDecimal
@@ -99,11 +91,11 @@ class TrackerFragment : AbstractTimeFragment(), ConfigurableFragment, SensorEven
         this.trackerDateCalendar = newDateCalendar
         this.trackerTimeCalendar = newTimeCalendar
 
-        val body = SharedPrefsHelper.getSunTrackerBody(applicationContext!!)
-        val mode = SharedPrefsHelper.getSunTrackerMode(applicationContext!!)
-        val mapType = SharedPrefsHelper.getSunTrackerMapType(applicationContext!!)
+        val body = Prefs.sunTrackerBody(applicationContext!!)
+        val mode = Prefs.sunTrackerMode(applicationContext!!)
+        val mapType = Prefs.sunTrackerMapType(applicationContext!!)
 
-        if (mode == "radar" && SharedPrefsHelper.getSunTrackerCompass(applicationContext!!)) {
+        if (mode == "radar" && Prefs.sunTrackerCompass(applicationContext!!)) {
             magneticDeclination = getMagneticDeclination(location.location, trackerDateCalendar!!)
         }
 
@@ -113,7 +105,7 @@ class TrackerFragment : AbstractTimeFragment(), ConfigurableFragment, SensorEven
         }
         compassActive = false
 
-        if (SharedPrefsHelper.getSunTrackerText(applicationContext!!) && body != null) {
+        if (Prefs.sunTrackerText(applicationContext!!) && body != null) {
             showInView(view, R.id.trackerText)
         } else {
             removeInView(view, R.id.trackerText)
@@ -151,7 +143,7 @@ class TrackerFragment : AbstractTimeFragment(), ConfigurableFragment, SensorEven
                         .commit()
             }
 
-            if (SharedPrefsHelper.getSunTrackerCompass(applicationContext!!)) {
+            if (Prefs.sunTrackerCompass(applicationContext!!)) {
                 val sensorManager = activity.getSystemService(Activity.SENSOR_SERVICE) as SensorManager
                 if (sensorManager != null) {
                     val orientationSensors = sensorManager.getSensorList(Sensor.TYPE_ORIENTATION)
@@ -191,12 +183,12 @@ class TrackerFragment : AbstractTimeFragment(), ConfigurableFragment, SensorEven
         if (event.sensor.type != Sensor.TYPE_ORIENTATION || applicationContext == null) {
             return
         }
-        val mode = SharedPrefsHelper.getSunTrackerMode(applicationContext!!)
+        val mode = Prefs.sunTrackerMode(applicationContext!!)
         if ("radar" != mode) {
             return
         }
         d(TAG, "Compass event: " + event.values[0] + " orientation: " + rotation + " declination: " + magneticDeclination)
-        if (trackerImageView != null && SharedPrefsHelper.getSunTrackerCompass(applicationContext!!)) {
+        if (trackerImageView != null && Prefs.sunTrackerCompass(applicationContext!!)) {
             trackerImageView!!.setDirection(event.values[0] + rotation.toFloat() + java.lang.Double.valueOf(magneticDeclination)!!.toFloat())
         }
     }
@@ -219,7 +211,7 @@ class TrackerFragment : AbstractTimeFragment(), ConfigurableFragment, SensorEven
         }
         val dateCalendar = clone(this.trackerDateCalendar!!)
         val timeCalendar = clone(this.trackerTimeCalendar!!)
-        val body = SharedPrefsHelper.getSunTrackerBody(applicationContext!!)
+        val body = Prefs.sunTrackerBody(applicationContext!!)
 
         if (trackerImage != null) {
             if (timeOnly) {
@@ -234,12 +226,12 @@ class TrackerFragment : AbstractTimeFragment(), ConfigurableFragment, SensorEven
             if (isSafe) {
 
                 var tempEventsSet: MutableSet<Event>? = null
-                val position = if (body != null && SharedPrefsHelper.getSunTrackerText(applicationContext!!)) BodyPositionCalculator.calcPosition(body, trackerLcation!!.location, timeCalendar) else null
+                val position = if (body != null && Prefs.sunTrackerText(applicationContext!!)) BodyPositionCalculator.calcPosition(body, trackerLcation!!.location, timeCalendar) else null
 
                 // Get the first two rise/set events that happen on this calendar day,
                 // midnight to midnight.
 
-                if (!timeOnly && body != null && SharedPrefsHelper.getSunTrackerText(applicationContext!!)) {
+                if (!timeOnly && body != null && Prefs.sunTrackerText(applicationContext!!)) {
                     tempEventsSet = TreeSet()
                     val loopCalendar = clone(dateCalendar)
                     loopCalendar.add(Calendar.DAY_OF_MONTH, -1)
@@ -261,7 +253,7 @@ class TrackerFragment : AbstractTimeFragment(), ConfigurableFragment, SensorEven
 
                 handler.post {
                     if (isSafe) {
-                        if (position != null && SharedPrefsHelper.getSunTrackerText(applicationContext!!)) {
+                        if (position != null && Prefs.sunTrackerText(applicationContext!!)) {
 
                             if (eventsSet != null) {
                                 if (eventsSet.size > 0) {

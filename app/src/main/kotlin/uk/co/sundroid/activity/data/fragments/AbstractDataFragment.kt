@@ -10,7 +10,7 @@ import uk.co.sundroid.activity.location.TimeZonePickerActivity
 import uk.co.sundroid.domain.LocationDetails
 import uk.co.sundroid.util.isNotEmpty
 import uk.co.sundroid.util.log.*
-import uk.co.sundroid.util.prefs.SharedPrefsHelper
+import uk.co.sundroid.util.prefs.Prefs
 import java.util.*
 
 /**
@@ -22,7 +22,7 @@ abstract class AbstractDataFragment : AbstractFragment(), OnViewPrefsChangedList
         get() = activity != null && !isDetached && applicationContext != null
 
     fun getLocation(): LocationDetails {
-        return SharedPrefsHelper.getSelectedLocation(applicationContext!!)!!
+        return Prefs.selectedLocation(applicationContext!!)!!
     }
 
     fun getDateCalendar(): Calendar {
@@ -46,7 +46,7 @@ abstract class AbstractDataFragment : AbstractFragment(), OnViewPrefsChangedList
     protected fun updateTimeZone() {
         val location = getLocation()
         val calendar = getDateCalendar()
-        if (SharedPrefsHelper.getShowTimeZone(applicationContext!!)) {
+        if (Prefs.showTimeZone(applicationContext!!)) {
             zoneButton.visibility = View.VISIBLE
             val zone = location.timeZone!!.zone
             val dst = zone.inDaylightTime(Date(calendar.timeInMillis + 12 * 60 * 60 * 1000))

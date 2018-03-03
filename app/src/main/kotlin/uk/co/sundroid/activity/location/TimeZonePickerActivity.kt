@@ -9,7 +9,7 @@ import android.widget.ListView
 import uk.co.sundroid.AbstractActivity
 import uk.co.sundroid.R
 import uk.co.sundroid.domain.TimeZoneDetail
-import uk.co.sundroid.util.prefs.SharedPrefsHelper
+import uk.co.sundroid.util.prefs.Prefs
 import uk.co.sundroid.util.log.*
 import uk.co.sundroid.util.view.MergeAdapter
 import uk.co.sundroid.util.time.TimeZoneResolver
@@ -19,7 +19,7 @@ class TimeZonePickerActivity : AbstractActivity() {
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val location = SharedPrefsHelper.getSelectedLocation(this)
+        val location = Prefs.selectedLocation(this)
         if (location == null) {
             setResult(RESULT_CANCELLED)
             finish()
@@ -52,7 +52,7 @@ class TimeZonePickerActivity : AbstractActivity() {
         list.setOnItemClickListener { parent, _, position, id ->
             d(TAG, "onItemClick($position, $id)")
             val timeZone = parent.getItemAtPosition(position) as TimeZoneDetail
-            SharedPrefsHelper.saveSelectedLocationTimeZone(this, timeZone)
+            Prefs.saveSelectedLocationTimeZone(this, timeZone)
             setResult(RESULT_TIMEZONE_SELECTED)
             finish()
         }

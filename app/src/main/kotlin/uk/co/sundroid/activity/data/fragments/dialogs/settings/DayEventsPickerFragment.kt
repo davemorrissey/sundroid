@@ -3,10 +3,10 @@ package uk.co.sundroid.activity.data.fragments.dialogs.settings
 import android.app.AlertDialog
 import android.app.Dialog
 import android.app.DialogFragment
-import android.content.Context
 import android.os.Bundle
+import uk.co.sundroid.activity.data.fragments.AbstractDataFragment
 import uk.co.sundroid.activity.data.fragments.dialogs.OnViewPrefsChangedListener
-import uk.co.sundroid.util.prefs.SharedPrefsHelper
+import uk.co.sundroid.util.prefs.Prefs
 
 class DayEventsPickerFragment : DialogFragment() {
 
@@ -38,7 +38,7 @@ class DayEventsPickerFragment : DialogFragment() {
                 { _, i, value -> currentEvents[i] = value })
         builder.setTitle("Select events")
         builder.setPositiveButton("OK", { _, _ -> run {
-            Setting.values().forEachIndexed { i, setting -> SharedPrefsHelper.setShowElement(activity, setting.ref, currentEvents[i]) }
+            Setting.values().forEachIndexed { i, setting -> Prefs.setShowElement(activity, setting.ref, currentEvents[i]) }
             val parent = targetFragment
             if (parent is OnViewPrefsChangedListener) {
                 (parent as OnViewPrefsChangedListener).onViewPrefsUpdated()
@@ -56,11 +56,13 @@ class DayEventsPickerFragment : DialogFragment() {
     }
 
     companion object {
-        fun newInstance(context: Context): DayEventsPickerFragment {
+        fun show(target: AbstractDataFragment) {
             val currentEvents = BooleanArray(Setting.values().size)
-            Setting.values().forEachIndexed { i, setting -> currentEvents[i] = SharedPrefsHelper.getShowElement(context, setting.ref, true) }
-            return DayEventsPickerFragment().apply {
+            Setting.values().forEachIndexed { i, setting -> currentEvents[i] = Prefs.showElement(target.activity, setting.ref, true) }
+            DayEventsPickerFragment().apply {
                 arguments = save(currentEvents)
+                setTargetFragment(target, 0)
+                show(target.fragmentManager, "SETTINGS")
             }
         }
 

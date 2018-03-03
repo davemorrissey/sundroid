@@ -14,7 +14,7 @@ import uk.co.sundroid.util.astro.math.MoonPhaseCalculator
 import uk.co.sundroid.util.astro.math.SunCalculator
 import uk.co.sundroid.domain.LocationDetails
 import uk.co.sundroid.util.astro.MoonPhase
-import uk.co.sundroid.util.prefs.SharedPrefsHelper
+import uk.co.sundroid.util.prefs.Prefs
 import uk.co.sundroid.util.theme.*
 import uk.co.sundroid.util.time.*
 import uk.co.sundroid.util.astro.YearData
@@ -68,20 +68,20 @@ class YearEventsFragment : AbstractYearFragment(), ConfigurableFragment {
                             var image = 0
                             when (event.type) {
                                 YearData.EventType.EARTH_APHELION, YearData.EventType.EARTH_PERIHELION -> {
-                                    if (SharedPrefsHelper.getShowElement(activity, "yearEarthApsis", true)) {
+                                    if (Prefs.showElement(activity, "yearEarthApsis", true)) {
                                         title = event.type.displayName
                                         link = event.link
                                     }
                                 }
                                 YearData.EventType.PARTIAL_LUNAR, YearData.EventType.TOTAL_LUNAR, YearData.EventType.PENUMBRAL_LUNAR -> {
-                                    if (SharedPrefsHelper.getShowElement(activity, "yearLunarEclipse", true)) {
+                                    if (Prefs.showElement(activity, "yearLunarEclipse", true)) {
                                         title = event.type.displayName
                                         time = "Greatest eclipse: " + time
                                         link = event.link
                                     }
                                 }
                                 YearData.EventType.PARTIAL_SOLAR, YearData.EventType.TOTAL_SOLAR, YearData.EventType.ANNULAR_SOLAR, YearData.EventType.HYBRID_SOLAR -> {
-                                    if (!SharedPrefsHelper.getShowElement(activity, "yearSolarEclipse", true)) {
+                                    if (!Prefs.showElement(activity, "yearSolarEclipse", true)) {
                                         title = event.type.displayName
                                         time = "Greatest eclipse: " + time
                                         subtitle = event.extra as String
@@ -89,12 +89,12 @@ class YearEventsFragment : AbstractYearFragment(), ConfigurableFragment {
                                     }
                                 }
                                 YearData.EventType.MARCH_EQUINOX, YearData.EventType.SEPTEMBER_EQUINOX -> {
-                                    if (SharedPrefsHelper.getShowElement(activity, "yearEquinox", true)) {
+                                    if (Prefs.showElement(activity, "yearEquinox", true)) {
                                         title = event.type.displayName
                                     }
                                 }
                                 YearData.EventType.NORTHERN_SOLSTICE -> {
-                                    if (SharedPrefsHelper.getShowElement(activity, "yearSolstice", true)) {
+                                    if (Prefs.showElement(activity, "yearSolstice", true)) {
                                         title = event.type.displayName
                                         if (Math.abs(location.location.latitude.doubleValue) > 23.44) {
                                             val sunDay = SunCalculator.calcDay(location.location, event.time, SunCalculator.Event.RISESET)
@@ -104,7 +104,7 @@ class YearEventsFragment : AbstractYearFragment(), ConfigurableFragment {
                                     }
                                 }
                                 YearData.EventType.SOUTHERN_SOLSTICE -> {
-                                    if (SharedPrefsHelper.getShowElement(activity, "yearSolstice", true)) {
+                                    if (Prefs.showElement(activity, "yearSolstice", true)) {
                                         title = event.type.displayName
                                         if (Math.abs(location.location.latitude.doubleValue) > 23.44) {
                                             val sunDay = SunCalculator.calcDay(location.location, event.time, SunCalculator.Event.RISESET)
@@ -117,25 +117,25 @@ class YearEventsFragment : AbstractYearFragment(), ConfigurableFragment {
                                     val moonPhase = event.extra as MoonPhaseEvent?
                                     when (moonPhase?.phase) {
                                         MoonPhase.FULL -> {
-                                            if (SharedPrefsHelper.getShowElement(activity, "yearFullMoon", true)) {
+                                            if (Prefs.showElement(activity, "yearFullMoon", true)) {
                                                 title = "Full Moon"
                                                 image = getPhaseFull()
                                             }
                                         }
                                         MoonPhase.NEW -> {
-                                            if (SharedPrefsHelper.getShowElement(activity, "yearNewMoon", true)) {
+                                            if (Prefs.showElement(activity, "yearNewMoon", true)) {
                                                 title = "New Moon"
                                                 image = getPhaseNew()
                                             }
                                         }
                                         MoonPhase.FIRST_QUARTER -> {
-                                            if (SharedPrefsHelper.getShowElement(activity, "yearQuarterMoon", true)) {
+                                            if (Prefs.showElement(activity, "yearQuarterMoon", true)) {
                                                 title = "First Quarter"
                                                 image = if (location.location.latitude.doubleValue >= 0) getPhaseRight() else getPhaseLeft()
                                             }
                                         }
                                         MoonPhase.LAST_QUARTER -> {
-                                            if (SharedPrefsHelper.getShowElement(activity, "yearQuarterMoon", true)) {
+                                            if (Prefs.showElement(activity, "yearQuarterMoon", true)) {
                                                 title = "Last Quarter"
                                                 image = if (location.location.latitude.doubleValue >= 0) getPhaseLeft() else getPhaseRight()
                                             }

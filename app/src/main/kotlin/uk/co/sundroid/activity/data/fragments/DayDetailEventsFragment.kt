@@ -13,8 +13,8 @@ import uk.co.sundroid.util.astro.RiseSetType
 import uk.co.sundroid.util.astro.SunDay
 import uk.co.sundroid.util.astro.math.BodyPositionCalculator
 import uk.co.sundroid.util.astro.math.SunCalculator
-import uk.co.sundroid.util.prefs.SharedPrefsHelper
 import uk.co.sundroid.util.geometry.*
+import uk.co.sundroid.util.prefs.Prefs
 import uk.co.sundroid.util.time.*
 
 import java.util.*
@@ -27,11 +27,7 @@ class DayDetailEventsFragment : AbstractDayFragment(), ConfigurableFragment {
     override val layout: Int
         get() = R.layout.frag_data_daydetail_events
 
-    override fun openSettingsDialog() {
-        val settingsDialog = DayEventsPickerFragment.newInstance(activity)
-        settingsDialog.setTargetFragment(this, 0)
-        settingsDialog.show(fragmentManager, "dayEventsSettings")
-    }
+    override fun openSettingsDialog() = DayEventsPickerFragment.show(this)
 
     override fun initialise() {
 
@@ -51,13 +47,13 @@ class DayDetailEventsFragment : AbstractDayFragment(), ConfigurableFragment {
                 var moonDay: MoonDay? = null
                 var planetDays: MutableMap<Body, BodyDay>? = null
 
-                if (SharedPrefsHelper.getShowElement(activity, "evtByTimeSun", true)) {
+                if (Prefs.showElement(activity, "evtByTimeSun", true)) {
                     sunDay = SunCalculator.calcDay(location.location, calendar)
                 }
-                if (SharedPrefsHelper.getShowElement(activity, "evtByTimeMoon", true)) {
+                if (Prefs.showElement(activity, "evtByTimeMoon", true)) {
                     moonDay = BodyPositionCalculator.calcDay(Body.MOON, location.location, calendar, false) as MoonDay
                 }
-                if (SharedPrefsHelper.getShowElement(activity, "evtByTimePlanets", false)) {
+                if (Prefs.showElement(activity, "evtByTimePlanets", false)) {
                     planetDays = LinkedHashMap()
                     for (body in Body.values()) {
                         if (body !== Body.SUN && body !== Body.MOON) {

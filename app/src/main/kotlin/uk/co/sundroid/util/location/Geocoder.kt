@@ -4,7 +4,7 @@ import java.util.ArrayList
 import java.util.Locale
 
 import uk.co.sundroid.domain.LocationDetails
-import uk.co.sundroid.util.prefs.SharedPrefsHelper
+import uk.co.sundroid.util.prefs.Prefs
 import uk.co.sundroid.util.log.*
 import uk.co.sundroid.util.*
 import uk.co.sundroid.util.time.TimeZoneResolver
@@ -55,7 +55,7 @@ object Geocoder {
 
         val locationDetails = LocationDetails(location)
 
-        if (SharedPrefsHelper.getReverseGeocode(context) && ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (Prefs.reverseGeocode(context) && ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             try {
                 val myLocation = android.location.Geocoder(context, Locale.getDefault())
                 val myList = myLocation.getFromLocation(location.latitude.doubleValue, location.longitude.doubleValue, 1)
@@ -92,8 +92,8 @@ object Geocoder {
             locationDetails.timeZone = possibleTimeZones[0]
         }
 
-        val defaultZone = SharedPrefsHelper.getDefaultZone(context)
-        val defaultZoneOverride = SharedPrefsHelper.getDefaultZoneOverride(context)
+        val defaultZone = Prefs.defaultZone(context)
+        val defaultZoneOverride = Prefs.defaultZoneOverride(context)
 
         if (locationDetails.timeZone == null || defaultZone != null && defaultZoneOverride) {
             locationDetails.timeZone = defaultZone

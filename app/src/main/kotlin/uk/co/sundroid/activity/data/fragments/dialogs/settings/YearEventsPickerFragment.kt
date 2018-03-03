@@ -6,7 +6,7 @@ import android.app.DialogFragment
 import android.content.Context
 import android.os.Bundle
 import uk.co.sundroid.activity.data.fragments.dialogs.OnViewPrefsChangedListener
-import uk.co.sundroid.util.prefs.SharedPrefsHelper
+import uk.co.sundroid.util.prefs.Prefs
 
 class YearEventsPickerFragment : DialogFragment() {
 
@@ -43,7 +43,7 @@ class YearEventsPickerFragment : DialogFragment() {
                 { _, i, value -> currentEvents[i] = value })
         builder.setTitle("Select events")
         builder.setPositiveButton("OK", { _, _ -> run {
-            Setting.values().forEachIndexed { i, setting -> SharedPrefsHelper.setShowElement(activity, setting.ref, currentEvents[i]) }
+            Setting.values().forEachIndexed { i, setting -> Prefs.setShowElement(activity, setting.ref, currentEvents[i]) }
             val parent = targetFragment
             if (parent is OnViewPrefsChangedListener) {
                 (parent as OnViewPrefsChangedListener).onViewPrefsUpdated()
@@ -63,7 +63,7 @@ class YearEventsPickerFragment : DialogFragment() {
     companion object {
         fun newInstance(context: Context): YearEventsPickerFragment {
             val currentEvents = BooleanArray(Setting.values().size)
-            Setting.values().forEachIndexed { i, setting -> currentEvents[i] = SharedPrefsHelper.getShowElement(context, setting.ref, true) }
+            Setting.values().forEachIndexed { i, setting -> currentEvents[i] = Prefs.showElement(context, setting.ref, true) }
             return YearEventsPickerFragment().apply {
                 arguments = save(currentEvents)
             }

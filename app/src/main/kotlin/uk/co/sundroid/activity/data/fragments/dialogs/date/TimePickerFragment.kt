@@ -8,7 +8,7 @@ import android.view.View
 import android.widget.TimePicker
 import uk.co.sundroid.R
 import uk.co.sundroid.R.layout
-import uk.co.sundroid.util.prefs.SharedPrefsHelper
+import uk.co.sundroid.util.prefs.Prefs
 import java.util.*
 import java.util.Calendar.*
 
@@ -40,7 +40,7 @@ class TimePickerFragment : DialogFragment() {
         view.findViewById<TimePicker>(R.id.timePicker)?.apply {
             currentHour = calendar.get(HOUR_OF_DAY)
             currentMinute = calendar.get(MINUTE)
-            setIs24HourView(SharedPrefsHelper.getClockType24(activity.applicationContext))
+            setIs24HourView(Prefs.clockType24(activity.applicationContext))
             setOnTimeChangedListener { _, hour, minute -> run {
                 calendar.set(HOUR_OF_DAY, hour)
                 calendar.set(MINUTE, minute)

@@ -27,7 +27,7 @@ import uk.co.sundroid.R.id
 import uk.co.sundroid.NavItem
 import uk.co.sundroid.domain.LocationDetails
 import uk.co.sundroid.util.location.LatitudeLongitude
-import uk.co.sundroid.util.prefs.SharedPrefsHelper
+import uk.co.sundroid.util.prefs.Prefs
 
 import uk.co.sundroid.NavItem.NavItemLocation.*
 import uk.co.sundroid.domain.MapType
@@ -81,8 +81,8 @@ class MapActivity : AbstractLocationActivity(), OnMapClickListener, OnInfoWindow
                 // Show alert only if this is the first time the user has denied permission,
                 // later calls to this method happen without interaction if they selected
                 // "always deny".
-                if (!SharedPrefsHelper.getMapLocationPermissionDenied(this)) {
-                    SharedPrefsHelper.setMapLocationPermissionDenied(this, true)
+                if (!Prefs.mapLocationPermissionDenied(this)) {
+                    Prefs.setMapLocationPermissionDenied(this, true)
                     AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert).apply {
                         setTitle("Location denied")
                         setMessage("Location name and time zone lookup will be unavailable. To fix this, you can grant this app location permission from Android settings.")
@@ -92,7 +92,7 @@ class MapActivity : AbstractLocationActivity(), OnMapClickListener, OnInfoWindow
                 }
             } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Unset denied flag so next time permission is denied, the alert is displayed again
-                SharedPrefsHelper.setMapLocationPermissionDenied(this, false)
+                Prefs.setMapLocationPermissionDenied(this, false)
             }
         }
     }
@@ -151,7 +151,7 @@ class MapActivity : AbstractLocationActivity(), OnMapClickListener, OnInfoWindow
 
     private fun setUpMap(map: GoogleMap) {
 
-        val location = SharedPrefsHelper.getSelectedLocation(this)
+        val location = Prefs.selectedLocation(this)
 
         // Hide the zoom controls as the button panel will cover it.
         map.uiSettings.isZoomControlsEnabled = true
@@ -166,7 +166,7 @@ class MapActivity : AbstractLocationActivity(), OnMapClickListener, OnInfoWindow
         map.setOnMapClickListener(this)
         map.clear()
 
-        map.mapType = SharedPrefsHelper.getLocMapType(applicationContext).googleId
+        map.mapType = Prefs.locMapType(applicationContext).googleId
 
         if (mapCentre != null) {
             val cameraUpdate = CameraUpdateFactory.newLatLngZoom(mapCentre, mapZoom)
@@ -194,7 +194,7 @@ class MapActivity : AbstractLocationActivity(), OnMapClickListener, OnInfoWindow
 
     override fun onInfoWindowClick(marker: Marker) {
         val mapLocationDetails = this.mapLocationDetails ?: return
-        SharedPrefsHelper.saveSelectedLocation(this, mapLocationDetails)
+        Prefs.saveSelectedLocation(this, mapLocationDetails)
         if (mapLocationDetails.timeZone == null) {
             val intent = Intent(applicationContext, TimeZonePickerActivity::class.java)
             intent.putExtra(TimeZonePickerActivity.INTENT_MODE, TimeZonePickerActivity.MODE_SELECT)
@@ -267,7 +267,7 @@ class MapActivity : AbstractLocationActivity(), OnMapClickListener, OnInfoWindow
     override fun onNavItemSelected(itemPosition: Int) {
         AlertDialog.Builder(this).apply {
             setTitle("Map type")
-            setItems(MapType.displayNames().toTypedArray(), { _, index -> SharedPrefsHelper.setLocMapType(applicationContext, MapType.values()[index]) })
+            setItems(MapType.displayNames().toTypedArray(), { _, index -> Prefs.setLocMapType(applicationContext, MapType.values()[index]) })
             setNegativeButton("Cancel", null)
         }.show()
     }

@@ -9,7 +9,7 @@ import uk.co.sundroid.R
 import uk.co.sundroid.util.astro.MoonPhase
 import uk.co.sundroid.util.astro.math.MoonPhaseCalculator
 import uk.co.sundroid.domain.LocationDetails
-import uk.co.sundroid.util.prefs.SharedPrefsHelper
+import uk.co.sundroid.util.prefs.Prefs
 import uk.co.sundroid.util.theme.*
 
 import java.math.BigDecimal
@@ -39,7 +39,7 @@ class MonthMoonPhaseFragment : AbstractMonthFragment<Any>() {
                         // Set column headers according to weekday preference.
                         for (day in 1..7) {
                             val dayId = view("moonCalD" + day)
-                            var altDay = day + SharedPrefsHelper.getFirstWeekday(applicationContext!!) - 1
+                            var altDay = day + Prefs.firstWeekday(applicationContext!!) - 1
                             if (altDay > 7) {
                                 altDay -= 7
                             }
@@ -72,7 +72,7 @@ class MonthMoonPhaseFragment : AbstractMonthFragment<Any>() {
                         val todayCalendar = Calendar.getInstance(calendar.timeZone)
 
                         // Add empty cells to the first row.
-                        var firstCol = loopCalendar.get(Calendar.DAY_OF_WEEK) + (7 - SharedPrefsHelper.getFirstWeekday(applicationContext!!)) + 1
+                        var firstCol = loopCalendar.get(Calendar.DAY_OF_WEEK) + (7 - Prefs.firstWeekday(applicationContext!!)) + 1
                         if (firstCol > 7) {
                             firstCol -= 7
                         }
@@ -92,7 +92,7 @@ class MonthMoonPhaseFragment : AbstractMonthFragment<Any>() {
                         run {
                             var i = 0
                             while (i < 32 && loopCalendar.get(Calendar.MONTH) == month) {
-                                var col = loopCalendar.get(Calendar.DAY_OF_WEEK) + (7 - SharedPrefsHelper.getFirstWeekday(applicationContext!!)) + 1
+                                var col = loopCalendar.get(Calendar.DAY_OF_WEEK) + (7 - Prefs.firstWeekday(applicationContext!!)) + 1
                                 if (col > 7) {
                                     col -= 7
                                 }
@@ -156,7 +156,7 @@ class MonthMoonPhaseFragment : AbstractMonthFragment<Any>() {
 
                         // Fill out any remaining cells in the last row.
                         loopCalendar.add(Calendar.DAY_OF_MONTH, -1)
-                        var lastCol = loopCalendar.get(Calendar.DAY_OF_WEEK) + (7 - SharedPrefsHelper.getFirstWeekday(applicationContext!!)) + 1
+                        var lastCol = loopCalendar.get(Calendar.DAY_OF_WEEK) + (7 - Prefs.firstWeekday(applicationContext!!)) + 1
                         if (lastCol > 7) {
                             lastCol -= 7
                         }

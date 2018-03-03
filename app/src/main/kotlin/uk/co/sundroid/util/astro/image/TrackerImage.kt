@@ -5,7 +5,7 @@ import java.util.LinkedHashMap
 import java.util.TreeSet
 
 import uk.co.sundroid.util.log.*
-import uk.co.sundroid.util.prefs.SharedPrefsHelper
+import uk.co.sundroid.util.prefs.Prefs
 import uk.co.sundroid.util.astro.Body
 import uk.co.sundroid.util.astro.math.BodyPositionCalculator
 import uk.co.sundroid.util.location.LatitudeLongitude
@@ -80,10 +80,10 @@ class TrackerImage(val style: TrackerStyle, val context: Context, val location: 
         }
     }
     
-    private val body: Body? = SharedPrefsHelper.getSunTrackerBody(context)
-    private val hourMarkers: Boolean = SharedPrefsHelper.getSunTrackerHourMarkers(context)
-    private val linearElevation: Boolean = SharedPrefsHelper.getSunTrackerLinearElevation(context)
-    private val magneticBearings: Boolean = SharedPrefsHelper.getMagneticBearings(context)
+    private val body: Body? = Prefs.sunTrackerBody(context)
+    private val hourMarkers: Boolean = Prefs.sunTrackerHourMarkers(context)
+    private val linearElevation: Boolean = Prefs.sunTrackerLinearElevation(context)
+    private val magneticBearings: Boolean = Prefs.magneticBearings(context)
     private var magneticDeclination = 0.0
     
     private var dateCalendar = Calendar.getInstance()

@@ -20,7 +20,7 @@ import uk.co.sundroid.domain.LocationDetails
 import uk.co.sundroid.util.*
 import uk.co.sundroid.util.geometry.*
 import uk.co.sundroid.util.log.*
-import uk.co.sundroid.util.prefs.SharedPrefsHelper
+import uk.co.sundroid.util.prefs.Prefs
 import uk.co.sundroid.util.theme.*
 import uk.co.sundroid.util.time.*
 
@@ -37,7 +37,7 @@ class MonthCalendarsFragment : AbstractMonthFragment<ArrayList<MonthCalendarsFra
 
     private val body: Body?
         get() {
-            when (SharedPrefsHelper.getLastCalendar(activity)) {
+            when (Prefs.lastCalendar(activity)) {
                 0 -> return Body.SUN
                 7 -> return Body.MERCURY
                 8 -> return Body.VENUS
@@ -52,7 +52,7 @@ class MonthCalendarsFragment : AbstractMonthFragment<ArrayList<MonthCalendarsFra
 
     private val type: String
         get() {
-            when (SharedPrefsHelper.getLastCalendar(activity)) {
+            when (Prefs.lastCalendar(activity)) {
                 0 -> return "daylight"
                 1 -> return "civ"
                 2 -> return "ntc"
@@ -76,7 +76,7 @@ class MonthCalendarsFragment : AbstractMonthFragment<ArrayList<MonthCalendarsFra
         val adapter = ArrayAdapter.createFromResource(activity, array.monthCalendars, R.layout.frag_data_monthcalendars_selector_selected)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
-        val index = SharedPrefsHelper.getLastCalendar(activity)
+        val index = Prefs.lastCalendar(activity)
         selector.adapter = adapter
         selector.onItemSelectedListener = this
         if (selector.selectedItemPosition != index) {
@@ -89,7 +89,7 @@ class MonthCalendarsFragment : AbstractMonthFragment<ArrayList<MonthCalendarsFra
     override fun onItemSelected(adapterView: AdapterView<*>, view: View?, index: Int, l: Long) {
         if (selectorActive) {
             d(TAG, "Item selected " + index)
-            SharedPrefsHelper.setLastCalendar(activity, index)
+            Prefs.setLastCalendar(activity, index)
             update()
         } else {
             d(TAG, "SELECTOR NOT ACTIVE " + index)

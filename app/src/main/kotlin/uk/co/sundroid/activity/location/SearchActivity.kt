@@ -13,7 +13,7 @@ import uk.co.sundroid.util.*
 import uk.co.sundroid.util.location.Geocoder
 import uk.co.sundroid.R
 import uk.co.sundroid.domain.LocationDetails
-import uk.co.sundroid.util.prefs.SharedPrefsHelper
+import uk.co.sundroid.util.prefs.Prefs
 
 import java.util.ArrayList
 
@@ -37,7 +37,7 @@ class SearchActivity : AbstractLocationActivity(), OnItemClickListener {
         searchList.adapter = listAdapter
         searchList.setOnItemClickListener { parent, _, position, _ -> run {
             val locationDetails = parent.getItemAtPosition(position) as LocationDetails
-            SharedPrefsHelper.saveSelectedLocation(this, locationDetails)
+            Prefs.saveSelectedLocation(this, locationDetails)
             if (locationDetails.timeZone == null) {
                 val intent = Intent(applicationContext, TimeZonePickerActivity::class.java)
                 intent.putExtra(TimeZonePickerActivity.INTENT_MODE, TimeZonePickerActivity.MODE_SELECT)
@@ -94,7 +94,7 @@ class SearchActivity : AbstractLocationActivity(), OnItemClickListener {
 
     override fun onItemClick(parent: AdapterView<*>, view: View, position: Int, id: Long) {
         val locationDetails = parent.getItemAtPosition(position) as LocationDetails
-        SharedPrefsHelper.saveSelectedLocation(this, locationDetails)
+        Prefs.saveSelectedLocation(this, locationDetails)
         if (locationDetails.timeZone == null) {
             val intent = Intent(applicationContext, TimeZonePickerActivity::class.java)
             intent.putExtra(TimeZonePickerActivity.INTENT_MODE, TimeZonePickerActivity.MODE_SELECT)

@@ -5,7 +5,7 @@ import android.content.Intent
 import android.graphics.Color
 
 import uk.co.sundroid.R.style
-import uk.co.sundroid.util.prefs.SharedPrefsHelper
+import uk.co.sundroid.util.prefs.Prefs
 import uk.co.sundroid.util.astro.Body
 import uk.co.sundroid.util.astro.image.TrackerImage.TrackerStyle
 import uk.co.sundroid.R.drawable.*
@@ -112,7 +112,7 @@ fun changeToTheme(activity: Activity, newTheme: String) {
 
 fun onActivityCreateSetTheme(activity: Activity) {
     if (theme == null) {
-        val prefsTheme = SharedPrefsHelper.getTheme(activity)
+        val prefsTheme = Prefs.theme(activity)
         if (prefsTheme == THEME_DARK || prefsTheme == THEME_LIGHT) {
             theme = prefsTheme
         }

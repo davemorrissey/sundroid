@@ -3,7 +3,7 @@ package uk.co.sundroid.activity.location
 import uk.co.sundroid.util.location.Geocoder
 import uk.co.sundroid.R
 import uk.co.sundroid.util.location.LatitudeLongitude
-import uk.co.sundroid.util.prefs.SharedPrefsHelper
+import uk.co.sundroid.util.prefs.Prefs
 import uk.co.sundroid.util.log.*
 import android.app.Dialog
 import android.app.ProgressDialog
@@ -104,7 +104,7 @@ class CoordsActivity : AbstractLocationActivity() {
                 inBackground = { Geocoder.getLocationDetails(location, applicationContext) },
                 onDone = { locationDetails -> run {
                     dismissDialog(DIALOG_LOOKINGUP)
-                    SharedPrefsHelper.saveSelectedLocation(this@CoordsActivity, locationDetails)
+                    Prefs.saveSelectedLocation(this@CoordsActivity, locationDetails)
                     if (locationDetails.timeZone == null) {
                         val intent = Intent(this@CoordsActivity, TimeZonePickerActivity::class.java)
                         intent.putExtra(TimeZonePickerActivity.INTENT_MODE, TimeZonePickerActivity.MODE_SELECT)

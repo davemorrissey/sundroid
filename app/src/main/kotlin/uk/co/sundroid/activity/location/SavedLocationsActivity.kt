@@ -10,7 +10,7 @@ import uk.co.sundroid.R
 import uk.co.sundroid.R.id
 import uk.co.sundroid.domain.LocationDetails
 import uk.co.sundroid.util.dao.DatabaseHelper
-import uk.co.sundroid.util.prefs.SharedPrefsHelper
+import uk.co.sundroid.util.prefs.Prefs
 import uk.co.sundroid.util.geometry.Accuracy
 
 class SavedLocationsActivity : AbstractLocationActivity() {
@@ -67,7 +67,7 @@ class SavedLocationsActivity : AbstractLocationActivity() {
     }
 
     private fun select(location: LocationDetails) {
-        SharedPrefsHelper.saveSelectedLocation(this, location)
+        Prefs.saveSelectedLocation(this, location)
         if (location.timeZone == null) {
             val intent = Intent(this, TimeZonePickerActivity::class.java)
             intent.putExtra(TimeZonePickerActivity.INTENT_MODE, TimeZonePickerActivity.MODE_SELECT)

@@ -9,7 +9,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.MapFragment
 import com.google.android.gms.maps.model.LatLng
 import uk.co.sundroid.domain.LocationDetails
-import uk.co.sundroid.util.prefs.SharedPrefsHelper
+import uk.co.sundroid.util.prefs.Prefs
 
 class TrackerMapFragment : MapFragment {
 
@@ -50,7 +50,7 @@ class TrackerMapFragment : MapFragment {
                 uiSettings.isRotateGesturesEnabled = false
                 uiSettings.isTiltGesturesEnabled = false
 
-                val mapType = SharedPrefsHelper.getSunTrackerMapType(activity.applicationContext)
+                val mapType = Prefs.sunTrackerMapType(activity.applicationContext)
                 map.mapType = mapType.googleId
 
                 if (location != null) {

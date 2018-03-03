@@ -8,7 +8,7 @@ import uk.co.sundroid.R
 import uk.co.sundroid.R.drawable
 import uk.co.sundroid.activity.data.fragments.dialogs.date.YearPickerFragment
 import uk.co.sundroid.domain.LocationDetails
-import uk.co.sundroid.util.prefs.SharedPrefsHelper
+import uk.co.sundroid.util.prefs.Prefs
 import uk.co.sundroid.util.*
 import uk.co.sundroid.util.view.ButtonDragGestureDetector
 import uk.co.sundroid.util.view.ButtonDragGestureDetector.ButtonDragGestureDetectorListener
@@ -141,7 +141,7 @@ abstract class AbstractYearFragment : AbstractDataFragment(), OnClickListener, O
     }
 
     private fun updateYear(location: LocationDetails, calendar: Calendar, view: View) {
-        if (SharedPrefsHelper.getShowTimeZone(applicationContext!!)) {
+        if (Prefs.showTimeZone(applicationContext!!)) {
             showInView(view, R.id.zoneButton)
             val zone = location.timeZone!!.zone
             val zoneDST = zone.inDaylightTime(Date(calendar.timeInMillis + 12 * 60 * 60 * 1000))

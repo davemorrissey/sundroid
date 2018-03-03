@@ -14,7 +14,7 @@ import android.text.format.DateFormat
 import uk.co.sundroid.domain.MapType
 import uk.co.sundroid.util.theme.THEME_DARK
 
-object SharedPrefsHelper {
+object Prefs {
     
     private const val LOC_LAT_KEY = "location-lat"
     private const val LOC_LON_KEY = "location-lon"
@@ -53,7 +53,7 @@ object SharedPrefsHelper {
 
     private const val MAP_LOCATION_PERMISSION_DENIED_KEY = "mapLocationPermissionDenied"
     
-    fun getSelectedLocation(context: Context): LocationDetails? {
+    fun selectedLocation(context: Context): LocationDetails? {
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
         if (prefs.contains(LOC_LAT_KEY) && prefs.contains(LOC_LON_KEY)) {
             try {
@@ -136,25 +136,25 @@ object SharedPrefsHelper {
         
     }
     
-    fun getShowSeconds(context: Context): Boolean {
+    fun showSeconds(context: Context): Boolean {
         return prefs(context).getBoolean(SHOW_SECONDS_KEY, false)
     }
     
-    fun getReverseGeocode(context: Context): Boolean {
+    fun reverseGeocode(context: Context): Boolean {
         return prefs(context).getBoolean(REVERSE_GEOCODE_KEY, true)
     }
     
-    fun getClockType24(context: Context): Boolean {
+    fun clockType24(context: Context): Boolean {
         val default24 = DateFormat.is24HourFormat(context)
         val clockType = ClockType.valueOf(prefs(context).getString(CLOCK_KEY, ClockType.DEFAULT.name))
         return clockType == ClockType.TWENTYFOUR || (clockType == ClockType.DEFAULT && default24)
     }
 
-    fun getTheme(context: Context): String {
+    fun theme(context: Context): String {
         return prefs(context).getString(THEME_KEY, THEME_DARK)
     }
 
-    fun getLocationTimeout(context: Context): Int {
+    fun locationTimeout(context: Context): Int {
         val timeout = prefs(context).getString(LOCATION_TIMEOUT_KEY, "60")
 		return try {
 			Integer.parseInt(timeout)
@@ -163,7 +163,7 @@ object SharedPrefsHelper {
         }
     }
     
-    fun getDefaultZone(context: Context): TimeZoneDetail? {
+    fun defaultZone(context: Context): TimeZoneDetail? {
         val pref = prefs(context).getString(DEFAULT_ZONE_KEY, "~ASK")
         return when (pref) {
             "~ASK" -> null
@@ -172,19 +172,19 @@ object SharedPrefsHelper {
         }
     }
     
-    fun getDefaultZoneOverride(context: Context): Boolean {
+    fun defaultZoneOverride(context: Context): Boolean {
         return prefs(context).getBoolean(DEFAULT_ZONE_OVERRIDE_KEY, false)
     }
     
-    fun getShowTimeZone(context: Context): Boolean {
+    fun showTimeZone(context: Context): Boolean {
         return prefs(context).getBoolean(SHOW_ZONE_KEY, true)
     }
     
-    fun getFirstWeekday(context: Context): Int {
+    fun firstWeekday(context: Context): Int {
         return Integer.parseInt(prefs(context).getString(FIRST_WEEKDAY_KEY, "1"))
     }
     
-    fun getMagneticBearings(context: Context): Boolean {
+    fun magneticBearings(context: Context): Boolean {
         return prefs(context).getBoolean(MAGNETIC_BEARINGS_KEY, false)
     }
     
@@ -192,11 +192,11 @@ object SharedPrefsHelper {
         prefs(context).edit().putBoolean("show-$ref", show).apply()
     }
     
-    fun getShowElement(context: Context, ref: String, def: Boolean): Boolean {
+    fun showElement(context: Context, ref: String, def: Boolean): Boolean {
         return prefs(context).getBoolean("show-$ref", def)
     }
     
-    fun getLastDataGroup(context: Context): DataGroup {
+    fun lastDataGroup(context: Context): DataGroup {
         val name = prefs(context).getString(LAST_DATA_GROUP_KEY, DataGroup.DAY_SUMMARY.name)
         try {
             return DataGroup.valueOf(name)
@@ -210,7 +210,7 @@ object SharedPrefsHelper {
         prefs(context).edit().putString(LAST_DATA_GROUP_KEY, dataGroup.name).apply()
     }
 
-    fun getLastDetailTab(context: Context): String {
+    fun lastDetailTab(context: Context): String {
         return prefs(context).getString(LAST_DETAIL_TAB_KEY, "sun")
     }
 
@@ -218,7 +218,7 @@ object SharedPrefsHelper {
         prefs(context).edit().putString(LAST_DETAIL_TAB_KEY, tab).apply()
     }
 
-    fun getLastCalendar(context: Context): Int {
+    fun lastCalendar(context: Context): Int {
         return prefs(context).getInt(LAST_CALENDAR_KEY, 0)
     }
 
@@ -226,7 +226,7 @@ object SharedPrefsHelper {
         prefs(context).edit().putInt(LAST_CALENDAR_KEY, calendar).apply()
     }
 
-    fun getLocMapType(context: Context): MapType {
+    fun locMapType(context: Context): MapType {
         return MapType.valueOf(prefs(context).getString(LOCMAP_TYPE_KEY, MapType.NORMAL.name))
     }
     
@@ -234,7 +234,7 @@ object SharedPrefsHelper {
         prefs(context).edit().putString(LOCMAP_TYPE_KEY, type.name).apply()
     }
     
-    fun getSunTrackerBody(context: Context): Body? {
+    fun sunTrackerBody(context: Context): Body? {
         val value = prefs(context).getString(SUNTRACKER_BODY_KEY, "SUN")
 		return if (value == "all") {
 			null
@@ -243,7 +243,7 @@ object SharedPrefsHelper {
         }
     }
     
-    fun getSunTrackerMode(context: Context): String {
+    fun sunTrackerMode(context: Context): String {
         return prefs(context).getString(SUNTRACKER_MODE_KEY, "radar")
     }
     
@@ -255,7 +255,7 @@ object SharedPrefsHelper {
         prefs(context).edit().putString(SUNTRACKER_MODE_KEY, mode).apply()
     }
 
-    fun getSunTrackerMapType(context: Context): MapType {
+    fun sunTrackerMapType(context: Context): MapType {
         return MapType.valueOf(prefs(context).getString(SUNTRACKER_MAPTYPE_KEY, MapType.NORMAL.name))
     }
     
@@ -263,7 +263,7 @@ object SharedPrefsHelper {
         prefs(context).edit().putString(SUNTRACKER_MAPTYPE_KEY, mode.name).apply()
     }
     
-    fun getSunTrackerLinearElevation(context: Context): Boolean {
+    fun sunTrackerLinearElevation(context: Context): Boolean {
         return prefs(context).getBoolean(SUNTRACKER_LINEARELEVATION_KEY, false)
     }
     
@@ -271,7 +271,7 @@ object SharedPrefsHelper {
         prefs(context).edit().putBoolean(SUNTRACKER_LINEARELEVATION_KEY, on).apply()
     }
     
-    fun getSunTrackerCompass(context: Context): Boolean {
+    fun sunTrackerCompass(context: Context): Boolean {
         return prefs(context).getBoolean(SUNTRACKER_COMPASS_KEY, false)
     }
     
@@ -279,7 +279,7 @@ object SharedPrefsHelper {
         prefs(context).edit().putBoolean(SUNTRACKER_COMPASS_KEY, on).apply()
     }
     
-    fun getSunTrackerHourMarkers(context: Context): Boolean {
+    fun sunTrackerHourMarkers(context: Context): Boolean {
         return prefs(context).getBoolean(SUNTRACKER_HOURMARKERS_KEY, false)
     }
     
@@ -287,7 +287,7 @@ object SharedPrefsHelper {
         prefs(context).edit().putBoolean(SUNTRACKER_HOURMARKERS_KEY, on).apply()
     }
     
-    fun getSunTrackerText(context: Context): Boolean {
+    fun sunTrackerText(context: Context): Boolean {
         return prefs(context).getBoolean(SUNTRACKER_TEXT_KEY, true)
     }
     
@@ -295,7 +295,7 @@ object SharedPrefsHelper {
         prefs(context).edit().putBoolean(SUNTRACKER_TEXT_KEY, on).apply()
     }
 
-    fun getMapLocationPermissionDenied(context: Context): Boolean {
+    fun mapLocationPermissionDenied(context: Context): Boolean {
         return prefs(context).getBoolean(MAP_LOCATION_PERMISSION_DENIED_KEY, false)
     }
 

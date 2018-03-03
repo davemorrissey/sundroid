@@ -14,7 +14,7 @@ import uk.co.sundroid.activity.data.fragments.dialogs.date.TimePickerFragment
 import uk.co.sundroid.domain.LocationDetails
 import uk.co.sundroid.util.isNotEmpty
 import uk.co.sundroid.util.log.e
-import uk.co.sundroid.util.prefs.SharedPrefsHelper
+import uk.co.sundroid.util.prefs.Prefs
 import uk.co.sundroid.util.time.formatTime
 import uk.co.sundroid.util.view.ButtonDragGestureDetector
 import uk.co.sundroid.util.view.ButtonDragGestureDetector.ButtonDragGestureDetectorListener
@@ -130,7 +130,7 @@ abstract class AbstractTimeFragment : AbstractDataFragment(), OnSeekBarChangeLis
         }
 
 
-        if (SharedPrefsHelper.getShowTimeZone(applicationContext!!)) {
+        if (Prefs.showTimeZone(applicationContext!!)) {
             showInView(view, R.id.zoneButton)
             val zone = location.timeZone!!.zone
             val zoneDST = zone.inDaylightTime(Date(dateCalendar.timeInMillis + 12 * 60 * 60 * 1000))

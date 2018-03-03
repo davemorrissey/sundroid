@@ -10,6 +10,7 @@ import android.widget.Toast
 import uk.co.sundroid.util.theme.*
 
 import uk.co.sundroid.NavItem.NavItemLocation.*
+import uk.co.sundroid.util.prefs.PrefsWrapper
 import uk.co.sundroid.util.view.SimpleAlertFragment
 
 /**
@@ -18,6 +19,8 @@ import uk.co.sundroid.util.view.SimpleAlertFragment
 abstract class AbstractActivity : Activity(), OnClickListener {
 
     private var navItems: List<NavItem>? = null
+
+    private var prefs: PrefsWrapper? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -148,6 +151,13 @@ abstract class AbstractActivity : Activity(), OnClickListener {
 
     protected fun longToast(message: String) {
         Toast.makeText(applicationContext, message, Toast.LENGTH_LONG).show()
+    }
+
+    protected fun prefs(): PrefsWrapper {
+        this.prefs?.let { return it }
+        val prefs = PrefsWrapper(this)
+        this.prefs = prefs
+        return prefs
     }
 
 }

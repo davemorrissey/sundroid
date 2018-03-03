@@ -11,7 +11,7 @@ import uk.co.sundroid.activity.Locater
 import uk.co.sundroid.activity.LocaterListener
 import uk.co.sundroid.R
 import uk.co.sundroid.domain.LocationDetails
-import uk.co.sundroid.util.prefs.SharedPrefsHelper
+import uk.co.sundroid.util.prefs.Prefs
 import uk.co.sundroid.util.log.*
 
 import kotlinx.android.synthetic.main.loc_options.*
@@ -104,7 +104,7 @@ class LocationSelectActivity : AbstractLocationActivity(), LocaterListener {
         }
 
         d(TAG, "Location received: " + locationDetails)
-        SharedPrefsHelper.saveSelectedLocation(this, locationDetails)
+        Prefs.saveSelectedLocation(this, locationDetails)
 
         if (locationDetails.timeZone == null) {
             val intent = Intent(applicationContext, TimeZonePickerActivity::class.java)

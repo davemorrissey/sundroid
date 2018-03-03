@@ -31,7 +31,7 @@ import uk.co.sundroid.domain.LocationDetails
 import uk.co.sundroid.util.location.LatitudeLongitude
 import uk.co.sundroid.util.*
 import uk.co.sundroid.util.log.*
-import uk.co.sundroid.util.prefs.SharedPrefsHelper
+import uk.co.sundroid.util.prefs.Prefs
 import uk.co.sundroid.util.time.TimeZoneResolver
 
 import java.util.ArrayList
@@ -85,7 +85,7 @@ class DataActivity : AbstractActivity(), OnClickListener, OnNavigationListener {
             intent.action = null
         }
 
-        SharedPrefsHelper.initPreferences(this)
+        Prefs.initPreferences(this)
         initCalendarAndLocation(forceDateUpdate)
         restoreState(savedInstanceState)
         initDayDetailTabs()
@@ -140,10 +140,10 @@ class DataActivity : AbstractActivity(), OnClickListener, OnNavigationListener {
     }
 
     private fun initCalendarAndLocation(forceDateUpdate: Boolean) {
-        val location = SharedPrefsHelper.getSelectedLocation(this) ?: LocationDetails(LatitudeLongitude(37.779093, -122.419109)).apply {
+        val location = Prefs.selectedLocation(this) ?: LocationDetails(LatitudeLongitude(37.779093, -122.419109)).apply {
             name = "San Francisco"
             timeZone = TimeZoneResolver.getTimeZone("US/Pacific")
-            SharedPrefsHelper.saveSelectedLocation(this@DataActivity, this)
+            Prefs.saveSelectedLocation(this@DataActivity, this)
         }
         if (location.timeZone == null) {
             location.timeZone = TimeZoneResolver.getTimeZone("UTC")
@@ -189,9 +189,9 @@ class DataActivity : AbstractActivity(), OnClickListener, OnNavigationListener {
                 this.timeCalendar.timeInMillis = state.getLong(STATE_TIME_TIMESTAMP)
             }
         } else {
-            this.dataGroup = SharedPrefsHelper.getLastDataGroup(this)
+            this.dataGroup = Prefs.lastDataGroup(this)
             if (this.dataGroup == DataGroup.DAY_DETAIL) {
-                this.dayDetailTab = SharedPrefsHelper.getLastDetailTab(this)
+                this.dayDetailTab = Prefs.lastDetailTab(this)
             }
         }
     }
@@ -200,7 +200,7 @@ class DataActivity : AbstractActivity(), OnClickListener, OnNavigationListener {
         if (dataGroup != this.dataGroup) {
             d(TAG, "Changing data group to " + dataGroup)
             this.dataGroup = dataGroup
-            SharedPrefsHelper.setLastDataGroup(this, dataGroup)
+            Prefs.setLastDataGroup(this, dataGroup)
             updateDataFragment(true)
         }
     }
@@ -209,7 +209,7 @@ class DataActivity : AbstractActivity(), OnClickListener, OnNavigationListener {
         if (dayDetailTab != this.dayDetailTab) {
             d(TAG, "Changing day detail tab to " + dayDetailTab)
             this.dayDetailTab = dayDetailTab
-            SharedPrefsHelper.setLastDayDetailTab(this, dayDetailTab)
+            Prefs.setLastDayDetailTab(this, dayDetailTab)
             updateDayDetailTabs()
             updateDataFragment(true)
         }
@@ -339,7 +339,7 @@ class DataActivity : AbstractActivity(), OnClickListener, OnNavigationListener {
                         if (isNotEmpty(saveName)) {
                             db = DatabaseHelper(this@DataActivity)
                             location!!.name = saveName
-                            SharedPrefsHelper.saveSelectedLocation(this@DataActivity, location!!)
+                            Prefs.saveSelectedLocation(this@DataActivity, location!!)
                             db.addSavedLocation(location!!)
                             Toast.makeText(this@DataActivity, "This location has been saved", Toast.LENGTH_SHORT).show()
                             refreshSelector()

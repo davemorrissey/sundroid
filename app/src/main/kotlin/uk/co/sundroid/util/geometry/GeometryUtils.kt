@@ -2,7 +2,7 @@ package uk.co.sundroid.util.geometry
 
 import android.content.Context
 import android.hardware.GeomagneticField
-import uk.co.sundroid.util.prefs.SharedPrefsHelper
+import uk.co.sundroid.util.prefs.Prefs
 import uk.co.sundroid.util.location.LatitudeLongitude
 import java.math.BigDecimal
 import java.util.*
@@ -153,7 +153,7 @@ fun parseArcValue(angle: String): Angle {
 fun formatBearing(context: Context, bearing: Double, location: LatitudeLongitude, time: Calendar): String {
 
     var b = bearing
-    if (SharedPrefsHelper.getMagneticBearings(context)) {
+    if (Prefs.magneticBearings(context)) {
         b -= getMagneticDeclination(location, time)
     }
     while (b < 0) {
