@@ -74,7 +74,7 @@ abstract class AbstractMonthFragment<T> : AbstractDataFragment() {
         Async(
                 inBackground = { calculate(location, calendar) },
                 onDone = { data -> if (isSafe) post(view, data) }
-        )
+        ).execute()
     }
 
     protected abstract fun update(view: View)

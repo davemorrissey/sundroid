@@ -18,6 +18,7 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.TextView.OnEditorActionListener
 import android.widget.Toast
+import uk.co.sundroid.util.async.Async
 
 class CoordsActivity : AbstractLocationActivity() {
 
@@ -99,24 +100,21 @@ class CoordsActivity : AbstractLocationActivity() {
         d(TAG, "startLookup()")
 
         showDialog(DIALOG_LOOKINGUP)
-        val activity = this
-        // FIXME AsyncTask
-        val thread = object : Thread() {
-            override fun run() {
-                val locationDetails = Geocoder.getLocationDetails(location, applicationContext)
-                dismissDialog(DIALOG_LOOKINGUP)
-                SharedPrefsHelper.saveSelectedLocation(activity, locationDetails)
-                if (locationDetails.timeZone == null) {
-                    val intent = Intent(applicationContext, TimeZonePickerActivity::class.java)
-                    intent.putExtra(TimeZonePickerActivity.INTENT_MODE, TimeZonePickerActivity.MODE_SELECT)
-                    startActivityForResult(intent, TimeZonePickerActivity.REQUEST_TIMEZONE)
-                } else {
-                    setResult(LocationSelectActivity.RESULT_LOCATION_SELECTED)
-                    finish()
-                }
-            }
-        }
-        thread.start()
+        Async(
+                inBackground = { Geocoder.getLocationDetails(location, applicationContext) },
+                onDone = { locationDetails -> run {
+                    dismissDialog(DIALOG_LOOKINGUP)
+                    SharedPrefsHelper.saveSelectedLocation(this@CoordsActivity, locationDetails)
+                    if (locationDetails.timeZone == null) {
+                        val intent = Intent(this@CoordsActivity, TimeZonePickerActivity::class.java)
+                        intent.putExtra(TimeZonePickerActivity.INTENT_MODE, TimeZonePickerActivity.MODE_SELECT)
+                        startActivityForResult(intent, TimeZonePickerActivity.REQUEST_TIMEZONE)
+                    } else {
+                        setResult(LocationSelectActivity.RESULT_LOCATION_SELECTED)
+                        finish()
+                    }
+                }}
+        ).execute()
     }
 
     public override fun onCreateDialog(id: Int): Dialog {
