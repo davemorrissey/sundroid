@@ -86,7 +86,7 @@ class DayDetailMoonFragment : AbstractDayFragment() {
                             showInView(view, R.id.moonEventTitle, yearEventToday.type.displayName)
                             showInView(view, R.id.moonEventSubtitle, "Tap to check Wikipedia for visibility")
                             val finalLink = yearEventToday.link
-                            view.findViewById<View>(R.id.moonEvent).setOnClickListener { _ ->
+                            view.findViewById<View>(R.id.moonEvent).setOnClickListener {
                                 val intent = Intent(Intent.ACTION_VIEW)
                                 intent.data = Uri.parse(finalLink)
                                 startActivity(intent)

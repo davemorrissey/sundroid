@@ -174,7 +174,7 @@ class YearEventsFragment : AbstractYearFragment(), ConfigurableFragment {
                             if (isNotEmpty(link)) {
                                 val finalLink = link
                                 showInView(eventRow, R.id.yearEventLink)
-                                eventRow.setOnClickListener { _ ->
+                                eventRow.setOnClickListener {
                                     val intent = Intent(Intent.ACTION_VIEW)
                                     intent.data = Uri.parse(finalLink)
                                     startActivity(intent)

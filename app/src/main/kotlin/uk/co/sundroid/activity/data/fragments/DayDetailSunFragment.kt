@@ -58,7 +58,7 @@ class DayDetailSunFragment : AbstractDayFragment() {
                             } else if (yearEventToday.type === EventType.ANNULAR_SOLAR || yearEventToday.type === EventType.HYBRID_SOLAR || yearEventToday.type === EventType.PARTIAL_SOLAR || yearEventToday.type === EventType.TOTAL_SOLAR) {
                                 showInView(view, R.id.sunEventSubtitle, "Tap to check Wikipedia for visibility")
                                 val finalLink = yearEventToday.link
-                                view.findViewById<View>(R.id.sunEvent).setOnClickListener { _ ->
+                                view.findViewById<View>(R.id.sunEvent).setOnClickListener {
                                     val intent = Intent(Intent.ACTION_VIEW)
                                     intent.data = Uri.parse(finalLink)
                                     startActivity(intent)

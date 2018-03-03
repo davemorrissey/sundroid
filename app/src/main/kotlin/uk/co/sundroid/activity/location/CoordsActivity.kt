@@ -31,7 +31,7 @@ class CoordsActivity : AbstractLocationActivity() {
         super.onCreate(savedInstanceState)
 
         val coordsSubmit = findViewById<View>(R.id.coordsSubmit)
-        coordsSubmit.setOnClickListener({ _ -> startSubmit() })
+        coordsSubmit.setOnClickListener { startSubmit() }
 
         val coordsField = findViewById<EditText>(R.id.coordsField)
         coordsField.setOnEditorActionListener(CoordsActionListener())

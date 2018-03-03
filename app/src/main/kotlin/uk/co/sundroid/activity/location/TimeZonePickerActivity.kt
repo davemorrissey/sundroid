@@ -49,13 +49,13 @@ class TimeZonePickerActivity : AbstractActivity() {
         adapter.addAdapter(TimeZoneAdapter(TimeZoneResolver.getAllTimeZones().sorted()))
 
         list.adapter = adapter
-        list.setOnItemClickListener({ parent, _, position, id ->
+        list.setOnItemClickListener { parent, _, position, id ->
             d(TAG, "onItemClick($position, $id)")
             val timeZone = parent.getItemAtPosition(position) as TimeZoneDetail
             SharedPrefsHelper.saveSelectedLocationTimeZone(this, timeZone)
             setResult(RESULT_TIMEZONE_SELECTED)
             finish()
-        })
+        }
     }
 
     override fun onNavBackSelected() {

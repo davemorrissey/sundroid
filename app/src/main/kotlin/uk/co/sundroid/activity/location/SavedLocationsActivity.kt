@@ -58,8 +58,8 @@ class SavedLocationsActivity : AbstractLocationActivity() {
             val row = View.inflate(this, R.layout.loc_saved_row, null)
             row.findViewById<TextView>(R.id.savedLocName).text = location.name
             row.findViewById<TextView>(R.id.savedLocCoords).text = location.location.getPunctuatedValue(Accuracy.MINUTES)
-            row.findViewById<View>(id.savedLocText).setOnClickListener({ _ -> select(location) })
-            row.findViewById<View>(id.savedLocDelete).setOnClickListener({ _ -> confirmDelete(location) })
+            row.findViewById<View>(id.savedLocText).setOnClickListener { select(location) }
+            row.findViewById<View>(id.savedLocDelete).setOnClickListener { confirmDelete(location) }
             list.addView(row)
             first = false
         }

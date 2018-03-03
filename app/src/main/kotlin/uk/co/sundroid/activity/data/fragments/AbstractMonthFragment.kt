@@ -56,10 +56,10 @@ abstract class AbstractMonthFragment<T> : AbstractDataFragment() {
         }
         val monthDetector = GestureDetector(applicationContext, ButtonDragGestureDetector(monthListener, applicationContext!!))
 
-        monthPrev.setOnClickListener { _ -> calendarDiff(MONTH, -1) }
-        monthNext.setOnClickListener { _ -> calendarDiff(MONTH, 1) }
-        zoneButton.setOnClickListener { _ -> startTimeZone() }
-        monthButton.setOnClickListener { _ -> MonthPickerFragment.show(this) }
+        monthPrev.setOnClickListener { calendarDiff(MONTH, -1) }
+        monthNext.setOnClickListener { calendarDiff(MONTH, 1) }
+        zoneButton.setOnClickListener { startTimeZone() }
+        monthButton.setOnClickListener { MonthPickerFragment.show(this) }
         monthButton.setOnTouchListener { _, event -> monthDetector.onTouchEvent(event) }
     }
 

@@ -298,10 +298,10 @@ class DataActivity : AbstractActivity(), OnClickListener, OnNavigationListener {
 
     private fun initDayDetailTabs() {
         show(R.id.dayDetailTabs)
-        findViewById<View>(R.id.sunTabInactive).setOnClickListener { _ -> setDayDetailTab("sun") }
-        findViewById<View>(R.id.moonTabInactive).setOnClickListener { _ -> setDayDetailTab("moon") }
-        findViewById<View>(R.id.planetsTabInactive).setOnClickListener { _ -> setDayDetailTab("planets") }
-        findViewById<View>(R.id.eventsTabInactive).setOnClickListener { _ -> setDayDetailTab("events") }
+        findViewById<View>(R.id.sunTabInactive).setOnClickListener { setDayDetailTab("sun") }
+        findViewById<View>(R.id.moonTabInactive).setOnClickListener { setDayDetailTab("moon") }
+        findViewById<View>(R.id.planetsTabInactive).setOnClickListener { setDayDetailTab("planets") }
+        findViewById<View>(R.id.eventsTabInactive).setOnClickListener { setDayDetailTab("events") }
         updateDayDetailTabs()
     }
 

@@ -107,9 +107,9 @@ abstract class AbstractTimeFragment : AbstractDataFragment(), OnSeekBarChangeLis
             override fun onButtonDragRight() = changeCalendars(DAY_OF_MONTH, 1)
         }
         val dateDetector = GestureDetector(applicationContext, ButtonDragGestureDetector(dateListener, applicationContext!!))
-        dateButton.setOnClickListener({ _ -> showDatePicker() })
-        dateButton.setOnTouchListener({ _, e -> dateDetector.onTouchEvent(e) })
-        zoneButton.setOnClickListener({ _ -> startTimeZone() })
+        zoneButton.setOnClickListener { startTimeZone() }
+        dateButton.setOnClickListener { showDatePicker() }
+        dateButton.setOnTouchListener { _, e -> dateDetector.onTouchEvent(e) }
 
         val timeListener = object : ButtonDragGestureDetectorListener {
             override fun onButtonDragUp() = prevHour()
@@ -118,8 +118,8 @@ abstract class AbstractTimeFragment : AbstractDataFragment(), OnSeekBarChangeLis
             override fun onButtonDragRight() = nextMinute()
         }
         val timeDetector = GestureDetector(applicationContext, ButtonDragGestureDetector(timeListener, applicationContext!!))
-        timeButton.setOnClickListener({ _ -> showTimePicker() })
-        timeButton.setOnTouchListener({ _, e -> timeDetector.onTouchEvent(e) })
+        timeButton.setOnClickListener { showTimePicker() }
+        timeButton.setOnTouchListener { _, e -> timeDetector.onTouchEvent(e) }
         timeSeeker.setOnSeekBarChangeListener(this)
     }
 

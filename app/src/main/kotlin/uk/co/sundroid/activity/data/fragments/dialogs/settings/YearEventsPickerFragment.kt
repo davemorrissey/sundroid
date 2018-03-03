@@ -21,7 +21,7 @@ class YearEventsPickerFragment : DialogFragment() {
         EARTH_APSIS("yearEarthApsis", "Earth aphelion and perihelion")
     }
 
-    private val currentEvents = BooleanArray(Setting.values().size, { _ -> true })
+    private val currentEvents = BooleanArray(Setting.values().size, { true })
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

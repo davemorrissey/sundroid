@@ -16,7 +16,7 @@ class DayEventsPickerFragment : DialogFragment() {
         PLANETS("evtByTimePlanets", "Planets"),
     }
 
-    private val currentEvents = BooleanArray(Setting.values().size, { _ -> true })
+    private val currentEvents = BooleanArray(Setting.values().size, { true })
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

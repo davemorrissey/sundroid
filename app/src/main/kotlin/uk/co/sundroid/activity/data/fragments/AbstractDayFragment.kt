@@ -55,10 +55,10 @@ abstract class AbstractDayFragment : AbstractDataFragment(), DatePickerFragment.
         }
         val dateDetector = GestureDetector(applicationContext, ButtonDragGestureDetector(dateListener, applicationContext!!))
 
-        datePrev.setOnClickListener { _ -> calendarDiff(DAY_OF_MONTH, -1) }
-        dateNext.setOnClickListener { _ -> calendarDiff(DAY_OF_MONTH, 1) }
-        zoneButton.setOnClickListener { _ -> startTimeZone() }
-        dateButton.setOnClickListener { _ -> showDatePicker() }
+        datePrev.setOnClickListener { calendarDiff(DAY_OF_MONTH, -1) }
+        dateNext.setOnClickListener { calendarDiff(DAY_OF_MONTH, 1) }
+        zoneButton.setOnClickListener { startTimeZone() }
+        dateButton.setOnClickListener { showDatePicker() }
         dateButton.setOnTouchListener { _, e -> dateDetector.onTouchEvent(e) }
     }
 
