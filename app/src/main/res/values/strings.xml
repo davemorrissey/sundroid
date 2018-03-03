@@ -44,4 +44,9 @@
         <item>Neptune rise and set</item>
     </string-array>
 
+    <string name="loc.search.none.title">No matches</string>
+    <string name="loc.search.none.msg">There were no locations matching your search. Please try another search term.</string>
+    <string name="loc.search.error.title">Search failed</string>
+    <string name="loc.search.error.msg">There was a problem searching for matching locations. Please check you have an internet connection.</string>
+
 </resources>

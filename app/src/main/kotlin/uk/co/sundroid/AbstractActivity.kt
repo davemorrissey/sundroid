@@ -5,10 +5,12 @@ import android.os.Bundle
 import android.view.*
 import android.view.View.OnClickListener
 import android.widget.TextView
+import android.widget.Toast
 
 import uk.co.sundroid.util.theme.*
 
 import uk.co.sundroid.NavItem.NavItemLocation.*
+import uk.co.sundroid.util.view.SimpleAlertFragment
 
 /**
  * Provides some helper functions for activities.
@@ -101,6 +103,12 @@ abstract class AbstractActivity : Activity(), OnClickListener {
         }
     }
 
+    protected fun remove(vararg views: View) {
+        for (view in views) {
+            view.visibility = View.GONE
+        }
+    }
+
     protected fun hide(vararg ids: Int) {
         for (id in ids) {
             findViewById<View>(id).visibility = View.INVISIBLE
@@ -128,6 +136,18 @@ abstract class AbstractActivity : Activity(), OnClickListener {
         for (id in ids) {
             view.findViewById<View>(id).visibility = View.GONE
         }
+    }
+
+    protected fun alert(title: String, message: String) {
+        SimpleAlertFragment.show(this, title, message)
+    }
+
+    protected fun alert(title: Int, message: Int) {
+        SimpleAlertFragment.show(this, title, message)
+    }
+
+    protected fun longToast(message: String) {
+        Toast.makeText(applicationContext, message, Toast.LENGTH_LONG).show()
     }
 
 }
