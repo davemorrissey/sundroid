@@ -19,17 +19,19 @@ class GlossaryFragment : AbstractFragment() {
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
-        infGlossaryApsisDisclosure.setOnClickListener { v -> toggle(v, infGlossaryApsisBody) }
-        infGlossaryAzimuthDisclosure.setOnClickListener { v -> toggle(v, infGlossaryAzimuthBody) }
-        infGlossaryCivTwiDisclosure.setOnClickListener { v -> toggle(v, infGlossaryCivTwiBody) }
-        infGlossaryNtcTwiDisclosure.setOnClickListener { v -> toggle(v, infGlossaryNtcTwiBody) }
-        infGlossaryAstTwiDisclosure.setOnClickListener { v -> toggle(v, infGlossaryAstTwiBody) }
-        infGlossarySolNoonDisclosure.setOnClickListener { v -> toggle(v, infGlossarySolNoonBody) }
-        infGlossaryGoldenDisclosure.setOnClickListener { v -> toggle(v, infGlossaryGoldenBody) }
-        infGlossarySolsticeDisclosure.setOnClickListener { v -> toggle(v, infGlossarySolsticeBody) }
-        infGlossaryEquinoxDisclosure.setOnClickListener { v -> toggle(v, infGlossaryEquinoxBody) }
-        infGlossarySolEclipseDisclosure.setOnClickListener { v -> toggle(v, infGlossarySolEclipseBody) }
-        infGlossaryLunarEclipseDisclosure.setOnClickListener { v -> toggle(v, infGlossaryLunarEclipseBody) }
+        mapOf(
+                infGlossaryApsisDisclosure to infGlossaryApsisBody,
+                infGlossaryAzimuthDisclosure to infGlossaryAzimuthBody,
+                infGlossaryCivTwiDisclosure to infGlossaryCivTwiBody,
+                infGlossaryNtcTwiDisclosure to infGlossaryNtcTwiBody,
+                infGlossaryAstTwiDisclosure to infGlossaryAstTwiBody,
+                infGlossarySolNoonDisclosure to infGlossarySolNoonBody,
+                infGlossaryGoldenDisclosure to infGlossaryGoldenBody,
+                infGlossarySolsticeDisclosure to infGlossarySolsticeBody,
+                infGlossaryEquinoxDisclosure to infGlossaryEquinoxBody,
+                infGlossarySolEclipseDisclosure to infGlossarySolEclipseBody,
+                infGlossaryLunarEclipseDisclosure to infGlossaryLunarEclipseBody
+        ).forEach { (d, body) -> d.setOnClickListener { v -> toggle(v, body)} }
     }
 
     private fun toggle(disclosure: View, body: View) {

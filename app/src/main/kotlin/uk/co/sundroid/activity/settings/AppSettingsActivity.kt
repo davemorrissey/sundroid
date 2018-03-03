@@ -53,7 +53,6 @@ class AppSettingsActivity : PreferenceActivity(), SharedPreferences.OnSharedPref
     }
 
     override fun onSharedPreferenceChanged(sharedPrefs: SharedPreferences, key: String) {
-        d("ASA", "Setting changed: " + key)
         if (key == "defaultTimeZone") {
             val preference = preferenceManager.findPreference("defaultTimeZoneOverride")
             if (preference != null) {

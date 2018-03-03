@@ -64,7 +64,7 @@ class Locater(private val listener: LocaterListener, private val context: Contex
 
     override fun onProviderEnabled(provider: String) {
         if (!finished) {
-            d(TAG, "Provider enabled: " + provider)
+            d(TAG, "Provider enabled: $provider")
         }
     }
 

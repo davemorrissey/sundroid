@@ -19,12 +19,14 @@ class GuideFragment : AbstractFragment() {
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
-        infGuideDisclaimerDisclosure.setOnClickListener { v -> toggle(v, infGuideDisclaimerBody) }
-        infGuideLocationDisclosure.setOnClickListener { v -> toggle(v, infGuideLocationBody) }
-        infGuideOfflineDisclosure.setOnClickListener { v -> toggle(v, infGuideOfflineBody) }
-        infGuideTimeDisclosure.setOnClickListener { v -> toggle(v, infGuideTimeBody) }
-        infGuideZonesDisclosure.setOnClickListener { v -> toggle(v, infGuideZonesBody) }
-        infGuideTrackerDisclosure.setOnClickListener { v -> toggle(v, infGuideTrackerBody) }
+        mapOf(
+            infGuideDisclaimerDisclosure to infGuideDisclaimerBody,
+            infGuideLocationDisclosure to infGuideLocationBody,
+            infGuideOfflineDisclosure to infGuideOfflineBody,
+            infGuideTimeDisclosure to infGuideTimeBody,
+            infGuideZonesDisclosure to infGuideZonesBody,
+            infGuideTrackerDisclosure to infGuideTrackerBody
+        ).forEach { (d, body) -> d.setOnClickListener { v -> toggle(v, body)} }
     }
 
     private fun toggle(disclosure: View, body: View) {

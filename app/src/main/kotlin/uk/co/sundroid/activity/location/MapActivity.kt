@@ -75,28 +75,24 @@ class MapActivity : AbstractLocationActivity(), OnMapClickListener, OnInfoWindow
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        when (requestCode) {
-            REQUEST_LOCATION -> {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.isNotEmpty()) {
-                    if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
-                        // Show alert only if this is the first time the user has denied permission,
-                        // later calls to this method happen without interaction if they selected
-                        // "always deny".
-                        if (!SharedPrefsHelper.getMapLocationPermissionDenied(this)) {
-                            SharedPrefsHelper.setMapLocationPermissionDenied(this, true)
-                            AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert).apply {
-                                setTitle("Location denied")
-                                setMessage("Location name and time zone lookup will be unavailable. To fix this, you can grant this app location permission from Android settings.")
-                                setPositiveButton(android.R.string.ok, null)
-                                setIcon(android.R.drawable.ic_dialog_info)
-                            }.show()
-                        }
-                    } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                        // Unset denied flag so next time permission is denied, the alert is displayed again
-                        SharedPrefsHelper.setMapLocationPermissionDenied(this, false)
-                    }
+        // If request is cancelled, the result arrays are empty.
+        if (requestCode == REQUEST_LOCATION && grantResults.isNotEmpty()) {
+            if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                // Show alert only if this is the first time the user has denied permission,
+                // later calls to this method happen without interaction if they selected
+                // "always deny".
+                if (!SharedPrefsHelper.getMapLocationPermissionDenied(this)) {
+                    SharedPrefsHelper.setMapLocationPermissionDenied(this, true)
+                    AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert).apply {
+                        setTitle("Location denied")
+                        setMessage("Location name and time zone lookup will be unavailable. To fix this, you can grant this app location permission from Android settings.")
+                        setPositiveButton(android.R.string.ok, null)
+                        setIcon(android.R.drawable.ic_dialog_info)
+                    }.show()
                 }
+            } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Unset denied flag so next time permission is denied, the alert is displayed again
+                SharedPrefsHelper.setMapLocationPermissionDenied(this, false)
             }
         }
     }
