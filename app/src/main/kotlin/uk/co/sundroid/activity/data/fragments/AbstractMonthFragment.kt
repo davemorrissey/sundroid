@@ -1,6 +1,5 @@
 package uk.co.sundroid.activity.data.fragments
 
-import android.os.AsyncTask
 import android.os.Bundle
 import android.view.GestureDetector
 import android.view.LayoutInflater
@@ -9,6 +8,7 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.inc_monthbar.*
 import uk.co.sundroid.activity.data.fragments.dialogs.date.MonthPickerFragment
 import uk.co.sundroid.domain.LocationDetails
+import uk.co.sundroid.util.async.Async
 import uk.co.sundroid.util.view.ButtonDragGestureDetector
 import uk.co.sundroid.util.view.ButtonDragGestureDetector.ButtonDragGestureDetectorListener
 import java.text.SimpleDateFormat
@@ -71,18 +71,10 @@ abstract class AbstractMonthFragment<T> : AbstractDataFragment() {
     }
 
     protected fun asyncCalculate(location: LocationDetails, calendar: Calendar, view: View) {
-        data class Params(val location: LocationDetails, val calendar: Calendar)
-        class Task : AsyncTask<Params, Void, T>() {
-            override fun doInBackground(vararg params: Params): T {
-                return calculate(params[0].location, params[0].calendar)
-            }
-            override fun onPostExecute(data: T) {
-                if (isSafe) {
-                    post(view, data)
-                }
-            }
-        }
-        Task().execute(Params(location, calendar))
+        Async(
+                inBackground = { calculate(location, calendar) },
+                onDone = { data -> if (isSafe) post(view, data) }
+        )
     }
 
     protected abstract fun update(view: View)
