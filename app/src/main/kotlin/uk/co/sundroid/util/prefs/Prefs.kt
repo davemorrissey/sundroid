@@ -192,7 +192,7 @@ object Prefs {
         prefs(context).edit().putBoolean("show-$ref", show).apply()
     }
     
-    fun showElement(context: Context, ref: String, def: Boolean): Boolean {
+    fun showElement(context: Context, ref: String, def: Boolean = true): Boolean {
         return prefs(context).getBoolean("show-$ref", def)
     }
     

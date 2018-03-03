@@ -20,7 +20,15 @@ abstract class AbstractActivity : Activity(), OnClickListener {
 
     private var navItems: List<NavItem>? = null
 
-    private var prefs: PrefsWrapper? = null
+    private var _prefs: PrefsWrapper? = null
+
+    val prefs: PrefsWrapper
+        get() {
+            this._prefs?.let { return it }
+            val prefs = PrefsWrapper(this)
+            this._prefs = prefs
+            return prefs
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -151,13 +159,6 @@ abstract class AbstractActivity : Activity(), OnClickListener {
 
     protected fun longToast(message: String) {
         Toast.makeText(applicationContext, message, Toast.LENGTH_LONG).show()
-    }
-
-    protected fun prefs(): PrefsWrapper {
-        this.prefs?.let { return it }
-        val prefs = PrefsWrapper(this)
-        this.prefs = prefs
-        return prefs
     }
 
 }

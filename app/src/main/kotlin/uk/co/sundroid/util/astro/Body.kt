@@ -12,6 +12,10 @@ enum class Body constructor(val displayName: String, val darkColor: Int, val lig
     JUPITER("Jupiter", Color.argb(255, 244, 211, 172), Color.argb(255, 220, 180, 140)),
     SATURN("Saturn", Color.argb(255, 249, 210, 147), Color.argb(255, 249, 210, 147)),
     URANUS("Uranus", Color.argb(255, 98, 221, 222), Color.argb(255, 98, 221, 222)),
-    NEPTUNE("Neptune", Color.argb(255, 98, 171, 222), Color.argb(255, 98, 171, 222))
+    NEPTUNE("Neptune", Color.argb(255, 98, 171, 222), Color.argb(255, 98, 171, 222));
+
+    companion object {
+        val PLANETS = arrayOf(MERCURY, VENUS, MARS, JUPITER, SATURN, URANUS, NEPTUNE)
+    }
 
 }

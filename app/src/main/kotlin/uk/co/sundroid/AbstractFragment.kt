@@ -5,11 +5,22 @@ import android.content.Context
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import uk.co.sundroid.util.prefs.PrefsWrapper
 
 /**
  * Provides some helper functions for fragments.
  */
 abstract class AbstractFragment : Fragment() {
+
+    private var _prefs: PrefsWrapper? = null
+
+    val prefs: PrefsWrapper
+        get() {
+            this._prefs?.let { return it }
+            val prefs = PrefsWrapper(activity)
+            this._prefs = prefs
+            return prefs
+        }
 
     protected val applicationContext: Context?
         get() {
@@ -64,6 +75,11 @@ abstract class AbstractFragment : Fragment() {
         for (id in ids) {
             view.findViewById<View>(id).visibility = View.INVISIBLE
         }
+    }
+
+    protected fun toggle(view: View, on: Int, off: Int) {
+        view.findViewById<View>(on).visibility = View.VISIBLE
+        view.findViewById<View>(off).visibility = View.GONE
     }
 
     protected fun imageInView(view: View, id: Int, drawable: Int) {

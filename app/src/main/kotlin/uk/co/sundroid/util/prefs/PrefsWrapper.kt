@@ -19,7 +19,7 @@ class PrefsWrapper(val context: Context) {
     fun firstWeekday(): Int = Prefs.firstWeekday(context)
     fun magneticBearings(): Boolean = Prefs.magneticBearings(context)
     fun setShowElement(ref: String, show: Boolean) = Prefs.setShowElement(context, ref, show)
-    fun showElement(ref: String, def: Boolean = false): Boolean = Prefs.showElement(context, ref, def)
+    fun showElement(ref: String, def: Boolean = true): Boolean = Prefs.showElement(context, ref, def)
     fun lastDataGroup(): DataGroup = Prefs.lastDataGroup(context)
     fun lastDataGroup(dataGroup: DataGroup) = Prefs.setLastDataGroup(context, dataGroup)
     fun lastDetailTab(): String = Prefs.lastDetailTab(context)
