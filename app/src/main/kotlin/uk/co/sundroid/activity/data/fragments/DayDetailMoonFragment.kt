@@ -1,31 +1,24 @@
 package uk.co.sundroid.activity.data.fragments
 
-import android.content.Intent
-import android.net.Uri
-import android.os.Handler
 import android.view.View
-import android.widget.ImageView
-import android.widget.TextView
 import uk.co.sundroid.R
-import uk.co.sundroid.util.astro.Body
-import uk.co.sundroid.util.astro.MoonDay
-import uk.co.sundroid.util.astro.MoonPhase
-import uk.co.sundroid.util.astro.YearData
+import uk.co.sundroid.R.id.*
+import uk.co.sundroid.util.astro.*
+import uk.co.sundroid.util.astro.YearData.Event
 import uk.co.sundroid.util.astro.image.MoonPhaseImage
-import uk.co.sundroid.util.astro.RiseSetType
 import uk.co.sundroid.util.astro.math.BodyPositionCalculator
 import uk.co.sundroid.util.astro.math.MoonPhaseCalculator
-import uk.co.sundroid.util.geometry.*
-import uk.co.sundroid.util.log.*
+import uk.co.sundroid.util.async.async
+import uk.co.sundroid.util.geometry.formatBearing
+import uk.co.sundroid.util.geometry.formatElevation
 import uk.co.sundroid.util.theme.*
-import uk.co.sundroid.util.time.*
-import uk.co.sundroid.util.astro.YearData.Event
-
+import uk.co.sundroid.util.time.formatDurationHMS
+import uk.co.sundroid.util.time.formatTime
+import uk.co.sundroid.util.time.isSameDay
+import uk.co.sundroid.util.time.shortDateAndMonth
 import java.util.*
 
 class DayDetailMoonFragment : AbstractDayFragment() {
-
-    private val handler = Handler()
 
     override val layout: Int
         get() = R.layout.frag_data_daydetail_moon
@@ -34,159 +27,120 @@ class DayDetailMoonFragment : AbstractDayFragment() {
         val location = getLocation()
         val calendar = getDateCalendar()
 
-        val thread = object : Thread() {
-            override fun run() {
-                if (!isSafe) {
-                    return
-                }
-
-                val moonDay = BodyPositionCalculator.calcDay(Body.MOON, location.location, calendar, true) as MoonDay
-                val moonPhaseEvents = MoonPhaseCalculator.getYearEvents(calendar.get(Calendar.YEAR), calendar.timeZone)
-                        .filter { it.time.get(Calendar.DAY_OF_YEAR) >= calendar.get(Calendar.DAY_OF_YEAR) }
-                        .toMutableList()
-                if (moonPhaseEvents.size < 4) {
-                    moonPhaseEvents.addAll(MoonPhaseCalculator.getYearEvents(calendar.get(Calendar.YEAR) + 1, calendar.timeZone))
-                }
-
-                val yearEvents = YearData.getYearEvents(calendar.get(Calendar.YEAR), calendar.timeZone)
-                val yearEventToday: Event? = yearEvents.lastOrNull { it.type.body === Body.MOON && isSameDay(calendar, it.time) }
-
-                // Asynchronously generate moon graphic to speed up response.
-                val moonThread = object : Thread() {
-                    override fun run() {
-                        if (!isSafe) {
-                            return
-                        }
-
-                        try {
-                            val start = System.currentTimeMillis()
-                            val phase = moonDay.phaseDouble
-                            val moonBitmap = MoonPhaseImage.makeImage(resources, R.drawable.moon, phase, location.location.latitude.doubleValue < 0, MoonPhaseImage.SIZE_LARGE)
-                            val end = System.currentTimeMillis()
-                            handler.post {
-                                if (isSafe) {
-                                    val moon = view.findViewById<ImageView>(R.id.moonImage)
-                                    moon.setImageBitmap(moonBitmap)
-                                }
-                            }
-                            d(TAG, "Moon render time " + (end - start))
-                        } catch (e: Exception) {
-                            e(TAG, "Error generating moon", e)
-                        }
-
+        class Data(val day: MoonDay, val phaseEvents: List<MoonPhaseEvent>, val yearEvent: YearData.Event?)
+        async(
+                inBackground = {
+                    val day = BodyPositionCalculator.calcDay(Body.MOON, location.location, calendar, true) as MoonDay
+                    val phaseEvents = MoonPhaseCalculator.getYearEvents(calendar.get(Calendar.YEAR), calendar.timeZone)
+                            .filter { it.time.get(Calendar.DAY_OF_YEAR) >= calendar.get(Calendar.DAY_OF_YEAR) }
+                            .toMutableList()
+                    if (phaseEvents.size < 4) {
+                        phaseEvents.addAll(MoonPhaseCalculator.getYearEvents(calendar.get(Calendar.YEAR) + 1, calendar.timeZone))
                     }
-                }
-                moonThread.start()
 
-                handler.post {
+                    val yearEvents = YearData.getYearEvents(calendar.get(Calendar.YEAR), calendar.timeZone)
+                    val yearEvent: Event? = yearEvents.lastOrNull { it.type.body === Body.MOON && isSameDay(calendar, it.time) }
+                    Data(day, phaseEvents, yearEvent)
+                },
+                onDone = { data: Data ->
                     if (isSafe) {
-                        if (yearEventToday != null) {
-                            view.findViewById<View>(R.id.moonEvent).setOnClickListener(null)
-                            showInView(view, R.id.moonEvent)
-                            showInView(view, R.id.moonEventTitle, yearEventToday.type.displayName)
-                            showInView(view, R.id.moonEventSubtitle, "Tap to check Wikipedia for visibility")
-                            val finalLink = yearEventToday.link
-                            view.findViewById<View>(R.id.moonEvent).setOnClickListener {
-                                val intent = Intent(Intent.ACTION_VIEW)
-                                intent.data = Uri.parse(finalLink)
-                                startActivity(intent)
-                            }
+                        val day = data.day
+                        val phaseEvents = data.phaseEvents
+                        val yearEvent = data.yearEvent
+
+                        async(
+                                inBackground = { MoonPhaseImage.makeImage(resources, R.drawable.moon, day.phaseDouble, location.location.latitude.doubleValue < 0, MoonPhaseImage.SIZE_LARGE) },
+                                onDone = { bitmap ->
+                                    if (isSafe) {
+                                        image(view, moonImage, bitmap)
+                                    }
+                                }
+                        )
+
+                        if (yearEvent != null) {
+                            view.findViewById<View>(moonEvent).setOnClickListener(null)
+                            show(view, moonEvent)
+                            show(view, moonEventTitle, yearEvent.type.displayName)
+                            show(view, moonEventSubtitle, "Tap to check Wikipedia for visibility")
+                            view.findViewById<View>(moonEvent).setOnClickListener { browseTo(yearEvent.link) }
                         } else {
-                            removeInView(view, R.id.moonEvent)
+                            remove(view, moonEvent)
                         }
 
                         for (i in 1..4) {
-                            val phaseEvent = moonPhaseEvents[i - 1]
-                            val phaseImgView = view("moonPhase" + i + "Img")
-                            val phaseLabelView = view("moonPhase" + i + "Label")
+                            val phaseEvent = phaseEvents[i - 1]
+                            val phaseImgView = view("moonPhase${i}Img")
+                            val phaseLabelView = view("moonPhase${i}Label")
                             var phaseImg = getPhaseFull()
                             when {
                                 phaseEvent.phase === MoonPhase.NEW -> phaseImg = getPhaseNew()
                                 phaseEvent.phase === MoonPhase.FIRST_QUARTER -> phaseImg = if (location.location.latitude.doubleValue >= 0) getPhaseRight() else getPhaseLeft()
                                 phaseEvent.phase === MoonPhase.LAST_QUARTER -> phaseImg = if (location.location.latitude.doubleValue >= 0) getPhaseLeft() else getPhaseRight()
                             }
-                            (view.findViewById<View>(phaseImgView) as ImageView).setImageResource(phaseImg)
-                            (view.findViewById<View>(phaseLabelView) as TextView).text = shortDateAndMonth(phaseEvent.time)
+                            image(view, phaseImgView, phaseImg)
+                            text(view, phaseLabelView, shortDateAndMonth(phaseEvent.time))
                         }
 
                         var noTransit = true
                         var noUptime = true
 
-                        if (moonDay.riseSetType !== RiseSetType.SET && moonDay.transitAppElevation > 0) {
-                            val noon = formatTime(applicationContext!!, moonDay.transit!!, false)
+                        if (day.riseSetType !== RiseSetType.SET && day.transitAppElevation > 0) {
+                            val noon = formatTime(activity, day.transit!!, false)
                             noTransit = false
-                            showInView(view, R.id.moonTransit)
-                            showInView(view, R.id.moonTransitTime, noon.time + noon.marker + "  " + formatElevation(moonDay.transitAppElevation))
+                            show(view, moonTransit)
+                            show(view, moonTransitTime, "$noon  ${formatElevation(day.transitAppElevation)}")
                         } else {
-                            removeInView(view, R.id.moonTransit)
+                            remove(view, moonTransit)
                         }
 
-                        if (moonDay.riseSetType === RiseSetType.RISEN || moonDay.riseSetType === RiseSetType.SET) {
-                            showInView(view, R.id.moonSpecial, if (moonDay.riseSetType === RiseSetType.RISEN) "Risen all day" else "Set all day")
-                            removeInView(view, R.id.moonEvtsRow, R.id.moonEvt1, R.id.moonEvt2, R.id.moonUptime)
+                        if (day.riseSetType === RiseSetType.RISEN || day.riseSetType === RiseSetType.SET) {
+                            show(view, moonSpecial, if (day.riseSetType === RiseSetType.RISEN) "Risen all day" else "Set all day")
+                            remove(view, moonEvtsRow, moonEvt0, moonEvt1, moonUptime)
                         } else {
-                            removeInView(view, R.id.moonSpecial)
-                            removeInView(view, R.id.moonEvt1, R.id.moonEvt2)
-                            showInView(view, R.id.moonEvtsRow)
-                            val events = TreeSet<SummaryEvent>()
-                            if (moonDay.rise != null) {
-                                events.add(SummaryEvent("Rise", moonDay.rise!!, moonDay.riseAzimuth))
-                            }
-                            if (moonDay.set != null) {
-                                events.add(SummaryEvent("Set", moonDay.set!!, moonDay.setAzimuth))
-                            }
-                            var index = 1
-                            for (event in events) {
-                                val rowId = view("moonEvt" + index)
-                                val timeId = view("moonEvt" + index + "Time")
-                                val azId = view("moonEvt" + index + "Az")
-                                val imgId = view("moonEvt" + index + "Img")
+                            remove(view, moonSpecial)
+                            remove(view, moonEvt0, moonEvt1)
+                            show(view, moonEvtsRow)
+                            val events = TreeSet<RiseSetEvent>()
+                            day.rise?.let { events.add(RiseSetEvent("Rise", it, day.riseAzimuth)) }
+                            day.set?.let { events.add(RiseSetEvent("Set", it, day.setAzimuth)) }
+                            events.forEachIndexed({ index, event ->
+                                val rowId = view("moonEvt$index")
+                                val timeId = view("moonEvt${index}Time")
+                                val azId = view("moonEvt${index}Az")
+                                val imgId = view("moonEvt${index}Img")
 
-                                val time = formatTime(applicationContext!!, event.time, false)
-                                val az = formatBearing(applicationContext!!, event.azimuth!!, location.location, event.time)
+                                val time = formatTime(activity, event.time, false)
+                                val az = formatBearing(activity, event.azimuth, location.location, event.time)
 
-                                textInView(view, timeId, time.time + time.marker)
-                                textInView(view, azId, az)
-                                showInView(view, rowId)
-                                imageInView(view, imgId, if (event.name == "Rise") getRiseArrow() else getSetArrow())
+                                text(view, timeId, "$time")
+                                text(view, azId, az)
+                                show(view, rowId)
+                                image(view, imgId, if (event.name == "Rise") getRiseArrow() else getSetArrow())
+                            })
 
-                                index++
-                            }
-
-                            if (moonDay.uptimeHours > 0 && moonDay.uptimeHours < 24) {
+                            if (day.uptimeHours > 0 && day.uptimeHours < 24) {
                                 noUptime = false
-                                showInView(view, R.id.moonUptime)
-                                showInView(view, R.id.moonUptimeTime, formatDurationHMS(applicationContext!!, moonDay.uptimeHours, false))
+                                show(view, moonUptime)
+                                show(view, moonUptimeTime, formatDurationHMS(activity, day.uptimeHours, false))
                             } else {
-                                removeInView(view, R.id.moonUptime)
+                                remove(view, moonUptime)
                             }
-
                         }
 
                         if (noTransit && noUptime) {
-                            removeInView(view, R.id.moonTransitUptime, R.id.moonTransitUptimeDivider)
+                            remove(view, moonTransitUptime, moonTransitUptimeDivider)
                         } else {
-                            showInView(view, R.id.moonTransitUptime, R.id.moonTransitUptimeDivider)
+                            show(view, moonTransitUptime, moonTransitUptimeDivider)
                         }
 
-                        if (moonDay.phaseEvent == null) {
-                            showInView(view, R.id.moonPhase, moonDay.phase.displayName)
-                        } else {
-                            val time = formatTime(applicationContext!!, moonDay.phaseEvent!!.time, false)
-                            showInView(view, R.id.moonPhase, moonDay.phase.displayName + " at " + time.time + time.marker)
-                        }
-                        showInView(view, R.id.moonIllumination, Integer.toString(moonDay.illumination) + "%")
-                        showInView(view, R.id.moonDataBox)
+                        show(view, moonPhase, day.phase.displayName + (day.phaseEvent?.let {
+                            " " + formatTime(activity, it.time, false).toString()
+                        } ?: ""))
+                        show(view, moonIllumination, "${day.illumination}%")
+                        show(view, moonDataBox)
                     }
                 }
-            }
-        }
-        thread.start()
-
-    }
-
-    companion object {
-        private val TAG = DayDetailMoonFragment::class.java.simpleName
+        )
     }
 
 }

@@ -2,6 +2,9 @@ package uk.co.sundroid
 
 import android.app.Fragment
 import android.content.Context
+import android.content.Intent
+import android.graphics.Bitmap
+import android.net.Uri
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -45,6 +48,12 @@ abstract class AbstractFragment : Fragment() {
         child.text = text
     }
 
+    protected fun show(view: View, id: Int, text: CharSequence) {
+        val child = view.findViewById<TextView>(id)
+        child.visibility = View.VISIBLE
+        child.text = text
+    }
+
     protected fun show(view: View, vararg ids: Int) {
         for (id in ids) {
             view.findViewById<View>(id).visibility = View.VISIBLE
@@ -82,8 +91,17 @@ abstract class AbstractFragment : Fragment() {
         view.findViewById<View>(off).visibility = View.GONE
     }
 
+    @Deprecated("Use image")
     protected fun imageInView(view: View, id: Int, drawable: Int) {
         (view.findViewById<View>(id) as ImageView).setImageResource(drawable)
+    }
+
+    protected fun image(view: View, id: Int, drawable: Int) {
+        (view.findViewById<View>(id) as ImageView).setImageResource(drawable)
+    }
+
+    protected fun image(view: View, id: Int, bitmap: Bitmap) {
+        view.findViewById<ImageView>(id).setImageBitmap(bitmap)
     }
 
     protected fun view(name: String): Int {
@@ -96,6 +114,15 @@ abstract class AbstractFragment : Fragment() {
 
     protected fun inflate(id: Int): View {
         return activity.layoutInflater.inflate(id, null)
+    }
+
+
+    protected fun browseTo(url: String?) {
+        url?.let {
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.data = Uri.parse(it)
+            startActivity(intent)
+        }
     }
 
 }

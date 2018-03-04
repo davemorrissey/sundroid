@@ -92,6 +92,33 @@
                         android:baselineAligned="false">
 
                     <LinearLayout
+                            android:id="@+id/moonEvt0"
+                            android:layout_width="0dp"
+                            android:layout_weight="0.5"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            android:orientation="vertical">
+
+                        <ImageView
+                                android:id="@+id/moonEvt0Img"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                />
+                        <TextView
+                                android:id="@+id/moonEvt0Time"
+                                style="@style/text"
+                                android:textSize="32sp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+                        <TextView
+                                android:id="@+id/moonEvt0Az"
+                                style="@style/text"
+                                android:textSize="16sp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+                    </LinearLayout>
+
+                    <LinearLayout
                             android:id="@+id/moonEvt1"
                             android:layout_width="0dp"
                             android:layout_weight="0.5"
@@ -112,33 +139,6 @@
                                 android:layout_height="wrap_content"/>
                         <TextView
                                 android:id="@+id/moonEvt1Az"
-                                style="@style/text"
-                                android:textSize="16sp"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"/>
-                    </LinearLayout>
-
-                    <LinearLayout
-                            android:id="@+id/moonEvt2"
-                            android:layout_width="0dp"
-                            android:layout_weight="0.5"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_horizontal"
-                            android:orientation="vertical">
-
-                        <ImageView
-                                android:id="@+id/moonEvt2Img"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                />
-                        <TextView
-                                android:id="@+id/moonEvt2Time"
-                                style="@style/text"
-                                android:textSize="32sp"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"/>
-                        <TextView
-                                android:id="@+id/moonEvt2Az"
                                 style="@style/text"
                                 android:textSize="16sp"
                                 android:layout_width="wrap_content"
