@@ -28,37 +28,37 @@ class DayDetailPlanetsFragment : AbstractDayFragment() {
 
         async(
                 inBackground = { Body.PLANETS.associate { Pair(it, BodyPositionCalculator.calcDay(it, location.location, calendar, true)) } },
-                onDone = { planetDays: Map<Body, BodyDay> ->
+                onDone = { days: Map<Body, BodyDay> ->
                     if (isSafe) {
-                        val planetsDataBox = view.findViewById<ViewGroup>(planetsDataBox)
-                        for ((planet, planetDay) in planetDays) {
-                            val planetRow = inflate(R.layout.frag_data_daydetail_planets_planet)
+                        val wrapper = view.findViewById<ViewGroup>(planetsDataBox)
+                        for ((planet, day) in days) {
+                            val row = inflate(R.layout.frag_data_daydetail_planets_planet)
 
-                            text(planetRow, planetName, planet.name)
+                            text(row, planetName, planet.name)
 
                             var noTransit = false
                             var noUptime = false
 
-                            if (planetDay.riseSetType !== RiseSetType.SET && planetDay.transitAppElevation > 0) {
-                                val noon = formatTime(activity, planetDay.transit!!, false)
-                                show(planetRow, planetTransit)
-                                show(planetRow, planetTransitTime, "$noon  ${formatElevation(planetDay.transitAppElevation)}")
+                            if (day.riseSetType !== RiseSetType.SET && day.transitAppElevation > 0) {
+                                val noon = formatTime(activity, day.transit!!, false)
+                                show(row, planetTransit)
+                                show(row, planetTransitTime, "$noon  ${formatElevation(day.transitAppElevation)}")
                             } else {
-                                remove(planetRow, planetTransit)
+                                remove(row, planetTransit)
                                 noTransit = true
                             }
 
-                            if (planetDay.riseSetType === RiseSetType.RISEN || planetDay.riseSetType === RiseSetType.SET) {
-                                show(planetRow, planetSpecial, if (planetDay.riseSetType === RiseSetType.RISEN) "Risen all day" else "Set all day")
-                                remove(planetRow, planetEvtsRow, planetEvt1, planetEvt2, planetUptime)
+                            if (day.riseSetType === RiseSetType.RISEN || day.riseSetType === RiseSetType.SET) {
+                                show(row, planetSpecial, if (day.riseSetType === RiseSetType.RISEN) "Risen all day" else "Set all day")
+                                remove(row, planetEvtsRow, planetEvt0, planetEvt1, planetUptime)
                                 noUptime = true
                             } else {
-                                remove(planetRow, planetSpecial)
-                                remove(planetRow, planetEvt1, planetEvt2)
-                                show(planetRow, planetEvtsRow)
+                                remove(row, planetSpecial)
+                                remove(row, planetEvt0, planetEvt1)
+                                show(row, planetEvtsRow)
                                 val events = TreeSet<RiseSetEvent>()
-                                planetDay.rise?.let { events.add(RiseSetEvent("Rise", it, planetDay.riseAzimuth)) }
-                                planetDay.set?.let { events.add(RiseSetEvent("Set", it, planetDay.setAzimuth)) }
+                                day.rise?.let { events.add(RiseSetEvent("Rise", it, day.riseAzimuth)) }
+                                day.set?.let { events.add(RiseSetEvent("Set", it, day.setAzimuth)) }
                                 events.forEachIndexed { index, event ->
                                     val rowId = view("planetEvt$index")
                                     val timeId = view("planetEvt${index}Time")
@@ -68,29 +68,29 @@ class DayDetailPlanetsFragment : AbstractDayFragment() {
                                     val time = formatTime(activity, event.time, false)
                                     val az = formatBearing(activity, event.azimuth, location.location, event.time)
 
-                                    text(planetRow, timeId, "$time")
-                                    text(planetRow, azId, az)
-                                    show(planetRow, rowId)
-                                    image(view, imgId, if (event.name == "Rise") getRiseArrow() else getSetArrow())
+                                    text(row, timeId, "$time")
+                                    text(row, azId, az)
+                                    show(row, rowId)
+                                    image(row, imgId, if (event.name == "Rise") getRiseArrow() else getSetArrow())
                                 }
 
-                                if (planetDay.uptimeHours > 0 && planetDay.uptimeHours < 24) {
-                                    show(planetRow, planetUptime)
-                                    show(planetRow, planetUptimeTime, formatDurationHMS(applicationContext!!, planetDay.uptimeHours, false))
+                                if (day.uptimeHours > 0 && day.uptimeHours < 24) {
+                                    show(row, planetUptime)
+                                    show(row, planetUptimeTime, formatDurationHMS(applicationContext!!, day.uptimeHours, false))
                                 } else {
-                                    remove(planetRow, planetUptime)
+                                    remove(row, planetUptime)
                                 }
                             }
 
                             if (noTransit && noUptime) {
-                                remove(planetRow, planetTransitUptime)
+                                remove(row, planetTransitUptime)
                             } else {
-                                show(planetRow, planetTransitUptime)
+                                show(row, planetTransitUptime)
                             }
-                            planetsDataBox.addView(planetRow)
+                            wrapper.addView(row)
 
                         }
-                        show(planetsDataBox)
+                        show(wrapper)
                     }
                 }
         )
