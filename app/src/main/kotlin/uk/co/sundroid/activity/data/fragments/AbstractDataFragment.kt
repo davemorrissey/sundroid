@@ -8,9 +8,9 @@ import uk.co.sundroid.activity.data.DataActivity
 import uk.co.sundroid.activity.data.fragments.dialogs.OnViewPrefsChangedListener
 import uk.co.sundroid.activity.location.TimeZonePickerActivity
 import uk.co.sundroid.domain.LocationDetails
-import uk.co.sundroid.util.isNotEmpty
-import uk.co.sundroid.util.log.*
+import uk.co.sundroid.util.log.e
 import uk.co.sundroid.util.prefs.Prefs
+import uk.co.sundroid.util.time.TimeZoneResolver
 import java.util.*
 
 /**
@@ -22,7 +22,7 @@ abstract class AbstractDataFragment : AbstractFragment(), OnViewPrefsChangedList
         get() = activity != null && !isDetached && applicationContext != null
 
     fun getLocation(): LocationDetails {
-        return Prefs.selectedLocation(applicationContext!!)!!
+        return Prefs.selectedLocation(activity)!!
     }
 
     fun getDateCalendar(): Calendar {
@@ -45,17 +45,18 @@ abstract class AbstractDataFragment : AbstractFragment(), OnViewPrefsChangedList
 
     protected fun updateTimeZone() {
         val location = getLocation()
+        val timeZone = location.timeZone ?: TimeZoneResolver.getTimeZone(null)
         val calendar = getDateCalendar()
-        if (Prefs.showTimeZone(applicationContext!!)) {
+        if (Prefs.showTimeZone(activity)) {
             zoneButton.visibility = View.VISIBLE
-            val zone = location.timeZone!!.zone
+            val zone = timeZone.zone
             val dst = zone.inDaylightTime(Date(calendar.timeInMillis + 12 * 60 * 60 * 1000))
             val name = zone.getDisplayName(dst, TimeZone.LONG)
             zoneName.text = name
 
-            var cities = location.timeZone!!.getOffset(calendar.timeInMillis + 12 * 60 * 60 * 1000) // Get day's main offset.
-            if (isNotEmpty(location.timeZone!!.cities)) {
-                cities += " " + location.timeZone!!.cities!!
+            var cities = timeZone.getOffset(calendar.timeInMillis + 12 * 60 * 60 * 1000) // Get day's main offset.
+            timeZone.cities?.let {
+                cities += " $it"
             }
             zoneCities.text = cities
         } else {
@@ -63,9 +64,9 @@ abstract class AbstractDataFragment : AbstractFragment(), OnViewPrefsChangedList
         }
     }
 
-    open fun initialise() { }
+    open fun initialise() {}
 
-    open fun update() { }
+    open fun update() {}
 
     override fun onViewPrefsUpdated() {
         try {
