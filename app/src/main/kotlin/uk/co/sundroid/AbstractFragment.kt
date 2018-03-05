@@ -6,6 +6,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import uk.co.sundroid.util.prefs.PrefsWrapper
@@ -80,7 +81,14 @@ abstract class AbstractFragment : Fragment() {
         }
     }
 
+    @Deprecated("use hide")
     protected fun hideInView(view: View, vararg ids: Int) {
+        for (id in ids) {
+            view.findViewById<View>(id).visibility = View.INVISIBLE
+        }
+    }
+
+    protected fun hide(view: View, vararg ids: Int) {
         for (id in ids) {
             view.findViewById<View>(id).visibility = View.INVISIBLE
         }
@@ -112,8 +120,8 @@ abstract class AbstractFragment : Fragment() {
         }
     }
 
-    protected fun inflate(id: Int): View {
-        return activity.layoutInflater.inflate(id, null)
+    protected fun inflate(id: Int, parent: ViewGroup? = null): View {
+        return activity.layoutInflater.inflate(id, parent)
     }
 
 
