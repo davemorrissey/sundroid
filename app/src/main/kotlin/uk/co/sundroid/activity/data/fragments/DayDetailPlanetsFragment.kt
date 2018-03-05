@@ -1,23 +1,23 @@
 package uk.co.sundroid.activity.data.fragments
 
-import android.os.Handler
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import uk.co.sundroid.R
+import uk.co.sundroid.R.id.*
 import uk.co.sundroid.util.astro.Body
 import uk.co.sundroid.util.astro.BodyDay
 import uk.co.sundroid.util.astro.RiseSetType
 import uk.co.sundroid.util.astro.math.BodyPositionCalculator
-import uk.co.sundroid.util.geometry.*
-import uk.co.sundroid.util.theme.*
-import uk.co.sundroid.util.time.*
-
+import uk.co.sundroid.util.async.async
+import uk.co.sundroid.util.geometry.formatBearing
+import uk.co.sundroid.util.geometry.formatElevation
+import uk.co.sundroid.util.theme.getRiseArrow
+import uk.co.sundroid.util.theme.getSetArrow
+import uk.co.sundroid.util.time.formatDurationHMS
+import uk.co.sundroid.util.time.formatTime
 import java.util.*
 
 class DayDetailPlanetsFragment : AbstractDayFragment() {
-
-    private val handler = Handler()
 
     override val layout: Int
         get() = R.layout.frag_data_daydetail_planets
@@ -26,98 +26,74 @@ class DayDetailPlanetsFragment : AbstractDayFragment() {
         val location = getLocation()
         val calendar = getDateCalendar()
 
-        val thread = object : Thread() {
-            override fun run() {
-                if (!isSafe) {
-                    return
-                }
-
-                val planetDays = LinkedHashMap<Body, BodyDay>()
-                Body.values()
-                        .filter { it !== Body.SUN && it !== Body.MOON }
-                        .forEach { planetDays[it] = BodyPositionCalculator.calcDay(it, location.location, calendar, true) }
-
-                handler.post {
+        async(
+                inBackground = { Body.PLANETS.associate { Pair(it, BodyPositionCalculator.calcDay(it, location.location, calendar, true)) } },
+                onDone = { planetDays: Map<Body, BodyDay> ->
                     if (isSafe) {
-                        val planetsDataBox = view.findViewById<ViewGroup>(R.id.planetsDataBox)
+                        val planetsDataBox = view.findViewById<ViewGroup>(planetsDataBox)
                         for ((planet, planetDay) in planetDays) {
-                            val planetRow = View.inflate(activity, R.layout.frag_data_daydetail_planets_planet, null)
+                            val planetRow = inflate(R.layout.frag_data_daydetail_planets_planet)
 
-                            textInView(planetRow, R.id.planetName, planet.name)
+                            text(planetRow, planetName, planet.name)
 
                             var noTransit = false
                             var noUptime = false
 
                             if (planetDay.riseSetType !== RiseSetType.SET && planetDay.transitAppElevation > 0) {
-                                val noon = formatTime(applicationContext!!, planetDay.transit!!, false)
-                                showInView(planetRow, R.id.planetTransit)
-                                showInView(planetRow, R.id.planetTransitTime, noon.time + noon.marker + "  " + formatElevation(planetDay.transitAppElevation))
+                                val noon = formatTime(activity, planetDay.transit!!, false)
+                                show(planetRow, planetTransit)
+                                show(planetRow, planetTransitTime, "$noon  ${formatElevation(planetDay.transitAppElevation)}")
                             } else {
-                                removeInView(planetRow, R.id.planetTransit)
+                                remove(planetRow, planetTransit)
                                 noTransit = true
                             }
 
                             if (planetDay.riseSetType === RiseSetType.RISEN || planetDay.riseSetType === RiseSetType.SET) {
-                                showInView(planetRow, R.id.planetSpecial, if (planetDay.riseSetType === RiseSetType.RISEN) "Risen all day" else "Set all day")
-                                removeInView(planetRow, R.id.planetEvtsRow, R.id.planetEvt1, R.id.planetEvt2, R.id.planetUptime)
+                                show(planetRow, planetSpecial, if (planetDay.riseSetType === RiseSetType.RISEN) "Risen all day" else "Set all day")
+                                remove(planetRow, planetEvtsRow, planetEvt1, planetEvt2, planetUptime)
                                 noUptime = true
                             } else {
-                                removeInView(planetRow, R.id.planetSpecial)
-                                removeInView(planetRow, R.id.planetEvt1, R.id.planetEvt2)
-                                showInView(planetRow, R.id.planetEvtsRow)
-                                val events = TreeSet<SummaryEvent>()
-                                if (planetDay.rise != null) {
-                                    events.add(SummaryEvent("Rise", planetDay.rise!!, planetDay.riseAzimuth))
-                                }
-                                if (planetDay.set != null) {
-                                    events.add(SummaryEvent("Set", planetDay.set!!, planetDay.setAzimuth))
-                                }
-                                var index = 1
-                                for (event in events) {
-                                    val rowId = view("planetEvt" + index)
-                                    val timeId = view("planetEvt" + index + "Time")
-                                    val azId = view("planetEvt" + index + "Az")
-                                    val imgId = view("planetEvt" + index + "Img")
+                                remove(planetRow, planetSpecial)
+                                remove(planetRow, planetEvt1, planetEvt2)
+                                show(planetRow, planetEvtsRow)
+                                val events = TreeSet<RiseSetEvent>()
+                                planetDay.rise?.let { events.add(RiseSetEvent("Rise", it, planetDay.riseAzimuth)) }
+                                planetDay.set?.let { events.add(RiseSetEvent("Set", it, planetDay.setAzimuth)) }
+                                events.forEachIndexed { index, event ->
+                                    val rowId = view("planetEvt$index")
+                                    val timeId = view("planetEvt${index}Time")
+                                    val azId = view("planetEvt${index}Az")
+                                    val imgId = view("planetEvt${index}Img")
 
-                                    val time = formatTime(applicationContext!!, event.time, false)
-                                    val az = formatBearing(applicationContext!!, event.azimuth!!, location.location, event.time)
+                                    val time = formatTime(activity, event.time, false)
+                                    val az = formatBearing(activity, event.azimuth, location.location, event.time)
 
-                                    textInView(planetRow, timeId, time.time + time.marker)
-                                    textInView(planetRow, azId, az)
-                                    showInView(planetRow, rowId)
-
-                                    if (event.name == "Rise") {
-                                        (planetRow.findViewById<View>(imgId) as ImageView).setImageResource(getRiseArrow())
-                                    } else {
-                                        (planetRow.findViewById<View>(imgId) as ImageView).setImageResource(getSetArrow())
-                                    }
-
-                                    index++
+                                    text(planetRow, timeId, "$time")
+                                    text(planetRow, azId, az)
+                                    show(planetRow, rowId)
+                                    image(view, imgId, if (event.name == "Rise") getRiseArrow() else getSetArrow())
                                 }
 
                                 if (planetDay.uptimeHours > 0 && planetDay.uptimeHours < 24) {
-                                    showInView(planetRow, R.id.planetUptime)
-                                    showInView(planetRow, R.id.planetUptimeTime, formatDurationHMS(applicationContext!!, planetDay.uptimeHours, false))
+                                    show(planetRow, planetUptime)
+                                    show(planetRow, planetUptimeTime, formatDurationHMS(applicationContext!!, planetDay.uptimeHours, false))
                                 } else {
-                                    removeInView(planetRow, R.id.planetUptime)
+                                    remove(planetRow, planetUptime)
                                 }
-
                             }
 
                             if (noTransit && noUptime) {
-                                removeInView(planetRow, R.id.planetTransitUptime)
+                                remove(planetRow, planetTransitUptime)
                             } else {
-                                showInView(planetRow, R.id.planetTransitUptime)
+                                show(planetRow, planetTransitUptime)
                             }
                             planetsDataBox.addView(planetRow)
 
                         }
-                        showInView(view, R.id.planetsDataBox)
+                        show(planetsDataBox)
                     }
                 }
-            }
-        }
-        thread.start()
+        )
     }
 
 }
