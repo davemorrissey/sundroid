@@ -27,7 +27,6 @@
                              android:layout_alignParentTop="true"
                              android:layout_alignParentRight="true"
                              android:padding="7dp"
-                             android:background="?buttonstate"
                              android:src="@drawable/d_icn_loc_search"
                         />
 

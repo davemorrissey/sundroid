@@ -34,7 +34,6 @@
                 android:layout_alignParentRight="true"
                 android:src="@drawable/icn_btn_ok"
                 android:padding="7dp"
-                android:background="?buttonstate"
                 />
 
             <EditText

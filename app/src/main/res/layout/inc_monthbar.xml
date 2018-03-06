@@ -1,7 +1,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/dateBox" style="@style/dateBox" android:baselineAligned="false" android:orientation="vertical">
     <LinearLayout android:layout_width="fill_parent" android:layout_weight="1" android:layout_height="fill_parent" android:baselineAligned="false" android:background="?button_bar_bg">
-        <ImageButton android:id="@+id/monthPrev" android:src="@drawable/navigation_previous_item" android:background="?buttonstate" android:layout_height="fill_parent" android:layout_width="48dp" android:layout_weight="0.01" android:layout_marginRight="1px" android:contentDescription="@string/prevMonth"/>
-        <LinearLayout android:id="@+id/monthButton" style="@style/currentDateButton" android:background="?buttonstate" android:layout_height="fill_parent" android:layout_width="wrap_content" android:layout_weight="1" android:orientation="vertical" android:padding="8dp" android:gravity="center_vertical">
+        <ImageButton android:id="@+id/monthPrev" android:src="@drawable/navigation_previous_item" android:layout_height="fill_parent" android:layout_width="48dp" android:layout_weight="0.01" android:layout_marginRight="1px" android:contentDescription="@string/prevMonth"/>
+        <LinearLayout android:id="@+id/monthButton" style="@style/currentDateButton" android:layout_height="fill_parent" android:layout_width="wrap_content" android:layout_weight="1" android:orientation="vertical" android:padding="8dp" android:gravity="center_vertical">
             <TextView
                     android:id="@+id/month"
                     android:layout_width="fill_parent"
@@ -11,11 +11,10 @@
                     android:gravity="center"
                     />
         </LinearLayout>
-        <ImageButton android:id="@+id/monthNext" android:src="@drawable/navigation_next_item" android:background="?buttonstate" android:layout_height="fill_parent" android:layout_width="48dp" android:layout_weight="0.01" android:layout_marginLeft="1px" android:contentDescription="@string/nextMonth"/>
+        <ImageButton android:id="@+id/monthNext" android:src="@drawable/navigation_next_item" android:layout_height="fill_parent" android:layout_width="48dp" android:layout_weight="0.01" android:layout_marginLeft="1px" android:contentDescription="@string/nextMonth"/>
     </LinearLayout>
     <RelativeLayout
             android:id="@+id/zoneButton"
-            android:background="?buttonstate"
             android:layout_marginTop="1px"
             android:layout_width="fill_parent"
             android:layout_weight="1"

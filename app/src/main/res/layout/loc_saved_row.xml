@@ -12,8 +12,7 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
             android:padding="5dp"
-            android:src="?icn_btn_delete"
-            android:background="?buttonstate_transparent"/>
+            android:src="?icn_btn_delete"/>
 
     <LinearLayout
             android:id="@+id/savedLocText"

@@ -31,8 +31,6 @@
     <attr name="secondary_text" format="color"/>
 
     <attr name="button_divider_color" format="color"/>
-    <attr name="buttonstate" format="reference"/>
-    <attr name="buttonstate_transparent" format="reference"/>
     <attr name="button_bar_bg" format="reference"/>
     <attr name="button_text" format="color"/>
     <attr name="button_secondary_text" format="color"/>

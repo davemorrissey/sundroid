@@ -1,6 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/dateBox" style="@style/dateBox" android:orientation="vertical">
 	<LinearLayout android:id="@+id/dateRow" android:layout_width="fill_parent" android:layout_height="wrap_content" android:baselineAligned="false" android:background="?button_bar_bg">
-		<LinearLayout android:id="@+id/dateButton" android:layout_width="0dp" android:layout_weight="0.6" android:background="?buttonstate" android:layout_height="@dimen/date_bar_height" android:orientation="vertical" android:layout_marginRight="1px" android:gravity="center_vertical">
+		<LinearLayout android:id="@+id/dateButton" android:layout_width="0dp" android:layout_weight="0.6" android:layout_height="@dimen/date_bar_height" android:orientation="vertical" android:layout_marginRight="1px" android:gravity="center_vertical">
             <TextView
                     android:id="@+id/dateWeekday"
                     android:layout_width="fill_parent"
@@ -19,7 +19,7 @@
                     android:gravity="center_horizontal"
                     />
 		</LinearLayout>
-        <LinearLayout android:id="@+id/timeButton" android:layout_width="0dp" android:layout_weight="0.4" android:background="?buttonstate" android:layout_height="@dimen/date_bar_height" android:orientation="vertical" android:gravity="center_vertical">
+        <LinearLayout android:id="@+id/timeButton" android:layout_width="0dp" android:layout_weight="0.4" android:layout_height="@dimen/date_bar_height" android:orientation="vertical" android:gravity="center_vertical">
             <TextView
                     android:id="@+id/timeHM"
                     android:layout_width="fill_parent"
@@ -41,7 +41,6 @@
 
         <RelativeLayout
                 android:id="@+id/zoneButton"
-                android:background="?buttonstate"
                 android:layout_marginRight="1px"
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
@@ -58,7 +57,6 @@
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
                 android:layout_weight="0.4"
-                android:background="?buttonstate"
                 android:padding="5dp"
                 android:gravity="center_vertical">
             <SeekBar

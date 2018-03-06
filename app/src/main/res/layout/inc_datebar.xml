@@ -1,7 +1,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/dateBox" style="@style/dateBox" android:baselineAligned="false" android:orientation="vertical">
-    <LinearLayout android:layout_width="fill_parent" android:layout_weight="1" android:layout_height="fill_parent" android:baselineAligned="false" android:background="?button_bar_bg">
-        <ImageButton android:id="@+id/datePrev" android:src="@drawable/navigation_previous_item" android:background="?buttonstate" android:layout_height="fill_parent" android:layout_width="48dp" android:layout_weight="0.01" android:layout_marginRight="1px" android:contentDescription="@string/prevDay"/>
-        <LinearLayout android:id="@+id/dateButton" style="@style/currentDateButton" android:background="?buttonstate" android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_weight="1" android:orientation="vertical" android:padding="5dp">
+    <LinearLayout android:layout_width="fill_parent" android:layout_weight="1" android:layout_height="fill_parent" android:baselineAligned="false">
+        <ImageButton android:id="@+id/datePrev" style="@style/dateBoxButton" android:padding="0dp" android:src="@drawable/navigation_previous_item" android:layout_height="fill_parent" android:layout_width="48dp" android:layout_weight="0.01" android:layout_marginRight="1px" android:contentDescription="@string/prevDay"/>
+        <LinearLayout android:id="@+id/dateButton" style="@style/dateBoxButton" android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_weight="1" android:orientation="vertical" android:padding="5dp">
             <TextView
                     android:id="@+id/dateWeekday"
                     android:layout_width="fill_parent"
@@ -20,11 +20,10 @@
                     android:gravity="center_horizontal"
                     />
         </LinearLayout>
-        <ImageButton android:id="@+id/dateNext" android:src="@drawable/navigation_next_item" android:background="?buttonstate" android:layout_height="fill_parent" android:layout_width="48dp" android:layout_weight="0.01" android:layout_marginLeft="1px" android:contentDescription="@string/nextDay"/>
+        <ImageButton android:id="@+id/dateNext" style="@style/dateBoxButton" android:src="@drawable/navigation_next_item" android:layout_height="fill_parent" android:layout_width="48dp" android:layout_weight="0.01" android:layout_marginLeft="1px" android:contentDescription="@string/nextDay"/>
     </LinearLayout>
     <RelativeLayout
             android:id="@+id/zoneButton"
-            android:background="?buttonstate"
             android:layout_marginTop="1px"
             android:layout_width="fill_parent"
             android:layout_weight="1"
