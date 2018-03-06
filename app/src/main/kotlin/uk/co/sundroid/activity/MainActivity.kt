@@ -6,13 +6,12 @@ import kotlinx.android.synthetic.main.main.*
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import uk.co.sundroid.R
-import uk.co.sundroid.activity.data.fragments.DayDetailSunFragment
-import uk.co.sundroid.activity.data.fragments.DaySummaryFragment
+import uk.co.sundroid.activity.data.fragments.*
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
-    private var fragmentId: Int = R.id.daySummary
+    private var fragmentId: Int = R.id.dayDetail
 
     var dateCalendar: Calendar = Calendar.getInstance()
     var timeCalendar: Calendar = Calendar.getInstance()
@@ -37,17 +36,23 @@ class MainActivity : AppCompatActivity() {
         toolbar?.setTitle(title)
     }
 
+    fun setToolbarSubtitle(subtitle: String? = null) {
+        toolbar?.subtitle = subtitle
+    }
+
     fun setToolbarSubtitle(subtitle: Int) {
         toolbar?.setSubtitle(subtitle)
     }
 
     private fun initNavigationDrawer() {
-        navigationView.setCheckedItem(R.id.daySummary)
+        navigationView.setCheckedItem(R.id.dayDetail)
         navigationView.setNavigationItemSelectedListener { menuItem ->
             drawerLayout.closeDrawers()
             when (menuItem.itemId) {
-                R.id.daySummary,
-                R.id.dayDetail -> setFragment(menuItem.itemId)
+                R.id.dayDetail,
+                R.id.tracker,
+                R.id.calendars,
+                R.id.yearEvents -> setFragment(menuItem.itemId)
             }
             true
         }
@@ -59,9 +64,12 @@ class MainActivity : AppCompatActivity() {
     private fun setFragment(id: Int) {
         fragmentId = id
         val fragmentClass = when(id) {
-            R.id.daySummary -> DaySummaryFragment::class.java
+//            R.id.daySummary -> DaySummaryFragment::class.java
             R.id.dayDetail -> DayDetailSunFragment::class.java
-            else -> DaySummaryFragment::class.java
+            R.id.tracker -> TrackerFragment::class.java
+            R.id.calendars -> MonthCalendarsFragment::class.java
+            R.id.yearEvents -> YearEventsFragment::class.java
+            else -> DayDetailSunFragment::class.java
         }
         val existingFragment = fragmentManager.findFragmentByTag("ROOT")
         if (existingFragment?.javaClass != fragmentClass) {

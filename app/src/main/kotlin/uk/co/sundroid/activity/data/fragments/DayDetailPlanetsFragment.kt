@@ -4,6 +4,7 @@ import android.view.View
 import android.view.ViewGroup
 import uk.co.sundroid.R
 import uk.co.sundroid.R.id.*
+import uk.co.sundroid.activity.MainActivity
 import uk.co.sundroid.util.astro.Body
 import uk.co.sundroid.util.astro.BodyDay
 import uk.co.sundroid.util.astro.RiseSetType
@@ -21,6 +22,12 @@ class DayDetailPlanetsFragment : AbstractDayFragment() {
 
     override val layout: Int
         get() = R.layout.frag_data_daydetail_planets
+
+    override fun onResume() {
+        super.onResume()
+        (activity as MainActivity).setToolbarTitle(R.string.data_detail_title)
+        (activity as MainActivity).setToolbarSubtitle(R.string.data_detail_subtitle_planets)
+    }
 
     override fun updateData(view: View) {
         val location = getLocation()

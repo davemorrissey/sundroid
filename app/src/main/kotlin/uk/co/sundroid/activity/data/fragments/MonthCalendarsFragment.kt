@@ -21,6 +21,7 @@ import uk.co.sundroid.util.time.formatTime
 import java.math.BigDecimal
 import java.util.*
 import uk.co.sundroid.R.id.*
+import uk.co.sundroid.activity.MainActivity
 
 class MonthCalendarsFragment : AbstractMonthFragment<ArrayList<MonthCalendarsFragment.DayEntry?>>(), OnItemSelectedListener {
 
@@ -57,6 +58,12 @@ class MonthCalendarsFragment : AbstractMonthFragment<ArrayList<MonthCalendarsFra
                 else -> ""
             }
         }
+
+    override fun onResume() {
+        super.onResume()
+        (activity as MainActivity).setToolbarTitle(R.string.data_calendars_title)
+        (activity as MainActivity).setToolbarSubtitle(null)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         selectorActive = false
@@ -177,7 +184,7 @@ class MonthCalendarsFragment : AbstractMonthFragment<ArrayList<MonthCalendarsFra
 
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
             val location = getLocation()
-            val row = convertView ?: inflate(R.layout.frag_data_monthcalendars_row, parent)
+            val row = convertView ?: inflate(R.layout.frag_data_monthcalendars_row)
             val entry = getItem(position)
             val type = type
             val body = body

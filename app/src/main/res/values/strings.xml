@@ -47,10 +47,33 @@
         <item>Neptune rise and set</item>
     </string-array>
 
+    <string name="sun">Sun</string>
+    <string name="moon">Moon</string>
+    <string name="mercury">Mercury</string>
+    <string name="venus">Venus</string>
+    <string name="mars">Mars</string>
+    <string name="jupiter">Jupiter</string>
+    <string name="saturn">Saturn</string>
+    <string name="uranus">Uranus</string>
+    <string name="neptune">Neptune</string>
+
     <string name="data.summary.title">Day Summary</string>
 
-    <string name="data.detail.title">Day Details</string>
+    <string name="data.detail.nav">Day in Detail</string>
+    <string name="data.detail.title">Day in Detail</string>
     <string name="data.detail.subtitle.sun">Sun</string>
+    <string name="data.detail.subtitle.moon">Moon</string>
+    <string name="data.detail.subtitle.planets">Planets</string>
+    <string name="data.detail.subtitle.events">Events</string>
+
+    <string name="data.tracker.nav">Tracker</string>
+    <string name="data.tracker.title">Tracker</string>
+
+    <string name="data.year.nav">Year Events</string>
+    <string name="data.year.title">Year Events</string>
+
+    <string name="data.calendars.nav">Calendars</string>
+    <string name="data.calendars.title">Calendars</string>
 
     <string name="loc.search.none.title">No matches</string>
     <string name="loc.search.none.msg">There were no locations matching your search. Please try another search term.</string>

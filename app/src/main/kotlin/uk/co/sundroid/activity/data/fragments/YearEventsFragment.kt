@@ -7,6 +7,7 @@ import android.text.Html
 import android.view.View
 import android.view.ViewGroup
 import uk.co.sundroid.R
+import uk.co.sundroid.activity.MainActivity
 import uk.co.sundroid.activity.data.fragments.dialogs.settings.YearEventsPickerFragment
 import uk.co.sundroid.util.*
 import uk.co.sundroid.util.astro.MoonPhaseEvent
@@ -35,6 +36,12 @@ class YearEventsFragment : AbstractYearFragment(), ConfigurableFragment {
         val settingsDialog = YearEventsPickerFragment.newInstance(activity)
         settingsDialog.setTargetFragment(this, 0)
         settingsDialog.show(fragmentManager, "yearEventsSettings")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        (activity as MainActivity).setToolbarTitle(R.string.data_year_title)
+        (activity as MainActivity).setToolbarSubtitle(null)
     }
 
     @Throws(Exception::class)

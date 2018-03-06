@@ -14,6 +14,7 @@ import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams
 import android.view.WindowManager
 import uk.co.sundroid.R
+import uk.co.sundroid.activity.MainActivity
 import uk.co.sundroid.activity.data.fragments.dialogs.settings.TrackerSettingsFragment
 import uk.co.sundroid.util.astro.image.TrackerImageView
 import uk.co.sundroid.util.astro.Body
@@ -68,6 +69,8 @@ class TrackerFragment : AbstractTimeFragment(), ConfigurableFragment, SensorEven
                 ?: return
         val display = windowManager.defaultDisplay ?: return
         rotation = display.orientation * Surface.ROTATION_90
+        (activity as MainActivity).setToolbarTitle(R.string.data_tracker_title)
+        activity.setToolbarSubtitle(null)
     }
 
     override fun onPause() {

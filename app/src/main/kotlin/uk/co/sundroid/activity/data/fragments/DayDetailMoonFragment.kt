@@ -3,6 +3,7 @@ package uk.co.sundroid.activity.data.fragments
 import android.view.View
 import uk.co.sundroid.R
 import uk.co.sundroid.R.id.*
+import uk.co.sundroid.activity.MainActivity
 import uk.co.sundroid.util.astro.*
 import uk.co.sundroid.util.astro.YearData.Event
 import uk.co.sundroid.util.astro.image.MoonPhaseImage
@@ -22,6 +23,12 @@ class DayDetailMoonFragment : AbstractDayFragment() {
 
     override val layout: Int
         get() = R.layout.frag_data_daydetail_moon
+
+    override fun onResume() {
+        super.onResume()
+        (activity as MainActivity).setToolbarTitle(R.string.data_detail_title)
+        (activity as MainActivity).setToolbarSubtitle(R.string.data_detail_subtitle_moon)
+    }
 
     override fun updateData(view: View) {
         val location = getLocation()

@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single" android:id="@+id/nav_pages">
-        <item
-            android:id="@+id/daySummary"
-            android:title="Day Summary"/>
+        <!--<item-->
+            <!--android:id="@+id/daySummary"-->
+            <!--android:title="Day Summary"/>-->
         <item
             android:id="@+id/dayDetail"
-            android:title="Day Detail"/>
+            android:title="@string/data.detail.nav"/>
+        <item
+            android:id="@+id/tracker"
+            android:title="@string/data.tracker.nav"/>
+        <item
+            android:id="@+id/calendars"
+            android:title="@string/data.calendars.nav"/>
+        <item
+            android:id="@+id/yearEvents"
+            android:title="@string/data.year.nav"/>
     </group>
 </menu>
