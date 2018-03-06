@@ -1,5 +1,6 @@
 package uk.co.sundroid.activity
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 
@@ -10,6 +11,9 @@ import uk.co.sundroid.R
 import uk.co.sundroid.activity.data.DataActivity
 import uk.co.sundroid.activity.data.DataGroup
 import uk.co.sundroid.activity.data.fragments.*
+import uk.co.sundroid.activity.info.InfoActivity
+import uk.co.sundroid.activity.location.LocationSelectActivity
+import uk.co.sundroid.activity.settings.AppSettingsActivity
 import uk.co.sundroid.domain.LocationDetails
 import uk.co.sundroid.util.location.LatitudeLongitude
 import uk.co.sundroid.util.prefs.Prefs
@@ -99,6 +103,11 @@ class MainActivity : AbstractActivity() {
         }
     }
 
+    private fun openActivity(clazz: Class<out Activity>) {
+        val intent = Intent(this, clazz)
+        startActivity(intent)
+    }
+
     fun setToolbarTitle(title: Int) {
         toolbar?.setTitle(title)
     }
@@ -120,6 +129,9 @@ class MainActivity : AbstractActivity() {
                 R.id.tracker -> setDataGroup(DataGroup.TRACKER)
                 R.id.calendars -> setDataGroup(DataGroup.MONTH_CALENDARS)
                 R.id.yearEvents -> setDataGroup(DataGroup.YEAR_EVENTS)
+                R.id.location -> openActivity(LocationSelectActivity::class.java)
+                R.id.help -> openActivity(InfoActivity::class.java)
+                R.id.settings -> openActivity(AppSettingsActivity::class.java)
             }
             true
         }

@@ -17,4 +17,15 @@
             android:id="@+id/yearEvents"
             android:title="@string/data.year.nav"/>
     </group>
+    <group android:checkableBehavior="none">
+        <item
+            android:id="@+id/location"
+            android:title="@string/loc.nav"/>
+        <item
+            android:id="@+id/help"
+            android:title="@string/help.nav"/>
+        <item
+            android:id="@+id/settings"
+            android:title="@string/settings.nav"/>
+    </group>
 </menu>

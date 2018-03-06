@@ -9,6 +9,7 @@ import android.view.KeyEvent
 import android.view.MenuItem
 
 import uk.co.sundroid.R
+import uk.co.sundroid.activity.MainActivity
 import uk.co.sundroid.activity.data.DataActivity
 import uk.co.sundroid.util.log.*
 import uk.co.sundroid.util.theme.*
@@ -70,7 +71,7 @@ class AppSettingsActivity : PreferenceActivity(), SharedPreferences.OnSharedPref
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            startActivity(Intent(applicationContext, DataActivity::class.java))
+            startActivity(Intent(applicationContext, MainActivity::class.java))
         }
         return super.onKeyDown(keyCode, event)
     }
