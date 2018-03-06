@@ -2,6 +2,7 @@ package uk.co.sundroid
 
 import android.app.Activity
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.view.*
 import android.view.View.OnClickListener
 import android.widget.TextView
@@ -16,7 +17,7 @@ import uk.co.sundroid.util.view.SimpleAlertFragment
 /**
  * Provides some helper functions for activities.
  */
-abstract class AbstractActivity : Activity(), OnClickListener {
+abstract class AbstractActivity : AppCompatActivity(), OnClickListener {
 
     private var navItems: List<NavItem>? = null
 

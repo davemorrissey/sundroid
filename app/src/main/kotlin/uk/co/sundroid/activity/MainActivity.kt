@@ -4,12 +4,12 @@ import android.os.Bundle
 
 import kotlinx.android.synthetic.main.main.*
 import android.support.v7.app.ActionBarDrawerToggle
-import android.support.v7.app.AppCompatActivity
+import uk.co.sundroid.AbstractActivity
 import uk.co.sundroid.R
 import uk.co.sundroid.activity.data.fragments.*
 import java.util.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AbstractActivity() {
 
     private var fragmentId: Int = R.id.dayDetail
 
