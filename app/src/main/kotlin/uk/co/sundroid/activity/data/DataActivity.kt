@@ -131,10 +131,10 @@ class DataActivity : AbstractActivity(), OnClickListener, OnNavigationListener {
             return true
         }
         if (selectorItems != null && selectorItems!!.size >= itemPosition + 1) {
-            val dataGroup = DataGroup.forIndex(selectorItems!![itemPosition].action)
-            if (dataGroup != null) {
-                setDataGroup(dataGroup)
-            }
+//            val dataGroup = DataGroup.forIndex(selectorItems!![itemPosition].action)
+//            if (dataGroup != null) {
+//                setDataGroup(dataGroup)
+//            }
         }
         return true
     }
@@ -409,9 +409,9 @@ class DataActivity : AbstractActivity(), OnClickListener, OnNavigationListener {
 
     private fun refreshSelector() {
         val selectorItems = ArrayList<SelectorItem>()
-        for (dataGroup in DataGroup.values()) {
-            selectorItems.add(SelectorItem(location!!.displayName, dataGroup.displayName, dataGroup.index))
-        }
+//        for (dataGroup in DataGroup.values()) {
+//            selectorItems.add(SelectorItem(location!!.displayName, dataGroup.displayName, dataGroup.index))
+//        }
         this.selectorItems = selectorItems
 //        actionBar!!.navigationMode = ActionBar.NAVIGATION_MODE_LIST
 //        refreshSelector(dataGroup!!.index)
