@@ -413,8 +413,8 @@ class DataActivity : AbstractActivity(), OnClickListener, OnNavigationListener {
             selectorItems.add(SelectorItem(location!!.displayName, dataGroup.displayName, dataGroup.index))
         }
         this.selectorItems = selectorItems
-        actionBar!!.navigationMode = ActionBar.NAVIGATION_MODE_LIST
-        refreshSelector(dataGroup!!.index)
+//        actionBar!!.navigationMode = ActionBar.NAVIGATION_MODE_LIST
+//        refreshSelector(dataGroup!!.index)
     }
 
     private fun refreshSelector(activeSelectorItem: Int) {

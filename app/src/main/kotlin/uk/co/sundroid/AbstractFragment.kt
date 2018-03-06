@@ -56,6 +56,7 @@ abstract class AbstractFragment : Fragment() {
     }
 
     protected fun show(view: View, vararg ids: Int) {
+        view.visibility = View.VISIBLE
         for (id in ids) {
             view.findViewById<View>(id).visibility = View.VISIBLE
         }

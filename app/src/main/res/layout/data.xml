@@ -48,18 +48,12 @@
 	        style="@style/tabActive"
 	        android:text="EVENTS"/>
     </LinearLayout>
-    
-    <!--include
-        layout="@layout/inc_datebar"
-        android:id="@+id/incDateBar"
-        android:layout_alignParentBottom="true"/-->
-    
+
     <LinearLayout
         android:id="@+id/dataFragment"
 		android:orientation="horizontal"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_below="@id/dayDetailTabs"/>
-        <!--android:layout_above="@id/incDateBar"/-->
-    
+
 </RelativeLayout>

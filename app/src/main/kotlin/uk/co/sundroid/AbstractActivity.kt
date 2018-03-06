@@ -33,9 +33,9 @@ abstract class AbstractActivity : Activity(), OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         onActivityCreateSetTheme(this)
-        window.requestFeature(Window.FEATURE_ACTION_BAR)
+//        window.requestFeature(Window.FEATURE_ACTION_BAR)
         window.setBackgroundDrawableResource(getAppBg())
-        actionBar?.setBackgroundDrawable(resources.getDrawable(getActionBarBg()))
+//        actionBar?.setBackgroundDrawable(resources.getDrawable(getActionBarBg()))
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

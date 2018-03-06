@@ -1,5 +1,6 @@
 package uk.co.sundroid.activity.data.fragments
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Handler
@@ -21,6 +22,7 @@ import java.util.TreeSet
 import uk.co.sundroid.util.time.formatDurationHMS
 
 import kotlinx.android.synthetic.main.frag_data_daydetail_sun.*
+import uk.co.sundroid.activity.MainActivity
 
 class DayDetailSunFragment : AbstractDayFragment() {
 
@@ -28,6 +30,12 @@ class DayDetailSunFragment : AbstractDayFragment() {
 
     override val layout: Int
         get() = R.layout.frag_data_daydetail_sun
+
+    override fun onResume() {
+        super.onResume()
+        (activity as MainActivity).setToolbarTitle(R.string.data_detail_title)
+        (activity as MainActivity).setToolbarSubtitle(R.string.data_detail_subtitle_sun)
+    }
 
     override fun updateData(view: View) {
         val location = getLocation()

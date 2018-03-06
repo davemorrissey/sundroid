@@ -2,6 +2,9 @@
 <resources>
     <string name="app_name">Sundroid</string>
 
+    <string name="drawer.open">Open</string>
+    <string name="drawer.close">Close</string>
+
     <string name="nextDay">Next day</string>
     <string name="prevDay">Previous day</string>
     <string name="nextMonth">Next month</string>
@@ -43,6 +46,11 @@
         <item>Uranus rise and set</item>
         <item>Neptune rise and set</item>
     </string-array>
+
+    <string name="data.summary.title">Day Summary</string>
+
+    <string name="data.detail.title">Day Details</string>
+    <string name="data.detail.subtitle.sun">Sun</string>
 
     <string name="loc.search.none.title">No matches</string>
     <string name="loc.search.none.msg">There were no locations matching your search. Please try another search term.</string>

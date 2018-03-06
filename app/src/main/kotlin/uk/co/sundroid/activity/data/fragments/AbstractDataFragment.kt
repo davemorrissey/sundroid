@@ -4,7 +4,7 @@ import android.content.Intent
 import android.view.View
 import kotlinx.android.synthetic.main.inc_datebar.*
 import uk.co.sundroid.AbstractFragment
-import uk.co.sundroid.activity.data.DataActivity
+import uk.co.sundroid.activity.MainActivity
 import uk.co.sundroid.activity.data.fragments.dialogs.OnViewPrefsChangedListener
 import uk.co.sundroid.activity.location.TimeZonePickerActivity
 import uk.co.sundroid.domain.LocationDetails
@@ -26,11 +26,11 @@ abstract class AbstractDataFragment : AbstractFragment(), OnViewPrefsChangedList
     }
 
     fun getDateCalendar(): Calendar {
-        return (activity as DataActivity).dateCalendar
+        return (activity as MainActivity).dateCalendar
     }
 
     fun getTimeCalendar(): Calendar {
-        return (activity as DataActivity).timeCalendar
+        return (activity as MainActivity).timeCalendar
     }
 
     fun calendarDiff(field: Int, diff: Int) {

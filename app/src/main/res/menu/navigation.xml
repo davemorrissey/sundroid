@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single" android:id="@+id/nav_pages">
+        <item
+            android:id="@+id/daySummary"
+            android:title="Day Summary"/>
+        <item
+            android:id="@+id/dayDetail"
+            android:title="Day Detail"/>
+    </group>
+</menu>
