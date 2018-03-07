@@ -63,64 +63,9 @@ class DataActivity : AbstractActivity(), OnClickListener, OnNavigationListener {
 
     inner class SelectorItem(val title: String, val subtitle: String, val action: Int)
 
-    public override fun onStop() {
-        super.onStop()
-        d(TAG, "onStop()")
-    }
-
-    public override fun onPause() {
-        super.onPause()
-        d(TAG, "onPause()")
-    }
-
-    public override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        d(TAG, "onCreate()")
-        setContentView(R.layout.data)
-        setActionBarTitle("")
-        var forceDateUpdate = false
-        if (intent.action != null && intent.action == Intent.ACTION_MAIN) {
-            i(TAG, "Opened from launcher, forcing date update")
-            forceDateUpdate = true
-            intent.action = null
-        }
-
-        Prefs.initPreferences(this)
-        initCalendarAndLocation(forceDateUpdate)
-        restoreState(savedInstanceState)
-        initDayDetailTabs()
-        updateDataFragment(savedInstanceState == null)
-        ignoreNextNavigation = true
-    }
-
-    override fun onNewIntent(intent: Intent) {
-        super.onNewIntent(intent)
-        if (intent.action != null && intent.action == Intent.ACTION_MAIN) {
-            i(TAG, "Opened from launcher, forcing date update")
-            intent.action = null
-            initCalendarAndLocation(true)
-        }
-    }
-
-    public override fun onResume() {
-        super.onResume()
-        d(TAG, "onResume()")
-
-        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-        val lastVersion = prefs.getInt("last-version", 0)
-        d(TAG, "Last version: " + lastVersion + ", current version: " + BuildConfig.VERSION_CODE)
-        prefs.edit().putInt("last-version", BuildConfig.VERSION_CODE).apply()
-
-        refreshSelector()
-        initCalendarAndLocation(false)
-        initialiseDataFragmentView()
-
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         d(TAG, "onActivityResult($requestCode, $resultCode)")
         super.onActivityResult(requestCode, resultCode, data)
-        initCalendarAndLocation(false)
         initialiseDataFragmentView()
         updateDataFragmentView()
     }
@@ -137,72 +82,6 @@ class DataActivity : AbstractActivity(), OnClickListener, OnNavigationListener {
 //            }
         }
         return true
-    }
-
-    private fun initCalendarAndLocation(forceDateUpdate: Boolean) {
-        val location = Prefs.selectedLocation(this) ?: LocationDetails(LatitudeLongitude(37.779093, -122.419109)).apply {
-            name = "San Francisco"
-            timeZone = TimeZoneResolver.getTimeZone("US/Pacific")
-            Prefs.saveSelectedLocation(this@DataActivity, this)
-        }
-        if (location.timeZone == null) {
-            location.timeZone = TimeZoneResolver.getTimeZone("UTC")
-        }
-        this.location = location
-
-        var dateDonor = dateCalendar
-        var timeDonor = timeCalendar
-        if (forceDateUpdate) {
-            dateDonor = Calendar.getInstance()
-            timeDonor = Calendar.getInstance()
-        }
-        dateCalendar.timeZone = location.timeZone!!.zone
-        dateCalendar.set(dateDonor.get(YEAR), dateDonor.get(MONTH), dateDonor.get(DAY_OF_MONTH), 0, 0, 0)
-        dateCalendar.set(Calendar.MILLISECOND, 0)
-        dateCalendar.timeInMillis
-        timeCalendar.timeZone = location.timeZone!!.zone
-        timeCalendar.set(dateDonor.get(YEAR), dateDonor.get(MONTH), dateDonor.get(DAY_OF_MONTH), timeDonor.get(HOUR_OF_DAY), timeDonor.get(MINUTE), 0)
-        timeCalendar.set(Calendar.MILLISECOND, 0)
-        timeCalendar.timeInMillis
-    }
-
-    override fun onSaveInstanceState(state: Bundle) {
-        super.onSaveInstanceState(state)
-        state.putSerializable(STATE_DATA_GROUP, this.dataGroup)
-        state.putString(STATE_DAY_DETAIL_TAB, this.dayDetailTab)
-        state.putLong(STATE_DATE_TIMESTAMP, this.dateCalendar.timeInMillis)
-        state.putLong(STATE_TIME_TIMESTAMP, this.timeCalendar.timeInMillis)
-    }
-
-    private fun restoreState(state: Bundle?) {
-        this.dayDetailTab = "sun"
-        this.dataGroup = DataGroup.DAY_SUMMARY
-        if (state != null) {
-            if (state.containsKey(STATE_DAY_DETAIL_TAB)) {
-                this.dayDetailTab = state.getString(STATE_DAY_DETAIL_TAB)
-            }
-            if (state.containsKey(STATE_DATA_GROUP)) {
-                this.dataGroup = state.get(STATE_DATA_GROUP) as DataGroup
-            }
-            if (state.containsKey(STATE_DATE_TIMESTAMP) && state.containsKey(STATE_TIME_TIMESTAMP)) {
-                this.dateCalendar.timeInMillis = state.getLong(STATE_DATE_TIMESTAMP)
-                this.timeCalendar.timeInMillis = state.getLong(STATE_TIME_TIMESTAMP)
-            }
-        } else {
-            this.dataGroup = Prefs.lastDataGroup(this)
-            if (this.dataGroup == DataGroup.DAY_DETAIL) {
-                this.dayDetailTab = Prefs.lastDetailTab(this)
-            }
-        }
-    }
-
-    private fun setDataGroup(dataGroup: DataGroup) {
-        if (dataGroup != this.dataGroup) {
-            d(TAG, "Changing data group to " + dataGroup)
-            this.dataGroup = dataGroup
-            Prefs.setLastDataGroup(this, dataGroup)
-            updateDataFragment(true)
-        }
     }
 
     private fun setDayDetailTab(dayDetailTab: String) {

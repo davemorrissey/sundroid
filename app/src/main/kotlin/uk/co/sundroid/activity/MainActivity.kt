@@ -3,10 +3,12 @@ package uk.co.sundroid.activity
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.preference.PreferenceManager
 
 import kotlinx.android.synthetic.main.main.*
 import android.support.v7.app.ActionBarDrawerToggle
 import uk.co.sundroid.AbstractActivity
+import uk.co.sundroid.BuildConfig
 import uk.co.sundroid.R
 import uk.co.sundroid.activity.data.DataActivity
 import uk.co.sundroid.activity.data.DataGroup
@@ -16,6 +18,8 @@ import uk.co.sundroid.activity.location.LocationSelectActivity
 import uk.co.sundroid.activity.settings.AppSettingsActivity
 import uk.co.sundroid.domain.LocationDetails
 import uk.co.sundroid.util.location.LatitudeLongitude
+import uk.co.sundroid.util.log.d
+import uk.co.sundroid.util.log.i
 import uk.co.sundroid.util.prefs.Prefs
 import uk.co.sundroid.util.time.TimeZoneResolver
 import java.util.*
@@ -43,6 +47,20 @@ class MainActivity : AbstractActivity() {
         initCalendarAndLocation(forceDateUpdate)
         restoreState(savedInstanceState)
         setDataGroup(dataGroup, true)
+    }
+
+    public override fun onResume() {
+        super.onResume()
+        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+        prefs.edit().putInt("last-version", BuildConfig.VERSION_CODE).apply()
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        if (intent.action != null && intent.action == Intent.ACTION_MAIN) {
+            intent.action = null
+            initCalendarAndLocation(true)
+        }
     }
 
     private fun initCalendarAndLocation(forceDateUpdate: Boolean) {
