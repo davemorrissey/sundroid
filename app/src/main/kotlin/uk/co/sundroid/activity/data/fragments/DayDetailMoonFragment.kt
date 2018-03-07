@@ -19,7 +19,7 @@ import uk.co.sundroid.util.time.isSameDay
 import uk.co.sundroid.util.time.shortDateAndMonth
 import java.util.*
 
-class DayDetailMoonFragment : AbstractDayFragment() {
+class DayDetailMoonFragment : AbstractDayDetailFragment() {
 
     override val layout: Int
         get() = R.layout.frag_data_daydetail_moon

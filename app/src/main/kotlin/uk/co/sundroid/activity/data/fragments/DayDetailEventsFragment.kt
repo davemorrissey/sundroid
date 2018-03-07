@@ -15,7 +15,7 @@ import uk.co.sundroid.util.time.formatTime
 import java.util.*
 import kotlin.collections.ArrayList
 
-class DayDetailEventsFragment : AbstractDayFragment(), ConfigurableFragment {
+class DayDetailEventsFragment : AbstractDayDetailFragment(), ConfigurableFragment {
 
     override val layout: Int
         get() = R.layout.frag_data_daydetail_events

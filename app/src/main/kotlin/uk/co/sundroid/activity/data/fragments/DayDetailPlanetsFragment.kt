@@ -18,7 +18,7 @@ import uk.co.sundroid.util.time.formatDurationHMS
 import uk.co.sundroid.util.time.formatTime
 import java.util.*
 
-class DayDetailPlanetsFragment : AbstractDayFragment() {
+class DayDetailPlanetsFragment : AbstractDayDetailFragment() {
 
     override val layout: Int
         get() = R.layout.frag_data_daydetail_planets

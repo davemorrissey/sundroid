@@ -24,7 +24,7 @@ import uk.co.sundroid.util.time.formatDurationHMS
 import kotlinx.android.synthetic.main.frag_data_daydetail_sun.*
 import uk.co.sundroid.activity.MainActivity
 
-class DayDetailSunFragment : AbstractDayFragment() {
+class DayDetailSunFragment : AbstractDayDetailFragment() {
 
     private val handler = Handler()
 
