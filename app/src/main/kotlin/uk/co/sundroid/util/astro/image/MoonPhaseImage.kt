@@ -19,10 +19,10 @@ object MoonPhaseImage {
         val source = BitmapFactory.decodeResource(resources, drawable)
 
         var targetSize = if (size == SIZE_MEDIUM) 61 else 121
-        if (densityDpi > 160) {
-            targetSize = if (size == SIZE_MEDIUM) 91 else 181
-        } else if (densityDpi < 160) {
-            targetSize = if (size == SIZE_MEDIUM) 45 else 91
+        when {
+            densityDpi > 320 -> targetSize = if (size == SIZE_MEDIUM) 181 else 361
+            densityDpi > 160 -> targetSize = if (size == SIZE_MEDIUM) 91 else 181
+            densityDpi < 160 -> targetSize = if (size == SIZE_MEDIUM) 45 else 91
         }
 
         val matrix = Matrix()
