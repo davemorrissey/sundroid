@@ -1,7 +1,5 @@
 package uk.co.sundroid.activity.data.fragments
 
-import android.app.Activity
-import android.content.Context
 import android.os.Handler
 import android.view.View
 import android.widget.ImageView
@@ -62,11 +60,11 @@ class DaySummaryFragment : AbstractDayFragment() {
         thread.start()
 
         if (sunDay.riseSetType === RiseSetType.RISEN || sunDay.riseSetType === RiseSetType.SET) {
-            showInView(view, R.id.sunSpecial, if (sunDay.riseSetType === RiseSetType.RISEN) "Risen all day" else "Set all day")
-            removeInView(view, R.id.sunEvt1Row, R.id.sunEvt2Row, R.id.sunUptimeRow)
+            show(view, R.id.sunSpecial, if (sunDay.riseSetType === RiseSetType.RISEN) "Risen all day" else "Set all day")
+            remove(view, R.id.sunEvt1Row, R.id.sunEvt2Row, R.id.sunUptimeRow)
         } else {
-            removeInView(view, R.id.sunSpecial)
-            removeInView(view, R.id.sunEvt1Row, R.id.sunEvt2Row)
+            remove(view, R.id.sunSpecial)
+            remove(view, R.id.sunEvt1Row, R.id.sunEvt2Row)
             val events = TreeSet<SummaryEvent>()
             if (sunDay.rise != null) {
                 events.add(SummaryEvent("RISE", sunDay.rise!!, sunDay.riseAzimuth))
@@ -82,29 +80,29 @@ class DaySummaryFragment : AbstractDayFragment() {
                 val imgId = view("sunEvt" + index + "Img")
 
                 val time = formatTime(applicationContext!!, event.time, false)
-                textInView(view, labelId, event.name)
-                textInView(view, timeId, time.time + time.marker.toLowerCase())
-                imageInView(view, imgId, if (event.name == "RISE") getRiseArrow() else getSetArrow())
-                showInView(view, rowId)
+                text(view, labelId, event.name)
+                text(view, timeId, time.time + time.marker.toLowerCase())
+                image(view, imgId, if (event.name == "RISE") getRiseArrow() else getSetArrow())
+                show(view, rowId)
 
                 index++
             }
 
             if (sunDay.uptimeHours > 0 && sunDay.uptimeHours < 24) {
-                showInView(view, R.id.sunUptimeRow)
-                showInView(view, R.id.sunUptimeTime, formatDurationHMS(applicationContext!!, sunDay.uptimeHours, false))
+                show(view, R.id.sunUptimeRow)
+                show(view, R.id.sunUptimeTime, formatDurationHMS(applicationContext!!, sunDay.uptimeHours, false))
             } else {
-                removeInView(view, R.id.sunUptimeRow)
+                remove(view, R.id.sunUptimeRow)
             }
 
         }
 
         if (moonDay.riseSetType === RiseSetType.RISEN || moonDay.riseSetType === RiseSetType.SET) {
-            showInView(view, R.id.moonSpecial, if (moonDay.riseSetType === RiseSetType.RISEN) "Risen all day" else "Set all day")
-            removeInView(view, R.id.moonEvt1Row, R.id.moonEvt2Row)
+            show(view, R.id.moonSpecial, if (moonDay.riseSetType === RiseSetType.RISEN) "Risen all day" else "Set all day")
+            remove(view, R.id.moonEvt1Row, R.id.moonEvt2Row)
         } else {
-            removeInView(view, R.id.moonSpecial)
-            removeInView(view, R.id.moonEvt1Row, R.id.moonEvt2Row)
+            remove(view, R.id.moonSpecial)
+            remove(view, R.id.moonEvt1Row, R.id.moonEvt2Row)
             val events = TreeSet<SummaryEvent>()
             if (moonDay.rise != null) {
                 events.add(SummaryEvent("RISE", moonDay.rise!!, moonDay.riseAzimuth))
@@ -120,22 +118,22 @@ class DaySummaryFragment : AbstractDayFragment() {
                 val imgId = view("moonEvt" + index + "Img")
 
                 val time = formatTime(applicationContext!!, event.time, false)
-                textInView(view, labelId, event.name)
-                textInView(view, timeId, time.time + time.marker.toLowerCase())
-                imageInView(view, imgId, if (event.name == "RISE") getRiseArrow() else getSetArrow())
-                showInView(view, rowId)
+                text(view, labelId, event.name)
+                text(view, timeId, time.time + time.marker.toLowerCase())
+                image(view, imgId, if (event.name == "RISE") getRiseArrow() else getSetArrow())
+                show(view, rowId)
 
                 index++
             }
 
         }
         if (moonDay.phaseEvent == null) {
-            showInView(view, R.id.moonPhase, moonDay.phase.shortDisplayName)
+            show(view, R.id.moonPhase, moonDay.phase.shortDisplayName)
         } else {
             val time = formatTime(applicationContext!!, moonDay.phaseEvent!!.time, false)
-            showInView(view, R.id.moonPhase, moonDay.phase.shortDisplayName + " at " + time.time + time.marker)
+            show(view, R.id.moonPhase, moonDay.phase.shortDisplayName + " at " + time.time + time.marker)
         }
-        showInView(view, R.id.moonIllumination, Integer.toString(moonDay.illumination) + "%")
+        show(view, R.id.moonIllumination, Integer.toString(moonDay.illumination) + "%")
     }
 
     companion object {
