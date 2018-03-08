@@ -1,10 +1,13 @@
 package uk.co.sundroid.activity.data.fragments
 
+import android.app.DatePickerDialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.GestureDetector
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.DatePicker
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import kotlinx.android.synthetic.main.inc_timebar.*
@@ -23,7 +26,7 @@ import java.util.*
 import java.util.Calendar.DAY_OF_MONTH
 import java.util.Calendar.MONTH
 
-abstract class AbstractTimeFragment : AbstractDataFragment(), OnSeekBarChangeListener, DatePickerFragment.OnDateSelectedListener, TimePickerFragment.OnTimeSelectedListener {
+abstract class AbstractTimeFragment : AbstractDataFragment(), OnSeekBarChangeListener, TimePickerFragment.OnTimeSelectedListener {
 
     private val dateFormat = SimpleDateFormat("dd MMM yyyy", Locale.US)
     private val weekdayFormat = SimpleDateFormat("EEEE", Locale.US)
@@ -59,7 +62,7 @@ abstract class AbstractTimeFragment : AbstractDataFragment(), OnSeekBarChangeLis
         }
     }
 
-    override fun onDateSet(year: Int, month: Int, date: Int) {
+    fun onDateSet(year: Int, month: Int, date: Int) {
         getDateCalendar().set(year, month, date)
         getTimeCalendar().set(year, month, date)
         update()
@@ -164,9 +167,12 @@ abstract class AbstractTimeFragment : AbstractDataFragment(), OnSeekBarChangeLis
     }
 
     private fun showDatePicker() {
-        val datePickerFragment = DatePickerFragment.newInstance(getDateCalendar())
-        datePickerFragment.setTargetFragment(this, 0)
-        datePickerFragment.show(fragmentManager, "datePicker")
+        val calendar = getDateCalendar()
+        val today = Calendar.getInstance(calendar.timeZone)
+        val listener = { _: DatePicker, y: Int, m: Int, d: Int -> onDateSet(y, m, d) }
+        val dialog = DatePickerDialog(activity, listener, calendar.get(Calendar.YEAR), calendar.get(MONTH), calendar.get(DAY_OF_MONTH))
+        dialog.setButton(DialogInterface.BUTTON_NEUTRAL, "Today", { _, _ -> onDateSet(today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH))})
+        dialog.show()
     }
 
     private fun showTimePicker() {
