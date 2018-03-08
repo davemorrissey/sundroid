@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
-    <color name="primary">#00695C</color>
-    <color name="primaryDark">#004D40</color>
-    <color name="imageViewBackground">#212121</color>
-    <color name="accent">#99cc00</color>
-    <color name="menuText">#000000</color>
+    <color name="l_primary">#303F9F</color>
+    <color name="l_primary_dark">#283593</color>
+    <color name="l_accent">#FF6F00</color>
+
+    <color name="d_primary">#212121</color>
+    <color name="d_primary_dark">#424242</color>
+    <color name="d_accent">#99cc00</color>
 
     <color name="d_app_background_start">#000000</color>
     <color name="d_app_background_end">#080808</color>

@@ -2,11 +2,13 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="SundroidLight" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:colorPrimary">@color/primary</item>
-        <item name="android:colorPrimaryDark">@color/primaryDark</item>
-        <item name="android:colorAccent">@color/accent</item>
+        <item name="android:colorPrimary">@color/l_primary</item>
+        <item name="android:colorPrimaryDark">@color/l_primary_dark</item>
+        <item name="android:colorAccent">@color/l_accent</item>
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
+		<item name="primary_color">@color/l_primary</item>
+		<item name="primary_color_dark">@color/l_primary_dark</item>
 		<item name="app_background_colour">@color/l_app_background_start</item>
 		<item name="app_background">@drawable/l_app_bg</item>
 		<item name="header_background">@drawable/l_action_bar_bg</item>
@@ -20,7 +22,7 @@
 		<item name="tab_bar_bg_color">#003f6f</item>
 		<item name="tab_bar_bg">@drawable/l_tab_bar_bg</item>
 		<item name="tabs_activetext">#ffffff</item>
-		<item name="tabs_inactivetext">#aaffffff</item>
+		<item name="tabs_inactivetext">#88ffffff</item>
 		<item name="divider_color">#dddddd</item>
 		<item name="button_divider_color">@color/l_button_divider</item>
 		<item name="button_bar_bg">@drawable/l_button_bar_bg</item>
@@ -44,11 +46,13 @@
     </style>
 
     <style name="SundroidDark" parent="Theme.AppCompat.NoActionBar">
-        <item name="android:colorPrimary">@color/primary</item>
-        <item name="android:colorPrimaryDark">@color/primaryDark</item>
-        <item name="android:colorAccent">@color/accent</item>
+        <item name="android:colorPrimary">@color/d_primary</item>
+        <item name="android:colorPrimaryDark">@color/d_primary_dark</item>
+        <item name="android:colorAccent">@color/d_accent</item>
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
+		<item name="primary_color">@color/d_primary</item>
+		<item name="primary_color_dark">@color/d_primary_dark</item>
 		<item name="app_background_colour">@color/d_app_background_start</item>
 		<item name="app_background">@drawable/d_app_bg</item>
 		<item name="header_background">@drawable/d_action_bar_bg</item>
@@ -169,18 +173,18 @@
 	</style>
 
 	<style name="TabLayoutStyle" parent="Widget.Design.TabLayout">
-		<item name="tabIndicatorColor">@color/accent</item>
+		<item name="tabIndicatorColor">?app_background_colour</item>
 		<item name="tabIndicatorHeight">2dp</item>
 		<item name="tabPaddingStart">8dp</item>
 		<item name="tabPaddingEnd">8dp</item>
-		<item name="tabBackground">@color/primary</item>
+		<item name="tabBackground">@color/l_primary</item>
 		<item name="tabTextAppearance">@style/TabTextAppearance</item>
-		<item name="tabSelectedTextColor">@android:color/white</item>
+		<item name="tabSelectedTextColor">?tabs_activetext</item>
 	</style>
 
 	<style name="TabTextAppearance" parent="TextAppearance.Design.Tab">
 		<item name="android:textSize">14sp</item>
-		<item name="android:textColor">@android:color/white</item>
+		<item name="android:textColor">?tabs_inactivetext</item>
 		<item name="textAllCaps">true</item>
 	</style>
 
