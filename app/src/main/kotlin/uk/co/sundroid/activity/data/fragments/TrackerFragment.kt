@@ -67,8 +67,7 @@ class TrackerFragment : AbstractTimeFragment(), ConfigurableFragment, SensorEven
         val windowManager = activity.getSystemService(Activity.WINDOW_SERVICE) as WindowManager
         val display = windowManager.defaultDisplay ?: return
         rotation = display.rotation * Surface.ROTATION_90
-        (activity as MainActivity).setToolbarTitle(R.string.data_tracker_title)
-        activity.setToolbarSubtitle(null)
+        (activity as MainActivity).setToolbarSubtitle(R.string.data_tracker_title)
     }
 
     override fun onPause() {

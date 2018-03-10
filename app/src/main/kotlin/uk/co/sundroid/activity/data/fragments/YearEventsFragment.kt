@@ -40,8 +40,7 @@ class YearEventsFragment : AbstractYearFragment(), ConfigurableFragment {
 
     override fun onResume() {
         super.onResume()
-        (activity as MainActivity).setToolbarTitle(R.string.data_year_title)
-        (activity as MainActivity).setToolbarSubtitle(null)
+        (activity as MainActivity).setToolbarSubtitle(R.string.data_year_title)
     }
 
     @Throws(Exception::class)

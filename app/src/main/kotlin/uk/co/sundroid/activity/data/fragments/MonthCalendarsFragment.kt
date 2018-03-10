@@ -61,8 +61,7 @@ class MonthCalendarsFragment : AbstractMonthFragment<ArrayList<MonthCalendarsFra
 
     override fun onResume() {
         super.onResume()
-        (activity as MainActivity).setToolbarTitle(R.string.data_calendars_title)
-        (activity as MainActivity).setToolbarSubtitle(null)
+        (activity as MainActivity).setToolbarSubtitle(R.string.data_calendars_title)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
