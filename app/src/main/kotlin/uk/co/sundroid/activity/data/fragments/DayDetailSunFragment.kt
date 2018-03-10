@@ -47,16 +47,16 @@ class DayDetailSunFragment : AbstractDayDetailFragment() {
                     if (isSafe) {
                         if (yearEventToday != null) {
                             view.findViewById<View>(R.id.sunEvent).setOnClickListener(null)
-                            showInView(view, R.id.sunEvent)
-                            showInView(view, R.id.sunEventTitle, yearEventToday.type.displayName)
+                            show(view, R.id.sunEvent)
+                            show(view, R.id.sunEventTitle, yearEventToday.type.displayName)
                             if (yearEventToday.type === EventType.NORTHERN_SOLSTICE && Math.abs(location.location.latitude.doubleValue) > 23.44) {
                                 val localExtreme = if (location.location.latitude.doubleValue >= 0) "Longest" else "Shortest"
-                                showInView(view, R.id.sunEventSubtitle, localExtreme + " day")
+                                show(view, R.id.sunEventSubtitle, localExtreme + " day")
                             } else if (yearEventToday.type === EventType.SOUTHERN_SOLSTICE && Math.abs(location.location.latitude.doubleValue) > 23.44) {
                                 val localExtreme = if (location.location.latitude.doubleValue >= 0) "Shortest" else "Longest"
-                                showInView(view, R.id.sunEventSubtitle, localExtreme + " day")
+                                show(view, R.id.sunEventSubtitle, localExtreme + " day")
                             } else if (yearEventToday.type === EventType.ANNULAR_SOLAR || yearEventToday.type === EventType.HYBRID_SOLAR || yearEventToday.type === EventType.PARTIAL_SOLAR || yearEventToday.type === EventType.TOTAL_SOLAR) {
-                                showInView(view, R.id.sunEventSubtitle, "Tap to check Wikipedia for visibility")
+                                show(view, R.id.sunEventSubtitle, "Tap to check Wikipedia for visibility")
                                 val finalLink = yearEventToday.link
                                 view.findViewById<View>(R.id.sunEvent).setOnClickListener {
                                     val intent = Intent(Intent.ACTION_VIEW)
@@ -64,10 +64,10 @@ class DayDetailSunFragment : AbstractDayDetailFragment() {
                                     startActivity(intent)
                                 }
                             } else {
-                                removeInView(view, R.id.sunEventSubtitle)
+                                remove(view, R.id.sunEventSubtitle)
                             }
                         } else {
-                            removeInView(view, R.id.sunEvent)
+                            remove(view, R.id.sunEvent)
                         }
 
                         var noTransit = true
@@ -76,19 +76,19 @@ class DayDetailSunFragment : AbstractDayDetailFragment() {
                         if (sunDay.riseSetType !== RiseSetType.SET && sunDay.transitAppElevation > 0) {
                             val noon = formatTime(applicationContext!!, sunDay.transit!!, false)
                             noTransit = false
-                            showInView(view, R.id.sunTransit)
-                            showInView(view, R.id.sunTransitTime, noon.time + noon.marker + "  " + formatElevation(sunDay.transitAppElevation))
+                            show(view, R.id.sunTransit)
+                            show(view, R.id.sunTransitTime, noon.time + noon.marker + "  " + formatElevation(sunDay.transitAppElevation))
                         } else {
-                            removeInView(view, R.id.sunTransit)
+                            remove(view, R.id.sunTransit)
                         }
 
                         if (sunDay.riseSetType === RiseSetType.RISEN || sunDay.riseSetType === RiseSetType.SET) {
-                            showInView(view, R.id.sunSpecial, if (sunDay.riseSetType === RiseSetType.RISEN) "Risen all day" else "Set all day")
-                            removeInView(view, R.id.sunEvtsRow, R.id.sunEvt1, R.id.sunEvt2, R.id.sunUptime)
+                            show(view, R.id.sunSpecial, if (sunDay.riseSetType === RiseSetType.RISEN) "Risen all day" else "Set all day")
+                            remove(view, R.id.sunEvtsRow, R.id.sunEvt1, R.id.sunEvt2, R.id.sunUptime)
                         } else {
-                            removeInView(view, R.id.sunSpecial)
-                            removeInView(view, R.id.sunEvt1, R.id.sunEvt2)
-                            showInView(view, R.id.sunEvtsRow)
+                            remove(view, R.id.sunSpecial)
+                            remove(view, R.id.sunEvt1, R.id.sunEvt2)
+                            show(view, R.id.sunEvtsRow)
                             val events = TreeSet<SummaryEvent>()
                             if (sunDay.rise != null) {
                                 events.add(SummaryEvent("Rise", sunDay.rise!!, sunDay.riseAzimuth))
@@ -106,28 +106,28 @@ class DayDetailSunFragment : AbstractDayDetailFragment() {
                                 val time = formatTime(applicationContext!!, event.time, false)
                                 val az = formatBearing(applicationContext!!, event.azimuth!!, location.location, event.time)
 
-                                textInView(view, timeId, time.time + time.marker)
-                                textInView(view, azId, az)
-                                showInView(view, rowId)
-                                imageInView(view, imgId, if (event.name == "Rise") getRiseArrow() else getSetArrow())
+                                text(view, timeId, time.time + time.marker)
+                                text(view, azId, az)
+                                show(view, rowId)
+                                image(view, imgId, if (event.name == "Rise") getRiseArrow() else getSetArrow())
 
                                 index++
                             }
 
                             if (sunDay.uptimeHours > 0 && sunDay.uptimeHours < 24) {
                                 noUptime = false
-                                showInView(view, R.id.sunUptime)
-                                showInView(view, R.id.sunUptimeTime, formatDurationHMS(applicationContext!!, sunDay.uptimeHours, false))
+                                show(view, R.id.sunUptime)
+                                show(view, R.id.sunUptimeTime, formatDurationHMS(applicationContext!!, sunDay.uptimeHours, false))
                             } else {
-                                removeInView(view, R.id.sunUptime)
+                                remove(view, R.id.sunUptime)
                             }
 
                         }
 
                         if (noTransit && noUptime) {
-                            removeInView(view, R.id.sunTransitUptime, R.id.sunTransitUptimeDivider)
+                            remove(view, R.id.sunTransitUptime, R.id.sunTransitUptimeDivider)
                         } else {
-                            showInView(view, R.id.sunTransitUptime, R.id.sunTransitUptimeDivider)
+                            show(view, R.id.sunTransitUptime, R.id.sunTransitUptimeDivider)
                         }
 
                         sunDay.apply {
@@ -142,7 +142,7 @@ class DayDetailSunFragment : AbstractDayDetailFragment() {
                                 (view, time) -> view.text = time?.let { formatTimeStr(activity, it) } ?: "-"
                             }
                         }
-                        showInView(view, R.id.sunDataBox)
+                        show(view, R.id.sunDataBox)
                     }
                 }
             }
