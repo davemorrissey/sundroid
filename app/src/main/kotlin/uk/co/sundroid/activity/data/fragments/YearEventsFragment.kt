@@ -151,47 +151,49 @@ class YearEventsFragment : AbstractYearFragment(), ConfigurableFragment {
                                 }
                             }
 
-                            if (!first) {
-                                activity.layoutInflater.inflate(R.layout.divider, eventsBox)
-                            }
-                            val eventRow = View.inflate(activity, R.layout.frag_data_yearevents_event, null)
-
-                            val today = todayCalendar.get(Calendar.YEAR) == event.time.get(Calendar.YEAR) &&
-                                    todayCalendar.get(Calendar.MONTH) == event.time.get(Calendar.MONTH) &&
-                                    todayCalendar.get(Calendar.DAY_OF_MONTH) == event.time.get(Calendar.DAY_OF_MONTH)
-                            if (today) {
-                                eventRow.setBackgroundColor(getCalendarHighlightColor())
-                            } else {
-                                eventRow.setBackgroundColor(getCalendarDefaultColor())
-                            }
-
-                            if (image > 0) {
-                                imageInView(eventRow, R.id.yearEventImg, image)
-                                showInView(eventRow, R.id.yearEventImg)
-                            }
-                            textInView(eventRow, R.id.yearEventDate, Integer.toString(event.time.get(Calendar.DAY_OF_MONTH)))
-                            textInView(eventRow, R.id.yearEventMonth, getShortMonth(event.time).toUpperCase())
-                            textInView(eventRow, R.id.yearEventTitle, Html.fromHtml(title))
-                            textInView(eventRow, R.id.yearEventTime, Html.fromHtml(time))
-                            if (isNotEmpty(subtitle)) {
-                                textInView(eventRow, R.id.yearEventSubtitle, Html.fromHtml(subtitle))
-                                showInView(eventRow, R.id.yearEventSubtitle)
-                            }
-                            if (isNotEmpty(link)) {
-                                val finalLink = link
-                                showInView(eventRow, R.id.yearEventLink)
-                                eventRow.setOnClickListener {
-                                    val intent = Intent(Intent.ACTION_VIEW)
-                                    intent.data = Uri.parse(finalLink)
-                                    startActivity(intent)
+                            if (title.isNotEmpty()) {
+                                if (!first) {
+                                    activity.layoutInflater.inflate(R.layout.divider, eventsBox)
                                 }
-                            } else {
-                                eventRow.isClickable = false
-                                eventRow.isFocusable = false
-                            }
+                                val eventRow = View.inflate(activity, R.layout.frag_data_yearevents_event, null)
 
-                            eventsBox.addView(eventRow)
-                            first = false
+                                val today = todayCalendar.get(Calendar.YEAR) == event.time.get(Calendar.YEAR) &&
+                                        todayCalendar.get(Calendar.MONTH) == event.time.get(Calendar.MONTH) &&
+                                        todayCalendar.get(Calendar.DAY_OF_MONTH) == event.time.get(Calendar.DAY_OF_MONTH)
+                                if (today) {
+                                    eventRow.setBackgroundColor(getCalendarHighlightColor())
+                                } else {
+                                    eventRow.setBackgroundColor(getCalendarDefaultColor())
+                                }
+
+                                if (image > 0) {
+                                    imageInView(eventRow, R.id.yearEventImg, image)
+                                    showInView(eventRow, R.id.yearEventImg)
+                                }
+                                textInView(eventRow, R.id.yearEventDate, Integer.toString(event.time.get(Calendar.DAY_OF_MONTH)))
+                                textInView(eventRow, R.id.yearEventMonth, getShortMonth(event.time).toUpperCase())
+                                textInView(eventRow, R.id.yearEventTitle, Html.fromHtml(title))
+                                textInView(eventRow, R.id.yearEventTime, Html.fromHtml(time))
+                                if (isNotEmpty(subtitle)) {
+                                    textInView(eventRow, R.id.yearEventSubtitle, Html.fromHtml(subtitle))
+                                    showInView(eventRow, R.id.yearEventSubtitle)
+                                }
+                                if (isNotEmpty(link)) {
+                                    val finalLink = link
+                                    showInView(eventRow, R.id.yearEventLink)
+                                    eventRow.setOnClickListener {
+                                        val intent = Intent(Intent.ACTION_VIEW)
+                                        intent.data = Uri.parse(finalLink)
+                                        startActivity(intent)
+                                    }
+                                } else {
+                                    eventRow.isClickable = false
+                                    eventRow.isFocusable = false
+                                }
+
+                                eventsBox.addView(eventRow)
+                                first = false
+                            }
                         }
                         if (first) {
                             removeInView(view, R.id.yearEventsBox)
