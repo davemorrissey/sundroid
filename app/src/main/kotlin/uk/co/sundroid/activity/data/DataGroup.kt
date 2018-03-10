@@ -3,7 +3,6 @@ package uk.co.sundroid.activity.data
 import android.app.Fragment
 import uk.co.sundroid.R
 import uk.co.sundroid.activity.data.fragments.*
-import uk.co.sundroid.activity.data.fragments.dialogs.DayDetailFragment
 
 enum class DataGroup constructor(val displayName: String, val navId: Int, val fragmentClass: Class<out Fragment>) {
 

@@ -1,4 +1,4 @@
-package uk.co.sundroid.activity.data.fragments.dialogs
+package uk.co.sundroid.activity.data.fragments
 
 import android.app.Fragment
 import android.os.Bundle
@@ -8,7 +8,6 @@ import android.support.v13.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
 import android.app.FragmentManager
 import uk.co.sundroid.R
-import uk.co.sundroid.activity.data.fragments.*
 
 
 class DayDetailFragment : AbstractDayFragment() {
