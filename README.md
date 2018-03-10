@@ -34,7 +34,7 @@ work properly. I did not refactor the app to the gradle build system or Material
 * Dropped OpenGL1 and Maps v1 support
 * Changed minimum SDK from 4 to 21
 
-### Future changes
+### Ongoing changes
 
 * Kotlin bulk conversion
 * Kotlin optimisation
@@ -42,9 +42,11 @@ work properly. I did not refactor the app to the gradle build system or Material
 * Material design
 * Replace screen selector with nav drawer
 * Refactor dialogs as fragments
-* Refactor preferences activity
 * Replace uses of deprecated APIs
-* Drop theme selector
+
+### Future changes
+
+* Refactor preferences activity
 * Extract strings to resources
 * Extract more styles to resources
 * Tests
