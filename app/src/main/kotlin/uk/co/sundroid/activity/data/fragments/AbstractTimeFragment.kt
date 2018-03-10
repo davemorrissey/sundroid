@@ -12,7 +12,6 @@ import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import kotlinx.android.synthetic.main.inc_timebar.*
 import uk.co.sundroid.R
-import uk.co.sundroid.activity.data.fragments.dialogs.date.DatePickerFragment
 import uk.co.sundroid.activity.data.fragments.dialogs.date.TimePickerFragment
 import uk.co.sundroid.domain.LocationDetails
 import uk.co.sundroid.util.isNotEmpty

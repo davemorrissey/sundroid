@@ -21,6 +21,11 @@ abstract class AbstractDataFragment : AbstractFragment(), OnViewPrefsChangedList
     protected var isSafe: Boolean = false
         get() = activity != null && !isDetached && applicationContext != null
 
+    override fun onResume() {
+        super.onResume()
+        (activity as MainActivity).setToolbarTitle(getLocation().name ?: getLocation().location.toString())
+    }
+
     fun getLocation(): LocationDetails {
         return Prefs.selectedLocation(activity)!!
     }

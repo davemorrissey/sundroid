@@ -126,6 +126,10 @@ class MainActivity : AbstractActivity() {
         startActivity(intent)
     }
 
+    fun setToolbarTitle(title: String) {
+        toolbar?.title = title
+    }
+
     fun setToolbarTitle(title: Int) {
         toolbar?.setTitle(title)
     }

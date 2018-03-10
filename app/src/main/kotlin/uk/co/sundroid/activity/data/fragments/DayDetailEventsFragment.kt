@@ -4,7 +4,6 @@ import android.view.View
 import android.widget.TableLayout
 import uk.co.sundroid.R
 import uk.co.sundroid.R.id.*
-import uk.co.sundroid.activity.MainActivity
 import uk.co.sundroid.activity.data.fragments.dialogs.settings.DayEventsPickerFragment
 import uk.co.sundroid.util.astro.*
 import uk.co.sundroid.util.astro.math.BodyPositionCalculator
@@ -19,12 +18,6 @@ class DayDetailEventsFragment : AbstractDayDetailFragment(), ConfigurableFragmen
 
     override val layout: Int
         get() = R.layout.frag_data_daydetail_events
-
-    override fun onResume() {
-        super.onResume()
-        (activity as MainActivity).setToolbarTitle(R.string.data_detail_title)
-        (activity as MainActivity).setToolbarSubtitle(R.string.data_detail_subtitle_events)
-    }
 
     override fun openSettingsDialog() = DayEventsPickerFragment.show(this)
 

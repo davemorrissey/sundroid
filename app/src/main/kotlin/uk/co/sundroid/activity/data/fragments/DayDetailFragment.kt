@@ -8,6 +8,7 @@ import android.support.v13.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
 import android.app.FragmentManager
 import uk.co.sundroid.R
+import uk.co.sundroid.activity.MainActivity
 
 
 class DayDetailFragment : AbstractDayFragment() {
@@ -25,6 +26,11 @@ class DayDetailFragment : AbstractDayFragment() {
 
         val tabLayout = view.findViewById(R.id.tabLayout) as TabLayout
         tabLayout.setupWithViewPager(viewPager)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        (activity as MainActivity).setToolbarSubtitle(R.string.data_detail_title)
     }
 
     override fun updateData(view: View) {
