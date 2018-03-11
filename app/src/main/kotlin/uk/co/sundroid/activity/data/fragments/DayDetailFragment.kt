@@ -7,9 +7,10 @@ import android.support.design.widget.TabLayout
 import android.support.v13.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
 import android.app.FragmentManager
+import android.content.Intent
+import android.support.v4.content.LocalBroadcastManager
 import uk.co.sundroid.R
 import uk.co.sundroid.activity.MainActivity
-
 
 class DayDetailFragment : AbstractDayFragment() {
 
@@ -18,12 +19,8 @@ class DayDetailFragment : AbstractDayFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         val viewPager = view.findViewById(R.id.viewPager) as ViewPager
-
-        viewPager.adapter = DayDetailTabsAdapter(fragmentManager)
-
-
+        viewPager.adapter = DayDetailTabsAdapter(childFragmentManager)
         val tabLayout = view.findViewById(R.id.tabLayout) as TabLayout
         tabLayout.setupWithViewPager(viewPager)
     }
@@ -34,8 +31,7 @@ class DayDetailFragment : AbstractDayFragment() {
     }
 
     override fun updateData(view: View) {
-
-
+        LocalBroadcastManager.getInstance(activity).sendBroadcast(Intent("update"))
     }
 
     class DayDetailTabsAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
