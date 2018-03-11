@@ -31,7 +31,7 @@
     <color name="d_button_active">#99cc00</color>
     <color name="d_button_highlight">#7ea50c</color>
     <color name="d_button_text">#ffffff</color>
-    <color name="d_button_secondary_text">#d4ffbc</color>
+    <color name="d_button_secondary_text">#aaffffff</color>
     <color name="d_button_disabledtext">#666666</color>
 
     <color name="l_button_background">#005895</color>
