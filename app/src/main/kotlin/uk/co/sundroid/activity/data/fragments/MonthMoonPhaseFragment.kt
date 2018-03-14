@@ -78,11 +78,11 @@ class MonthMoonPhaseFragment : AbstractMonthFragment<Any>() {
                         }
                         for (i in 1 until firstCol) {
                             val datesRow = view.findViewById<TableRow>(R.id.moonCalDates1)
-                            val dateCell = activity.layoutInflater.inflate(R.layout.frag_data_monthmoonphase_date, datesRow, false)
+                            val dateCell = inflate(R.layout.frag_data_monthmoonphase_date, datesRow)
                             dateCell.visibility = View.INVISIBLE
                             datesRow.addView(dateCell)
                             val imagesRow = view.findViewById<TableRow>(R.id.moonCalImages1)
-                            val imageCell = activity.layoutInflater.inflate(R.layout.frag_data_monthmoonphase_image, imagesRow, false)
+                            val imageCell = inflate(R.layout.frag_data_monthmoonphase_image, imagesRow)
                             imageCell.visibility = View.INVISIBLE
                             imagesRow.addView(imageCell)
                         }
@@ -104,7 +104,7 @@ class MonthMoonPhaseFragment : AbstractMonthFragment<Any>() {
                                 val datesRow = view.findViewById<TableRow>(view("moonCalDates" + row))
                                 val imagesRow = view.findViewById<TableRow>(view("moonCalImages" + row))
 
-                                val dateCell = activity.layoutInflater.inflate(R.layout.frag_data_monthmoonphase_date, datesRow, false)
+                                val dateCell = inflate(R.layout.frag_data_monthmoonphase_date, datesRow)
                                 (dateCell.findViewById(R.id.moonCalTitleText) as TextView).text = loopCalendar.get(Calendar.DAY_OF_MONTH).toString()
 
                                 val phaseEvent = MoonPhaseCalculator.getDayEvent(loopCalendar, phaseEvents)
@@ -123,7 +123,7 @@ class MonthMoonPhaseFragment : AbstractMonthFragment<Any>() {
 
                                 datesRow.addView(dateCell)
 
-                                val imageCell = activity.layoutInflater.inflate(R.layout.frag_data_monthmoonphase_image, imagesRow, false)
+                                val imageCell = inflate(R.layout.frag_data_monthmoonphase_image, imagesRow)
 
                                 val phaseDbl = MoonPhaseCalculator.getNoonPhase(loopCalendar) / 2
                                 var phaseBd = BigDecimal(phaseDbl)
@@ -162,11 +162,11 @@ class MonthMoonPhaseFragment : AbstractMonthFragment<Any>() {
                         }
                         for (i in lastCol + 1..7) {
                             val datesRow = view.findViewById<TableRow>(view("moonCalDates" + row))
-                            val dateCell = activity.layoutInflater.inflate(R.layout.frag_data_monthmoonphase_date, datesRow, false)
+                            val dateCell = inflate(R.layout.frag_data_monthmoonphase_date, datesRow)
                             dateCell.visibility = View.INVISIBLE
                             datesRow.addView(dateCell)
                             val imagesRow = view.findViewById<TableRow>(view("moonCalImages" + row))
-                            val imageCell = activity.layoutInflater.inflate(R.layout.frag_data_monthmoonphase_image, imagesRow, false)
+                            val imageCell = inflate(R.layout.frag_data_monthmoonphase_image, imagesRow)
                             imageCell.visibility = View.INVISIBLE
                             imagesRow.addView(imageCell)
                         }

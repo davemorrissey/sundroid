@@ -155,7 +155,7 @@ class YearEventsFragment : AbstractYearFragment(), ConfigurableFragment {
                                 if (!first) {
                                     activity.layoutInflater.inflate(R.layout.divider, eventsBox)
                                 }
-                                val eventRow = View.inflate(activity, R.layout.frag_data_yearevents_event, null)
+                                val eventRow = inflate(R.layout.frag_data_yearevents_event)
 
                                 val today = todayCalendar.get(Calendar.YEAR) == event.time.get(Calendar.YEAR) &&
                                         todayCalendar.get(Calendar.MONTH) == event.time.get(Calendar.MONTH) &&
