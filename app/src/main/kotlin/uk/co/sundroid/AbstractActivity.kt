@@ -126,27 +126,9 @@ abstract class AbstractActivity : AppCompatActivity(), OnClickListener {
         }
     }
 
-    protected fun textInView(view: View, id: Int, text: String?) {
+    protected fun text(view: View, id: Int, text: String?) {
         val child = view.findViewById<TextView>(id)
         child.text = text.orEmpty()
-    }
-
-    protected fun showInView(view: View, id: Int, text: CharSequence) {
-        val child = view.findViewById<TextView>(id)
-        child.visibility = View.VISIBLE
-        child.text = text
-    }
-
-    protected fun showInView(view: View, vararg ids: Int) {
-        for (id in ids) {
-            view.findViewById<View>(id).visibility = View.VISIBLE
-        }
-    }
-
-    protected fun removeInView(view: View, vararg ids: Int) {
-        for (id in ids) {
-            view.findViewById<View>(id).visibility = View.GONE
-        }
     }
 
     protected fun alert(title: String, message: String) {

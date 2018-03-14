@@ -177,7 +177,7 @@
 		<item name="tabIndicatorHeight">2dp</item>
 		<item name="tabPaddingStart">8dp</item>
 		<item name="tabPaddingEnd">8dp</item>
-		<item name="tabBackground">@color/l_primary</item>
+		<item name="tabBackground">?primary_color</item>
 		<item name="tabTextAppearance">@style/TabTextAppearance</item>
 		<item name="tabSelectedTextColor">?tabs_activetext</item>
 	</style>

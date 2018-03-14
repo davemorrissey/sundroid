@@ -66,8 +66,8 @@ class TimeZonePickerActivity : AbstractActivity() {
     private inner class TimeZoneAdapter constructor(list: List<TimeZoneDetail>) : ArrayAdapter<TimeZoneDetail>(this@TimeZonePickerActivity, R.layout.zone_row, list) {
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
             val row = convertView ?: layoutInflater.inflate(R.layout.zone_row, parent, false)
-            textInView(row, R.id.timeZoneRowOffset, getItem(position).getOffset(System.currentTimeMillis()))
-            textInView(row, R.id.timeZoneRowCities, getItem(position).cities)
+            text(row, R.id.timeZoneRowOffset, getItem(position).getOffset(System.currentTimeMillis()))
+            text(row, R.id.timeZoneRowCities, getItem(position).cities)
             return row
         }
     }

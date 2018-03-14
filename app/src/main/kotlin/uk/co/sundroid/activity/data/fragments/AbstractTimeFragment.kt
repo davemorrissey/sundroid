@@ -136,30 +136,30 @@ abstract class AbstractTimeFragment : AbstractDataFragment(), OnSeekBarChangeLis
 
 
         if (Prefs.showTimeZone(applicationContext!!)) {
-            showInView(view, R.id.zoneButton)
+            show(view, R.id.zoneButton)
             val zone = location.timeZone!!.zone
             val zoneDST = zone.inDaylightTime(Date(dateCalendar.timeInMillis + 12 * 60 * 60 * 1000))
             val zoneName = zone.getDisplayName(zoneDST, TimeZone.LONG)
-            textInView(view, R.id.zoneName, zoneName)
+            text(view, R.id.zoneName, zoneName)
 
             var zoneCities = location.timeZone!!.getOffset(dateCalendar.timeInMillis + 12 * 60 * 60 * 1000) // Get day's main offset.
             if (isNotEmpty(location.timeZone!!.cities)) {
                 zoneCities += " " + location.timeZone!!.cities!!
             }
-            textInView(view, R.id.zoneCities, zoneCities)
+            text(view, R.id.zoneCities, zoneCities)
         } else {
-            removeInView(view, R.id.zoneButton)
+            remove(view, R.id.zoneButton)
         }
 
         val time = formatTime(applicationContext!!, timeCalendar, false, false)
-        showInView(view, R.id.timeHM, time.time + time.marker)
+        show(view, R.id.timeHM, time.time + time.marker)
 
         dateFormat.timeZone = dateCalendar.timeZone
         weekdayFormat.timeZone = dateCalendar.timeZone
         val date = dateFormat.format(Date(dateCalendar.timeInMillis))
         val weekday = weekdayFormat.format(Date(dateCalendar.timeInMillis))
-        showInView(view, R.id.dateDMY, date)
-        showInView(view, R.id.dateWeekday, weekday)
+        show(view, R.id.dateDMY, date)
+        show(view, R.id.dateWeekday, weekday)
 
         val minutes = timeCalendar.get(Calendar.HOUR_OF_DAY) * 60 + timeCalendar.get(Calendar.MINUTE)
         (view.findViewById<View>(R.id.timeSeeker) as SeekBar).progress = minutes

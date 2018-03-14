@@ -44,13 +44,13 @@ class MonthMoonPhaseFragment : AbstractMonthFragment<Any>() {
                                 altDay -= 7
                             }
                             when (altDay) {
-                                1 -> showInView(view, dayId, "Sun")
-                                2 -> showInView(view, dayId, "Mon")
-                                3 -> showInView(view, dayId, "Tue")
-                                4 -> showInView(view, dayId, "Wed")
-                                5 -> showInView(view, dayId, "Thu")
-                                6 -> showInView(view, dayId, "Fri")
-                                7 -> showInView(view, dayId, "Sat")
+                                1 -> show(view, dayId, "Sun")
+                                2 -> show(view, dayId, "Mon")
+                                3 -> show(view, dayId, "Tue")
+                                4 -> show(view, dayId, "Wed")
+                                5 -> show(view, dayId, "Thu")
+                                6 -> show(view, dayId, "Fri")
+                                7 -> show(view, dayId, "Sat")
                             }
                         }
 

@@ -167,20 +167,20 @@ class YearEventsFragment : AbstractYearFragment(), ConfigurableFragment {
                                 }
 
                                 if (image > 0) {
-                                    imageInView(eventRow, R.id.yearEventImg, image)
-                                    showInView(eventRow, R.id.yearEventImg)
+                                    image(eventRow, R.id.yearEventImg, image)
+                                    show(eventRow, R.id.yearEventImg)
                                 }
-                                textInView(eventRow, R.id.yearEventDate, Integer.toString(event.time.get(Calendar.DAY_OF_MONTH)))
-                                textInView(eventRow, R.id.yearEventMonth, getShortMonth(event.time).toUpperCase())
-                                textInView(eventRow, R.id.yearEventTitle, Html.fromHtml(title))
-                                textInView(eventRow, R.id.yearEventTime, Html.fromHtml(time))
+                                text(eventRow, R.id.yearEventDate, Integer.toString(event.time.get(Calendar.DAY_OF_MONTH)))
+                                text(eventRow, R.id.yearEventMonth, getShortMonth(event.time).toUpperCase())
+                                text(eventRow, R.id.yearEventTitle, Html.fromHtml(title))
+                                text(eventRow, R.id.yearEventTime, Html.fromHtml(time))
                                 if (isNotEmpty(subtitle)) {
-                                    textInView(eventRow, R.id.yearEventSubtitle, Html.fromHtml(subtitle))
-                                    showInView(eventRow, R.id.yearEventSubtitle)
+                                    text(eventRow, R.id.yearEventSubtitle, Html.fromHtml(subtitle))
+                                    show(eventRow, R.id.yearEventSubtitle)
                                 }
                                 if (isNotEmpty(link)) {
                                     val finalLink = link
-                                    showInView(eventRow, R.id.yearEventLink)
+                                    show(eventRow, R.id.yearEventLink)
                                     eventRow.setOnClickListener {
                                         val intent = Intent(Intent.ACTION_VIEW)
                                         intent.data = Uri.parse(finalLink)
@@ -196,11 +196,11 @@ class YearEventsFragment : AbstractYearFragment(), ConfigurableFragment {
                             }
                         }
                         if (first) {
-                            removeInView(view, R.id.yearEventsBox)
-                            showInView(view, R.id.yearEventsNone)
+                            remove(view, R.id.yearEventsBox)
+                            show(view, R.id.yearEventsNone)
                         } else {
-                            showInView(view, R.id.yearEventsBox)
-                            removeInView(view, R.id.yearEventsNone)
+                            show(view, R.id.yearEventsBox)
+                            remove(view, R.id.yearEventsNone)
                         }
                     }
                 }

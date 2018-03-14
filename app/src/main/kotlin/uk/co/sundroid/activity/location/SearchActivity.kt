@@ -85,8 +85,8 @@ class SearchActivity : AbstractLocationActivity(), OnItemClickListener {
                 if (isNotEmpty(item.state)) {
                     extra = "${item.state}, $extra"
                 }
-                textInView(row, R.id.searchLocName, item.name)
-                textInView(row, R.id.searchLocExtra, extra)
+                text(row, R.id.searchLocName, item.name)
+                text(row, R.id.searchLocExtra, extra)
             }
             return row
         }

@@ -142,38 +142,38 @@ abstract class AbstractYearFragment : AbstractDataFragment(), OnClickListener, O
 
     private fun updateYear(location: LocationDetails, calendar: Calendar, view: View) {
         if (Prefs.showTimeZone(applicationContext!!)) {
-            showInView(view, R.id.zoneButton)
+            show(view, R.id.zoneButton)
             val zone = location.timeZone!!.zone
             val zoneDST = zone.inDaylightTime(Date(calendar.timeInMillis + 12 * 60 * 60 * 1000))
             val zoneName = zone.getDisplayName(zoneDST, TimeZone.LONG)
-            textInView(view, R.id.zoneName, zoneName)
+            text(view, R.id.zoneName, zoneName)
 
             var zoneCities = location.timeZone!!.getOffset(calendar.timeInMillis + 12 * 60 * 60 * 1000) // Get day's main offset.
             if (isNotEmpty(location.timeZone!!.cities)) {
                 zoneCities += " " + location.timeZone!!.cities!!
             }
-            textInView(view, R.id.zoneCities, zoneCities)
+            text(view, R.id.zoneCities, zoneCities)
         } else {
-            removeInView(view, R.id.zoneButton)
+            remove(view, R.id.zoneButton)
         }
 
         yearFormat.timeZone = calendar.timeZone
         val year = yearFormat.format(Date(calendar.timeInMillis))
-        showInView(view, R.id.year, year)
+        show(view, R.id.year, year)
 
         if (calendar.get(Calendar.YEAR) <= 2000) {
             view.findViewById<View>(R.id.yearPrev).isEnabled = false
-            imageInView(view, R.id.yearPrev, drawable.navigation_previous_item_disabled)
+            image(view, R.id.yearPrev, drawable.navigation_previous_item_disabled)
         } else {
             view.findViewById<View>(R.id.yearPrev).isEnabled = true
-            imageInView(view, R.id.yearPrev, drawable.navigation_previous_item)
+            image(view, R.id.yearPrev, drawable.navigation_previous_item)
         }
         if (calendar.get(Calendar.YEAR) >= 2020) {
             view.findViewById<View>(R.id.yearNext).isEnabled = false
-            imageInView(view, R.id.yearNext, drawable.navigation_next_item_disabled)
+            image(view, R.id.yearNext, drawable.navigation_next_item_disabled)
         } else {
             view.findViewById<View>(R.id.yearNext).isEnabled = true
-            imageInView(view, R.id.yearNext, drawable.navigation_next_item)
+            image(view, R.id.yearNext, drawable.navigation_next_item)
         }
     }
 

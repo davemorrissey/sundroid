@@ -36,19 +36,6 @@ abstract class AbstractFragment : Fragment() {
         child.text = text
     }
 
-    @Deprecated("Use text")
-    protected fun textInView(view: View, id: Int, text: CharSequence) {
-        val child = view.findViewById<TextView>(id)
-        child.text = text
-    }
-
-    @Deprecated("Use show")
-    protected fun showInView(view: View, id: Int, text: CharSequence) {
-        val child = view.findViewById<TextView>(id)
-        child.visibility = View.VISIBLE
-        child.text = text
-    }
-
     protected fun show(view: View, id: Int, text: CharSequence) {
         val child = view.findViewById<TextView>(id)
         child.visibility = View.VISIBLE
@@ -62,30 +49,9 @@ abstract class AbstractFragment : Fragment() {
         }
     }
 
-    @Deprecated("Use show")
-    protected fun showInView(view: View, vararg ids: Int) {
-        for (id in ids) {
-            view.findViewById<View>(id).visibility = View.VISIBLE
-        }
-    }
-
     protected fun remove(view: View, vararg ids: Int) {
         for (id in ids) {
             view.findViewById<View>(id).visibility = View.GONE
-        }
-    }
-
-    @Deprecated("Use remove")
-    protected fun removeInView(view: View, vararg ids: Int) {
-        for (id in ids) {
-            view.findViewById<View>(id).visibility = View.GONE
-        }
-    }
-
-    @Deprecated("use hide")
-    protected fun hideInView(view: View, vararg ids: Int) {
-        for (id in ids) {
-            view.findViewById<View>(id).visibility = View.INVISIBLE
         }
     }
 
@@ -98,11 +64,6 @@ abstract class AbstractFragment : Fragment() {
     protected fun toggle(view: View, on: Int, off: Int) {
         view.findViewById<View>(on).visibility = View.VISIBLE
         view.findViewById<View>(off).visibility = View.GONE
-    }
-
-    @Deprecated("Use image")
-    protected fun imageInView(view: View, id: Int, drawable: Int) {
-        (view.findViewById<View>(id) as ImageView).setImageResource(drawable)
     }
 
     protected fun image(view: View, id: Int, drawable: Int) {
