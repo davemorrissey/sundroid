@@ -12,14 +12,11 @@ import uk.co.sundroid.BuildConfig
 import uk.co.sundroid.R
 import uk.co.sundroid.activity.data.DataActivity
 import uk.co.sundroid.activity.data.DataGroup
-import uk.co.sundroid.activity.data.fragments.*
 import uk.co.sundroid.activity.info.InfoActivity
 import uk.co.sundroid.activity.location.LocationSelectActivity
 import uk.co.sundroid.activity.settings.AppSettingsActivity
 import uk.co.sundroid.domain.LocationDetails
 import uk.co.sundroid.util.location.LatitudeLongitude
-import uk.co.sundroid.util.log.d
-import uk.co.sundroid.util.log.i
 import uk.co.sundroid.util.prefs.Prefs
 import uk.co.sundroid.util.time.TimeZoneResolver
 import java.util.*
@@ -170,9 +167,5 @@ class MainActivity : AbstractActivity() {
         private const val STATE_DATA_GROUP = "dataView"
         private const val STATE_DATE_TIMESTAMP = "dateTimestamp"
         private const val STATE_TIME_TIMESTAMP = "timeTimestamp"
-
-        private const val DATA_TAG = "dataFragment"
-
-        private val TAG = DataActivity::class.java.simpleName
     }
 }

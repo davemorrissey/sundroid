@@ -1,13 +1,10 @@
 package uk.co.sundroid.activity.data
 
-import android.app.ActionBar
 import android.app.ActionBar.OnNavigationListener
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
-import android.os.Bundle
-import android.preference.PreferenceManager
 import android.view.Menu
 import android.view.View
 import android.view.View.OnClickListener
@@ -18,7 +15,6 @@ import android.widget.TextView
 import android.widget.Toast
 
 import uk.co.sundroid.AbstractActivity
-import uk.co.sundroid.BuildConfig
 import uk.co.sundroid.NavItem
 import uk.co.sundroid.R
 import uk.co.sundroid.activity.data.fragments.*
@@ -28,15 +24,12 @@ import uk.co.sundroid.activity.location.TimeZonePickerActivity
 import uk.co.sundroid.activity.settings.AppSettingsActivity
 import uk.co.sundroid.util.dao.DatabaseHelper
 import uk.co.sundroid.domain.LocationDetails
-import uk.co.sundroid.util.location.LatitudeLongitude
 import uk.co.sundroid.util.*
 import uk.co.sundroid.util.log.*
 import uk.co.sundroid.util.prefs.Prefs
-import uk.co.sundroid.util.time.TimeZoneResolver
 
 import java.util.ArrayList
 import java.util.Calendar
-import java.util.Calendar.*
 
 import uk.co.sundroid.R.*
 import uk.co.sundroid.NavItem.NavItemLocation.*

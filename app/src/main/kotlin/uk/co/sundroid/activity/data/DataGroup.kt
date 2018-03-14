@@ -4,13 +4,13 @@ import android.app.Fragment
 import uk.co.sundroid.R
 import uk.co.sundroid.activity.data.fragments.*
 
-enum class DataGroup constructor(val displayName: String, val navId: Int, val fragmentClass: Class<out Fragment>) {
+enum class DataGroup constructor(val displayName: String, val fragmentClass: Class<out Fragment>) {
 
-    DAY_SUMMARY("Day summary", 0, DaySummaryFragment::class.java),
-    DAY_DETAIL("Day in detail", R.id.dayDetail, DayDetailFragment::class.java),
-    TRACKER("Sun and moon tracker", R.id.tracker, TrackerFragment::class.java),
-    MONTH_CALENDARS("Month calendars", R.id.calendars, MonthCalendarsFragment::class.java),
-    MONTH_MOONPHASE("Moon phase calendar", 0, MonthMoonPhaseFragment::class.java),
-    YEAR_EVENTS("Year events", R.id.yearEvents, YearEventsFragment::class.java);
+    DAY_SUMMARY("Day summary", DaySummaryFragment::class.java),
+    DAY_DETAIL("Day in detail", DayDetailFragment::class.java),
+    TRACKER("Sun and moon tracker", TrackerFragment::class.java),
+    MONTH_CALENDARS("Month calendars", MonthCalendarsFragment::class.java),
+    MONTH_MOONPHASE("Moon phase calendar", MonthMoonPhaseFragment::class.java),
+    YEAR_EVENTS("Year events", YearEventsFragment::class.java);
 
 }

@@ -51,10 +51,10 @@ class DayDetailSunFragment : AbstractDayDetailFragment() {
                             show(view, R.id.sunEventTitle, yearEventToday.type.displayName)
                             if (yearEventToday.type === EventType.NORTHERN_SOLSTICE && Math.abs(location.location.latitude.doubleValue) > 23.44) {
                                 val localExtreme = if (location.location.latitude.doubleValue >= 0) "Longest" else "Shortest"
-                                show(view, R.id.sunEventSubtitle, localExtreme + " day")
+                                show(view, R.id.sunEventSubtitle, "$localExtreme day")
                             } else if (yearEventToday.type === EventType.SOUTHERN_SOLSTICE && Math.abs(location.location.latitude.doubleValue) > 23.44) {
                                 val localExtreme = if (location.location.latitude.doubleValue >= 0) "Shortest" else "Longest"
-                                show(view, R.id.sunEventSubtitle, localExtreme + " day")
+                                show(view, R.id.sunEventSubtitle, "$localExtreme day")
                             } else if (yearEventToday.type === EventType.ANNULAR_SOLAR || yearEventToday.type === EventType.HYBRID_SOLAR || yearEventToday.type === EventType.PARTIAL_SOLAR || yearEventToday.type === EventType.TOTAL_SOLAR) {
                                 show(view, R.id.sunEventSubtitle, "Tap to check Wikipedia for visibility")
                                 val finalLink = yearEventToday.link
@@ -98,10 +98,10 @@ class DayDetailSunFragment : AbstractDayDetailFragment() {
                             }
                             var index = 1
                             for (event in events) {
-                                val rowId = view("sunEvt" + index)
-                                val timeId = view("sunEvt" + index + "Time")
-                                val azId = view("sunEvt" + index + "Az")
-                                val imgId = view("sunEvt" + index + "Img")
+                                val rowId = view("sunEvt$index")
+                                val timeId = view("sunEvt${index}Time")
+                                val azId = view("sunEvt${index}Az")
+                                val imgId = view("sunEvt${index}Img")
 
                                 val time = formatTime(applicationContext!!, event.time, false)
                                 val az = formatBearing(applicationContext!!, event.azimuth!!, location.location, event.time)

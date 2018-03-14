@@ -7,7 +7,7 @@ class Async<O>(
         private val onDone: ((O) -> Unit)? = null,
         private val onFail: ((Exception) -> Unit)? = null) : AsyncTask<Void, Void, O>() {
 
-    var ex: Exception? = null
+    private var ex: Exception? = null
 
     override fun doInBackground(vararg params: Void): O? {
         return try {

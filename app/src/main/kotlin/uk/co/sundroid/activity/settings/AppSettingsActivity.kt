@@ -11,7 +11,6 @@ import android.view.MenuItem
 import uk.co.sundroid.R
 import uk.co.sundroid.activity.MainActivity
 import uk.co.sundroid.activity.data.DataActivity
-import uk.co.sundroid.util.log.*
 import uk.co.sundroid.util.theme.*
 
 class AppSettingsActivity : PreferenceActivity(), SharedPreferences.OnSharedPreferenceChangeListener {

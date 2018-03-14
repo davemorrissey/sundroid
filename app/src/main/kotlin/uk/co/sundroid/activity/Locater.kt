@@ -73,7 +73,7 @@ class Locater(private val listener: LocaterListener, private val context: Contex
         @Volatile
         private var thread: Thread? = null
 
-        private val TAG = TimeoutThread::class.java.name
+        private val tag = TimeoutThread::class.java.name
 
         fun start() {
             val thread = Thread(this, "LocationTimeout")
@@ -95,7 +95,7 @@ class Locater(private val listener: LocaterListener, private val context: Contex
                     onTimeout()
                 }
             } catch (e: InterruptedException) {
-                d(TAG, "Interrupted.")
+                d(tag, "Interrupted.")
                 Thread.currentThread().interrupt()
             }
         }

@@ -42,7 +42,7 @@ abstract class AbstractDayFragment : AbstractDataFragment() {
         }
     }
 
-    fun onDateSet(year: Int, month: Int, date: Int) {
+    private fun onDateSet(year: Int, month: Int, date: Int) {
         getDateCalendar().set(year, month, date)
         getTimeCalendar().set(year, month, date)
         update()

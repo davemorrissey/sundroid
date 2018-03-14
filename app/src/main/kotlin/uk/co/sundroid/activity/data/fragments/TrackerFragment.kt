@@ -100,7 +100,7 @@ class TrackerFragment : AbstractTimeFragment(), ConfigurableFragment, SensorEven
 
         if (compassActive) {
             val sensorManager = activity.getSystemService(Activity.SENSOR_SERVICE) as SensorManager
-            sensorManager?.unregisterListener(this)
+            sensorManager.unregisterListener(this)
         }
         compassActive = false
 
@@ -251,7 +251,7 @@ class TrackerFragment : AbstractTimeFragment(), ConfigurableFragment, SensorEven
                             if (eventsSet != null) {
                                 if (eventsSet.size > 0) {
                                     val event1 = eventsSet.toTypedArray()[0]
-                                    val time = formatTime(activity, event1.time!!, false)
+                                    val time = formatTime(activity, event1.time, false)
                                     val az = formatBearing(activity, event1.azimuth!!, trackerLcation!!.location, event1.time)
                                     text(view!!, R.id.trackerEvt1Name, event1.name)
                                     text(view!!, R.id.trackerEvt1Time, time.time + time.marker)

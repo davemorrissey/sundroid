@@ -48,12 +48,11 @@ fun formatTime(context: Context, calendar: Calendar, allowSeconds: Boolean, allo
         clone.add(SECOND, 30)
     }
 
-    var time = ""
-    if (!is24) {
+    var time = if (!is24) {
         val hour = clone.get(HOUR)
-        time += if (hour == 0) "12" else hour
+        if (hour == 0) "12" else hour.toString()
     } else {
-        time += zeroPad(clone.get(HOUR_OF_DAY), 2)
+        zeroPad(clone.get(HOUR_OF_DAY), 2)
     }
     time += ":" + zeroPad(clone.get(MINUTE), 2)
     if (showSeconds) {
