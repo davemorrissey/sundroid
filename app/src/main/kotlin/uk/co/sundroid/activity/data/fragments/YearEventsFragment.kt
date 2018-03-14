@@ -179,12 +179,9 @@ class YearEventsFragment : AbstractYearFragment(), ConfigurableFragment {
                                     show(eventRow, R.id.yearEventSubtitle)
                                 }
                                 if (isNotEmpty(link)) {
-                                    val finalLink = link
                                     show(eventRow, R.id.yearEventLink)
                                     eventRow.setOnClickListener {
-                                        val intent = Intent(Intent.ACTION_VIEW)
-                                        intent.data = Uri.parse(finalLink)
-                                        startActivity(intent)
+                                        browseTo(link)
                                     }
                                 } else {
                                     eventRow.isClickable = false

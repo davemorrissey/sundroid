@@ -1,7 +1,5 @@
 package uk.co.sundroid.activity.data.fragments
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Handler
 import android.view.View
 import uk.co.sundroid.R
@@ -57,11 +55,8 @@ class DayDetailSunFragment : AbstractDayDetailFragment() {
                                 show(view, R.id.sunEventSubtitle, "$localExtreme day")
                             } else if (yearEventToday.type === EventType.ANNULAR_SOLAR || yearEventToday.type === EventType.HYBRID_SOLAR || yearEventToday.type === EventType.PARTIAL_SOLAR || yearEventToday.type === EventType.TOTAL_SOLAR) {
                                 show(view, R.id.sunEventSubtitle, "Tap to check Wikipedia for visibility")
-                                val finalLink = yearEventToday.link
                                 view.findViewById<View>(R.id.sunEvent).setOnClickListener {
-                                    val intent = Intent(Intent.ACTION_VIEW)
-                                    intent.data = Uri.parse(finalLink)
-                                    startActivity(intent)
+                                    browseTo(yearEventToday.link)
                                 }
                             } else {
                                 remove(view, R.id.sunEventSubtitle)
