@@ -17,7 +17,6 @@ import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.TextView.OnEditorActionListener
-import android.widget.Toast
 import uk.co.sundroid.util.async.Async
 
 class CoordsActivity : AbstractLocationActivity() {
@@ -59,7 +58,7 @@ class CoordsActivity : AbstractLocationActivity() {
             startLookup(location)
         } catch (e: Exception) {
             e(TAG, "Parse error", e)
-            Toast.makeText(applicationContext, "Invalid coordinates. Please try again.", Toast.LENGTH_LONG).show()
+            longToast("Invalid coordinates. Please try again.")
         }
 
     }
