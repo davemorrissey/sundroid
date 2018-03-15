@@ -17,7 +17,7 @@ import java.util.Calendar.*
 
 abstract class AbstractMonthFragment<T> : AbstractDataFragment() {
 
-    private val monthFormat = SimpleDateFormat("MMM yyyy", Locale.US)
+    private val monthFormat = SimpleDateFormat("MMMM yyyy", Locale.US)
 
     protected abstract val layout: Int
 

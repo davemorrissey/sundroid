@@ -23,6 +23,8 @@
     <include
             layout="@layout/inc_monthbar"
             android:id="@+id/incMonthBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"/>
 
     <uk.co.sundroid.util.view.BoundedLinearLayout
