@@ -400,7 +400,6 @@
 		<item name="android:layout_width">wrap_content</item>
 		<item name="android:layout_height">?actionBarSize</item>
 		<item name="android:layout_alignParentTop">true</item>
-		<item name="android:textSize">25dp</item>
 		<item name="android:background">@drawable/ripple</item>
 	</style>
 
