@@ -1,6 +1,7 @@
 package uk.co.sundroid.activity.data.fragments
 
 import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.GestureDetector
@@ -10,9 +11,9 @@ import android.view.ViewGroup
 import android.widget.DatePicker
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
+import android.widget.TimePicker
 import kotlinx.android.synthetic.main.inc_timebar.*
 import uk.co.sundroid.R
-import uk.co.sundroid.activity.data.fragments.dialogs.date.TimePickerFragment
 import uk.co.sundroid.domain.LocationDetails
 import uk.co.sundroid.util.isNotEmpty
 import uk.co.sundroid.util.log.e
@@ -25,7 +26,7 @@ import java.util.*
 import java.util.Calendar.DAY_OF_MONTH
 import java.util.Calendar.MONTH
 
-abstract class AbstractTimeFragment : AbstractDataFragment(), OnSeekBarChangeListener, TimePickerFragment.OnTimeSelectedListener {
+abstract class AbstractTimeFragment : AbstractDataFragment(), OnSeekBarChangeListener {
 
     private val dateFormat = SimpleDateFormat("dd MMM yyyy", Locale.US)
     private val weekdayFormat = SimpleDateFormat("EEEE", Locale.US)
@@ -67,7 +68,7 @@ abstract class AbstractTimeFragment : AbstractDataFragment(), OnSeekBarChangeLis
         update()
     }
 
-    override fun onTimeSet(hour: Int, minute: Int) {
+    private fun onTimeSet(hour: Int, minute: Int) {
         getTimeCalendar().set(Calendar.HOUR_OF_DAY, hour)
         getTimeCalendar().set(Calendar.MINUTE, minute)
         update()
@@ -175,9 +176,12 @@ abstract class AbstractTimeFragment : AbstractDataFragment(), OnSeekBarChangeLis
     }
 
     private fun showTimePicker() {
-        val timePickerFragment = TimePickerFragment.newInstance(getTimeCalendar())
-        timePickerFragment.setTargetFragment(this, 0)
-        timePickerFragment.show(fragmentManager, "timePicker")
+        val calendar = getTimeCalendar()
+        val now = Calendar.getInstance(calendar.timeZone)
+        val listener = { _: TimePicker, h: Int, m: Int -> onTimeSet(h, m) }
+        val dialog = TimePickerDialog(activity, listener, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), prefs.clockType24())
+        dialog.setButton(DialogInterface.BUTTON_NEUTRAL, "Now", { _, _ -> onTimeSet(now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE))})
+        dialog.show()
     }
 
     override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
