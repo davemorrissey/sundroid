@@ -115,7 +115,7 @@ object Prefs {
             editor.putString(FIRST_WEEKDAY_KEY, "1")
         }
         if (!prefs.contains(SHOW_ZONE_KEY)) {
-            editor.putBoolean(SHOW_ZONE_KEY, true)
+            editor.putBoolean(SHOW_ZONE_KEY, false)
         }
         if (!prefs.contains(ALARM_IN_SILENT_KEY)) {
             editor.putBoolean(ALARM_IN_SILENT_KEY, true)
