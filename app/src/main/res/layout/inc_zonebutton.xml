@@ -1,0 +1,15 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/zoneButton"
+    style="@style/dateBoxButton"
+    android:layout_width="fill_parent"
+    android:orientation="vertical"
+    android:gravity="center_vertical">
+
+    <TextView
+        android:id="@+id/zoneName"
+        style="@style/zoneName" />
+
+    <TextView
+        android:id="@+id/zoneCities"
+        style="@style/zoneCities" />
+</LinearLayout>
