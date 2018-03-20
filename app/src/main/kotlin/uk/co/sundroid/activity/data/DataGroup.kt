@@ -6,7 +6,6 @@ import uk.co.sundroid.activity.data.fragments.*
 
 enum class DataGroup constructor(val displayName: String, val fragmentClass: Class<out Fragment>) {
 
-    DAY_SUMMARY("Day summary", DaySummaryFragment::class.java),
     DAY_DETAIL("Day in detail", DayDetailFragment::class.java),
     TRACKER("Sun and moon tracker", TrackerFragment::class.java),
     MONTH_CALENDARS("Month calendars", MonthCalendarsFragment::class.java),
