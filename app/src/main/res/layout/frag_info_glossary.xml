@@ -1,166 +1,186 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    >
-		
-	<LinearLayout
-		style="@style/listMenuBox"
-		android:orientation="vertical"
-		>
-		<TextView
-			style="@style/listMenuDisclosureButton"
-			android:id="@+id/infGlossaryApsisDisclosure"
-			android:text="Aphelion &amp; perihelion"/>
-		<LinearLayout
-			style="@style/listMenuDisclosureContent"
-			android:id="@+id/infGlossaryApsisBody"
-			>
-			<TextView
-				style="@style/bodyText"
-				android:text="Aphelion is the point in a planet's orbit where it is furthest away from the sun. Perihelion is the point where it is closest."
-				/>
-		</LinearLayout>
-		<View style="@style/listMenuDivider"/>
-		<TextView
-			style="@style/listMenuDisclosureButton"
-			android:id="@+id/infGlossaryAstTwiDisclosure"
-			android:text="Astronomical twilight"/>
-		<LinearLayout
-			style="@style/listMenuDisclosureContent"
-			android:id="@+id/infGlossaryAstTwiBody"
-			>
-			<TextView
-				style="@style/bodyText"
-				android:text="The times between astronomical dawn and nautical dawn, and between nautical dusk and astronomical dusk, when the sun is between 12\u00b0 and 18\u00b0 below the horizon.\n\nDuring astronomical twilight the sky is still very slightly illuminated by the sun - only between astronomical dusk and dawn is the sky dark enough for all astronomical observations."
-				/>
-		</LinearLayout>
-		<View style="@style/listMenuDivider"/>
-		<TextView
-			style="@style/listMenuDisclosureButton"
-			android:id="@+id/infGlossaryAzimuthDisclosure"
-			android:text="Azimuth"/>
-		<LinearLayout
-			style="@style/listMenuDisclosureContent"
-			android:id="@+id/infGlossaryAzimuthBody"
-			>
-			<TextView
-				style="@style/bodyText"
-				android:text="The bearing to the sun or moon, measured in degrees from North. For example, an azimuth of 90\u00b0 indicates the sun or moon is due East."
-				/>
-		</LinearLayout>
-		<View style="@style/listMenuDivider"/>
-		<TextView
-			style="@style/listMenuDisclosureButton"
-			android:id="@+id/infGlossaryCivTwiDisclosure"
-			android:text="Civil twilight"/>
-		<LinearLayout
-			style="@style/listMenuDisclosureContent"
-			android:id="@+id/infGlossaryCivTwiBody"
-			>
-			<TextView
-				style="@style/bodyText"
-				android:text="The times between civil dawn and sunrise, and between sunset and civil dusk. Civil dawn and dusk occur when the sun is 6\u00b0 below the horizon.\n\nDuring civil twilight the sun is still lighting the sky, and bright stars and planets such as Venus may be visible."
-				/>
-		</LinearLayout>
-		<View style="@style/listMenuDivider"/>
-		<TextView
-			style="@style/listMenuDisclosureButton"
-			android:id="@+id/infGlossaryEquinoxDisclosure"
-			android:text="Equinox"/>
-		<LinearLayout
-			style="@style/listMenuDisclosureContent"
-			android:id="@+id/infGlossaryEquinoxBody"
-			>
-			<TextView
-				style="@style/bodyText"
-				android:text="Equinoxes occur twice each year when the sun is directly above the equator, and the Earth's axis is tilted neither towards or away from the sun."
-				/>
-		</LinearLayout>
-		<View style="@style/listMenuDivider"/>
-		<TextView
-			style="@style/listMenuDisclosureButton"
-			android:id="@+id/infGlossaryGoldenDisclosure"
-			android:text="Golden hour"/>
-		<LinearLayout
-			style="@style/listMenuDisclosureContent"
-			android:id="@+id/infGlossaryGoldenBody"
-			>
-			<TextView
-				style="@style/bodyText"
-				android:text="The periods after sunrise in the morning and before sunset in the evening when the sun is low in the sky, giving a softer and warmer light ideal for photography. Definitions of golden hour vary and this app uses the most common - the periods when the sun is less than 6\u00b0 above the horizon.\n\nMorning golden hour lasts from sunrise to golden hour end, and evening golden hour lasts from golden hour start to sunset. This app usually shows these times separately."
-				/>
-		</LinearLayout>
-		<View style="@style/listMenuDivider"/>
-		<TextView
-			style="@style/listMenuDisclosureButton"
-			android:id="@+id/infGlossaryLunarEclipseDisclosure"
-			android:text="Lunar eclipse"/>
-		<LinearLayout
-			style="@style/listMenuDisclosureContent"
-			android:id="@+id/infGlossaryLunarEclipseBody"
-			>
-			<TextView
-				style="@style/bodyText"
-				android:text="Lunar eclipses occur when the moon passes through the Earth's shadow.\n\nTotal eclipses occur when the moon passes through the center of the Earth's shadow (the umbra) where it receives no direct light from the sun. The moon appears a dim rusty red due to light refracted through the Earth's atmosphere.\n\nPartial eclipses occur when only part of the moon's surface enters the umbra, leaving some in direct sunlight.\n\nPenumbral eclipses occur when all or part of the moon enters the Earth's penumbra, meaning that the Earth is partially obscuring light from the sun to all or part of the moon. Penumbral lunar eclipses are usually difficult to observe."
-				/>
-		</LinearLayout>
-		<View style="@style/listMenuDivider"/>
-		<TextView
-			style="@style/listMenuDisclosureButton"
-			android:id="@+id/infGlossaryNtcTwiDisclosure"
-			android:text="Nautical twilight"/>
-		<LinearLayout
-			style="@style/listMenuDisclosureContent"
-			android:id="@+id/infGlossaryNtcTwiBody"
-			>
-			<TextView
-				style="@style/bodyText"
-				android:text="The times between nautical dawn and civil dawn, and between civil dusk and nautical dusk, when the sun is between 6\u00b0 and 12\u00b0 below the horizon.\n\nDuring nautical twilight the horizon is still sufficiently illuminated for sailors to use it for reference when navigating by the stars."
-				/>
-		</LinearLayout>
-		<View style="@style/listMenuDivider"/>
-		<TextView
-			style="@style/listMenuDisclosureButton"
-			android:id="@+id/infGlossarySolEclipseDisclosure"
-			android:text="Solar eclipse"/>
-		<LinearLayout
-			style="@style/listMenuDisclosureContent"
-			android:id="@+id/infGlossarySolEclipseBody"
-			>
-			<TextView
-				style="@style/bodyText"
-				android:text="Solar eclipses occur when the moon passes between the sun and Earth, casting a shadow across the Earth's surface.\n\nTotal eclipses occur when the moon completely obscures the sun's disc, making the sun's corona visible.\n\nAnnular eclipses occur when the moon passes directly in front of the sun, but its apparent size is smaller, leaving a bright ring of the sun's disc visible.\n\nHybrid eclipses shift between total and annular eclipses as they pass across the Earth.\n\nPartial eclipses occur when the center of the moon's shadow (the umbra) misses the Earth, so only a segment of the sun is obscured when observed from Earth."
-				/>
-		</LinearLayout>
-		<View style="@style/listMenuDivider"/>
-		<TextView
-			style="@style/listMenuDisclosureButton"
-			android:id="@+id/infGlossarySolNoonDisclosure"
-			android:text="Solar noon"/>
-		<LinearLayout
-			style="@style/listMenuDisclosureContent"
-			android:id="@+id/infGlossarySolNoonBody"
-			>
-			<TextView
-				style="@style/bodyText"
-				android:text="The moment when the sun reaches its highest position in the sky for the day."
-				/>
-		</LinearLayout>
-		<View style="@style/listMenuDivider"/>
-		<TextView
-			style="@style/listMenuDisclosureButton"
-			android:id="@+id/infGlossarySolsticeDisclosure"
-			android:text="Solstice"/>
-		<LinearLayout
-			style="@style/listMenuDisclosureContent"
-			android:id="@+id/infGlossarySolsticeBody"
-			>
-			<TextView
-				style="@style/bodyText"
-				android:text="Solstices occur twice each year when the sun reaches its northernmost and southernmost extremes in the sky. The Northern Solstice occurs in June and marks the longest day of the year for those North of the Tropic of Cancer, and the shortest for those South of the Tropic of Capricorn. The Southern Solstice occurs in December, when the reverse is true."
-				/>
-		</LinearLayout>
-		<View style="@style/listMenuDivider"/>
-	</LinearLayout>
+    android:layout_height="fill_parent">
+
+    <LinearLayout
+        style="@style/listMenuBox"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/listMenuDisclosureButton"
+            android:id="@+id/infGlossaryApsisDisclosure"
+            android:text="Aphelion &amp; perihelion" />
+
+        <LinearLayout
+            style="@style/listMenuDisclosureContent"
+            android:id="@+id/infGlossaryApsisBody">
+
+            <TextView
+                style="@style/bodyText"
+                android:text="Aphelion is the point in a planet's orbit where it is furthest away from the sun. Perihelion is the point where it is closest." />
+        </LinearLayout>
+
+        <View style="@style/listMenuDivider" />
+
+        <TextView
+            style="@style/listMenuDisclosureButton"
+            android:id="@+id/infGlossaryAstTwiDisclosure"
+            android:text="Astronomical twilight" />
+
+        <LinearLayout
+            style="@style/listMenuDisclosureContent"
+            android:id="@+id/infGlossaryAstTwiBody">
+
+            <TextView
+                style="@style/bodyText"
+                android:text="The times between astronomical dawn and nautical dawn, and between nautical dusk and astronomical dusk, when the sun is between 12\u00b0 and 18\u00b0 below the horizon.\n\nDuring astronomical twilight the sky is still very slightly illuminated by the sun - only between astronomical dusk and dawn is the sky dark enough for all astronomical observations." />
+        </LinearLayout>
+
+        <View style="@style/listMenuDivider" />
+
+        <TextView
+            style="@style/listMenuDisclosureButton"
+            android:id="@+id/infGlossaryAzimuthDisclosure"
+            android:text="Azimuth" />
+
+        <LinearLayout
+            style="@style/listMenuDisclosureContent"
+            android:id="@+id/infGlossaryAzimuthBody">
+
+            <TextView
+                style="@style/bodyText"
+                android:text="The bearing to the sun or moon, measured in degrees from North. For example, an azimuth of 90\u00b0 indicates the sun or moon is due East." />
+        </LinearLayout>
+
+        <View style="@style/listMenuDivider" />
+
+        <TextView
+            style="@style/listMenuDisclosureButton"
+            android:id="@+id/infGlossaryCivTwiDisclosure"
+            android:text="Civil twilight" />
+
+        <LinearLayout
+            style="@style/listMenuDisclosureContent"
+            android:id="@+id/infGlossaryCivTwiBody">
+
+            <TextView
+                style="@style/bodyText"
+                android:text="The times between civil dawn and sunrise, and between sunset and civil dusk. Civil dawn and dusk occur when the sun is 6\u00b0 below the horizon.\n\nDuring civil twilight the sun is still lighting the sky, and bright stars and planets such as Venus may be visible." />
+        </LinearLayout>
+
+        <View style="@style/listMenuDivider" />
+
+        <TextView
+            style="@style/listMenuDisclosureButton"
+            android:id="@+id/infGlossaryEquinoxDisclosure"
+            android:text="Equinox" />
+
+        <LinearLayout
+            style="@style/listMenuDisclosureContent"
+            android:id="@+id/infGlossaryEquinoxBody">
+
+            <TextView
+                style="@style/bodyText"
+                android:text="Equinoxes occur twice each year when the sun is directly above the equator, and the Earth's axis is tilted neither towards or away from the sun." />
+        </LinearLayout>
+
+        <View style="@style/listMenuDivider" />
+
+        <TextView
+            style="@style/listMenuDisclosureButton"
+            android:id="@+id/infGlossaryGoldenDisclosure"
+            android:text="Golden hour" />
+
+        <LinearLayout
+            style="@style/listMenuDisclosureContent"
+            android:id="@+id/infGlossaryGoldenBody">
+
+            <TextView
+                style="@style/bodyText"
+                android:text="The periods after sunrise in the morning and before sunset in the evening when the sun is low in the sky, giving a softer and warmer light ideal for photography. Definitions of golden hour vary and this app uses the most common - the periods when the sun is less than 6\u00b0 above the horizon.\n\nMorning golden hour lasts from sunrise to golden hour end, and evening golden hour lasts from golden hour start to sunset. This app usually shows these times separately." />
+        </LinearLayout>
+
+        <View style="@style/listMenuDivider" />
+
+        <TextView
+            style="@style/listMenuDisclosureButton"
+            android:id="@+id/infGlossaryLunarEclipseDisclosure"
+            android:text="Lunar eclipse" />
+
+        <LinearLayout
+            style="@style/listMenuDisclosureContent"
+            android:id="@+id/infGlossaryLunarEclipseBody">
+
+            <TextView
+                style="@style/bodyText"
+                android:text="Lunar eclipses occur when the moon passes through the Earth's shadow.\n\nTotal eclipses occur when the moon passes through the center of the Earth's shadow (the umbra) where it receives no direct light from the sun. The moon appears a dim rusty red due to light refracted through the Earth's atmosphere.\n\nPartial eclipses occur when only part of the moon's surface enters the umbra, leaving some in direct sunlight.\n\nPenumbral eclipses occur when all or part of the moon enters the Earth's penumbra, meaning that the Earth is partially obscuring light from the sun to all or part of the moon. Penumbral lunar eclipses are usually difficult to observe." />
+        </LinearLayout>
+
+        <View style="@style/listMenuDivider" />
+
+        <TextView
+            style="@style/listMenuDisclosureButton"
+            android:id="@+id/infGlossaryNtcTwiDisclosure"
+            android:text="Nautical twilight" />
+
+        <LinearLayout
+            style="@style/listMenuDisclosureContent"
+            android:id="@+id/infGlossaryNtcTwiBody">
+
+            <TextView
+                style="@style/bodyText"
+                android:text="The times between nautical dawn and civil dawn, and between civil dusk and nautical dusk, when the sun is between 6\u00b0 and 12\u00b0 below the horizon.\n\nDuring nautical twilight the horizon is still sufficiently illuminated for sailors to use it for reference when navigating by the stars." />
+        </LinearLayout>
+
+        <View style="@style/listMenuDivider" />
+
+        <TextView
+            style="@style/listMenuDisclosureButton"
+            android:id="@+id/infGlossarySolEclipseDisclosure"
+            android:text="Solar eclipse" />
+
+        <LinearLayout
+            style="@style/listMenuDisclosureContent"
+            android:id="@+id/infGlossarySolEclipseBody">
+
+            <TextView
+                style="@style/bodyText"
+                android:text="Solar eclipses occur when the moon passes between the sun and Earth, casting a shadow across the Earth's surface.\n\nTotal eclipses occur when the moon completely obscures the sun's disc, making the sun's corona visible.\n\nAnnular eclipses occur when the moon passes directly in front of the sun, but its apparent size is smaller, leaving a bright ring of the sun's disc visible.\n\nHybrid eclipses shift between total and annular eclipses as they pass across the Earth.\n\nPartial eclipses occur when the center of the moon's shadow (the umbra) misses the Earth, so only a segment of the sun is obscured when observed from Earth." />
+        </LinearLayout>
+
+        <View style="@style/listMenuDivider" />
+
+        <TextView
+            style="@style/listMenuDisclosureButton"
+            android:id="@+id/infGlossarySolNoonDisclosure"
+            android:text="Solar noon" />
+
+        <LinearLayout
+            style="@style/listMenuDisclosureContent"
+            android:id="@+id/infGlossarySolNoonBody">
+
+            <TextView
+                style="@style/bodyText"
+                android:text="The moment when the sun reaches its highest position in the sky for the day." />
+        </LinearLayout>
+
+        <View style="@style/listMenuDivider" />
+
+        <TextView
+            style="@style/listMenuDisclosureButton"
+            android:id="@+id/infGlossarySolsticeDisclosure"
+            android:text="Solstice" />
+
+        <LinearLayout
+            style="@style/listMenuDisclosureContent"
+            android:id="@+id/infGlossarySolsticeBody">
+
+            <TextView
+                style="@style/bodyText"
+                android:text="Solstices occur twice each year when the sun reaches its northernmost and southernmost extremes in the sky. The Northern Solstice occurs in June and marks the longest day of the year for those North of the Tropic of Cancer, and the shortest for those South of the Tropic of Capricorn. The Southern Solstice occurs in December, when the reverse is true." />
+        </LinearLayout>
+
+        <View style="@style/listMenuDivider" />
+    </LinearLayout>
 </ScrollView>

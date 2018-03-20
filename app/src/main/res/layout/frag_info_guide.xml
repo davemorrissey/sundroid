@@ -1,96 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    >
-		
-	<LinearLayout
-		style="@style/listMenuBox"
-		android:orientation="vertical"
-		>
-		<TextView
-			style="@style/listMenuDisclosureButton"
-			android:id="@+id/infGuideDisclaimerDisclosure"
-			android:text="Important disclaimers"/>
-		<LinearLayout
-			style="@style/listMenuDisclosureContent"
-			android:id="@+id/infGuideDisclaimerBody"
-			>
-			<TextView
-				style="@style/bodyText"
-                android:text="THIS DATA IS PROVIDED WITH NO GUARANTEE OF ACCURACY AND NO WARRANTY OF FITNESS FOR ANY PURPOSE.\n\nTimes are usually accurate to within a few minutes, but they do not take into account local geography or your altitude, so the observed times in hilly regions may be different. Errors in the far North and South can be much greater."
-				/>
-		</LinearLayout>
-		<View style="@style/listMenuDivider"/>
-		<TextView
-			style="@style/listMenuDisclosureButton"
-			android:id="@+id/infGuideTimeDisclosure"
-			android:text="Time display"/>
-		<LinearLayout
-			style="@style/listMenuDisclosureContent"
-			android:id="@+id/infGuideTimeBody"
-			>
-			<TextView
-				style="@style/bodyText"
-				android:text="Times are normally displayed in hours and minutes using the 24 hour clock preference setting on your phone. In settings, you can override the 24 hour preference, and enable the display of seconds.\n\nBecause of the extra space required, seconds can't be displayed on all screens, and because the error in calculations is often a minute or two, the seconds value should only be used to see small variations from day to day. Moonrise and moonset times are always to the nearest minute."
-				/>
-		</LinearLayout>
-		<View style="@style/listMenuDivider"/>
-		<TextView
-			style="@style/listMenuDisclosureButton"
-			android:id="@+id/infGuideZonesDisclosure"
-			android:text="Time zones"/>
-		<LinearLayout
-			style="@style/listMenuDisclosureContent"
-			android:id="@+id/infGuideZonesBody"
-			>
-			<TextView
-				style="@style/bodyText"
-				android:text="Wherever possible, the time zone for your selected location is determined by asking Google for location information. When this isn't possible, your device time zone will be used when you asked for data for your location, and for the other methods of location selection you'll need to select a time zone.\n\nIf you always want data for the same country, you can set a default time zone for use when the automatic method fails. You can also set this default zone to override automatic selection. Go to Menu &gt; Settings for these options."
-				/>
-		</LinearLayout>
-		<View style="@style/listMenuDivider"/>
-		<TextView
-			style="@style/listMenuDisclosureButton"
-			android:id="@+id/infGuideOfflineDisclosure"
-			android:text="Offline usage"/>
-		<LinearLayout
-			style="@style/listMenuDisclosureContent"
-			android:id="@+id/infGuideOfflineBody"
-			>
-			<TextView
-				style="@style/bodyText"
-				android:text="This app can work while offline. You will not be able to use the search or map options to find a location, and automatic time zone detection and location name lookup will be unavailable.\n\nThe app can't tell it's offline because this requires more permissions, so to stop it from trying to look up location details, uncheck the 'lookup locations' option in Menu &gt; Settings."
-				/>
-		</LinearLayout>
-		<View style="@style/listMenuDivider"/>
-		<TextView
-			style="@style/listMenuDisclosureButton"
-			android:id="@+id/infGuideLocationDisclosure"
-			android:text="Location lookup"/>
-		<LinearLayout
-			style="@style/listMenuDisclosureContent"
-			android:id="@+id/infGuideLocationBody"
-			>
-			<TextView
-				style="@style/bodyText"
-				android:text="This app will try to get both GPS and network location, depending on what's enabled on your phone, and will use whichever is returned first. Network location is accurate enough, so don't worry if the location is a few miles out.\n\nAndroid phones sometimes remember your last known location, and using this is much faster than waiting for a result from the network or GPS. However, if you're moving around a lot it can be very inaccurate, so this option is disabled by default. To enable it, go to Menu &gt; Settings and check 'Last known location'."
-				/>
-		</LinearLayout>
-		<View style="@style/listMenuDivider" android:id="@+id/infGuideTrackerDivider"/>
-		<TextView
-			style="@style/listMenuDisclosureButton"
-			android:id="@+id/infGuideTrackerDisclosure"
-			android:text="Sun tracker"/>
-		<LinearLayout
-			style="@style/listMenuDisclosureContent"
-			android:id="@+id/infGuideTrackerBody"
-			>
-			<TextView
-				style="@style/bodyText"
-				android:text="The sun tracker shows the path of the sun during the day. The path is shown as a line on a compass disc where the edge represents the horizon and the center is vertically up. Each circle equals 15\u00b0 of elevation.\n\nThe path line is yellow when the sun is risen and blue when it is set, and a line from the center shows the position at the selected time. Dotted lines from the center show the azimuths of sunrise and sunset.\n\nYou can set the date and time by tapping the buttons to use selectors, or swiping left/right/up/down from the buttons. The time slider lets you quickly move through the current day.\n\nIf you're using this feature for garden planning or photography, you may wish to select a precise location using GPS or the map option, because wireless networks location and search are not accurate enough.\n\nTo set your preferences for this view, tap the settings icon in the header. The options are:\n\nMap view: Shows the compass disc overlaid on a map with your selected location in the middle.\n\nMap type: Choose the type of map to display.\n\nCompass rotation: Available only in standard view, this rotates the compass disc to align with North. Please calibrate your phone's compass using a dedicated compass app before using this feature, and remember that the compass can be completely unreliable, especially in metal buildings.\n\nHour markers: Shows a small marker at each hour. These are not labelled to avoid clutter; please use the time slider to help find times.\n\nLinear elevation: Switches from the default top-down hemisphere sky view to a circular graph, so the spacing of 15\u00b0 elevation lines is equal. This makes elevation changes much clearer while the sun is low in the sky.\n\nShow text: Shows sunrise and sunset for the day, and azimuth and elevation for the selected time.\n\nNote: The app defaults to using true north, suitable for plotting on maps. Go to Menu > Settings > Magnetic bearings if you prefer to use bearings relative to magnetic north, so you can use a compass."
-				/>
-		</LinearLayout>
-		<View style="@style/listMenuDivider"/>
-	</LinearLayout>
+    android:layout_height="fill_parent">
+
+    <LinearLayout
+        style="@style/listMenuBox"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/listMenuDisclosureButton"
+            android:id="@+id/infGuideDisclaimerDisclosure"
+            android:text="Important disclaimers" />
+
+        <LinearLayout
+            style="@style/listMenuDisclosureContent"
+            android:id="@+id/infGuideDisclaimerBody">
+
+            <TextView
+                style="@style/bodyText"
+                android:text="THIS DATA IS PROVIDED WITH NO GUARANTEE OF ACCURACY AND NO WARRANTY OF FITNESS FOR ANY PURPOSE.\n\nTimes are usually accurate to within a few minutes, but they do not take into account local geography or your altitude, so the observed times in hilly regions may be different. Errors in the far North and South can be much greater." />
+        </LinearLayout>
+
+        <View style="@style/listMenuDivider" />
+
+        <TextView
+            style="@style/listMenuDisclosureButton"
+            android:id="@+id/infGuideTimeDisclosure"
+            android:text="Time display" />
+
+        <LinearLayout
+            style="@style/listMenuDisclosureContent"
+            android:id="@+id/infGuideTimeBody">
+
+            <TextView
+                style="@style/bodyText"
+                android:text="Times are normally displayed in hours and minutes using the 24 hour clock preference setting on your phone. In settings, you can override the 24 hour preference, and enable the display of seconds.\n\nBecause of the extra space required, seconds can't be displayed on all screens, and because the error in calculations is often a minute or two, the seconds value should only be used to see small variations from day to day. Moonrise and moonset times are always to the nearest minute." />
+        </LinearLayout>
+
+        <View style="@style/listMenuDivider" />
+
+        <TextView
+            style="@style/listMenuDisclosureButton"
+            android:id="@+id/infGuideZonesDisclosure"
+            android:text="Time zones" />
+
+        <LinearLayout
+            style="@style/listMenuDisclosureContent"
+            android:id="@+id/infGuideZonesBody">
+
+            <TextView
+                style="@style/bodyText"
+                android:text="Wherever possible, the time zone for your selected location is determined by asking Google for location information. When this isn't possible, your device time zone will be used when you asked for data for your location, and for the other methods of location selection you'll need to select a time zone.\n\nIf you always want data for the same country, you can set a default time zone for use when the automatic method fails. You can also set this default zone to override automatic selection. Go to Menu &gt; Settings for these options." />
+        </LinearLayout>
+
+        <View style="@style/listMenuDivider" />
+
+        <TextView
+            style="@style/listMenuDisclosureButton"
+            android:id="@+id/infGuideOfflineDisclosure"
+            android:text="Offline usage" />
+
+        <LinearLayout
+            style="@style/listMenuDisclosureContent"
+            android:id="@+id/infGuideOfflineBody">
+
+            <TextView
+                style="@style/bodyText"
+                android:text="This app can work while offline. You will not be able to use the search or map options to find a location, and automatic time zone detection and location name lookup will be unavailable.\n\nThe app can't tell it's offline because this requires more permissions, so to stop it from trying to look up location details, uncheck the 'lookup locations' option in Menu &gt; Settings." />
+        </LinearLayout>
+
+        <View style="@style/listMenuDivider" />
+
+        <TextView
+            style="@style/listMenuDisclosureButton"
+            android:id="@+id/infGuideLocationDisclosure"
+            android:text="Location lookup" />
+
+        <LinearLayout
+            style="@style/listMenuDisclosureContent"
+            android:id="@+id/infGuideLocationBody">
+
+            <TextView
+                style="@style/bodyText"
+                android:text="This app will try to get both GPS and network location, depending on what's enabled on your phone, and will use whichever is returned first. Network location is accurate enough, so don't worry if the location is a few miles out.\n\nAndroid phones sometimes remember your last known location, and using this is much faster than waiting for a result from the network or GPS. However, if you're moving around a lot it can be very inaccurate, so this option is disabled by default. To enable it, go to Menu &gt; Settings and check 'Last known location'." />
+        </LinearLayout>
+
+        <View
+            style="@style/listMenuDivider"
+            android:id="@+id/infGuideTrackerDivider" />
+
+        <TextView
+            style="@style/listMenuDisclosureButton"
+            android:id="@+id/infGuideTrackerDisclosure"
+            android:text="Sun tracker" />
+
+        <LinearLayout
+            style="@style/listMenuDisclosureContent"
+            android:id="@+id/infGuideTrackerBody">
+
+            <TextView
+                style="@style/bodyText"
+                android:text="The sun tracker shows the path of the sun during the day. The path is shown as a line on a compass disc where the edge represents the horizon and the center is vertically up. Each circle equals 15\u00b0 of elevation.\n\nThe path line is yellow when the sun is risen and blue when it is set, and a line from the center shows the position at the selected time. Dotted lines from the center show the azimuths of sunrise and sunset.\n\nYou can set the date and time by tapping the buttons to use selectors, or swiping left/right/up/down from the buttons. The time slider lets you quickly move through the current day.\n\nIf you're using this feature for garden planning or photography, you may wish to select a precise location using GPS or the map option, because wireless networks location and search are not accurate enough.\n\nTo set your preferences for this view, tap the settings icon in the header. The options are:\n\nMap view: Shows the compass disc overlaid on a map with your selected location in the middle.\n\nMap type: Choose the type of map to display.\n\nCompass rotation: Available only in standard view, this rotates the compass disc to align with North. Please calibrate your phone's compass using a dedicated compass app before using this feature, and remember that the compass can be completely unreliable, especially in metal buildings.\n\nHour markers: Shows a small marker at each hour. These are not labelled to avoid clutter; please use the time slider to help find times.\n\nLinear elevation: Switches from the default top-down hemisphere sky view to a circular graph, so the spacing of 15\u00b0 elevation lines is equal. This makes elevation changes much clearer while the sun is low in the sky.\n\nShow text: Shows sunrise and sunset for the day, and azimuth and elevation for the selected time.\n\nNote: The app defaults to using true north, suitable for plotting on maps. Go to Menu > Settings > Magnetic bearings if you prefer to use bearings relative to magnetic north, so you can use a compass." />
+        </LinearLayout>
+
+        <View style="@style/listMenuDivider" />
+    </LinearLayout>
 </ScrollView>
