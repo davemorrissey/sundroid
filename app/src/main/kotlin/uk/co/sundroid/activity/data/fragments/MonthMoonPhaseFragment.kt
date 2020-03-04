@@ -38,7 +38,7 @@ class MonthMoonPhaseFragment : AbstractMonthFragment<Any>() {
 
                         // Set column headers according to weekday preference.
                         for (day in 1..7) {
-                            val dayId = view("moonCalD" + day)
+                            val dayId = view("moonCalD$day")
                             var altDay = day + Prefs.firstWeekday(applicationContext!!) - 1
                             if (altDay > 7) {
                                 altDay -= 7
@@ -56,9 +56,9 @@ class MonthMoonPhaseFragment : AbstractMonthFragment<Any>() {
 
                         // Wipe all days.
                         for (row in 1..6) {
-                            val datesRowId = view("moonCalDates" + row)
+                            val datesRowId = view("moonCalDates$row")
                             (view.findViewById<View>(datesRowId) as TableRow).removeAllViews()
-                            val imagesRowId = view("moonCalImages" + row)
+                            val imagesRowId = view("moonCalImages$row")
                             (view.findViewById<View>(imagesRowId) as TableRow).removeAllViews()
                         }
 
@@ -101,8 +101,8 @@ class MonthMoonPhaseFragment : AbstractMonthFragment<Any>() {
                                         todayCalendar.get(Calendar.MONTH) == loopCalendar.get(Calendar.MONTH) &&
                                         todayCalendar.get(Calendar.DAY_OF_MONTH) == loopCalendar.get(Calendar.DAY_OF_MONTH)
 
-                                val datesRow = view.findViewById<TableRow>(view("moonCalDates" + row))
-                                val imagesRow = view.findViewById<TableRow>(view("moonCalImages" + row))
+                                val datesRow = view.findViewById<TableRow>(view("moonCalDates$row"))
+                                val imagesRow = view.findViewById<TableRow>(view("moonCalImages$row"))
 
                                 val dateCell = inflate(R.layout.frag_data_monthmoonphase_date, datesRow)
                                 (dateCell.findViewById(R.id.moonCalTitleText) as TextView).text = loopCalendar.get(Calendar.DAY_OF_MONTH).toString()
@@ -134,7 +134,7 @@ class MonthMoonPhaseFragment : AbstractMonthFragment<Any>() {
                                 }
                                 val moonImg = phaseBd.toString().replace("\\.".toRegex(), "")
 
-                                (imageCell.findViewById(R.id.moonCalImageOverlay) as ImageView).setImageResource(resources.getIdentifier(packageName + ":drawable/moonoverlay" + moonImg, null, null))
+                                (imageCell.findViewById(R.id.moonCalImageOverlay) as ImageView).setImageResource(resources.getIdentifier("$packageName:drawable/moonoverlay$moonImg", null, null))
 
                                 imagesRow.addView(imageCell)
 
@@ -161,11 +161,11 @@ class MonthMoonPhaseFragment : AbstractMonthFragment<Any>() {
                             lastCol -= 7
                         }
                         for (i in lastCol + 1..7) {
-                            val datesRow = view.findViewById<TableRow>(view("moonCalDates" + row))
+                            val datesRow = view.findViewById<TableRow>(view("moonCalDates$row"))
                             val dateCell = inflate(R.layout.frag_data_monthmoonphase_date, datesRow)
                             dateCell.visibility = View.INVISIBLE
                             datesRow.addView(dateCell)
-                            val imagesRow = view.findViewById<TableRow>(view("moonCalImages" + row))
+                            val imagesRow = view.findViewById<TableRow>(view("moonCalImages$row"))
                             val imageCell = inflate(R.layout.frag_data_monthmoonphase_image, imagesRow)
                             imageCell.visibility = View.INVISIBLE
                             imagesRow.addView(imageCell)

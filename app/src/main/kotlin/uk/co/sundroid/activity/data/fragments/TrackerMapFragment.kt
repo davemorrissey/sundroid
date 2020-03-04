@@ -6,12 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.MapFragment
+import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import uk.co.sundroid.domain.LocationDetails
 import uk.co.sundroid.util.prefs.Prefs
 
-class TrackerMapFragment : MapFragment {
+class TrackerMapFragment : SupportMapFragment() {
 
     private var location: LocationDetails? = null
     private var mapCenterListener: MapCenterListener? = null
@@ -24,13 +24,17 @@ class TrackerMapFragment : MapFragment {
     }
 
 
-    constructor()
+//    constructor()
 
-    constructor(location: LocationDetails, mapCenterListener: MapCenterListener) {
-        retainInstance = true
-        this.location = location
-        this.mapCenterListener = mapCenterListener
-    }
+//    constructor(location: LocationDetails, mapCenterListener: MapCenterListener) {
+//        retainInstance = true
+//        this.location = location
+//        this.mapCenterListener = mapCenterListener
+//    }
+//
+//    override fun setArguments(p0: Bundle?) {
+//        super.setArguments(p0)
+//    }
 
     override fun onCreateView(layoutInflater: LayoutInflater, viewGroup: ViewGroup?, bundle: Bundle?): View? {
         val view = super.onCreateView(layoutInflater, viewGroup, bundle)
@@ -50,7 +54,7 @@ class TrackerMapFragment : MapFragment {
                 uiSettings.isRotateGesturesEnabled = false
                 uiSettings.isTiltGesturesEnabled = false
 
-                val mapType = Prefs.sunTrackerMapType(activity.applicationContext)
+                val mapType = Prefs.sunTrackerMapType(requireContext())
                 map.mapType = mapType.googleId
 
                 if (location != null) {

@@ -146,16 +146,16 @@ object Prefs {
     
     fun clockType24(context: Context): Boolean {
         val default24 = DateFormat.is24HourFormat(context)
-        val clockType = ClockType.valueOf(prefs(context).getString(CLOCK_KEY, ClockType.DEFAULT.name))
+        val clockType = ClockType.valueOf(prefs(context).getString(CLOCK_KEY, null) ?: ClockType.DEFAULT.name)
         return clockType == ClockType.TWENTYFOUR || (clockType == ClockType.DEFAULT && default24)
     }
 
     fun theme(context: Context): String {
-        return prefs(context).getString(THEME_KEY, THEME_DARK)
+        return prefs(context).getString(THEME_KEY, null) ?: THEME_DARK
     }
 
     fun locationTimeout(context: Context): Int {
-        val timeout = prefs(context).getString(LOCATION_TIMEOUT_KEY, "60")
+        val timeout = prefs(context).getString(LOCATION_TIMEOUT_KEY, null) ?: "60"
 		return try {
 			Integer.parseInt(timeout)
         } catch (e: Exception) {
@@ -164,8 +164,7 @@ object Prefs {
     }
     
     fun defaultZone(context: Context): TimeZoneDetail? {
-        val pref = prefs(context).getString(DEFAULT_ZONE_KEY, "~ASK")
-        return when (pref) {
+        return when (val pref = prefs(context).getString(DEFAULT_ZONE_KEY, "~ASK")) {
             "~ASK" -> null
             "~DEVICE" ->  TimeZoneResolver.getTimeZone(null)
             else -> TimeZoneResolver.getTimeZone(pref)
@@ -181,7 +180,7 @@ object Prefs {
     }
     
     fun firstWeekday(context: Context): Int {
-        return Integer.parseInt(prefs(context).getString(FIRST_WEEKDAY_KEY, "1"))
+        return Integer.parseInt(prefs(context).getString(FIRST_WEEKDAY_KEY, null) ?: "1")
     }
     
     fun magneticBearings(context: Context): Boolean {
@@ -197,13 +196,13 @@ object Prefs {
     }
     
     fun lastDataGroup(context: Context): DataGroup {
-        val name = prefs(context).getString(LAST_DATA_GROUP_KEY, DataGroup.DAY_SUMMARY.name)
+        val name = prefs(context).getString(LAST_DATA_GROUP_KEY, null) ?: DataGroup.DAY_DETAIL.name
         try {
             return DataGroup.valueOf(name)
         } catch (e: Exception) {
             // Return default
         }
-        return DataGroup.DAY_SUMMARY
+        return DataGroup.DAY_DETAIL
     }
     
     fun setLastDataGroup(context: Context, dataGroup: DataGroup) {
@@ -211,7 +210,7 @@ object Prefs {
     }
 
     fun lastDetailTab(context: Context): String {
-        return prefs(context).getString(LAST_DETAIL_TAB_KEY, "sun")
+        return prefs(context).getString(LAST_DETAIL_TAB_KEY, null) ?: "sun"
     }
 
     fun setLastDayDetailTab(context: Context, tab: String) {
@@ -227,7 +226,7 @@ object Prefs {
     }
 
     fun locMapType(context: Context): MapType {
-        return MapType.valueOf(prefs(context).getString(LOCMAP_TYPE_KEY, MapType.NORMAL.name))
+        return MapType.valueOf(prefs(context).getString(LOCMAP_TYPE_KEY, null) ?: MapType.NORMAL.name)
     }
     
     fun setLocMapType(context: Context, type: MapType) {
@@ -235,7 +234,7 @@ object Prefs {
     }
     
     fun sunTrackerBody(context: Context): Body? {
-        val value = prefs(context).getString(SUNTRACKER_BODY_KEY, "SUN")
+        val value = prefs(context).getString(SUNTRACKER_BODY_KEY, null) ?: "SUN"
 		return if (value == "all") {
 			null
         } else {
@@ -244,7 +243,7 @@ object Prefs {
     }
     
     fun sunTrackerMode(context: Context): String {
-        return prefs(context).getString(SUNTRACKER_MODE_KEY, "radar")
+        return prefs(context).getString(SUNTRACKER_MODE_KEY, null) ?: "radar"
     }
     
     fun setSunTrackerBody(context: Context, body: Body?) {
@@ -256,7 +255,7 @@ object Prefs {
     }
 
     fun sunTrackerMapType(context: Context): MapType {
-        return MapType.valueOf(prefs(context).getString(SUNTRACKER_MAPTYPE_KEY, MapType.NORMAL.name))
+        return MapType.valueOf(prefs(context).getString(SUNTRACKER_MAPTYPE_KEY, null) ?: MapType.NORMAL.name)
     }
     
     fun setSunTrackerMapType(context: Context, mode: MapType) {

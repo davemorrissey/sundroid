@@ -1,11 +1,11 @@
 package uk.co.sundroid.activity.data.fragments
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Handler
 import android.text.Html
 import android.view.View
 import android.view.ViewGroup
+import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.tabs.TabLayout
 import uk.co.sundroid.R
 import uk.co.sundroid.activity.MainActivity
 import uk.co.sundroid.activity.data.fragments.dialogs.settings.YearEventsPickerFragment
@@ -21,9 +21,8 @@ import uk.co.sundroid.util.time.*
 import uk.co.sundroid.util.astro.YearData
 import uk.co.sundroid.util.astro.YearData.Event
 import uk.co.sundroid.util.astro.YearData.EventType
-
-import java.util.ArrayList
-import java.util.Calendar
+import java.util.*
+import kotlin.math.abs
 
 class YearEventsFragment : AbstractYearFragment(), ConfigurableFragment {
 
@@ -33,9 +32,9 @@ class YearEventsFragment : AbstractYearFragment(), ConfigurableFragment {
         get() = R.layout.frag_data_yearevents
 
     override fun openSettingsDialog() {
-        val settingsDialog = YearEventsPickerFragment.newInstance(activity)
+        val settingsDialog = YearEventsPickerFragment.newInstance(requireContext())
         settingsDialog.setTargetFragment(this, 0)
-        settingsDialog.show(fragmentManager, "yearEventsSettings")
+        settingsDialog.show(requireFragmentManager(), "yearEventsSettings")
     }
 
     override fun onResume() {
@@ -66,82 +65,82 @@ class YearEventsFragment : AbstractYearFragment(), ConfigurableFragment {
 
                         var first = true
                         for (event in eventsList) {
-                            val eventTime = formatTime(activity, event.time, false)
+                            val eventTime = formatTime(requireContext(), event.time, false)
                             var title = ""
-                            var time = eventTime.time + eventTime.marker.toLowerCase()
+                            var time = eventTime.time + eventTime.marker.toLowerCase(Locale.getDefault())
                             var subtitle = ""
                             var link: String? = null
                             var image = 0
                             when (event.type) {
-                                YearData.EventType.EARTH_APHELION, YearData.EventType.EARTH_PERIHELION -> {
-                                    if (Prefs.showElement(activity, "yearEarthApsis", true)) {
+                                EventType.EARTH_APHELION, EventType.EARTH_PERIHELION -> {
+                                    if (Prefs.showElement(requireContext(), "yearEarthApsis", true)) {
                                         title = event.type.displayName
                                         link = event.link
                                     }
                                 }
-                                YearData.EventType.PARTIAL_LUNAR, YearData.EventType.TOTAL_LUNAR, YearData.EventType.PENUMBRAL_LUNAR -> {
-                                    if (Prefs.showElement(activity, "yearLunarEclipse", true)) {
+                                EventType.PARTIAL_LUNAR, EventType.TOTAL_LUNAR, EventType.PENUMBRAL_LUNAR -> {
+                                    if (Prefs.showElement(requireContext(), "yearLunarEclipse", true)) {
                                         title = event.type.displayName
-                                        time = "Greatest eclipse: " + time
+                                        time = "Greatest eclipse: $time"
                                         link = event.link
                                     }
                                 }
-                                YearData.EventType.PARTIAL_SOLAR, YearData.EventType.TOTAL_SOLAR, YearData.EventType.ANNULAR_SOLAR, YearData.EventType.HYBRID_SOLAR -> {
-                                    if (!Prefs.showElement(activity, "yearSolarEclipse", true)) {
+                                EventType.PARTIAL_SOLAR, EventType.TOTAL_SOLAR, EventType.ANNULAR_SOLAR, EventType.HYBRID_SOLAR -> {
+                                    if (!Prefs.showElement(requireContext(), "yearSolarEclipse", true)) {
                                         title = event.type.displayName
-                                        time = "Greatest eclipse: " + time
+                                        time = "Greatest eclipse: $time"
                                         subtitle = event.extra as String
                                         link = event.link
                                     }
                                 }
-                                YearData.EventType.MARCH_EQUINOX, YearData.EventType.SEPTEMBER_EQUINOX -> {
-                                    if (Prefs.showElement(activity, "yearEquinox", true)) {
+                                EventType.MARCH_EQUINOX, EventType.SEPTEMBER_EQUINOX -> {
+                                    if (Prefs.showElement(requireContext(), "yearEquinox", true)) {
                                         title = event.type.displayName
                                     }
                                 }
-                                YearData.EventType.NORTHERN_SOLSTICE -> {
-                                    if (Prefs.showElement(activity, "yearSolstice", true)) {
+                                EventType.NORTHERN_SOLSTICE -> {
+                                    if (Prefs.showElement(requireContext(), "yearSolstice", true)) {
                                         title = event.type.displayName
-                                        if (Math.abs(location.location.latitude.doubleValue) > 23.44) {
+                                        if (abs(location.location.latitude.doubleValue) > 23.44) {
                                             val sunDay = SunCalculator.calcDay(location.location, event.time, SunCalculator.Event.RISESET)
                                             val localExtreme = if (location.location.latitude.doubleValue >= 0) "Longest" else "Shortest"
-                                            subtitle = localExtreme + " day: " + formatDurationHMS(activity, sunDay.uptimeHours, true)
+                                            subtitle = localExtreme + " day: " + formatDurationHMS(requireContext(), sunDay.uptimeHours, true)
                                         }
                                     }
                                 }
-                                YearData.EventType.SOUTHERN_SOLSTICE -> {
-                                    if (Prefs.showElement(activity, "yearSolstice", true)) {
+                                EventType.SOUTHERN_SOLSTICE -> {
+                                    if (Prefs.showElement(requireContext(), "yearSolstice", true)) {
                                         title = event.type.displayName
-                                        if (Math.abs(location.location.latitude.doubleValue) > 23.44) {
+                                        if (abs(location.location.latitude.doubleValue) > 23.44) {
                                             val sunDay = SunCalculator.calcDay(location.location, event.time, SunCalculator.Event.RISESET)
                                             val localExtreme = if (location.location.latitude.doubleValue >= 0) "Shortest" else "Longest"
-                                            subtitle = localExtreme + " day: " + formatDurationHMS(activity, sunDay.uptimeHours, true)
+                                            subtitle = localExtreme + " day: " + formatDurationHMS(requireContext(), sunDay.uptimeHours, true)
                                         }
                                     }
                                 }
-                                YearData.EventType.PHASE -> {
+                                EventType.PHASE -> {
                                     val moonPhase = event.extra as MoonPhaseEvent?
                                     when (moonPhase?.phase) {
                                         MoonPhase.FULL -> {
-                                            if (Prefs.showElement(activity, "yearFullMoon", true)) {
+                                            if (Prefs.showElement(requireContext(), "yearFullMoon", true)) {
                                                 title = "Full Moon"
                                                 image = getPhaseFull()
                                             }
                                         }
                                         MoonPhase.NEW -> {
-                                            if (Prefs.showElement(activity, "yearNewMoon", true)) {
+                                            if (Prefs.showElement(requireContext(), "yearNewMoon", true)) {
                                                 title = "New Moon"
                                                 image = getPhaseNew()
                                             }
                                         }
                                         MoonPhase.FIRST_QUARTER -> {
-                                            if (Prefs.showElement(activity, "yearQuarterMoon", true)) {
+                                            if (Prefs.showElement(requireContext(), "yearQuarterMoon", true)) {
                                                 title = "First Quarter"
                                                 image = if (location.location.latitude.doubleValue >= 0) getPhaseRight() else getPhaseLeft()
                                             }
                                         }
                                         MoonPhase.LAST_QUARTER -> {
-                                            if (Prefs.showElement(activity, "yearQuarterMoon", true)) {
+                                            if (Prefs.showElement(requireContext(), "yearQuarterMoon", true)) {
                                                 title = "Last Quarter"
                                                 image = if (location.location.latitude.doubleValue >= 0) getPhaseLeft() else getPhaseRight()
                                             }
@@ -153,7 +152,7 @@ class YearEventsFragment : AbstractYearFragment(), ConfigurableFragment {
 
                             if (title.isNotEmpty()) {
                                 if (!first) {
-                                    activity.layoutInflater.inflate(R.layout.divider, eventsBox)
+                                    requireActivity().layoutInflater.inflate(R.layout.divider, eventsBox)
                                 }
                                 val eventRow = inflate(R.layout.frag_data_yearevents_event)
 
@@ -170,8 +169,8 @@ class YearEventsFragment : AbstractYearFragment(), ConfigurableFragment {
                                     image(eventRow, R.id.yearEventImg, image)
                                     show(eventRow, R.id.yearEventImg)
                                 }
-                                text(eventRow, R.id.yearEventDate, Integer.toString(event.time.get(Calendar.DAY_OF_MONTH)))
-                                text(eventRow, R.id.yearEventMonth, getShortMonth(event.time).toUpperCase())
+                                text(eventRow, R.id.yearEventDate, event.time.get(Calendar.DAY_OF_MONTH).toString())
+                                text(eventRow, R.id.yearEventMonth, getShortMonth(event.time).toUpperCase(Locale.getDefault()))
                                 text(eventRow, R.id.yearEventTitle, Html.fromHtml(title))
                                 text(eventRow, R.id.yearEventTime, Html.fromHtml(time))
                                 if (isNotEmpty(subtitle)) {

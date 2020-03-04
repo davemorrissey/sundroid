@@ -21,7 +21,7 @@ abstract class AbstractMonthFragment<T> : AbstractDataFragment() {
 
     protected abstract val layout: Int
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup, state: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, state: Bundle?): View? {
         return inflater.inflate(layout, container, false)
     }
 
@@ -58,9 +58,15 @@ abstract class AbstractMonthFragment<T> : AbstractDataFragment() {
 
         monthPrev.setOnClickListener { calendarDiff(MONTH, -1) }
         monthNext.setOnClickListener { calendarDiff(MONTH, 1) }
-        zoneButton.setOnClickListener { startTimeZone() }
-        monthButton.setOnClickListener { MonthPickerFragment.show(this) }
+        zoneButton?.setOnClickListener { startTimeZone() }
+        monthButton.setOnClickListener { showMonthPicker() }
         monthButton.setOnTouchListener { _, event -> monthDetector.onTouchEvent(event) }
+    }
+
+    private fun showMonthPicker() {
+        val monthPickerFragment = MonthPickerFragment.newInstance(getDateCalendar())
+        monthPickerFragment.setTargetFragment(this, 0)
+        monthPickerFragment.show(requireFragmentManager(), "monthPicker")
     }
 
     private fun updateMonth() {

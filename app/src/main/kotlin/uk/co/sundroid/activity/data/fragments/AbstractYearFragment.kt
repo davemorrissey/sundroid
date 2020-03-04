@@ -20,6 +20,8 @@ import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
 
+import java.util.Calendar.*
+
 abstract class AbstractYearFragment : AbstractDataFragment(), OnClickListener, OnTouchListener, YearPickerFragment.OnYearSelectedListener {
 
     private val yearFormat = SimpleDateFormat("yyyy", Locale.US)
@@ -51,8 +53,8 @@ abstract class AbstractYearFragment : AbstractDataFragment(), OnClickListener, O
     }
 
     override fun onYearSet(year: Int) {
-        getDateCalendar().set(Calendar.YEAR, year)
-        getTimeCalendar().set(Calendar.YEAR, year)
+        getDateCalendar().set(YEAR, year)
+        getTimeCalendar().set(YEAR, year)
         update()
     }
 
@@ -161,14 +163,14 @@ abstract class AbstractYearFragment : AbstractDataFragment(), OnClickListener, O
         val year = yearFormat.format(Date(calendar.timeInMillis))
         show(view, R.id.year, year)
 
-        if (calendar.get(Calendar.YEAR) <= 2000) {
+        if (calendar.get(YEAR) <= 2000) {
             view.findViewById<View>(R.id.yearPrev).isEnabled = false
             image(view, R.id.yearPrev, drawable.navigation_previous_item_disabled)
         } else {
             view.findViewById<View>(R.id.yearPrev).isEnabled = true
             image(view, R.id.yearPrev, drawable.navigation_previous_item)
         }
-        if (calendar.get(Calendar.YEAR) >= 2020) {
+        if (calendar.get(YEAR) >= 2020) {
             view.findViewById<View>(R.id.yearNext).isEnabled = false
             image(view, R.id.yearNext, drawable.navigation_next_item_disabled)
         } else {
@@ -180,21 +182,21 @@ abstract class AbstractYearFragment : AbstractDataFragment(), OnClickListener, O
     private fun showYearPicker() {
         val yearPickerFragment = YearPickerFragment.newInstance(getDateCalendar())
         yearPickerFragment.setTargetFragment(this, 0)
-        yearPickerFragment.show(fragmentManager, "yearPicker")
+        yearPickerFragment.show(requireFragmentManager(), "yearPicker")
     }
 
     private fun nextYear() {
-        if (getDateCalendar().get(Calendar.YEAR) < 2020) {
-            getDateCalendar().add(Calendar.YEAR, 1)
-            getTimeCalendar().add(Calendar.YEAR, 1)
+        if (getDateCalendar().get(YEAR) < 2020) {
+            getDateCalendar().add(YEAR, 1)
+            getTimeCalendar().add(YEAR, 1)
             update()
         }
     }
 
     private fun prevYear() {
-        if (getDateCalendar().get(Calendar.YEAR) > 2000) {
-            getDateCalendar().add(Calendar.YEAR, -1)
-            getTimeCalendar().add(Calendar.YEAR, -1)
+        if (getDateCalendar().get(YEAR) > 2000) {
+            getDateCalendar().add(YEAR, -1)
+            getTimeCalendar().add(YEAR, -1)
             update()
         }
     }

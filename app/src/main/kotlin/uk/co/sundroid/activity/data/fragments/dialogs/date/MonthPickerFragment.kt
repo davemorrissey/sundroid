@@ -1,9 +1,11 @@
 package uk.co.sundroid.activity.data.fragments.dialogs.date
 
-import android.app.*
+import android.app.AlertDialog
+import android.app.Dialog
 import android.os.Bundle
 import android.view.View
 import android.widget.NumberPicker
+import androidx.fragment.app.DialogFragment
 import uk.co.sundroid.R
 import uk.co.sundroid.R.layout
 import uk.co.sundroid.activity.data.fragments.AbstractMonthFragment
@@ -13,16 +15,16 @@ import java.util.Calendar.*
 
 class MonthPickerFragment : DialogFragment() {
 
-    private var calendar: Calendar = Calendar.getInstance()
+    private var calendar: Calendar = getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         restore(arguments)
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        Companion.save(calendar, outState)
+        save(calendar, outState)
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -49,8 +51,8 @@ class MonthPickerFragment : DialogFragment() {
         return AlertDialog.Builder(activity).apply {
             setView(view)
             setTitle("Set month")
-            setPositiveButton("Set", { _, _ -> set(calendar) })
-            setNeutralButton("This month", { _, _ -> set(Calendar.getInstance()) })
+            setPositiveButton("Set") { _, _ -> set(calendar) }
+            setNeutralButton("This month") { _, _ -> set(getInstance()) }
             setNegativeButton("Cancel", null)
         }.create()
     }
@@ -74,11 +76,9 @@ class MonthPickerFragment : DialogFragment() {
     }
 
     companion object {
-        fun show(target: AbstractMonthFragment<*>) {
-            MonthPickerFragment().apply {
-                arguments = save(target.getDateCalendar())
-                setTargetFragment(target, 0)
-                show(target.activity.fragmentManager, "monthPicker")
+        fun newInstance(calendar: Calendar): MonthPickerFragment {
+            return MonthPickerFragment().apply {
+                arguments = save(calendar)
             }
         }
 

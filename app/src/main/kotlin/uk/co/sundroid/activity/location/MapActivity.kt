@@ -6,8 +6,8 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
-import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import android.view.View
 import android.widget.TextView
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -16,6 +16,7 @@ import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener
 import com.google.android.gms.maps.MapFragment
+import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
@@ -97,13 +98,13 @@ class MapActivity : AbstractLocationActivity(), OnMapClickListener, OnInfoWindow
         }
     }
 
-    override fun onSaveInstanceState(state: Bundle?) {
+    override fun onSaveInstanceState(state: Bundle) {
         map?.let {
-            state?.putDouble("mapCentreLat", it.cameraPosition.target.latitude)
-            state?.putDouble("mapCentreLon", it.cameraPosition.target.longitude)
-            state?.putFloat("mapZoom", it.cameraPosition.zoom)
-            state?.putSerializable("mapLocation", mapLocation)
-            state?.putSerializable("mapLocationDetails", mapLocationDetails)
+            state.putDouble("mapCentreLat", it.cameraPosition.target.latitude)
+            state.putDouble("mapCentreLon", it.cameraPosition.target.longitude)
+            state.putFloat("mapZoom", it.cameraPosition.zoom)
+            state.putSerializable("mapLocation", mapLocation)
+            state.putSerializable("mapLocationDetails", mapLocationDetails)
         }
         super.onSaveInstanceState(state)
     }
@@ -142,7 +143,7 @@ class MapActivity : AbstractLocationActivity(), OnMapClickListener, OnInfoWindow
 
     private fun setUpMapIfNeeded() {
         if (map == null) {
-            (fragmentManager.findFragmentById(R.id.map) as MapFragment).getMapAsync { googleMap ->
+            (supportFragmentManager.findFragmentById(id.map) as SupportMapFragment).getMapAsync { googleMap ->
                 map = googleMap
                 setUpMap(googleMap)
             }
@@ -267,13 +268,13 @@ class MapActivity : AbstractLocationActivity(), OnMapClickListener, OnInfoWindow
     override fun onNavItemSelected(itemPosition: Int) {
         AlertDialog.Builder(this).apply {
             setTitle("Map type")
-            setItems(MapType.displayNames().toTypedArray(), { _, index -> Prefs.setLocMapType(applicationContext, MapType.values()[index]) })
+            setItems(MapType.displayNames().toTypedArray()) { _, index -> Prefs.setLocMapType(applicationContext, MapType.values()[index]) }
             setNegativeButton("Cancel", null)
         }.show()
     }
 
     companion object {
-        private const val REQUEST_LOCATION = 87648
+        private const val REQUEST_LOCATION = 1234
     }
 
 }

@@ -2,8 +2,8 @@ package uk.co.sundroid.activity.data.fragments.dialogs.settings
 
 import android.app.AlertDialog
 import android.app.Dialog
-import android.app.DialogFragment
 import android.os.Bundle
+import androidx.fragment.app.DialogFragment
 import uk.co.sundroid.activity.data.fragments.AbstractDataFragment
 import uk.co.sundroid.activity.data.fragments.dialogs.OnViewPrefsChangedListener
 import uk.co.sundroid.util.prefs.Prefs
@@ -16,16 +16,16 @@ class DayEventsPickerFragment : DialogFragment() {
         PLANETS("evtByTimePlanets", "Planets"),
     }
 
-    private val currentEvents = BooleanArray(Setting.values().size, { true })
+    private val currentEvents = BooleanArray(Setting.values().size) { true }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         restore(arguments)
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        Companion.save(currentEvents, outState)
+        save(currentEvents, outState)
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -34,16 +34,16 @@ class DayEventsPickerFragment : DialogFragment() {
         val builder = AlertDialog.Builder(activity)
         builder.setMultiChoiceItems(
                 Setting.values().map { it.displayName }.toTypedArray(),
-                currentEvents,
-                { _, i, value -> currentEvents[i] = value })
+                currentEvents
+        ) { _, i, value -> currentEvents[i] = value }
         builder.setTitle("Select events")
-        builder.setPositiveButton("OK", { _, _ -> run {
-            Setting.values().forEachIndexed { i, setting -> Prefs.setShowElement(activity, setting.ref, currentEvents[i]) }
+        builder.setPositiveButton("OK") { _, _ -> run {
+            Setting.values().forEachIndexed { i, setting -> Prefs.setShowElement(requireContext(), setting.ref, currentEvents[i]) }
             val parent = targetFragment
             if (parent is OnViewPrefsChangedListener) {
                 (parent as OnViewPrefsChangedListener).onViewPrefsUpdated()
             }
-        }})
+        }}
         builder.setNegativeButton("Cancel", null)
         return builder.create()
     }
@@ -58,11 +58,11 @@ class DayEventsPickerFragment : DialogFragment() {
     companion object {
         fun show(target: AbstractDataFragment) {
             val currentEvents = BooleanArray(Setting.values().size)
-            Setting.values().forEachIndexed { i, setting -> currentEvents[i] = Prefs.showElement(target.activity, setting.ref, true) }
+            Setting.values().forEachIndexed { i, setting -> currentEvents[i] = Prefs.showElement(target.requireContext(), setting.ref, true) }
             DayEventsPickerFragment().apply {
                 arguments = save(currentEvents)
                 setTargetFragment(target, 0)
-                show(target.fragmentManager, "SETTINGS")
+                show(target.requireFragmentManager(), "SETTINGS")
             }
         }
 

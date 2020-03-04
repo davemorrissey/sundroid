@@ -40,7 +40,7 @@ class DayDetailPlanetsFragment : AbstractDayDetailFragment() {
                             var noUptime = false
 
                             if (day.riseSetType !== RiseSetType.SET && day.transitAppElevation > 0) {
-                                val noon = formatTime(activity, day.transit!!, false)
+                                val noon = formatTime(requireContext(), day.transit!!, false)
                                 show(row, planetTransit)
                                 show(row, planetTransitTime, "$noon  ${formatElevation(day.transitAppElevation)}")
                             } else {
@@ -65,8 +65,8 @@ class DayDetailPlanetsFragment : AbstractDayDetailFragment() {
                                     val azId = view("planetEvt${index}Az")
                                     val imgId = view("planetEvt${index}Img")
 
-                                    val time = formatTime(activity, event.time, false)
-                                    val az = formatBearing(activity, event.azimuth, location.location, event.time)
+                                    val time = formatTime(requireContext(), event.time, false)
+                                    val az = formatBearing(requireContext(), event.azimuth, location.location, event.time)
 
                                     text(row, timeId, "$time")
                                     text(row, azId, az)

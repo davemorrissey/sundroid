@@ -27,7 +27,7 @@ abstract class AbstractDataFragment : AbstractFragment(), OnViewPrefsChangedList
     }
 
     fun getLocation(): LocationDetails {
-        return Prefs.selectedLocation(activity)!!
+        return Prefs.selectedLocation(requireContext())!!
     }
 
     fun getDateCalendar(): Calendar {
@@ -52,20 +52,20 @@ abstract class AbstractDataFragment : AbstractFragment(), OnViewPrefsChangedList
         val location = getLocation()
         val timeZone = location.timeZone ?: TimeZoneResolver.getTimeZone(null)
         val calendar = getDateCalendar()
-        if (Prefs.showTimeZone(activity)) {
-            zoneButton.visibility = View.VISIBLE
+        if (Prefs.showTimeZone(requireContext())) {
+            zoneButton?.visibility = View.VISIBLE
             val zone = timeZone.zone
             val dst = zone.inDaylightTime(Date(calendar.timeInMillis + 12 * 60 * 60 * 1000))
             val name = zone.getDisplayName(dst, TimeZone.LONG)
-            zoneName.text = name
+            zoneName?.text = name
 
             var cities = timeZone.getOffset(calendar.timeInMillis + 12 * 60 * 60 * 1000) // Get day's main offset.
             timeZone.cities?.let {
                 cities += " $it"
             }
-            zoneCities.text = cities
+            zoneCities?.text = cities
         } else {
-            zoneButton.visibility = View.GONE
+            zoneButton?.visibility = View.GONE
         }
     }
 
@@ -85,7 +85,7 @@ abstract class AbstractDataFragment : AbstractFragment(), OnViewPrefsChangedList
     protected fun startTimeZone() {
         val intent = Intent(activity, TimeZonePickerActivity::class.java)
         intent.putExtra(TimeZonePickerActivity.INTENT_MODE, TimeZonePickerActivity.MODE_CHANGE)
-        activity.startActivityForResult(intent, TimeZonePickerActivity.REQUEST_TIMEZONE)
+        requireActivity().startActivityForResult(intent, TimeZonePickerActivity.REQUEST_TIMEZONE)
     }
 
     companion object {

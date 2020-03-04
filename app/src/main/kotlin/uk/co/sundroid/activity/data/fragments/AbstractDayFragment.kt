@@ -15,6 +15,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.Calendar.DAY_OF_MONTH
 import java.util.Calendar.MONTH
+import java.util.Calendar.YEAR
 
 abstract class AbstractDayFragment : AbstractDataFragment() {
 
@@ -59,7 +60,7 @@ abstract class AbstractDayFragment : AbstractDataFragment() {
 
         datePrev.setOnClickListener { calendarDiff(DAY_OF_MONTH, -1) }
         dateNext.setOnClickListener { calendarDiff(DAY_OF_MONTH, 1) }
-        zoneButton.setOnClickListener { startTimeZone() }
+        zoneButton?.setOnClickListener { startTimeZone() }
         dateButton.setOnClickListener { showDatePicker() }
         dateButton.setOnTouchListener { _, e -> dateDetector.onTouchEvent(e) }
     }
@@ -79,8 +80,8 @@ abstract class AbstractDayFragment : AbstractDataFragment() {
         val calendar = getDateCalendar()
         val today = Calendar.getInstance(calendar.timeZone)
         val listener = { _: DatePicker, y: Int, m: Int, d: Int -> onDateSet(y, m, d) }
-        val dialog = DatePickerDialog(activity, listener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH))
-        dialog.setButton(DialogInterface.BUTTON_NEUTRAL, "Today", { _, _ -> onDateSet(today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH))})
+        val dialog = DatePickerDialog(requireContext(), listener, calendar.get(YEAR), calendar.get(MONTH), calendar.get(DAY_OF_MONTH))
+        dialog.setButton(DialogInterface.BUTTON_NEUTRAL, "Today") { _, _ -> onDateSet(today.get(YEAR), today.get(MONTH), today.get(DAY_OF_MONTH))}
         dialog.show()
     }
 

@@ -56,8 +56,8 @@ class SavedLocationsActivity : AbstractLocationActivity() {
                 layoutInflater.inflate(R.layout.divider, list)
             }
             val row = View.inflate(this, R.layout.loc_saved_row, null)
-            row.findViewById<TextView>(R.id.savedLocName).text = location.name
-            row.findViewById<TextView>(R.id.savedLocCoords).text = location.location.getPunctuatedValue(Accuracy.MINUTES)
+            row.findViewById<TextView>(id.savedLocName).text = location.name
+            row.findViewById<TextView>(id.savedLocCoords).text = location.location.getPunctuatedValue(Accuracy.MINUTES)
             row.findViewById<View>(id.savedLocText).setOnClickListener { select(location) }
             row.findViewById<View>(id.savedLocDelete).setOnClickListener { confirmDelete(location) }
             list.addView(row)
@@ -82,7 +82,7 @@ class SavedLocationsActivity : AbstractLocationActivity() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Delete")
         builder.setMessage("Delete this saved location?")
-        builder.setPositiveButton("OK", { _, _ -> delete(location) })
+        builder.setPositiveButton("OK") { _, _ -> delete(location) }
         builder.setNegativeButton("Cancel", null)
         builder.create().show()
     }

@@ -1,6 +1,6 @@
 package uk.co.sundroid
 
-import android.app.Fragment
+import androidx.fragment.app.Fragment
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -21,7 +21,7 @@ abstract class AbstractFragment : Fragment() {
     val prefs: PrefsWrapper
         get() {
             this._prefs?.let { return it }
-            val prefs = PrefsWrapper(activity)
+            val prefs = PrefsWrapper(requireContext())
             this._prefs = prefs
             return prefs
         }
@@ -83,7 +83,7 @@ abstract class AbstractFragment : Fragment() {
     }
 
     protected fun inflate(id: Int, parent: ViewGroup? = null): View {
-        return activity.layoutInflater.inflate(id, parent)
+        return requireActivity().layoutInflater.inflate(id, parent)
     }
 
 

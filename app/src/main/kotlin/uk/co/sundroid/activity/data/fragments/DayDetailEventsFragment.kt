@@ -83,9 +83,9 @@ class DayDetailEventsFragment : AbstractDayDetailFragment(), ConfigurableFragmen
                             toggle(view, on = eventsTable, off = eventsNone)
                             for (event in eventsList) {
                                 val eventRow = inflate(R.layout.frag_data_daydetail_events_row)
-                                text(eventRow, eventName, event.name.toUpperCase())
-                                text(eventRow, eventTime, "${formatTime(activity, event.time, true)}")
-                                text(eventRow, eventAz, if (event.azimuth != null) formatBearing(activity, event.azimuth, location.location, calendar) else " ")
+                                text(eventRow, eventName, event.name.toUpperCase(Locale.getDefault()))
+                                text(eventRow, eventTime, "${formatTime(requireContext(), event.time, true)}")
+                                text(eventRow, eventAz, if (event.azimuth != null) formatBearing(requireContext(), event.azimuth, location.location, calendar) else " ")
                                 table.addView(eventRow)
                             }
                         }

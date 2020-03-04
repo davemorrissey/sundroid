@@ -1,7 +1,6 @@
 package uk.co.sundroid.activity.data.fragments
 
 import android.os.Bundle
-import android.support.v4.content.LocalBroadcastManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +8,7 @@ import android.content.Intent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.IntentFilter
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 
 abstract class AbstractDayDetailFragment : AbstractDataFragment() {
 
@@ -17,13 +17,13 @@ abstract class AbstractDayDetailFragment : AbstractDataFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         LocalBroadcastManager
-                .getInstance(activity)
+                .getInstance(requireContext())
                 .registerReceiver(updateReceiver, IntentFilter("update"))
     }
 
     override fun onDestroy() {
         LocalBroadcastManager
-                .getInstance(activity)
+                .getInstance(requireContext())
                 .unregisterReceiver(updateReceiver)
         super.onDestroy()
     }

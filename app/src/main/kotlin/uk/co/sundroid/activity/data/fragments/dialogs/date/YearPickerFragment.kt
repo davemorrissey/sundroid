@@ -2,10 +2,10 @@ package uk.co.sundroid.activity.data.fragments.dialogs.date
 
 import android.app.AlertDialog
 import android.app.Dialog
-import android.app.DialogFragment
 import android.os.Bundle
 import android.view.View
 import android.widget.NumberPicker
+import androidx.fragment.app.DialogFragment
 import uk.co.sundroid.R
 import uk.co.sundroid.R.layout
 import java.util.*
@@ -13,7 +13,7 @@ import java.util.Calendar.*
 
 class YearPickerFragment : DialogFragment() {
 
-    private var calendar: Calendar = Calendar.getInstance()
+    private var calendar: Calendar = getInstance()
 
     @FunctionalInterface
     interface OnYearSelectedListener {
@@ -25,9 +25,9 @@ class YearPickerFragment : DialogFragment() {
         restore(arguments)
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        Companion.save(calendar, outState)
+        save(calendar, outState)
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -46,8 +46,8 @@ class YearPickerFragment : DialogFragment() {
         return AlertDialog.Builder(activity).apply {
             setView(view)
             setTitle("Set year")
-            setPositiveButton("Set", { _, _ -> set(calendar) })
-            setNeutralButton("This year", { _, _ -> set(Calendar.getInstance()) })
+            setPositiveButton("Set") { _, _ -> set(calendar) }
+            setNeutralButton("This year") { _, _ -> set(getInstance()) }
             setNegativeButton("Cancel", null)
         }.create()
     }

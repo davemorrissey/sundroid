@@ -28,30 +28,3 @@ class Async<O>(
     }
 
 }
-
-class AsyncIO<I, O>(
-        private val inBackground: (I) -> O,
-        private val onDone: ((O) -> Unit)? = null,
-        private val onFail: ((Exception) -> Unit)? = null) : AsyncTask<I, Void, O>() {
-
-    var ex: Exception? = null
-
-    override fun doInBackground(vararg params: I): O? {
-        return try {
-            inBackground.invoke(params[0])
-        } catch (ex: Exception) {
-            this.ex = ex
-            null
-        }
-    }
-
-    override fun onPostExecute(result: O?) {
-        this.ex?.let {
-            onFail?.invoke(it)
-        } ?: result?.let {
-            // TODO May not invoke for expected null
-            onDone?.invoke(it)
-        }
-    }
-
-}

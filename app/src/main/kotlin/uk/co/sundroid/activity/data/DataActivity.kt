@@ -28,7 +28,7 @@ import java.util.Calendar
 import uk.co.sundroid.R.*
 import uk.co.sundroid.NavItem.NavItemLocation.*
 
-class DataActivity : AbstractActivity(), OnClickListener {
+abstract class DataActivity : AbstractActivity(), OnClickListener {
 
     private var fragment: AbstractDataFragment? = null
 
@@ -50,7 +50,7 @@ class DataActivity : AbstractActivity(), OnClickListener {
     }
 
     private fun initialiseDataFragmentView() {
-        val fragment = fragmentManager.findFragmentByTag(DATA_TAG)
+        val fragment = supportFragmentManager.findFragmentByTag(DATA_TAG)
         if (fragment is AbstractDataFragment) {
             try {
                 fragment.initialise()
@@ -62,7 +62,7 @@ class DataActivity : AbstractActivity(), OnClickListener {
     }
 
     private fun updateDataFragmentView() {
-        val fragment = fragmentManager.findFragmentByTag(DATA_TAG)
+        val fragment = supportFragmentManager.findFragmentByTag(DATA_TAG)
         if (fragment is AbstractDataFragment) {
             d(TAG, "Updating data in fragment " + fragment.javaClass.simpleName)
             try {
@@ -81,7 +81,7 @@ class DataActivity : AbstractActivity(), OnClickListener {
                 val dialog = AlertDialog.Builder(this)
                 dialog.setTitle("Save location")
 
-                val view = layoutInflater.inflate(R.layout.dialog_save, null)
+                val view = layoutInflater.inflate(layout.dialog_save, null)
                 val saveField = view.findViewById<EditText>(R.id.saveField)
                 if (isNotEmpty(location!!.name) && isEmpty(saveField.text.toString())) {
                     saveField.setText(location!!.name)
@@ -104,9 +104,7 @@ class DataActivity : AbstractActivity(), OnClickListener {
                             Toast.makeText(this@DataActivity, "Please enter a name for this location", Toast.LENGTH_SHORT).show()
                         }
                     } finally {
-                        if (db != null) {
-                            db.close()
-                        }
+                        db?.close()
                     }
                     removeDialog(DIALOG_SAVE)
                 }
@@ -140,7 +138,7 @@ class DataActivity : AbstractActivity(), OnClickListener {
             MENU_HELP -> startActivity(Intent(this, InfoActivity::class.java))
             MENU_SETTINGS -> startActivity(Intent(this, AppSettingsActivity::class.java))
             MENU_VIEW_SETTINGS -> if (isFragmentConfigurable) {
-                (fragmentManager.findFragmentByTag(DATA_TAG) as ConfigurableFragment).openSettingsDialog()
+                (supportFragmentManager.findFragmentByTag(DATA_TAG) as ConfigurableFragment).openSettingsDialog()
             }
         }
     }
@@ -164,16 +162,16 @@ class DataActivity : AbstractActivity(), OnClickListener {
 
     companion object {
 
-        private val DIALOG_SAVE = 746
+        private const val DIALOG_SAVE = 746
 
-        private val MENU_CHANGE_LOCATION = Menu.FIRST + 1
-        private val MENU_SAVE_LOCATION = Menu.FIRST + 2
-        private val MENU_HELP = Menu.FIRST + 5
-        private val MENU_SETTINGS = Menu.FIRST + 6
-        private val MENU_VIEW_SETTINGS = Menu.FIRST + 10
-        private val MENU_TIME_ZONE = Menu.FIRST + 12
+        private const val MENU_CHANGE_LOCATION = Menu.FIRST + 1
+        private const val MENU_SAVE_LOCATION = Menu.FIRST + 2
+        private const val MENU_HELP = Menu.FIRST + 5
+        private const val MENU_SETTINGS = Menu.FIRST + 6
+        private const val MENU_VIEW_SETTINGS = Menu.FIRST + 10
+        private const val MENU_TIME_ZONE = Menu.FIRST + 12
 
-        private val DATA_TAG = "dataFragment"
+        private const val DATA_TAG = "dataFragment"
 
         private val TAG = DataActivity::class.java.simpleName
     }

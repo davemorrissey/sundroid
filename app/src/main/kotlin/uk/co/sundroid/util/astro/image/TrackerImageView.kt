@@ -3,7 +3,7 @@ package uk.co.sundroid.util.astro.image
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Point
-import android.support.v7.widget.AppCompatImageView
+import androidx.appcompat.widget.AppCompatImageView
 
 class TrackerImageView(context: Context) : AppCompatImageView(context) {
 

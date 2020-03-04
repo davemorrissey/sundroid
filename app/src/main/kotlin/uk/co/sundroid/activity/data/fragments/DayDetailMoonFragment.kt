@@ -27,7 +27,7 @@ class DayDetailMoonFragment : AbstractDayDetailFragment() {
         val location = getLocation()
         val calendar = getDateCalendar()
 
-        class Data(val day: MoonDay, val phaseEvents: List<MoonPhaseEvent>, val yearEvent: YearData.Event?)
+        class Data(val day: MoonDay, val phaseEvents: List<MoonPhaseEvent>, val yearEvent: Event?)
         async(
                 inBackground = {
                     val day = BodyPositionCalculator.calcDay(Body.MOON, location.location, calendar, true) as MoonDay
@@ -85,7 +85,7 @@ class DayDetailMoonFragment : AbstractDayDetailFragment() {
                         var noUptime = true
 
                         if (day.riseSetType !== RiseSetType.SET && day.transitAppElevation > 0) {
-                            val noon = formatTime(activity, day.transit!!, false)
+                            val noon = formatTime(requireContext(), day.transit!!, false)
                             noTransit = false
                             show(view, moonTransit)
                             show(view, moonTransitTime, "$noon  ${formatElevation(day.transitAppElevation)}")
@@ -103,25 +103,25 @@ class DayDetailMoonFragment : AbstractDayDetailFragment() {
                             val events = TreeSet<RiseSetEvent>()
                             day.rise?.let { events.add(RiseSetEvent("Rise", it, day.riseAzimuth)) }
                             day.set?.let { events.add(RiseSetEvent("Set", it, day.setAzimuth)) }
-                            events.forEachIndexed({ index, event ->
+                            events.forEachIndexed { index, event ->
                                 val rowId = view("moonEvt$index")
                                 val timeId = view("moonEvt${index}Time")
                                 val azId = view("moonEvt${index}Az")
                                 val imgId = view("moonEvt${index}Img")
 
-                                val time = formatTime(activity, event.time, false)
-                                val az = formatBearing(activity, event.azimuth, location.location, event.time)
+                                val time = formatTime(requireContext(), event.time, false)
+                                val az = formatBearing(requireContext(), event.azimuth, location.location, event.time)
 
                                 text(view, timeId, "$time")
                                 text(view, azId, az)
                                 show(view, rowId)
                                 image(view, imgId, if (event.name == "Rise") getRiseArrow() else getSetArrow())
-                            })
+                            }
 
                             if (day.uptimeHours > 0 && day.uptimeHours < 24) {
                                 noUptime = false
                                 show(view, moonUptime)
-                                show(view, moonUptimeTime, formatDurationHMS(activity, day.uptimeHours, false))
+                                show(view, moonUptimeTime, formatDurationHMS(requireContext(), day.uptimeHours, false))
                             } else {
                                 remove(view, moonUptime)
                             }
@@ -134,7 +134,7 @@ class DayDetailMoonFragment : AbstractDayDetailFragment() {
                         }
 
                         show(view, moonPhase, day.phase.displayName + (day.phaseEvent?.let {
-                            " " + formatTime(activity, it.time, false).toString()
+                            " " + formatTime(requireContext(), it.time, false).toString()
                         } ?: ""))
                         show(view, moonIllumination, "${day.illumination}%")
                         show(view, moonDataBox)

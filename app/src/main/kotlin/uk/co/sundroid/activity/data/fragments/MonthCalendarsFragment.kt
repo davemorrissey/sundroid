@@ -32,7 +32,7 @@ class MonthCalendarsFragment : AbstractMonthFragment<ArrayList<MonthCalendarsFra
 
     private val body: Body?
         get() {
-            return when (Prefs.lastCalendar(activity)) {
+            return when (Prefs.lastCalendar(requireContext())) {
                 0 -> Body.SUN
                 7 -> Body.MERCURY
                 8 -> Body.VENUS
@@ -47,7 +47,7 @@ class MonthCalendarsFragment : AbstractMonthFragment<ArrayList<MonthCalendarsFra
 
     private val type: String
         get() {
-            return when (Prefs.lastCalendar(activity)) {
+            return when (Prefs.lastCalendar(requireContext())) {
                 0 -> "daylight"
                 1 -> "civ"
                 2 -> "ntc"
@@ -71,10 +71,10 @@ class MonthCalendarsFragment : AbstractMonthFragment<ArrayList<MonthCalendarsFra
             selectorActive = true
             false
         }
-        val adapter = ArrayAdapter.createFromResource(activity, array.monthCalendars, R.layout.frag_data_monthcalendars_selector_selected)
+        val adapter = ArrayAdapter.createFromResource(requireContext(), array.monthCalendars, R.layout.frag_data_monthcalendars_selector_selected)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
-        val index = Prefs.lastCalendar(activity)
+        val index = Prefs.lastCalendar(requireContext())
         selector.adapter = adapter
         selector.onItemSelectedListener = this
         if (selector.selectedItemPosition != index) {
@@ -158,7 +158,7 @@ class MonthCalendarsFragment : AbstractMonthFragment<ArrayList<MonthCalendarsFra
 
     }
 
-    override fun post(view: View, data: ArrayList<MonthCalendarsFragment.DayEntry?>) {
+    override fun post(view: View, data: ArrayList<DayEntry?>) {
         val listAdapter = DayEntryAdapter(data)
         val list = view.findViewById<ListView>(monthCalList)
         list.adapter = listAdapter
@@ -179,7 +179,7 @@ class MonthCalendarsFragment : AbstractMonthFragment<ArrayList<MonthCalendarsFra
         var today = false
     }
 
-    inner class DayEntryAdapter constructor(list: ArrayList<DayEntry?>) : ArrayAdapter<DayEntry>(applicationContext, R.layout.frag_data_monthcalendars_row, list) {
+    inner class DayEntryAdapter constructor(list: ArrayList<DayEntry?>) : ArrayAdapter<DayEntry>(requireContext(), R.layout.frag_data_monthcalendars_row, list) {
 
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
             val location = getLocation()
@@ -188,7 +188,7 @@ class MonthCalendarsFragment : AbstractMonthFragment<ArrayList<MonthCalendarsFra
             val type = type
             val body = body
 
-            val packageName = activity.packageName
+            val packageName = requireContext().packageName
 
             if (entry == null) {
                 text(row, rowDate, "")
@@ -245,7 +245,7 @@ class MonthCalendarsFragment : AbstractMonthFragment<ArrayList<MonthCalendarsFra
                 Calendar.SUNDAY -> weekday = "SUN"
             }
 
-            text(row, rowDate, Integer.toString(entry.day))
+            text(row, rowDate, entry.day.toString())
             text(row, rowWeekday, weekday)
 
             var up: Calendar? = null
@@ -265,10 +265,10 @@ class MonthCalendarsFragment : AbstractMonthFragment<ArrayList<MonthCalendarsFra
                 up = bodyDay!!.rise
                 down = bodyDay.set
                 if (up != null && previousBodyDay?.rise != null) {
-                    upAz = formatDiff(activity, bodyDay.rise!!, previousBodyDay.rise!!, allowSeconds)
+                    upAz = formatDiff(requireContext(), bodyDay.rise!!, previousBodyDay.rise!!, allowSeconds)
                 }
                 if (down != null && previousBodyDay?.set != null) {
-                    downAz = formatDiff(activity, bodyDay.set!!, previousBodyDay.set!!, allowSeconds)
+                    downAz = formatDiff(requireContext(), bodyDay.set!!, previousBodyDay.set!!, allowSeconds)
                 }
                 if (up != null) {
                     if (isNotEmpty(upAz)) {
@@ -276,7 +276,7 @@ class MonthCalendarsFragment : AbstractMonthFragment<ArrayList<MonthCalendarsFra
                     } else {
                         upAz = ""
                     }
-                    val azimuth = formatBearing(activity, bodyDay.riseAzimuth, location.location, up)
+                    val azimuth = formatBearing(requireContext(), bodyDay.riseAzimuth, location.location, up)
                     upAz += azimuth
                 }
                 if (down != null) {
@@ -285,7 +285,7 @@ class MonthCalendarsFragment : AbstractMonthFragment<ArrayList<MonthCalendarsFra
                     } else {
                         downAz = ""
                     }
-                    val azimuth = formatBearing(activity, bodyDay.setAzimuth, location.location, down)
+                    val azimuth = formatBearing(requireContext(), bodyDay.setAzimuth, location.location, down)
                     downAz += azimuth
                 }
                 if (up == null && down == null) {
@@ -304,10 +304,10 @@ class MonthCalendarsFragment : AbstractMonthFragment<ArrayList<MonthCalendarsFra
                     riseSetType = if (sunDay.civType === TwilightType.DARK) RiseSetType.SET else RiseSetType.RISEN
                 }
                 if (up != null && previousSunDay?.civDawn != null) {
-                    upAz = formatDiff(activity, sunDay.civDawn!!, previousSunDay.civDawn!!, true)
+                    upAz = formatDiff(requireContext(), sunDay.civDawn!!, previousSunDay.civDawn!!, true)
                 }
                 if (down != null && previousSunDay?.civDusk != null) {
-                    downAz = formatDiff(activity, sunDay.civDusk!!, previousSunDay.civDusk!!, true)
+                    downAz = formatDiff(requireContext(), sunDay.civDusk!!, previousSunDay.civDusk!!, true)
                 }
             } else if (type == "ntc") {
                 allowSeconds = true
@@ -319,10 +319,10 @@ class MonthCalendarsFragment : AbstractMonthFragment<ArrayList<MonthCalendarsFra
                     riseSetType = if (sunDay.ntcType === TwilightType.DARK) RiseSetType.SET else RiseSetType.RISEN
                 }
                 if (up != null && previousSunDay?.ntcDawn != null) {
-                    upAz = formatDiff(activity, sunDay.ntcDawn!!, previousSunDay.ntcDawn!!, true)
+                    upAz = formatDiff(requireContext(), sunDay.ntcDawn!!, previousSunDay.ntcDawn!!, true)
                 }
                 if (down != null && previousSunDay?.ntcDusk != null) {
-                    downAz = formatDiff(activity, sunDay.ntcDusk!!, previousSunDay.ntcDusk!!, true)
+                    downAz = formatDiff(requireContext(), sunDay.ntcDusk!!, previousSunDay.ntcDusk!!, true)
                 }
             } else if (type == "ast") {
                 allowSeconds = true
@@ -334,10 +334,10 @@ class MonthCalendarsFragment : AbstractMonthFragment<ArrayList<MonthCalendarsFra
                     riseSetType = if (sunDay.astType === TwilightType.DARK) RiseSetType.SET else RiseSetType.RISEN
                 }
                 if (up != null && previousSunDay?.astDawn != null) {
-                    upAz = formatDiff(activity, sunDay.astDawn!!, previousSunDay.astDawn!!, true)
+                    upAz = formatDiff(requireContext(), sunDay.astDawn!!, previousSunDay.astDawn!!, true)
                 }
                 if (down != null && previousSunDay?.astDusk != null) {
-                    downAz = formatDiff(activity, sunDay.astDusk!!, previousSunDay.astDusk!!, true)
+                    downAz = formatDiff(requireContext(), sunDay.astDusk!!, previousSunDay.astDusk!!, true)
                 }
             } else if (type == "golden") {
                 allowSeconds = true
@@ -349,10 +349,10 @@ class MonthCalendarsFragment : AbstractMonthFragment<ArrayList<MonthCalendarsFra
                     riseSetType = if (sunDay.ghType === TwilightType.DARK) RiseSetType.SET else RiseSetType.RISEN
                 }
                 if (up != null && previousSunDay?.ghEnd != null) {
-                    upAz = formatDiff(activity, sunDay.ghEnd!!, previousSunDay.ghEnd!!, true)
+                    upAz = formatDiff(requireContext(), sunDay.ghEnd!!, previousSunDay.ghEnd!!, true)
                 }
                 if (down != null && previousSunDay?.ghStart != null) {
-                    downAz = formatDiff(activity, sunDay.ghStart!!, previousSunDay.ghStart!!, true)
+                    downAz = formatDiff(requireContext(), sunDay.ghStart!!, previousSunDay.ghStart!!, true)
                 }
             } else if (type == "daylight") {
                 allowSeconds = true
@@ -365,10 +365,10 @@ class MonthCalendarsFragment : AbstractMonthFragment<ArrayList<MonthCalendarsFra
                 up = moonDay.rise
                 down = moonDay.set
                 if (up != null) {
-                    upAz = formatBearing(activity, moonDay.riseAzimuth, location.location, up)
+                    upAz = formatBearing(requireContext(), moonDay.riseAzimuth, location.location, up)
                 }
                 if (down != null) {
-                    downAz = formatBearing(activity, moonDay.setAzimuth, location.location, down)
+                    downAz = formatBearing(requireContext(), moonDay.setAzimuth, location.location, down)
                 }
                 if (up == null && down == null) {
                     riseSetType = if (moonDay.riseSetType === RiseSetType.RISEN) {
@@ -405,15 +405,15 @@ class MonthCalendarsFragment : AbstractMonthFragment<ArrayList<MonthCalendarsFra
             }
 
             if (length != java.lang.Double.MIN_VALUE) {
-                val timeStr = formatDuration(activity, length, true)
+                val timeStr = formatDuration(requireContext(), length, true)
                 text(row, dayUp, timeStr)
-                val diffStr = formatDiff(activity, lengthDiff, true)
+                val diffStr = formatDiff(requireContext(), lengthDiff, true)
                 text(row, dayDown, diffStr)
                 remove(row, dayUpAz)
                 remove(row, dayDownAz)
             } else {
                 if (up != null) {
-                    val time = formatTime(activity, up, allowSeconds)
+                    val time = formatTime(requireContext(), up, allowSeconds)
                     var timeStr = time.time
                     if (isNotEmpty(time.marker)) {
                         timeStr += time.marker
@@ -438,7 +438,7 @@ class MonthCalendarsFragment : AbstractMonthFragment<ArrayList<MonthCalendarsFra
                 }
 
                 if (down != null) {
-                    val time = formatTime(activity, down, allowSeconds)
+                    val time = formatTime(requireContext(), down, allowSeconds)
                     var timeStr = time.time
                     if (isNotEmpty(time.marker)) {
                         timeStr += time.marker

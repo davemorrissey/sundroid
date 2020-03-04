@@ -4,13 +4,12 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.preference.PreferenceManager
+import androidx.appcompat.app.ActionBarDrawerToggle
 
 import kotlinx.android.synthetic.main.main.*
-import android.support.v7.app.ActionBarDrawerToggle
 import uk.co.sundroid.AbstractActivity
 import uk.co.sundroid.BuildConfig
 import uk.co.sundroid.R
-import uk.co.sundroid.activity.data.DataActivity
 import uk.co.sundroid.activity.data.DataGroup
 import uk.co.sundroid.activity.info.InfoActivity
 import uk.co.sundroid.activity.location.LocationSelectActivity
@@ -83,15 +82,15 @@ class MainActivity : AbstractActivity() {
         timeCalendar.timeInMillis
     }
 
-    override fun onSaveInstanceState(state: Bundle?) {
+    override fun onSaveInstanceState(state: Bundle) {
         super.onSaveInstanceState(state)
-        state?.putSerializable(STATE_DATA_GROUP, this.dataGroup)
-        state?.putLong(STATE_DATE_TIMESTAMP, this.dateCalendar.timeInMillis)
-        state?.putLong(STATE_TIME_TIMESTAMP, this.timeCalendar.timeInMillis)
+        state.putSerializable(STATE_DATA_GROUP, this.dataGroup)
+        state.putLong(STATE_DATE_TIMESTAMP, this.dateCalendar.timeInMillis)
+        state.putLong(STATE_TIME_TIMESTAMP, this.timeCalendar.timeInMillis)
     }
 
     private fun restoreState(state: Bundle?) {
-        this.dataGroup = DataGroup.DAY_SUMMARY
+        this.dataGroup = DataGroup.DAY_DETAIL
         if (state != null) {
             if (state.containsKey(STATE_DATA_GROUP)) {
                 this.dataGroup = state.get(STATE_DATA_GROUP) as DataGroup
@@ -109,9 +108,9 @@ class MainActivity : AbstractActivity() {
         if (dataGroup != this.dataGroup || force) {
             this.dataGroup = dataGroup
             Prefs.setLastDataGroup(this, dataGroup)
-            val existingFragment = fragmentManager.findFragmentByTag("ROOT")
+            val existingFragment = supportFragmentManager.findFragmentByTag("ROOT")
             if (existingFragment?.javaClass != dataGroup.fragmentClass || force) {
-                fragmentManager.beginTransaction()
+                supportFragmentManager.beginTransaction()
                         .replace(R.id.content, dataGroup.fragmentClass.newInstance(), "ROOT")
                         .commit()
             }

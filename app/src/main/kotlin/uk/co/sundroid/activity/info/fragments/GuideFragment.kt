@@ -14,11 +14,11 @@ import kotlinx.android.synthetic.main.frag_info_guide.*
 
 class GuideFragment : AbstractFragment() {
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup, state: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, state: Bundle?): View? {
         return inflater.inflate(R.layout.frag_info_guide, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         mapOf(
             infGuideDisclaimerDisclosure to infGuideDisclaimerBody,
             infGuideLocationDisclosure to infGuideLocationBody,

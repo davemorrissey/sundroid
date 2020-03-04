@@ -1,14 +1,14 @@
 package uk.co.sundroid.activity.data.fragments
 
-import android.app.Fragment
+import androidx.fragment.app.Fragment
 import android.os.Bundle
 import android.view.View
-import android.support.design.widget.TabLayout
-import android.support.v13.app.FragmentPagerAdapter
-import android.support.v4.view.ViewPager
-import android.app.FragmentManager
+import androidx.fragment.app.FragmentManager
 import android.content.Intent
-import android.support.v4.content.LocalBroadcastManager
+import androidx.fragment.app.FragmentPagerAdapter
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.viewpager.widget.ViewPager
+import com.google.android.material.tabs.TabLayout
 import uk.co.sundroid.R
 import uk.co.sundroid.activity.MainActivity
 
@@ -31,7 +31,7 @@ class DayDetailFragment : AbstractDayFragment() {
     }
 
     override fun updateData(view: View) {
-        LocalBroadcastManager.getInstance(activity).sendBroadcast(Intent("update"))
+        LocalBroadcastManager.getInstance(requireContext()).sendBroadcast(Intent("update"))
     }
 
     class DayDetailTabsAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {

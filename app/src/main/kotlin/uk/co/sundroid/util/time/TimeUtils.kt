@@ -9,7 +9,7 @@ import java.util.Calendar.*
 val shortMonths = arrayOf("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
 
 fun shortDateAndMonth(calendar: Calendar): String {
-    val dom = calendar.get(Calendar.DAY_OF_MONTH)
+    val dom = calendar.get(DAY_OF_MONTH)
     var date = dom.toString()
     date += when {
         arrayOf(1, 21, 31).contains(dom) -> "st"
@@ -21,11 +21,11 @@ fun shortDateAndMonth(calendar: Calendar): String {
 }
 
 fun getShortMonth(calendar: Calendar): String {
-    return shortMonths[calendar.get(Calendar.MONTH)]
+    return shortMonths[calendar.get(MONTH)]
 }
 
 fun clone(calendar: Calendar): Calendar {
-    val clone = Calendar.getInstance(calendar.timeZone)
+    val clone = getInstance(calendar.timeZone)
     clone.timeInMillis = calendar.timeInMillis
     return clone
 }
@@ -37,14 +37,14 @@ fun isSameDay(calendar1: Calendar, calendar2: Calendar): Boolean {
 }
 
 fun formatTime(context: Context, calendar: Calendar, allowSeconds: Boolean, allowRounding: Boolean): Time {
-    val clone = Calendar.getInstance(calendar.timeZone)
+    val clone = getInstance(calendar.timeZone)
     clone.timeInMillis = calendar.timeInMillis
 
     val showSeconds = Prefs.showSeconds(context) && allowSeconds
     val is24 = Prefs.clockType24(context)
 
     // If more than half way through a minute, roll forward into next minute.
-    if (allowRounding && !showSeconds && clone.get(Calendar.SECOND) >= 30) {
+    if (allowRounding && !showSeconds && clone.get(SECOND) >= 30) {
         clone.add(SECOND, 30)
     }
 

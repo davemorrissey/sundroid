@@ -19,6 +19,7 @@ import java.util.TreeSet
 import uk.co.sundroid.util.time.formatDurationHMS
 
 import kotlinx.android.synthetic.main.frag_data_daydetail_sun.*
+import kotlin.math.abs
 
 class DayDetailSunFragment : AbstractDayDetailFragment() {
 
@@ -47,10 +48,10 @@ class DayDetailSunFragment : AbstractDayDetailFragment() {
                             view.findViewById<View>(R.id.sunEvent).setOnClickListener(null)
                             show(view, R.id.sunEvent)
                             show(view, R.id.sunEventTitle, yearEventToday.type.displayName)
-                            if (yearEventToday.type === EventType.NORTHERN_SOLSTICE && Math.abs(location.location.latitude.doubleValue) > 23.44) {
+                            if (yearEventToday.type === EventType.NORTHERN_SOLSTICE && abs(location.location.latitude.doubleValue) > 23.44) {
                                 val localExtreme = if (location.location.latitude.doubleValue >= 0) "Longest" else "Shortest"
                                 show(view, R.id.sunEventSubtitle, "$localExtreme day")
-                            } else if (yearEventToday.type === EventType.SOUTHERN_SOLSTICE && Math.abs(location.location.latitude.doubleValue) > 23.44) {
+                            } else if (yearEventToday.type === EventType.SOUTHERN_SOLSTICE && abs(location.location.latitude.doubleValue) > 23.44) {
                                 val localExtreme = if (location.location.latitude.doubleValue >= 0) "Shortest" else "Longest"
                                 show(view, R.id.sunEventSubtitle, "$localExtreme day")
                             } else if (yearEventToday.type === EventType.ANNULAR_SOLAR || yearEventToday.type === EventType.HYBRID_SOLAR || yearEventToday.type === EventType.PARTIAL_SOLAR || yearEventToday.type === EventType.TOTAL_SOLAR) {
@@ -134,7 +135,7 @@ class DayDetailSunFragment : AbstractDayDetailFragment() {
                                     sunAstDawnTime to astDawn,
                                     sunAstDuskTime to astDusk
                             ).forEach {
-                                (view, time) -> view.text = time?.let { formatTimeStr(activity, it) } ?: "-"
+                                (view, time) -> view.text = time?.let { formatTimeStr(requireContext(), it) } ?: "-"
                             }
                         }
                         show(view, R.id.sunDataBox)

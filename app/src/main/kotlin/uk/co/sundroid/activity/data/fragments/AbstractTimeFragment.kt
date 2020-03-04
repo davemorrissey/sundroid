@@ -24,7 +24,11 @@ import uk.co.sundroid.util.view.ButtonDragGestureDetector.ButtonDragGestureDetec
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.Calendar.DAY_OF_MONTH
+import java.util.Calendar.DAY_OF_YEAR
 import java.util.Calendar.MONTH
+import java.util.Calendar.MINUTE
+import java.util.Calendar.HOUR_OF_DAY
+import java.util.Calendar.YEAR
 
 abstract class AbstractTimeFragment : AbstractDataFragment(), OnSeekBarChangeListener {
 
@@ -44,7 +48,7 @@ abstract class AbstractTimeFragment : AbstractDataFragment(), OnSeekBarChangeLis
         return inflater.inflate(layout, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         safeInitialise(view)
         safeUpdate(view, false)
@@ -69,8 +73,8 @@ abstract class AbstractTimeFragment : AbstractDataFragment(), OnSeekBarChangeLis
     }
 
     private fun onTimeSet(hour: Int, minute: Int) {
-        getTimeCalendar().set(Calendar.HOUR_OF_DAY, hour)
-        getTimeCalendar().set(Calendar.MINUTE, minute)
+        getTimeCalendar().set(HOUR_OF_DAY, hour)
+        getTimeCalendar().set(MINUTE, minute)
         update()
     }
 
@@ -80,7 +84,7 @@ abstract class AbstractTimeFragment : AbstractDataFragment(), OnSeekBarChangeLis
         val timeCalendar = getTimeCalendar()
         try {
             if (view != null && !isDetached) {
-                initGestures(view)
+                initGestures()
                 updateDateAndTime(view, dateCalendar, timeCalendar)
                 initialise(location, dateCalendar, timeCalendar, view)
             }
@@ -105,7 +109,7 @@ abstract class AbstractTimeFragment : AbstractDataFragment(), OnSeekBarChangeLis
 
     }
 
-    private fun initGestures(view: View) {
+    private fun initGestures() {
         val dateListener = object : ButtonDragGestureDetectorListener {
             override fun onButtonDragUp() = changeCalendars(MONTH, -1)
             override fun onButtonDragDown() = changeCalendars(MONTH, 1)
@@ -152,7 +156,7 @@ abstract class AbstractTimeFragment : AbstractDataFragment(), OnSeekBarChangeLis
             remove(view, R.id.zoneButton)
         }
 
-        val time = formatTime(applicationContext!!, timeCalendar, false, false)
+        val time = formatTime(applicationContext!!, timeCalendar, allowSeconds = false, allowRounding = false)
         show(view, R.id.timeHM, time.time + time.marker)
 
         dateFormat.timeZone = dateCalendar.timeZone
@@ -162,7 +166,7 @@ abstract class AbstractTimeFragment : AbstractDataFragment(), OnSeekBarChangeLis
         show(view, R.id.dateDMY, date)
         show(view, R.id.dateWeekday, weekday)
 
-        val minutes = timeCalendar.get(Calendar.HOUR_OF_DAY) * 60 + timeCalendar.get(Calendar.MINUTE)
+        val minutes = timeCalendar.get(HOUR_OF_DAY) * 60 + timeCalendar.get(MINUTE)
         (view.findViewById<View>(R.id.timeSeeker) as SeekBar).progress = minutes
     }
 
@@ -170,8 +174,8 @@ abstract class AbstractTimeFragment : AbstractDataFragment(), OnSeekBarChangeLis
         val calendar = getDateCalendar()
         val today = Calendar.getInstance(calendar.timeZone)
         val listener = { _: DatePicker, y: Int, m: Int, d: Int -> onDateSet(y, m, d) }
-        val dialog = DatePickerDialog(activity, listener, calendar.get(Calendar.YEAR), calendar.get(MONTH), calendar.get(DAY_OF_MONTH))
-        dialog.setButton(DialogInterface.BUTTON_NEUTRAL, "Today", { _, _ -> onDateSet(today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH))})
+        val dialog = DatePickerDialog(requireContext(), listener, calendar.get(YEAR), calendar.get(MONTH), calendar.get(DAY_OF_MONTH))
+        dialog.setButton(DialogInterface.BUTTON_NEUTRAL, "Today") { _, _ -> onDateSet(today.get(YEAR), today.get(MONTH), today.get(DAY_OF_MONTH))}
         dialog.show()
     }
 
@@ -179,8 +183,8 @@ abstract class AbstractTimeFragment : AbstractDataFragment(), OnSeekBarChangeLis
         val calendar = getTimeCalendar()
         val now = Calendar.getInstance(calendar.timeZone)
         val listener = { _: TimePicker, h: Int, m: Int -> onTimeSet(h, m) }
-        val dialog = TimePickerDialog(activity, listener, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), prefs.clockType24())
-        dialog.setButton(DialogInterface.BUTTON_NEUTRAL, "Now", { _, _ -> onTimeSet(now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE))})
+        val dialog = TimePickerDialog(activity, listener, calendar.get(HOUR_OF_DAY), calendar.get(MINUTE), prefs.clockType24())
+        dialog.setButton(DialogInterface.BUTTON_NEUTRAL, "Now") { _, _ -> onTimeSet(now.get(HOUR_OF_DAY), now.get(MINUTE))}
         dialog.show()
     }
 
@@ -188,8 +192,8 @@ abstract class AbstractTimeFragment : AbstractDataFragment(), OnSeekBarChangeLis
         if (fromUser) {
             val hours = progress / 60
             val minutes = progress - hours * 60
-            getTimeCalendar().set(Calendar.HOUR_OF_DAY, hours)
-            getTimeCalendar().set(Calendar.MINUTE, minutes)
+            getTimeCalendar().set(HOUR_OF_DAY, hours)
+            getTimeCalendar().set(MINUTE, minutes)
             safeUpdate(view, false)
         }
     }
@@ -209,12 +213,12 @@ abstract class AbstractTimeFragment : AbstractDataFragment(), OnSeekBarChangeLis
 
     private fun nextMinute() {
         if (view != null) {
-            val dayOfYear = getTimeCalendar().get(Calendar.DAY_OF_YEAR)
-            getTimeCalendar().add(Calendar.MINUTE, 1)
-            val minutes = getTimeCalendar().get(Calendar.HOUR_OF_DAY) * 60 + getTimeCalendar().get(Calendar.MINUTE)
+            val dayOfYear = getTimeCalendar().get(DAY_OF_YEAR)
+            getTimeCalendar().add(MINUTE, 1)
+            val minutes = getTimeCalendar().get(HOUR_OF_DAY) * 60 + getTimeCalendar().get(MINUTE)
             (view!!.findViewById<View>(R.id.timeSeeker) as SeekBar).progress = minutes
-            if (getTimeCalendar().get(Calendar.DAY_OF_YEAR) != dayOfYear) {
-                getDateCalendar().add(Calendar.DAY_OF_MONTH, 1)
+            if (getTimeCalendar().get(DAY_OF_YEAR) != dayOfYear) {
+                getDateCalendar().add(DAY_OF_MONTH, 1)
                 safeUpdate(view, false)
             } else {
                 safeUpdate(view, true)
@@ -224,12 +228,12 @@ abstract class AbstractTimeFragment : AbstractDataFragment(), OnSeekBarChangeLis
 
     private fun prevMinute() {
         if (view != null) {
-            val dayOfYear = getTimeCalendar().get(Calendar.DAY_OF_YEAR)
-            getTimeCalendar().add(Calendar.MINUTE, -1)
-            val minutes = getTimeCalendar().get(Calendar.HOUR_OF_DAY) * 60 + getTimeCalendar().get(Calendar.MINUTE)
+            val dayOfYear = getTimeCalendar().get(DAY_OF_YEAR)
+            getTimeCalendar().add(MINUTE, -1)
+            val minutes = getTimeCalendar().get(HOUR_OF_DAY) * 60 + getTimeCalendar().get(MINUTE)
             (view!!.findViewById<View>(R.id.timeSeeker) as SeekBar).progress = minutes
-            if (getTimeCalendar().get(Calendar.DAY_OF_YEAR) != dayOfYear) {
-                getDateCalendar().add(Calendar.DAY_OF_MONTH, -1)
+            if (getTimeCalendar().get(DAY_OF_YEAR) != dayOfYear) {
+                getDateCalendar().add(DAY_OF_MONTH, -1)
                 safeUpdate(view, false)
             } else {
                 safeUpdate(view, true)
@@ -239,12 +243,12 @@ abstract class AbstractTimeFragment : AbstractDataFragment(), OnSeekBarChangeLis
 
     private fun nextHour() {
         if (view != null) {
-            val dayOfYear = getTimeCalendar().get(Calendar.DAY_OF_YEAR)
-            getTimeCalendar().add(Calendar.HOUR_OF_DAY, 1)
-            val minutes = getTimeCalendar().get(Calendar.HOUR_OF_DAY) * 60 + getTimeCalendar().get(Calendar.MINUTE)
+            val dayOfYear = getTimeCalendar().get(DAY_OF_YEAR)
+            getTimeCalendar().add(HOUR_OF_DAY, 1)
+            val minutes = getTimeCalendar().get(HOUR_OF_DAY) * 60 + getTimeCalendar().get(MINUTE)
             (view!!.findViewById<View>(R.id.timeSeeker) as SeekBar).progress = minutes
-            if (getTimeCalendar().get(Calendar.DAY_OF_YEAR) != dayOfYear) {
-                getDateCalendar().add(Calendar.DAY_OF_MONTH, 1)
+            if (getTimeCalendar().get(DAY_OF_YEAR) != dayOfYear) {
+                getDateCalendar().add(DAY_OF_MONTH, 1)
                 safeUpdate(view, false)
             } else {
                 safeUpdate(view, true)
@@ -254,12 +258,12 @@ abstract class AbstractTimeFragment : AbstractDataFragment(), OnSeekBarChangeLis
 
     private fun prevHour() {
         if (view != null) {
-            val dayOfYear = getTimeCalendar().get(Calendar.DAY_OF_YEAR)
-            getTimeCalendar().add(Calendar.HOUR_OF_DAY, -1)
-            val minutes = getTimeCalendar().get(Calendar.HOUR_OF_DAY) * 60 + getTimeCalendar().get(Calendar.MINUTE)
+            val dayOfYear = getTimeCalendar().get(DAY_OF_YEAR)
+            getTimeCalendar().add(HOUR_OF_DAY, -1)
+            val minutes = getTimeCalendar().get(HOUR_OF_DAY) * 60 + getTimeCalendar().get(MINUTE)
             (view!!.findViewById<View>(R.id.timeSeeker) as SeekBar).progress = minutes
-            if (getTimeCalendar().get(Calendar.DAY_OF_YEAR) != dayOfYear) {
-                getDateCalendar().add(Calendar.DAY_OF_MONTH, -1)
+            if (getTimeCalendar().get(DAY_OF_YEAR) != dayOfYear) {
+                getDateCalendar().add(DAY_OF_MONTH, -1)
                 safeUpdate(view, false)
             } else {
                 safeUpdate(view, true)

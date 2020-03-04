@@ -1,8 +1,8 @@
 package uk.co.sundroid.activity.info
 
-import android.app.Fragment
 import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.Fragment
 import uk.co.sundroid.AbstractActivity
 import uk.co.sundroid.R
 import uk.co.sundroid.R.id
@@ -13,9 +13,9 @@ import uk.co.sundroid.activity.info.fragments.GuideFragment
 class InfoActivity : AbstractActivity() {
 
     enum class InfoGroup(val fragmentClass: Class<out Fragment>, val activeTab: Int, val inactiveTab: Int) {
-        GUIDE (GuideFragment::class.java, R.id.guideTabActive, R.id.guideTabInactive),
-        GLOSSARY (GlossaryFragment::class.java, R.id.glossaryTabActive, R.id.glossaryTabInactive),
-        ABOUT (AboutFragment::class.java, R.id.aboutTabActive, R.id.aboutTabInactive)
+        GUIDE (GuideFragment::class.java, id.guideTabActive, id.guideTabInactive),
+        GLOSSARY (GlossaryFragment::class.java, id.glossaryTabActive, id.glossaryTabInactive),
+        ABOUT (AboutFragment::class.java, id.aboutTabActive, id.aboutTabInactive)
     }
 
     private var infoGroup: InfoGroup = InfoGroup.GUIDE
@@ -34,7 +34,7 @@ class InfoActivity : AbstractActivity() {
     }
 
     private fun changeFragment() {
-        fragmentManager
+        supportFragmentManager
                 .beginTransaction()
                 .replace(id.infoFragment, infoGroup.fragmentClass.newInstance(), "INFO")
                 .commit()

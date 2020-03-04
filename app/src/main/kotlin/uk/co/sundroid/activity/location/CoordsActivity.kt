@@ -18,6 +18,7 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.TextView.OnEditorActionListener
 import uk.co.sundroid.util.async.Async
+import java.util.*
 
 class CoordsActivity : AbstractLocationActivity() {
 
@@ -67,30 +68,34 @@ class CoordsActivity : AbstractLocationActivity() {
     private fun parseLocation(): LatitudeLongitude {
 
         val coordsField = findViewById<EditText>(R.id.coordsField)
-        val coordsValue = coordsField.text.toString().toUpperCase()
+        val coordsValue = coordsField.text.toString().toUpperCase(Locale.getDefault())
 
-        if (coordsValue.matches("[NS][0-9]+(\\.[0-9]+)? [WE][0-9]+(\\.[0-9]+)?".toRegex())) {
+        when {
+            coordsValue.matches("[NS][0-9]+(\\.[0-9]+)? [WE][0-9]+(\\.[0-9]+)?".toRegex()) -> {
 
-            val parts = coordsValue.split(" ")
-            var latDbl = parts[0].substring(1).toDouble()
-            var lonDbl = parts[1].substring(1).toDouble()
-            if (parts[0].startsWith("S")) {
-                latDbl = -latDbl
+                val parts = coordsValue.split(" ")
+                var latDbl = parts[0].substring(1).toDouble()
+                var lonDbl = parts[1].substring(1).toDouble()
+                if (parts[0].startsWith("S")) {
+                    latDbl = -latDbl
+                }
+                if (parts[1].startsWith("W")) {
+                    lonDbl = -lonDbl
+                }
+                return LatitudeLongitude(latDbl, lonDbl)
+
             }
-            if (parts[1].startsWith("W")) {
-                lonDbl = -lonDbl
+            coordsValue.matches("-?[0-9]+(\\.[0-9]+)? -?[0-9]+(\\.[0-9]+)?".toRegex()) -> {
+
+                val parts = coordsValue.split(" ")
+                return LatitudeLongitude(parts[0].toDouble(), parts[1].toDouble())
+
             }
-            return LatitudeLongitude(latDbl, lonDbl)
+            else -> {
 
-        } else if (coordsValue.matches("-?[0-9]+(\\.[0-9]+)? -?[0-9]+(\\.[0-9]+)?".toRegex())) {
+                return LatitudeLongitude(coordsValue)
 
-            val parts = coordsValue.split(" ")
-            return LatitudeLongitude(parts[0].toDouble(), parts[1].toDouble())
-
-        } else {
-
-            return LatitudeLongitude(coordsValue)
-
+            }
         }
 
     }

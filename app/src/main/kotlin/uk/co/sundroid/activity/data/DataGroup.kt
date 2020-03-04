@@ -1,7 +1,6 @@
 package uk.co.sundroid.activity.data
 
-import android.app.Fragment
-import uk.co.sundroid.R
+import androidx.fragment.app.Fragment
 import uk.co.sundroid.activity.data.fragments.*
 
 enum class DataGroup constructor(val displayName: String, val fragmentClass: Class<out Fragment>) {

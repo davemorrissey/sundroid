@@ -14,7 +14,7 @@
         </LinearLayout>
         <ImageButton android:id="@+id/monthNext" android:src="@drawable/navigation_next_item" android:layout_height="fill_parent" android:layout_width="48dp" android:layout_weight="0.01" android:layout_marginLeft="1px" android:contentDescription="@string/nextMonth"/>
     </LinearLayout>
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/zoneButton"
         android:layout_marginLeft="1px"
         android:layout_width="fill_parent"
@@ -23,7 +23,7 @@
         android:gravity="center_vertical"
         android:padding="5dp">
         <TextView android:id="@+id/zoneName" style="@style/zoneName"/>
-        <TextView android:id="@+id/zoneCities" style="@style/zoneCities" android:layout_below="@id/zoneName"/>
-    </RelativeLayout>
+        <TextView android:id="@+id/zoneCities" style="@style/zoneCities"/>
+    </LinearLayout>
 
 </LinearLayout>
