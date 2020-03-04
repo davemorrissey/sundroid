@@ -41,7 +41,6 @@
         <activity android:name="uk.co.sundroid.activity.location.SavedLocationsActivity" />
         <activity android:name="uk.co.sundroid.activity.location.LocationSelectActivity" />
         <activity android:name="uk.co.sundroid.activity.location.TimeZonePickerActivity" />
-        <activity android:name="uk.co.sundroid.activity.info.InfoActivity" />
         <activity android:name="uk.co.sundroid.activity.settings.AppSettingsActivity" />
 
         <meta-data

@@ -13,7 +13,7 @@ import uk.co.sundroid.R.layout
 
 import kotlinx.android.synthetic.main.frag_info_about.*
 
-class AboutFragment : AbstractFragment() {
+class InfoAboutFragment : AbstractFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, state: Bundle?): View? {
         return inflater.inflate(layout.frag_info_about, container, false)

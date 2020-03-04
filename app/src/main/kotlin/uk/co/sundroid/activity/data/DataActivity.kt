@@ -12,7 +12,6 @@ import uk.co.sundroid.AbstractActivity
 import uk.co.sundroid.NavItem
 import uk.co.sundroid.R
 import uk.co.sundroid.activity.data.fragments.*
-import uk.co.sundroid.activity.info.InfoActivity
 import uk.co.sundroid.activity.location.LocationSelectActivity
 import uk.co.sundroid.activity.location.TimeZonePickerActivity
 import uk.co.sundroid.activity.settings.AppSettingsActivity
@@ -135,7 +134,7 @@ abstract class DataActivity : AbstractActivity(), OnClickListener {
             MENU_CHANGE_LOCATION -> startLocationOptions()
             MENU_SAVE_LOCATION -> startSaveLocation()
             MENU_TIME_ZONE -> startTimeZone()
-            MENU_HELP -> startActivity(Intent(this, InfoActivity::class.java))
+//            MENU_HELP -> startActivity(Intent(this, InfoActivity::class.java))
             MENU_SETTINGS -> startActivity(Intent(this, AppSettingsActivity::class.java))
             MENU_VIEW_SETTINGS -> if (isFragmentConfigurable) {
                 (supportFragmentManager.findFragmentByTag(DATA_TAG) as ConfigurableFragment).openSettingsDialog()

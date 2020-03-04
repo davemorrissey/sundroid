@@ -10,27 +10,22 @@ import uk.co.sundroid.AbstractFragment
 import uk.co.sundroid.R
 import uk.co.sundroid.util.theme.*
 
-import kotlinx.android.synthetic.main.frag_info_glossary.*
+import kotlinx.android.synthetic.main.frag_info_guide.*
 
-class GlossaryFragment : AbstractFragment() {
+class InfoGuideFragment : AbstractFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, state: Bundle?): View? {
-        return inflater.inflate(R.layout.frag_info_glossary, container, false)
+        return inflater.inflate(R.layout.frag_info_guide, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         mapOf(
-                infGlossaryApsisDisclosure to infGlossaryApsisBody,
-                infGlossaryAzimuthDisclosure to infGlossaryAzimuthBody,
-                infGlossaryCivTwiDisclosure to infGlossaryCivTwiBody,
-                infGlossaryNtcTwiDisclosure to infGlossaryNtcTwiBody,
-                infGlossaryAstTwiDisclosure to infGlossaryAstTwiBody,
-                infGlossarySolNoonDisclosure to infGlossarySolNoonBody,
-                infGlossaryGoldenDisclosure to infGlossaryGoldenBody,
-                infGlossarySolsticeDisclosure to infGlossarySolsticeBody,
-                infGlossaryEquinoxDisclosure to infGlossaryEquinoxBody,
-                infGlossarySolEclipseDisclosure to infGlossarySolEclipseBody,
-                infGlossaryLunarEclipseDisclosure to infGlossaryLunarEclipseBody
+            infGuideDisclaimerDisclosure to infGuideDisclaimerBody,
+            infGuideLocationDisclosure to infGuideLocationBody,
+            infGuideOfflineDisclosure to infGuideOfflineBody,
+            infGuideTimeDisclosure to infGuideTimeBody,
+            infGuideZonesDisclosure to infGuideZonesBody,
+            infGuideTrackerDisclosure to infGuideTrackerBody
         ).forEach { (d, body) -> d.setOnClickListener { v -> toggle(v, body)} }
     }
 

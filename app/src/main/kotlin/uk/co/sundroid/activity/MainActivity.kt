@@ -4,14 +4,13 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
-
+import androidx.drawerlayout.widget.DrawerLayout
 import kotlinx.android.synthetic.main.main.*
 import uk.co.sundroid.AbstractActivity
 import uk.co.sundroid.BuildConfig
 import uk.co.sundroid.R
-import uk.co.sundroid.activity.data.DataGroup
-import uk.co.sundroid.activity.info.InfoActivity
 import uk.co.sundroid.activity.location.LocationSelectActivity
 import uk.co.sundroid.activity.settings.AppSettingsActivity
 import uk.co.sundroid.domain.LocationDetails
@@ -20,12 +19,15 @@ import uk.co.sundroid.util.prefs.Prefs
 import uk.co.sundroid.util.time.TimeZoneResolver
 import java.util.*
 
+
 class MainActivity : AbstractActivity() {
 
-    private var dataGroup: DataGroup = DataGroup.DAY_DETAIL
+    private var page: Page = Page.DAY_DETAIL
+    private var backPage: Page? = null
 
     var dateCalendar: Calendar = Calendar.getInstance()
     var timeCalendar: Calendar = Calendar.getInstance()
+    var actionBarDrawerToggle: ActionBarDrawerToggle? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +44,7 @@ class MainActivity : AbstractActivity() {
         Prefs.initPreferences(this)
         initCalendarAndLocation(forceDateUpdate)
         restoreState(savedInstanceState)
-        setDataGroup(dataGroup, true)
+        setPage(page, true)
     }
 
     public override fun onResume() {
@@ -84,35 +86,45 @@ class MainActivity : AbstractActivity() {
 
     override fun onSaveInstanceState(state: Bundle) {
         super.onSaveInstanceState(state)
-        state.putSerializable(STATE_DATA_GROUP, this.dataGroup)
+        state.putSerializable(STATE_PAGE, this.page)
         state.putLong(STATE_DATE_TIMESTAMP, this.dateCalendar.timeInMillis)
         state.putLong(STATE_TIME_TIMESTAMP, this.timeCalendar.timeInMillis)
     }
 
     private fun restoreState(state: Bundle?) {
-        this.dataGroup = DataGroup.DAY_DETAIL
+        this.page = Page.DAY_DETAIL
         if (state != null) {
-            if (state.containsKey(STATE_DATA_GROUP)) {
-                this.dataGroup = state.get(STATE_DATA_GROUP) as DataGroup
+            if (state.containsKey(STATE_PAGE)) {
+                this.page = state.get(STATE_PAGE) as Page
             }
             if (state.containsKey(STATE_DATE_TIMESTAMP) && state.containsKey(STATE_TIME_TIMESTAMP)) {
                 this.dateCalendar.timeInMillis = state.getLong(STATE_DATE_TIMESTAMP)
                 this.timeCalendar.timeInMillis = state.getLong(STATE_TIME_TIMESTAMP)
             }
-        } else {
-            this.dataGroup = Prefs.lastDataGroup(this)
+//        } else {
+//            this.dataGroup = Prefs.lastDataGroup(this)
         }
     }
 
-    private fun setDataGroup(dataGroup: DataGroup, force: Boolean = false) {
-        if (dataGroup != this.dataGroup || force) {
-            this.dataGroup = dataGroup
-            Prefs.setLastDataGroup(this, dataGroup)
+    private fun setPage(page: Page, force: Boolean = false) {
+        if (page != this.page || force) {
+            if (page.dataGroup != null) {
+                Prefs.setLastDataGroup(this, page.dataGroup)
+            } else {
+                this.backPage = this.page
+            }
+            this.page = page
             val existingFragment = supportFragmentManager.findFragmentByTag("ROOT")
-            if (existingFragment?.javaClass != dataGroup.fragmentClass || force) {
-                supportFragmentManager.beginTransaction()
-                        .replace(R.id.content, dataGroup.fragmentClass.newInstance(), "ROOT")
-                        .commit()
+            if (existingFragment?.javaClass != page.fragmentClass || force) {
+                val tx = supportFragmentManager.beginTransaction()
+                        .replace(R.id.content, page.fragmentClass.newInstance(), "ROOT")
+                if (page.dataGroup == null) {
+                    tx.addToBackStack(null)
+                    displayBackButton(true)
+                } else {
+                    displayBackButton(false)
+                }
+                tx.commit()
             }
         }
     }
@@ -138,32 +150,57 @@ class MainActivity : AbstractActivity() {
         toolbar?.setSubtitle(subtitle)
     }
 
+    fun setDisplayHomeAsUp(homeAsUp: Boolean) {
+//        supportActionBar?.setDisplayHomeAsUpEnabled(homeAsUp)
+    }
+
     private fun initNavigationDrawer() {
         navigationView.setCheckedItem(R.id.dayDetail)
         navigationView.setNavigationItemSelectedListener { menuItem ->
             drawerLayout.closeDrawers()
             when (menuItem.itemId) {
-                R.id.dayDetail -> setDataGroup(DataGroup.DAY_DETAIL)
-                R.id.tracker -> setDataGroup(DataGroup.TRACKER)
-                R.id.calendars -> setDataGroup(DataGroup.MONTH_CALENDARS)
-                R.id.yearEvents -> setDataGroup(DataGroup.YEAR_EVENTS)
+                R.id.dayDetail -> setPage(Page.DAY_DETAIL)
+//                R.id.tracker -> setPage(Page.TRACKER)
+//                R.id.calendars -> setPage(Page.MONTH_CALENDARS)
+//                R.id.yearEvents -> setPage(Page.YEAR_EVENTS)
                 R.id.location -> openActivity(LocationSelectActivity::class.java)
-                R.id.help -> openActivity(InfoActivity::class.java)
+                R.id.help -> setPage(Page.HELP)
                 R.id.settings -> openActivity(AppSettingsActivity::class.java)
             }
             true
         }
-        val actionBarDrawerToggle = ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close)
-        drawerLayout.addDrawerListener(actionBarDrawerToggle)
-        actionBarDrawerToggle.syncState()
+        actionBarDrawerToggle = ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close)
+        drawerLayout.addDrawerListener(actionBarDrawerToggle!!)
+        actionBarDrawerToggle?.syncState()
+    }
+
+    private fun displayBackButton(enable: Boolean) {
+        if (enable) {
+            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+            actionBarDrawerToggle?.isDrawerIndicatorEnabled = false
+            supportActionBar?.setDisplayHomeAsUpEnabled(true)
+            actionBarDrawerToggle?.toolbarNavigationClickListener = View.OnClickListener {
+                onBackPressed()
+            }
+        } else {
+            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+            supportActionBar?.setDisplayHomeAsUpEnabled(false)
+            actionBarDrawerToggle?.isDrawerIndicatorEnabled = true
+            actionBarDrawerToggle?.toolbarNavigationClickListener = null
+        }
     }
 
     override fun onBackPressed() {
-        moveTaskToBack(true)
+        super.onBackPressed()
+        displayBackButton(false)
+        if (backPage != null) {
+            page = backPage!!
+            backPage = null
+        }
     }
 
     companion object {
-        private const val STATE_DATA_GROUP = "dataView"
+        private const val STATE_PAGE = "page"
         private const val STATE_DATE_TIMESTAMP = "dateTimestamp"
         private const val STATE_TIME_TIMESTAMP = "timeTimestamp"
     }

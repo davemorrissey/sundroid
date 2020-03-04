@@ -10,7 +10,6 @@ import android.view.MenuItem
 
 import uk.co.sundroid.R
 import uk.co.sundroid.activity.MainActivity
-import uk.co.sundroid.activity.data.DataActivity
 import uk.co.sundroid.util.theme.*
 
 class AppSettingsActivity : PreferenceActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
@@ -36,13 +35,13 @@ class AppSettingsActivity : PreferenceActivity(), SharedPreferences.OnSharedPref
     }
 
     private fun onNavBackSelected() {
-        val intent = Intent(this, DataActivity::class.java)
+        val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
         finish()
     }
 
     override fun onBackPressed() {
-        val intent = Intent(this, DataActivity::class.java)
+        val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
         finish()
     }

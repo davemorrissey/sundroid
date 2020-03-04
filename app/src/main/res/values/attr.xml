@@ -14,6 +14,7 @@
     <attr name="divider_color" format="color"/>
     <attr name="list_divider" format="reference"/>
 
+    <attr name="accent_colour" format="color"/>
     <attr name="app_background_colour" format="color"/>
     <attr name="app_background" format="reference"/>
     <attr name="header_background" format="reference"/>

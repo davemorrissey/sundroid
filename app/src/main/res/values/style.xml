@@ -9,6 +9,7 @@
         <item name="android:windowNoTitle">true</item>
 		<item name="primary_color">@color/l_primary</item>
 		<item name="primary_color_dark">@color/l_primary_dark</item>
+		<item name="accent_colour">@color/l_accent</item>
 		<item name="app_background_colour">@color/l_app_background_start</item>
 		<item name="app_background">@drawable/l_app_bg</item>
 		<item name="header_background">@drawable/l_action_bar_bg</item>
@@ -53,6 +54,7 @@
         <item name="android:windowNoTitle">true</item>
 		<item name="primary_color">@color/d_primary</item>
 		<item name="primary_color_dark">@color/d_primary_dark</item>
+		<item name="accent_colour">@color/d_accent</item>
 		<item name="app_background_colour">@color/d_app_background_start</item>
 		<item name="app_background">@drawable/d_app_bg</item>
 		<item name="header_background">@drawable/d_action_bar_bg</item>
@@ -67,7 +69,7 @@
 		<item name="tab_bar_bg">@drawable/d_tab_bar_bg</item>
 		<item name="tabs_activetext">#ffffff</item>
 		<item name="tabs_inactivetext">#aaaaaa</item>
-		<item name="divider_color">#222222</item>
+		<item name="divider_color">#333333</item>
 		<item name="button_divider_color">@color/d_button_divider</item>
 		<item name="button_bar_bg">@drawable/d_button_bar_bg</item>
 		<item name="button_text">@color/d_button_text</item>
@@ -173,8 +175,8 @@
 	</style>
 
 	<style name="TabLayoutStyle" parent="Widget.Design.TabLayout">
-		<item name="tabIndicatorColor">?app_background_colour</item>
-		<item name="tabIndicatorHeight">2dp</item>
+		<item name="tabIndicatorColor">?accent_colour</item>
+		<item name="tabIndicatorHeight">4dp</item>
 		<item name="tabPaddingStart">8dp</item>
 		<item name="tabPaddingEnd">8dp</item>
 		<item name="tabBackground">?primary_color</item>
@@ -183,7 +185,7 @@
 	</style>
 
 	<style name="TabTextAppearance" parent="TextAppearance.Design.Tab">
-		<item name="android:textSize">14sp</item>
+		<item name="android:textSize">16sp</item>
 		<item name="android:textColor">?tabs_inactivetext</item>
 		<item name="textAllCaps">true</item>
 	</style>
@@ -197,7 +199,7 @@
     </style>
 
 	<style name="text">
-		<item name="android:textSize">14sp</item>
+		<item name="android:textSize">16sp</item>
 		<item name="android:textColor">?body_text</item>
 	</style>
 	
@@ -224,17 +226,16 @@
 		<item name="android:layout_width">fill_parent</item>
 		<item name="android:layout_height">wrap_content</item>
 		<item name="android:textSize">20sp</item>
-		<item name="android:padding">10dp</item>
 		<item name="android:gravity">left</item>
 		<item name="android:background">?disclosure</item>
 		<item name="android:clickable">true</item>
 		<item name="android:focusable">true</item>
 	</style>
 	<style name="listMenuDisclosureButton" parent="@style/listMenuButton">
-		<item name="android:paddingTop">10dp</item>
-		<item name="android:paddingRight">10dp</item>
-		<item name="android:paddingBottom">10dp</item>
-		<item name="android:paddingLeft">5dp</item>
+		<item name="android:paddingTop">16dp</item>
+		<item name="android:paddingRight">12dp</item>
+		<item name="android:paddingBottom">16dp</item>
+		<item name="android:paddingLeft">20dp</item>
 		<item name="android:drawableRight">?disclosure_closed</item>
 		<item name="android:drawablePadding">0dp</item>
 	</style>
@@ -242,7 +243,7 @@
 		<item name="android:layout_width">fill_parent</item>
 		<item name="android:layout_height">wrap_content</item>
 		<item name="android:visibility">gone</item>
-		<item name="android:padding">10dp</item>
+		<item name="android:padding">20dp</item>
 	</style>
 	
 	<style name="listMenuIconButton" parent="@style/listMenuButton">

@@ -4,15 +4,15 @@
         <item
             android:id="@+id/dayDetail"
             android:title="@string/data.detail.nav"/>
-        <item
-            android:id="@+id/tracker"
-            android:title="@string/data.tracker.nav"/>
-        <item
-            android:id="@+id/calendars"
-            android:title="@string/data.calendars.nav"/>
-        <item
-            android:id="@+id/yearEvents"
-            android:title="@string/data.year.nav"/>
+<!--        <item-->
+<!--            android:id="@+id/tracker"-->
+<!--            android:title="@string/data.tracker.nav"/>-->
+<!--        <item-->
+<!--            android:id="@+id/calendars"-->
+<!--            android:title="@string/data.calendars.nav"/>-->
+<!--        <item-->
+<!--            android:id="@+id/yearEvents"-->
+<!--            android:title="@string/data.year.nav"/>-->
     </group>
     <group android:checkableBehavior="none">
         <item

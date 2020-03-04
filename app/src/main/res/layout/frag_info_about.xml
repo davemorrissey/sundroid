@@ -6,28 +6,28 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:padding="15dp"
+        android:padding="30dp"
         android:orientation="vertical"
         android:gravity="center">
 
         <ImageView
             android:id="@+id/aboutIcon"
             android:src="@drawable/logo"
-            android:layout_height="120dp"
-            android:layout_width="120dp"
-            android:layout_marginBottom="15dp" />
+            android:layout_height="160dp"
+            android:layout_width="160dp"
+            android:layout_marginBottom="30dp" />
 
         <TextView
             android:id="@+id/aboutVersion"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:textColor="?body_text"
-            android:textSize="18sp"
+            android:textSize="20sp"
             android:gravity="center" />
 
         <TextView
             style="@style/bodyText"
-            android:textSize="12sp"
+            android:textSize="14sp"
             android:layout_marginTop="15dp"
             android:gravity="center"
             android:text="Sun position code adapted from original by the\nNational Oceanic and Atmospheric Administration.\nhttp://www.srrb.noaa.gov/highlights/sunrise/sunrise.html\nEclipse Predictions by Fred Espenak, NASA's GSFC" />

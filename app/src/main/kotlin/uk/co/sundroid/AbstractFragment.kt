@@ -26,6 +26,7 @@ abstract class AbstractFragment : Fragment() {
             return prefs
         }
 
+    @Deprecated("Use require methods")
     protected val applicationContext: Context?
         get() {
             return activity?.applicationContext
