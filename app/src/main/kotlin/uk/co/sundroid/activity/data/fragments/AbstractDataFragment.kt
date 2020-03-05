@@ -18,8 +18,8 @@ import java.util.*
  */
 abstract class AbstractDataFragment : AbstractFragment(), OnViewPrefsChangedListener {
 
-    protected var isSafe: Boolean = false
-        get() = activity != null && !isDetached && applicationContext != null
+    protected var isSafe: Boolean = true
+//        get() = activity != null && !isDetached
 
     override fun onResume() {
         super.onResume()

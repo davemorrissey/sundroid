@@ -22,12 +22,12 @@ import java.util.*
 
 class MainActivity : AbstractActivity() {
 
-    private var page: Page = Page.DAY_DETAIL
+    private var page: Page = Page.DAY_SUMMARY
     private var backPage: Page? = null
 
     var dateCalendar: Calendar = Calendar.getInstance()
     var timeCalendar: Calendar = Calendar.getInstance()
-    var actionBarDrawerToggle: ActionBarDrawerToggle? = null
+    private var actionBarDrawerToggle: ActionBarDrawerToggle? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -92,7 +92,7 @@ class MainActivity : AbstractActivity() {
     }
 
     private fun restoreState(state: Bundle?) {
-        this.page = Page.DAY_DETAIL
+        this.page = Page.DAY_SUMMARY
         if (state != null) {
             if (state.containsKey(STATE_PAGE)) {
                 this.page = state.get(STATE_PAGE) as Page
@@ -155,10 +155,11 @@ class MainActivity : AbstractActivity() {
     }
 
     private fun initNavigationDrawer() {
-        navigationView.setCheckedItem(R.id.dayDetail)
+        navigationView.setCheckedItem(R.id.daySummary)
         navigationView.setNavigationItemSelectedListener { menuItem ->
             drawerLayout.closeDrawers()
             when (menuItem.itemId) {
+                R.id.daySummary -> setPage(Page.DAY_SUMMARY)
                 R.id.dayDetail -> setPage(Page.DAY_DETAIL)
 //                R.id.tracker -> setPage(Page.TRACKER)
 //                R.id.calendars -> setPage(Page.MONTH_CALENDARS)

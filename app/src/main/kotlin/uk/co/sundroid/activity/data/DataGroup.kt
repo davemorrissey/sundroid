@@ -1,14 +1,12 @@
 package uk.co.sundroid.activity.data
 
-import androidx.fragment.app.Fragment
-import uk.co.sundroid.activity.data.fragments.*
+enum class DataGroup constructor(val displayName: String) {
 
-enum class DataGroup constructor(val displayName: String, val fragmentClass: Class<out Fragment>) {
-
-    DAY_DETAIL("Day in detail", DayDetailFragment::class.java),
-    TRACKER("Sun and moon tracker", TrackerFragment::class.java),
-    MONTH_CALENDARS("Month calendars", MonthCalendarsFragment::class.java),
-    MONTH_MOONPHASE("Moon phase calendar", MonthMoonPhaseFragment::class.java),
-    YEAR_EVENTS("Year events", YearEventsFragment::class.java);
+    DAY_SUMMARY("Day summary"),
+    DAY_DETAIL("Day in detail"),
+    TRACKER("Sun and moon tracker"),
+    MONTH_CALENDARS("Month calendars"),
+    MONTH_MOONPHASE("Moon phase calendar"),
+    YEAR_EVENTS("Year events")
 
 }

@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <include
+        android:id="@+id/incDateBar"
+        layout="@layout/inc_datebar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" />
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@id/incDateBar">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/sunDataBox"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:paddingTop="15dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="15dp">
+
+                <ImageView
+                    android:id="@+id/sunImage"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginRight="5dp"
+                    android:maxWidth="80dp"
+                    android:maxHeight="80dp"
+                    android:paddingLeft="0dp"
+                    android:paddingTop="0dp"
+                    android:paddingRight="5dp"
+                    android:paddingBottom="5dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/sun" />
+
+                <LinearLayout
+                    android:id="@+id/sunDataBoxTop"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/sunImage"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/sunSpecial"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="20dp"
+                        android:paddingBottom="10dp"
+                        android:textColor="?body_text"
+                        android:textSize="22sp"
+                        android:visibility="gone" />
+
+                    <RelativeLayout
+                        android:id="@+id/sunEvt1Row"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/sunEvt1Label"
+                            style="@style/text"
+                            android:layout_width="60dp"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="10sp"
+                            android:textColor="?secondary_text"
+                            android:textSize="14sp" />
+
+                        <ImageView
+                            android:id="@+id/sunEvt1Img"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="9sp"
+                            android:layout_marginRight="12dp"
+                            android:layout_toRightOf="@id/sunEvt1Label" />
+
+                        <TextView
+                            android:id="@+id/sunEvt1Time"
+                            style="@style/text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignBaseline="@id/sunEvt1Label"
+                            android:layout_toRightOf="@id/sunEvt1Img"
+                            android:textSize="26sp" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/sunEvt2Row"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/sunEvt2Label"
+                            style="@style/text"
+                            android:layout_width="60dp"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="10sp"
+                            android:textColor="?secondary_text"
+                            android:textSize="14sp" />
+
+                        <ImageView
+                            android:id="@+id/sunEvt2Img"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="9sp"
+                            android:layout_marginRight="12dp"
+                            android:layout_toRightOf="@id/sunEvt2Label" />
+
+                        <TextView
+                            android:id="@+id/sunEvt2Time"
+                            style="@style/text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignBaseline="@id/sunEvt2Label"
+                            android:layout_toRightOf="@id/sunEvt2Img"
+                            android:textSize="26sp" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/sunUptimeRow"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/sunUptimeLabel"
+                            style="@style/text"
+                            android:layout_width="95dp"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="5sp"
+                            android:text="LENGTH"
+                            android:textColor="?secondary_text"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/sunUptimeTime"
+                            style="@style/text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="fill_parent"
+                            android:layout_alignBaseline="@id/sunUptimeLabel"
+                            android:layout_toRightOf="@id/sunUptimeLabel"
+                            android:textSize="20sp" />
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+            <View
+                style="@style/listMenuDivider"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp" />
+
+            <RelativeLayout
+                android:id="@+id/moonDataBox"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+
+                <ImageView
+                    android:id="@+id/moonImage"
+                    android:layout_width="75dp"
+                    android:layout_height="75dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginLeft="7dp"
+                    android:layout_marginRight="3dp"
+                    android:maxWidth="75dp"
+                    android:maxHeight="75dp"
+                    android:paddingLeft="0dp"
+                    android:paddingTop="5dp"
+                    android:paddingRight="15dp"
+                    android:paddingBottom="10dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/moon" />
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/moonImage"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/moonSpecial"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="20dp"
+                        android:paddingBottom="10dp"
+                        android:textColor="?body_text"
+                        android:textSize="22sp"
+                        android:visibility="gone" />
+
+                    <RelativeLayout
+                        android:id="@+id/moonEvt1Row"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/moonEvt1Label"
+                            style="@style/text"
+                            android:layout_width="60dp"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="10sp"
+                            android:textColor="?secondary_text"
+                            android:textSize="14sp" />
+
+                        <ImageView
+                            android:id="@+id/moonEvt1Img"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="9sp"
+                            android:layout_marginRight="12dp"
+                            android:layout_toRightOf="@id/moonEvt1Label" />
+
+                        <TextView
+                            android:id="@+id/moonEvt1Time"
+                            style="@style/text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignBaseline="@id/moonEvt1Label"
+                            android:layout_toRightOf="@id/moonEvt1Img"
+                            android:textSize="26sp" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/moonEvt2Row"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/moonEvt2Label"
+                            style="@style/text"
+                            android:layout_width="60dp"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="10sp"
+                            android:textColor="?secondary_text"
+                            android:textSize="14sp" />
+
+                        <ImageView
+                            android:id="@+id/moonEvt2Img"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="9sp"
+                            android:layout_marginRight="12dp"
+                            android:layout_toRightOf="@id/moonEvt2Label" />
+
+                        <TextView
+                            android:id="@+id/moonEvt2Time"
+                            style="@style/text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignBaseline="@id/moonEvt2Label"
+                            android:layout_toRightOf="@id/moonEvt2Img"
+                            android:textSize="26sp" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/moonPhaseRow"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/moonPhaseLabel"
+                            style="@style/text"
+                            android:layout_width="95dp"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="5sp"
+                            android:text="PHASE"
+                            android:textColor="?secondary_text"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/moonPhase"
+                            style="@style/text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="fill_parent"
+                            android:layout_alignBaseline="@id/moonPhaseLabel"
+                            android:layout_toRightOf="@id/moonPhaseLabel"
+                            android:textSize="16sp" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/moonIlluminationRow"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp">
+
+                        <TextView
+                            android:id="@+id/moonIlluminationLabel"
+                            style="@style/text"
+                            android:layout_width="95dp"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="5sp"
+                            android:text="VISIBILITY"
+                            android:textColor="?secondary_text"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/moonIllumination"
+                            style="@style/text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="fill_parent"
+                            android:layout_alignBaseline="@id/moonIlluminationLabel"
+                            android:layout_toRightOf="@id/moonIlluminationLabel"
+                            android:textSize="20sp" />
+                    </RelativeLayout>
+                </LinearLayout>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</RelativeLayout>

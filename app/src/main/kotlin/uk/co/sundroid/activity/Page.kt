@@ -7,6 +7,7 @@ import uk.co.sundroid.activity.info.fragments.InfoFragment
 
 enum class Page constructor(val displayName: String, val fragmentClass: Class<out Fragment>, val dataGroup: DataGroup?) {
 
+    DAY_SUMMARY("Day summary", DaySummaryFragment::class.java, DataGroup.DAY_SUMMARY),
     DAY_DETAIL("Day in detail", DayDetailFragment::class.java, DataGroup.DAY_DETAIL),
     TRACKER("Sun and moon tracker", TrackerFragment::class.java, DataGroup.TRACKER),
     MONTH_CALENDARS("Month calendars", MonthCalendarsFragment::class.java, DataGroup.MONTH_CALENDARS),

@@ -2,6 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single" android:id="@+id/nav_pages">
         <item
+            android:id="@+id/daySummary"
+            android:title="@string/data.summary.nav"/>
+        <item
             android:id="@+id/dayDetail"
             android:title="@string/data.detail.nav"/>
 <!--        <item-->
@@ -14,7 +17,7 @@
 <!--            android:id="@+id/yearEvents"-->
 <!--            android:title="@string/data.year.nav"/>-->
     </group>
-    <group android:checkableBehavior="none">
+    <group android:checkableBehavior="single">
         <item
             android:id="@+id/location"
             android:title="@string/loc.nav"/>
