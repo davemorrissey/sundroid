@@ -3,7 +3,10 @@
     package="uk.co.sundroid"
     android:installLocation="internalOnly">
 
-    <supports-screens android:smallScreens="false" />
+    <supports-screens
+        android:smallScreens="false"
+        android:largeScreens="false"
+        android:xlargeScreens="false"/>
 
     <uses-feature
         android:glEsVersion="0x00020000"
