@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
 
@@ -25,23 +26,23 @@
                 android:id="@+id/sunDataBox"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="10dp"
-                android:paddingTop="15dp"
-                android:paddingRight="10dp"
-                android:paddingBottom="15dp">
+                android:paddingLeft="15dp"
+                android:paddingTop="20dp"
+                android:paddingRight="15dp"
+                android:paddingBottom="20dp">
 
                 <ImageView
                     android:id="@+id/sunImage"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
                     android:layout_alignParentTop="true"
                     android:layout_marginRight="5dp"
-                    android:maxWidth="80dp"
-                    android:maxHeight="80dp"
+                    android:maxWidth="120dp"
+                    android:maxHeight="120dp"
                     android:paddingLeft="0dp"
                     android:paddingTop="0dp"
-                    android:paddingRight="5dp"
-                    android:paddingBottom="5dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="10dp"
                     android:scaleType="fitXY"
                     android:src="@drawable/sun" />
 
@@ -60,7 +61,8 @@
                         android:paddingBottom="10dp"
                         android:textColor="?body_text"
                         android:textSize="22sp"
-                        android:visibility="gone" />
+                        android:visibility="gone"
+                        tools:text="Risen all day"/>
 
                     <RelativeLayout
                         android:id="@+id/sunEvt0Row"
@@ -70,19 +72,21 @@
                         <TextView
                             android:id="@+id/sunEvt0Label"
                             style="@style/text"
-                            android:layout_width="60dp"
+                            android:layout_width="70dp"
                             android:layout_height="wrap_content"
                             android:paddingTop="10sp"
                             android:textColor="?secondary_text"
-                            android:textSize="14sp" />
+                            android:textSize="16dp"
+                            tools:text="RISE" />
 
                         <ImageView
                             android:id="@+id/sunEvt0Img"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="9sp"
-                            android:layout_marginRight="12dp"
-                            android:layout_toRightOf="@id/sunEvt0Label" />
+                            android:layout_marginTop="12sp"
+                            android:layout_marginRight="15dp"
+                            android:layout_toRightOf="@id/sunEvt0Label"
+                            tools:src="@drawable/d_rise" />
 
                         <TextView
                             android:id="@+id/sunEvt0Time"
@@ -91,30 +95,34 @@
                             android:layout_height="wrap_content"
                             android:layout_alignBaseline="@id/sunEvt0Label"
                             android:layout_toRightOf="@id/sunEvt0Img"
-                            android:textSize="26sp" />
+                            android:textSize="32sp"
+                            tools:text="01:23am" />
                     </RelativeLayout>
 
                     <RelativeLayout
                         android:id="@+id/sunEvt1Row"
                         android:layout_width="fill_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp">
 
                         <TextView
                             android:id="@+id/sunEvt1Label"
                             style="@style/text"
-                            android:layout_width="60dp"
+                            android:layout_width="70dp"
                             android:layout_height="wrap_content"
                             android:paddingTop="10sp"
                             android:textColor="?secondary_text"
-                            android:textSize="14sp" />
+                            android:textSize="16sp"
+                            tools:text="SET" />
 
                         <ImageView
                             android:id="@+id/sunEvt1Img"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="9sp"
-                            android:layout_marginRight="12dp"
-                            android:layout_toRightOf="@id/sunEvt1Label" />
+                            android:layout_marginTop="12sp"
+                            android:layout_marginRight="15dp"
+                            android:layout_toRightOf="@id/sunEvt1Label"
+                            tools:src="@drawable/d_set" />
 
                         <TextView
                             android:id="@+id/sunEvt1Time"
@@ -123,23 +131,25 @@
                             android:layout_height="wrap_content"
                             android:layout_alignBaseline="@id/sunEvt1Label"
                             android:layout_toRightOf="@id/sunEvt1Img"
-                            android:textSize="26sp" />
+                            android:textSize="32sp"
+                            tools:text="12:34pm" />
                     </RelativeLayout>
 
                     <RelativeLayout
                         android:id="@+id/sunUptimeRow"
                         android:layout_width="fill_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp">
 
                         <TextView
                             android:id="@+id/sunUptimeLabel"
                             style="@style/text"
-                            android:layout_width="95dp"
+                            android:layout_width="110dp"
                             android:layout_height="wrap_content"
                             android:paddingTop="5sp"
                             android:text="LENGTH"
                             android:textColor="?secondary_text"
-                            android:textSize="14sp" />
+                            android:textSize="16sp" />
 
                         <TextView
                             android:id="@+id/sunUptimeTime"
@@ -148,7 +158,8 @@
                             android:layout_height="fill_parent"
                             android:layout_alignBaseline="@id/sunUptimeLabel"
                             android:layout_toRightOf="@id/sunUptimeLabel"
-                            android:textSize="20sp" />
+                            android:textSize="24sp"
+                            tools:text="12h 34m" />
                     </RelativeLayout>
 
                 </LinearLayout>
@@ -164,21 +175,21 @@
                 android:id="@+id/moonDataBox"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:padding="10dp">
+                android:padding="15dp">
 
                 <ImageView
                     android:id="@+id/moonImage"
-                    android:layout_width="75dp"
-                    android:layout_height="75dp"
+                    android:layout_width="115dp"
+                    android:layout_height="115dp"
                     android:layout_alignParentTop="true"
-                    android:layout_marginLeft="7dp"
-                    android:layout_marginRight="3dp"
-                    android:maxWidth="75dp"
-                    android:maxHeight="75dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:maxWidth="115dp"
+                    android:maxHeight="115dp"
                     android:paddingLeft="0dp"
-                    android:paddingTop="5dp"
-                    android:paddingRight="15dp"
-                    android:paddingBottom="10dp"
+                    android:paddingTop="10dp"
+                    android:paddingRight="20dp"
+                    android:paddingBottom="15dp"
                     android:scaleType="fitXY"
                     android:src="@drawable/moon" />
 
@@ -196,7 +207,8 @@
                         android:paddingBottom="10dp"
                         android:textColor="?body_text"
                         android:textSize="22sp"
-                        android:visibility="gone" />
+                        android:visibility="gone"
+                        tools:text="Risen all day"/>
 
                     <RelativeLayout
                         android:id="@+id/moonEvt0Row"
@@ -206,19 +218,21 @@
                         <TextView
                             android:id="@+id/moonEvt0Label"
                             style="@style/text"
-                            android:layout_width="60dp"
+                            android:layout_width="70dp"
                             android:layout_height="wrap_content"
                             android:paddingTop="10sp"
                             android:textColor="?secondary_text"
-                            android:textSize="14sp" />
+                            android:textSize="16sp"
+                            tools:text="RISE" />
 
                         <ImageView
                             android:id="@+id/moonEvt0Img"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="9sp"
-                            android:layout_marginRight="12dp"
-                            android:layout_toRightOf="@id/moonEvt0Label" />
+                            android:layout_marginTop="12sp"
+                            android:layout_marginRight="15dp"
+                            android:layout_toRightOf="@id/moonEvt0Label"
+                            tools:src="@drawable/d_rise"/>
 
                         <TextView
                             android:id="@+id/moonEvt0Time"
@@ -227,30 +241,34 @@
                             android:layout_height="wrap_content"
                             android:layout_alignBaseline="@id/moonEvt0Label"
                             android:layout_toRightOf="@id/moonEvt0Img"
-                            android:textSize="26sp" />
+                            android:textSize="32sp"
+                            tools:text="01:23am" />
                     </RelativeLayout>
 
                     <RelativeLayout
                         android:id="@+id/moonEvt1Row"
                         android:layout_width="fill_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp">
 
                         <TextView
                             android:id="@+id/moonEvt1Label"
                             style="@style/text"
-                            android:layout_width="60dp"
+                            android:layout_width="70dp"
                             android:layout_height="wrap_content"
                             android:paddingTop="10sp"
                             android:textColor="?secondary_text"
-                            android:textSize="14sp" />
+                            android:textSize="16sp"
+                            tools:text="SET" />
 
                         <ImageView
                             android:id="@+id/moonEvt1Img"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="9sp"
-                            android:layout_marginRight="12dp"
-                            android:layout_toRightOf="@id/moonEvt1Label" />
+                            android:layout_marginTop="12sp"
+                            android:layout_marginRight="15dp"
+                            android:layout_toRightOf="@id/moonEvt1Label"
+                            tools:src="@drawable/d_set"/>
 
                         <TextView
                             android:id="@+id/moonEvt1Time"
@@ -259,23 +277,25 @@
                             android:layout_height="wrap_content"
                             android:layout_alignBaseline="@id/moonEvt1Label"
                             android:layout_toRightOf="@id/moonEvt1Img"
-                            android:textSize="26sp" />
+                            android:text="12:34pm"
+                            android:textSize="32sp" />
                     </RelativeLayout>
 
                     <RelativeLayout
                         android:id="@+id/moonPhaseRow"
                         android:layout_width="fill_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp">
 
                         <TextView
                             android:id="@+id/moonPhaseLabel"
                             style="@style/text"
-                            android:layout_width="95dp"
+                            android:layout_width="110dp"
                             android:layout_height="wrap_content"
                             android:paddingTop="5sp"
                             android:text="PHASE"
                             android:textColor="?secondary_text"
-                            android:textSize="14sp" />
+                            android:textSize="16sp" />
 
                         <TextView
                             android:id="@+id/moonPhase"
@@ -284,24 +304,25 @@
                             android:layout_height="fill_parent"
                             android:layout_alignBaseline="@id/moonPhaseLabel"
                             android:layout_toRightOf="@id/moonPhaseLabel"
-                            android:textSize="16sp" />
+                            android:textSize="20sp"
+                            tools:text="Evening crescent" />
                     </RelativeLayout>
 
                     <RelativeLayout
                         android:id="@+id/moonIlluminationRow"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp">
+                        android:layout_marginTop="10dp">
 
                         <TextView
                             android:id="@+id/moonIlluminationLabel"
                             style="@style/text"
-                            android:layout_width="95dp"
+                            android:layout_width="110dp"
                             android:layout_height="wrap_content"
                             android:paddingTop="5sp"
                             android:text="VISIBILITY"
                             android:textColor="?secondary_text"
-                            android:textSize="14sp" />
+                            android:textSize="16sp" />
 
                         <TextView
                             android:id="@+id/moonIllumination"
@@ -310,7 +331,8 @@
                             android:layout_height="fill_parent"
                             android:layout_alignBaseline="@id/moonIlluminationLabel"
                             android:layout_toRightOf="@id/moonIlluminationLabel"
-                            android:textSize="20sp" />
+                            android:textSize="20sp"
+                            tools:text="100%" />
                     </RelativeLayout>
                 </LinearLayout>
 
