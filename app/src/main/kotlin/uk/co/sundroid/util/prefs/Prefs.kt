@@ -151,7 +151,8 @@ object Prefs {
     }
 
     fun theme(context: Context): String {
-        return prefs(context).getString(THEME_KEY, null) ?: THEME_DARK
+//        return prefs(context).getString(THEME_KEY, null) ?: THEME_DARK
+        return THEME_DARK
     }
 
     fun locationTimeout(context: Context): Int {
