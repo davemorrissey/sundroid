@@ -1,9 +1,9 @@
 package uk.co.sundroid.util.astro
 
 
-enum class RiseSetType {
+enum class RiseSetType(val description: String) {
 
-    RISEN,
-    SET
+    RISEN ("Risen all day"),
+    SET ("Set all day")
 
 }

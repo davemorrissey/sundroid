@@ -45,20 +45,33 @@ abstract class AbstractFragment : Fragment() {
 
     protected fun show(view: View, vararg ids: Int) {
         view.visibility = View.VISIBLE
-        for (id in ids) {
-            view.findViewById<View>(id).visibility = View.VISIBLE
+        ids.forEach {
+            view.findViewById<View>(it).visibility = View.VISIBLE
         }
     }
 
+    protected fun text(view: TextView, text: CharSequence) {
+        view.visibility = View.VISIBLE
+        view.text = text
+    }
+
+    protected fun visible(vararg views: View) {
+        views.forEach { it.visibility = View.VISIBLE }
+    }
+
+    protected fun gone(vararg views: View) {
+        views.forEach { it.visibility = View.GONE }
+    }
+
     protected fun remove(view: View, vararg ids: Int) {
-        for (id in ids) {
-            view.findViewById<View>(id).visibility = View.GONE
+        ids.forEach {
+            view.findViewById<View>(it).visibility = View.GONE
         }
     }
 
     protected fun hide(view: View, vararg ids: Int) {
-        for (id in ids) {
-            view.findViewById<View>(id).visibility = View.INVISIBLE
+        ids.forEach {
+            view.findViewById<View>(it).visibility = View.INVISIBLE
         }
     }
 

@@ -1,12 +1,12 @@
 package uk.co.sundroid.activity.data.fragments
 
+import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.os.Handler
 import android.view.View
 import uk.co.sundroid.R
 import uk.co.sundroid.util.astro.Body
 import uk.co.sundroid.util.astro.MoonDay
-import uk.co.sundroid.util.astro.RiseSetType
 import uk.co.sundroid.util.astro.SunDay
 import uk.co.sundroid.util.astro.math.BodyPositionCalculator
 import uk.co.sundroid.util.astro.math.SunCalculator
@@ -16,12 +16,15 @@ import uk.co.sundroid.util.time.*
 import java.util.*
 
 import kotlinx.android.synthetic.main.frag_data_daysummary.*
+import uk.co.sundroid.util.astro.RiseSetType.*
+import android.view.View.*
 
 class DaySummaryFragment : AbstractDayFragment() {
     private val handler = Handler()
     override val layout: Int
         get() = R.layout.frag_data_daysummary
 
+    @SuppressLint("SetTextI18n")
     override fun updateData(view: View) {
         val location = getLocation()
         val calendar = getDateCalendar()
@@ -29,25 +32,21 @@ class DaySummaryFragment : AbstractDayFragment() {
         val sunDay: SunDay = SunCalculator.calcDay(location.location, calendar)
         val moonDay: MoonDay = BodyPositionCalculator.calcDay(Body.MOON, location.location, calendar, true) as MoonDay
 
-        // Asynchronously generate moon graphic to speed up response.
-        val thread: Thread = object : Thread() {
-            override fun run() {
-                context?.let {
-                    val phase: Double = moonDay.phaseDouble
-                    val moonBitmap: Bitmap = MoonPhaseImage.makeImage(resources, R.drawable.moon, phase, location.location.latitude.doubleValue < 0, MoonPhaseImage.SIZE_MEDIUM)
-                    handler.post {
-                        moonImage?.setImageBitmap(moonBitmap)
-                    }
+        Thread(Runnable {
+            context?.let {
+                val phase: Double = moonDay.phaseDouble
+                val moonBitmap: Bitmap = MoonPhaseImage.makeImage(resources, R.drawable.moon, phase, location.location.latitude.doubleValue < 0, MoonPhaseImage.SIZE_MEDIUM)
+                handler.post {
+                    moonImage?.setImageBitmap(moonBitmap)
                 }
             }
-        }
-        thread.start()
-        if (sunDay.riseSetType === RiseSetType.RISEN || sunDay.riseSetType === RiseSetType.SET) {
-            show(view, R.id.sunSpecial, if (sunDay.riseSetType === RiseSetType.RISEN) "Risen all day" else "Set all day")
-            remove(view, R.id.sunEvt1Row, R.id.sunEvt2Row, R.id.sunUptimeRow)
+        }).start()
+
+        gone(sunSpecial, sunEvt0Row, sunEvt1Row, sunUptimeRow)
+        if (sunDay.riseSetType in setOf(RISEN, SET)) {
+            sunSpecial.text = sunDay.riseSetType?.description
+            sunSpecial.visibility = VISIBLE
         } else {
-            remove(view, R.id.sunSpecial)
-            remove(view, R.id.sunEvt1Row, R.id.sunEvt2Row)
             val events: MutableSet<SummaryEvent> = TreeSet()
             sunDay.rise?.let {
                 events.add(SummaryEvent("RISE", it, sunDay.riseAzimuth))
@@ -55,32 +54,24 @@ class DaySummaryFragment : AbstractDayFragment() {
             sunDay.set?.let {
                 events.add(SummaryEvent("SET", it, sunDay.setAzimuth))
             }
-            var index = 1
-            for (event in events) {
-                val rowId = view("sunEvt${index}Row")
-                val labelId = view("sunEvt${index}Label")
-                val timeId = view("sunEvt${index}Time")
-                val imgId = view("sunEvt${index}Img")
+            events.forEachIndexed { index, event ->
                 val time: Time = formatTime(requireContext(), event.time, false)
-                text(view, labelId, event.name)
-                text(view, timeId, time.time + time.marker.toLowerCase(Locale.getDefault()))
-                image(view, imgId, if (event.name == "RISE") getRiseArrow() else getSetArrow())
-                show(view, rowId)
-                index++
+                text(view, view("sunEvt${index}Label"), event.name)
+                text(view, view("sunEvt${index}Time"), time.time + time.marker.toLowerCase(Locale.getDefault()))
+                image(view, view("sunEvt${index}Img"), if (event.name == "RISE") getRiseArrow() else getSetArrow())
+                show(view, view("sunEvt${index}Row"))
             }
             if (sunDay.uptimeHours > 0 && sunDay.uptimeHours < 24) {
-                show(view, R.id.sunUptimeRow)
-                show(view, R.id.sunUptimeTime, formatDurationHMS(requireContext(), sunDay.uptimeHours, false))
-            } else {
-                remove(view, R.id.sunUptimeRow)
+                sunUptimeRow.visibility = VISIBLE
+                sunUptimeTime.text = formatDurationHMS(requireContext(), sunDay.uptimeHours, false)
             }
         }
-        if (moonDay.riseSetType === RiseSetType.RISEN || moonDay.riseSetType === RiseSetType.SET) {
-            show(view, R.id.moonSpecial, if (moonDay.riseSetType === RiseSetType.RISEN) "Risen all day" else "Set all day")
-            remove(view, R.id.moonEvt1Row, R.id.moonEvt2Row)
+
+        gone(moonSpecial, moonEvt0Row, moonEvt1Row)
+        if (moonDay.riseSetType in setOf(RISEN, SET)) {
+            moonSpecial.text = moonDay.riseSetType?.description
+            moonSpecial.visibility = VISIBLE
         } else {
-            remove(view, R.id.moonSpecial)
-            remove(view, R.id.moonEvt1Row, R.id.moonEvt2Row)
             val events: MutableSet<SummaryEvent> = TreeSet()
             moonDay.rise?.let {
                 events.add(SummaryEvent("RISE", it, moonDay.riseAzimuth))
@@ -88,27 +79,21 @@ class DaySummaryFragment : AbstractDayFragment() {
             moonDay.set?.let {
                 events.add(SummaryEvent("SET", it, moonDay.setAzimuth))
             }
-            var index = 1
-            for (event in events) {
-                val rowId = view("moonEvt${index}Row")
-                val labelId = view("moonEvt${index}Label")
-                val timeId = view("moonEvt${index}Time")
-                val imgId = view("moonEvt${index}Img")
+            events.forEachIndexed { index, event ->
                 val time: Time = formatTime(requireContext(), event.time, false)
-                text(view, labelId, event.name)
-                text(view, timeId, time.time + time.marker.toLowerCase(Locale.getDefault()))
-                image(view, imgId, if (event.name == "RISE") getRiseArrow() else getSetArrow())
-                show(view, rowId)
-                index++
+                text(view, view("moonEvt${index}Label"), event.name)
+                text(view, view("moonEvt${index}Time"), time.time + time.marker.toLowerCase(Locale.getDefault()))
+                image(view, view("moonEvt${index}Img"), if (event.name == "RISE") getRiseArrow() else getSetArrow())
+                show(view, view("moonEvt${index}Row"))
             }
         }
-        if (moonDay.phaseEvent == null) {
-            show(view, R.id.moonPhase, moonDay.phase.shortDisplayName)
-        } else {
-            val time: Time = formatTime(requireContext(), moonDay.phaseEvent!!.time, false)
-            show(view, R.id.moonPhase, moonDay.phase.shortDisplayName + " at " + time.time + time.marker)
+        moonDay.phaseEvent?.let {
+            val time: Time = formatTime(requireContext(), it.time, false)
+            moonPhase.text = "${moonDay.phase.shortDisplayName} at ${time.time}${time.marker}"
+        } ?: run {
+            moonPhase.text = moonDay.phase.shortDisplayName
         }
-        show(view, R.id.moonIllumination, moonDay.illumination.toString() + "%")
+        moonIllumination.text = "${moonDay.illumination}%"
     }
 
 }

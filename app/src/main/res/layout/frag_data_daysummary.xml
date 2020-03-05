@@ -63,6 +63,38 @@
                         android:visibility="gone" />
 
                     <RelativeLayout
+                        android:id="@+id/sunEvt0Row"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/sunEvt0Label"
+                            style="@style/text"
+                            android:layout_width="60dp"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="10sp"
+                            android:textColor="?secondary_text"
+                            android:textSize="14sp" />
+
+                        <ImageView
+                            android:id="@+id/sunEvt0Img"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="9sp"
+                            android:layout_marginRight="12dp"
+                            android:layout_toRightOf="@id/sunEvt0Label" />
+
+                        <TextView
+                            android:id="@+id/sunEvt0Time"
+                            style="@style/text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignBaseline="@id/sunEvt0Label"
+                            android:layout_toRightOf="@id/sunEvt0Img"
+                            android:textSize="26sp" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
                         android:id="@+id/sunEvt1Row"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content">
@@ -91,38 +123,6 @@
                             android:layout_height="wrap_content"
                             android:layout_alignBaseline="@id/sunEvt1Label"
                             android:layout_toRightOf="@id/sunEvt1Img"
-                            android:textSize="26sp" />
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:id="@+id/sunEvt2Row"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            android:id="@+id/sunEvt2Label"
-                            style="@style/text"
-                            android:layout_width="60dp"
-                            android:layout_height="wrap_content"
-                            android:paddingTop="10sp"
-                            android:textColor="?secondary_text"
-                            android:textSize="14sp" />
-
-                        <ImageView
-                            android:id="@+id/sunEvt2Img"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="9sp"
-                            android:layout_marginRight="12dp"
-                            android:layout_toRightOf="@id/sunEvt2Label" />
-
-                        <TextView
-                            android:id="@+id/sunEvt2Time"
-                            style="@style/text"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignBaseline="@id/sunEvt2Label"
-                            android:layout_toRightOf="@id/sunEvt2Img"
                             android:textSize="26sp" />
                     </RelativeLayout>
 
@@ -199,6 +199,38 @@
                         android:visibility="gone" />
 
                     <RelativeLayout
+                        android:id="@+id/moonEvt0Row"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/moonEvt0Label"
+                            style="@style/text"
+                            android:layout_width="60dp"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="10sp"
+                            android:textColor="?secondary_text"
+                            android:textSize="14sp" />
+
+                        <ImageView
+                            android:id="@+id/moonEvt0Img"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="9sp"
+                            android:layout_marginRight="12dp"
+                            android:layout_toRightOf="@id/moonEvt0Label" />
+
+                        <TextView
+                            android:id="@+id/moonEvt0Time"
+                            style="@style/text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignBaseline="@id/moonEvt0Label"
+                            android:layout_toRightOf="@id/moonEvt0Img"
+                            android:textSize="26sp" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
                         android:id="@+id/moonEvt1Row"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content">
@@ -227,38 +259,6 @@
                             android:layout_height="wrap_content"
                             android:layout_alignBaseline="@id/moonEvt1Label"
                             android:layout_toRightOf="@id/moonEvt1Img"
-                            android:textSize="26sp" />
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:id="@+id/moonEvt2Row"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            android:id="@+id/moonEvt2Label"
-                            style="@style/text"
-                            android:layout_width="60dp"
-                            android:layout_height="wrap_content"
-                            android:paddingTop="10sp"
-                            android:textColor="?secondary_text"
-                            android:textSize="14sp" />
-
-                        <ImageView
-                            android:id="@+id/moonEvt2Img"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="9sp"
-                            android:layout_marginRight="12dp"
-                            android:layout_toRightOf="@id/moonEvt2Label" />
-
-                        <TextView
-                            android:id="@+id/moonEvt2Time"
-                            style="@style/text"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignBaseline="@id/moonEvt2Label"
-                            android:layout_toRightOf="@id/moonEvt2Img"
                             android:textSize="26sp" />
                     </RelativeLayout>
 
