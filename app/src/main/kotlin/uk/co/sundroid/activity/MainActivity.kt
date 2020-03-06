@@ -136,10 +136,11 @@ class MainActivity : AbstractActivity(), FragmentManager.OnBackStackChangedListe
                 Prefs.setLastDataGroup(this, page.dataGroup)
             }
             this.page = page
-            val existingFragment = supportFragmentManager.findFragmentByTag("ROOT")
-            if (existingFragment?.javaClass != page.fragmentClass || force) {
-                val tx = supportFragmentManager.beginTransaction()
-                        .replace(R.id.content, page.fragmentClass.newInstance(), "ROOT")
+            val rootFragment = getRootFragment()
+            if (rootFragment?.javaClass != page.fragmentClass || force) {
+                val tx = supportFragmentManager
+                        .beginTransaction()
+                        .replace(R.id.content, page.fragmentClass.newInstance(), ROOT)
                 if (page.dataGroup == null) {
                     tx.addToBackStack(null)
                 } else {
@@ -301,14 +302,13 @@ class MainActivity : AbstractActivity(), FragmentManager.OnBackStackChangedListe
     }
 
     private fun getRootFragment(): Fragment? {
-        // FIXME should this be fetching ROOT?
-        val fragments = supportFragmentManager.fragments
-        return when (fragments.isNotEmpty()) {
-            true -> fragments[0]
-            false -> null
-        }
+        return supportFragmentManager.findFragmentByTag(ROOT)
     }
 
+    /**
+     * Pressing back from Help fragment pops it off the back stack without a fragment transaction.
+     * We use this to update the action bar.
+     */
     override fun onBackStackChanged() {
         refreshChrome()
     }
@@ -323,6 +323,8 @@ class MainActivity : AbstractActivity(), FragmentManager.OnBackStackChangedListe
         private const val MENU_SAVE_LOCATION = Menu.FIRST + 2
         private const val MENU_VIEW_SETTINGS = Menu.FIRST + 10
         private const val MENU_TIME_ZONE = Menu.FIRST + 12
+
+        private const val ROOT = "ROOT"
 
         private val TAG = MainActivity::class.java.name
     }
