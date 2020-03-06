@@ -132,11 +132,11 @@ abstract class AbstractActivity : AppCompatActivity(), OnClickListener {
     }
 
     protected fun alert(title: String, message: String) {
-        SimpleAlertFragment.show(this, title, message)
+        SimpleAlertFragment.show(supportFragmentManager, title, message)
     }
 
     protected fun alert(title: Int, message: Int) {
-        SimpleAlertFragment.show(this, title, message)
+        SimpleAlertFragment.show(this, supportFragmentManager, title, message)
     }
 
     protected fun longToast(message: String) {

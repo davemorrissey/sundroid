@@ -17,17 +17,4 @@ abstract class AbstractLocationActivity : AbstractActivity() {
         setDisplayHomeAsUpEnabled()
     }
 
-    override fun onNavBackSelected() {
-        setResult(LocationSelectActivity.RESULT_CANCELLED)
-        finish()
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
-        super.onActivityResult(requestCode, resultCode, intent)
-        if (resultCode == LocationSelectActivity.RESULT_LOCATION_SELECTED || resultCode == TimeZonePickerActivity.RESULT_TIMEZONE_SELECTED) {
-            setResult(LocationSelectActivity.RESULT_LOCATION_SELECTED)
-            finish()
-        }
-    }
-
 }

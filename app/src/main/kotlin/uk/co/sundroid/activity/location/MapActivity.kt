@@ -201,7 +201,6 @@ class MapActivity : AbstractLocationActivity(), OnMapClickListener, OnInfoWindow
             intent.putExtra(TimeZonePickerActivity.INTENT_MODE, TimeZonePickerActivity.MODE_SELECT)
             startActivityForResult(intent, TimeZonePickerActivity.REQUEST_TIMEZONE)
         } else {
-            setResult(LocationSelectActivity.RESULT_LOCATION_SELECTED)
             finish()
         }
     }

@@ -13,6 +13,6 @@ interface LocaterListener {
 
     fun locationReceived(locationDetails: LocationDetails)
 
-    fun getSystemService(id: String): Any
+    fun getSystemService(id: String): Any?
 
 }

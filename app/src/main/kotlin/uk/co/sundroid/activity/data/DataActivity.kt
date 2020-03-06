@@ -12,7 +12,6 @@ import uk.co.sundroid.AbstractActivity
 import uk.co.sundroid.NavItem
 import uk.co.sundroid.R
 import uk.co.sundroid.activity.data.fragments.*
-import uk.co.sundroid.activity.location.LocationSelectActivity
 import uk.co.sundroid.activity.location.TimeZonePickerActivity
 import uk.co.sundroid.activity.settings.AppSettingsActivity
 import uk.co.sundroid.util.dao.DatabaseHelper
@@ -145,8 +144,6 @@ abstract class DataActivity : AbstractActivity(), OnClickListener {
     /********************************* NAVIGATION  */
 
     private fun startLocationOptions() {
-        val intent = Intent(this, LocationSelectActivity::class.java)
-        startActivityForResult(intent, LocationSelectActivity.REQUEST_LOCATION)
     }
 
     private fun startSaveLocation() {

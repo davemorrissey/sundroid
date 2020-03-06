@@ -5,16 +5,18 @@ import uk.co.sundroid.R
 import uk.co.sundroid.activity.data.DataGroup
 import uk.co.sundroid.activity.data.fragments.*
 import uk.co.sundroid.activity.info.fragments.InfoFragment
+import uk.co.sundroid.activity.location.LocationSelectFragment
 
-enum class Page constructor(val displayName: String, val navItem: Int, val fragmentClass: Class<out Fragment>, val dataGroup: DataGroup?) {
+enum class Page constructor(val navItem: Int, val fragmentClass: Class<out Fragment>, val dataGroup: DataGroup? = null) {
 
-    DAY_SUMMARY("Day summary", R.id.daySummary, DaySummaryFragment::class.java, DataGroup.DAY_SUMMARY),
-    DAY_DETAIL("Day in detail", R.id.dayDetail, DayDetailFragment::class.java, DataGroup.DAY_DETAIL),
-    TRACKER("Sun and moon tracker", 0, TrackerFragment::class.java, DataGroup.TRACKER),
-    MONTH_CALENDARS("Month calendars", 0, MonthCalendarsFragment::class.java, DataGroup.MONTH_CALENDARS),
-    MONTH_MOONPHASE("Moon phase calendar", 0, MonthMoonPhaseFragment::class.java, DataGroup.MONTH_MOONPHASE),
-    YEAR_EVENTS("Year events", 0, YearEventsFragment::class.java, DataGroup.YEAR_EVENTS),
-    HELP("Help", R.id.help, InfoFragment::class.java, null);
+    DAY_SUMMARY(R.id.daySummary, DaySummaryFragment::class.java, DataGroup.DAY_SUMMARY),
+    DAY_DETAIL(R.id.dayDetail, DayDetailFragment::class.java, DataGroup.DAY_DETAIL),
+    TRACKER(0, TrackerFragment::class.java, DataGroup.TRACKER),
+    MONTH_CALENDARS(0, MonthCalendarsFragment::class.java, DataGroup.MONTH_CALENDARS),
+    MONTH_MOONPHASE(0, MonthMoonPhaseFragment::class.java, DataGroup.MONTH_MOONPHASE),
+    YEAR_EVENTS(0, YearEventsFragment::class.java, DataGroup.YEAR_EVENTS),
+    HELP(R.id.help, InfoFragment::class.java),
+    LOCATION_OPTIONS(0, LocationSelectFragment::class.java);
 
     companion object {
         fun fromFragment(fragment: Fragment): Page? {

@@ -5,7 +5,9 @@ import uk.co.sundroid.util.location.LatitudeLongitude
 import uk.co.sundroid.util.prefs.Prefs
 import uk.co.sundroid.util.log.*
 import android.content.Context
+import android.content.Context.*
 import android.location.Criteria
+import android.location.Criteria.*
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
@@ -22,9 +24,9 @@ class Locater(private val listener: LocaterListener, private val context: Contex
         timeoutThread = null
 
         val criteria = Criteria()
-        criteria.accuracy = Criteria.ACCURACY_FINE
+        criteria.accuracy = ACCURACY_FINE
 
-        val locationManager = listener.getSystemService(Context.LOCATION_SERVICE) as LocationManager? ?: return false
+        val locationManager = listener.getSystemService(LOCATION_SERVICE) as LocationManager? ?: return false
         try {
             locationManager.requestSingleUpdate(criteria, this, listener.getMainLooper())
         } catch (e: SecurityException) {

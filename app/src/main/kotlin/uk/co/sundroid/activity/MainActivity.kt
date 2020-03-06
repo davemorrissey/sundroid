@@ -22,7 +22,6 @@ import uk.co.sundroid.NavItem.NavItemLocation.*
 import uk.co.sundroid.R
 import uk.co.sundroid.activity.data.fragments.AbstractDataFragment
 import uk.co.sundroid.activity.data.fragments.ConfigurableFragment
-import uk.co.sundroid.activity.location.LocationSelectActivity
 import uk.co.sundroid.activity.location.TimeZonePickerActivity
 import uk.co.sundroid.activity.settings.AppSettingsActivity
 import uk.co.sundroid.domain.LocationDetails
@@ -66,6 +65,7 @@ class MainActivity : AbstractActivity(), FragmentManager.OnBackStackChangedListe
         super.onResume()
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
         prefs.edit().putInt("last-version", BuildConfig.VERSION_CODE).apply()
+        (getRootFragment() as? AbstractDataFragment)?.update()
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -77,6 +77,7 @@ class MainActivity : AbstractActivity(), FragmentManager.OnBackStackChangedListe
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        // FIXME should be able to remove this once all location activities are fragments
         d(TAG, "onActivityResult($requestCode, $resultCode)")
         super.onActivityResult(requestCode, resultCode, data)
         initCalendarAndLocation(false)
@@ -195,10 +196,7 @@ class MainActivity : AbstractActivity(), FragmentManager.OnBackStackChangedListe
 
     override fun onNavItemSelected(itemPosition: Int) {
         when (itemPosition) {
-            MENU_CHANGE_LOCATION -> {
-                val intent = Intent(this, LocationSelectActivity::class.java)
-                startActivityForResult(intent, LocationSelectActivity.REQUEST_LOCATION)
-            }
+            MENU_CHANGE_LOCATION -> setPage(Page.LOCATION_OPTIONS)
             MENU_SAVE_LOCATION -> showDialog(DIALOG_SAVE)
             MENU_TIME_ZONE -> {
                 val intent = Intent(applicationContext, TimeZonePickerActivity::class.java)
@@ -250,7 +248,7 @@ class MainActivity : AbstractActivity(), FragmentManager.OnBackStackChangedListe
             actionBarDrawerToggle?.isDrawerIndicatorEnabled = false
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
             actionBarDrawerToggle?.toolbarNavigationClickListener = View.OnClickListener {
-                onBackPressed()
+                supportFragmentManager.popBackStack()
             }
         } else {
             drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
@@ -306,11 +304,14 @@ class MainActivity : AbstractActivity(), FragmentManager.OnBackStackChangedListe
     }
 
     /**
-     * Pressing back from Help fragment pops it off the back stack without a fragment transaction.
-     * We use this to update the action bar.
+     * Returning from help and location screens pops them off the back stack. The action bar needs
+     * to be updated, and when returning from location select the calendars must be reinitialised
+     * and the data updated.
      */
     override fun onBackStackChanged() {
         refreshChrome()
+        initCalendarAndLocation(false)
+        (getRootFragment() as? AbstractDataFragment)?.update()
     }
 
     companion object {

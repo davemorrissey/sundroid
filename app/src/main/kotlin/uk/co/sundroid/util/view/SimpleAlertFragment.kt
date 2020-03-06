@@ -1,22 +1,26 @@
 package uk.co.sundroid.util.view
 
-import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
-import android.app.DialogFragment
+import android.content.Context
 import android.os.Bundle
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentManager
 
 class SimpleAlertFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return AlertDialog.Builder(activity)
-                .setTitle(arguments.getString("title"))
-                .setMessage(arguments.getString("message"))
+                .setTitle(arguments?.getString("title"))
+                .setMessage(arguments?.getString("message"))
                 .setPositiveButton("OK", null)
                 .create()
     }
 
     companion object {
+
+        private const val TAG = "ALERT"
+
         fun newInstance(title: String, message: String): SimpleAlertFragment {
             val frag = SimpleAlertFragment()
             val args = Bundle()
@@ -25,11 +29,14 @@ class SimpleAlertFragment : DialogFragment() {
             frag.arguments = args
             return frag
         }
-        fun show(activity: Activity, title: String, message: String) {
-            newInstance(title, message).show(activity.fragmentManager, "ALERT")
+
+        fun show(fragmentManager: FragmentManager, title: String, message: String) {
+            newInstance(title, message).show(fragmentManager, TAG)
         }
-        fun show(activity: Activity, title: Int, message: Int) {
-            newInstance(activity.resources.getString(title), activity.resources.getString(message)).show(activity.fragmentManager, "ALERT")
+
+        fun show(context: Context, fragmentManager: FragmentManager, title: Int, message: Int) {
+            newInstance(context.resources.getString(title), context.resources.getString(message)).show(fragmentManager, TAG)
         }
+
     }
 }
