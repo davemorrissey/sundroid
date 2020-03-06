@@ -1,29 +1,43 @@
 package uk.co.sundroid.activity
 
 import android.app.Activity
+import android.app.AlertDialog
+import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.view.Menu
 import android.view.View
+import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import kotlinx.android.synthetic.main.main.*
 import uk.co.sundroid.AbstractActivity
 import uk.co.sundroid.BuildConfig
+import uk.co.sundroid.NavItem
+import uk.co.sundroid.NavItem.NavItemLocation.*
 import uk.co.sundroid.R
+import uk.co.sundroid.activity.data.fragments.AbstractDataFragment
+import uk.co.sundroid.activity.data.fragments.ConfigurableFragment
 import uk.co.sundroid.activity.location.LocationSelectActivity
+import uk.co.sundroid.activity.location.TimeZonePickerActivity
 import uk.co.sundroid.activity.settings.AppSettingsActivity
 import uk.co.sundroid.domain.LocationDetails
+import uk.co.sundroid.util.dao.DatabaseHelper
+import uk.co.sundroid.util.isEmpty
+import uk.co.sundroid.util.isNotEmpty
 import uk.co.sundroid.util.location.LatitudeLongitude
+import uk.co.sundroid.util.log.d
 import uk.co.sundroid.util.prefs.Prefs
 import uk.co.sundroid.util.time.TimeZoneResolver
 import java.util.*
 
-
-class MainActivity : AbstractActivity() {
+class MainActivity : AbstractActivity(), FragmentManager.OnBackStackChangedListener {
 
     private var page: Page = Page.DAY_SUMMARY
-    private var backPage: Page? = null
 
     var dateCalendar: Calendar = Calendar.getInstance()
     var timeCalendar: Calendar = Calendar.getInstance()
@@ -34,6 +48,7 @@ class MainActivity : AbstractActivity() {
         setContentView(R.layout.main)
         setSupportActionBar(toolbar)
         initNavigationDrawer()
+        supportFragmentManager.addOnBackStackChangedListener(this)
 
         var forceDateUpdate = false
         if (intent.action != null && intent.action == Intent.ACTION_MAIN) {
@@ -61,6 +76,13 @@ class MainActivity : AbstractActivity() {
         }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        d(TAG, "onActivityResult($requestCode, $resultCode)")
+        super.onActivityResult(requestCode, resultCode, data)
+        initCalendarAndLocation(false)
+        (getRootFragment() as? AbstractDataFragment)?.update()
+    }
+
     private fun initCalendarAndLocation(forceDateUpdate: Boolean) {
         val location = Prefs.selectedLocation(this) ?: LocationDetails(LatitudeLongitude(37.779093, -122.419109)).apply {
             name = "San Francisco"
@@ -86,9 +108,11 @@ class MainActivity : AbstractActivity() {
 
     override fun onSaveInstanceState(state: Bundle) {
         super.onSaveInstanceState(state)
-        state.putSerializable(STATE_PAGE, this.page)
-        state.putLong(STATE_DATE_TIMESTAMP, this.dateCalendar.timeInMillis)
-        state.putLong(STATE_TIME_TIMESTAMP, this.timeCalendar.timeInMillis)
+        state.apply {
+            putSerializable(STATE_PAGE, page)
+            putLong(STATE_DATE_TIMESTAMP, dateCalendar.timeInMillis)
+            putLong(STATE_TIME_TIMESTAMP, timeCalendar.timeInMillis)
+        }
     }
 
     private fun restoreState(state: Bundle?) {
@@ -110,8 +134,6 @@ class MainActivity : AbstractActivity() {
         if (page != this.page || force) {
             if (page.dataGroup != null) {
                 Prefs.setLastDataGroup(this, page.dataGroup)
-            } else {
-                this.backPage = this.page
             }
             this.page = page
             val existingFragment = supportFragmentManager.findFragmentByTag("ROOT")
@@ -120,9 +142,8 @@ class MainActivity : AbstractActivity() {
                         .replace(R.id.content, page.fragmentClass.newInstance(), "ROOT")
                 if (page.dataGroup == null) {
                     tx.addToBackStack(null)
-                    displayBackButton(true)
                 } else {
-                    displayBackButton(false)
+                    tx.runOnCommit { refreshChrome() }
                 }
                 tx.commit()
             }
@@ -138,10 +159,6 @@ class MainActivity : AbstractActivity() {
         toolbar?.title = title
     }
 
-    fun setToolbarTitle(title: Int) {
-        toolbar?.setTitle(title)
-    }
-
     fun setToolbarSubtitle(subtitle: String? = null) {
         toolbar?.subtitle = subtitle
     }
@@ -150,12 +167,10 @@ class MainActivity : AbstractActivity() {
         toolbar?.setSubtitle(subtitle)
     }
 
-    fun setDisplayHomeAsUp(homeAsUp: Boolean) {
-//        supportActionBar?.setDisplayHomeAsUpEnabled(homeAsUp)
-    }
-
+    /**
+     * Prepare the navigation drawer, adding listeners to all the options and enabling the toggle.
+     */
     private fun initNavigationDrawer() {
-        navigationView.setCheckedItem(R.id.daySummary)
         navigationView.setNavigationItemSelectedListener { menuItem ->
             drawerLayout.closeDrawers()
             when (menuItem.itemId) {
@@ -164,17 +179,70 @@ class MainActivity : AbstractActivity() {
 //                R.id.tracker -> setPage(Page.TRACKER)
 //                R.id.calendars -> setPage(Page.MONTH_CALENDARS)
 //                R.id.yearEvents -> setPage(Page.YEAR_EVENTS)
-                R.id.location -> openActivity(LocationSelectActivity::class.java)
+//                R.id.location -> openActivity(LocationSelectActivity::class.java)
                 R.id.help -> setPage(Page.HELP)
                 R.id.settings -> openActivity(AppSettingsActivity::class.java)
             }
             true
         }
         actionBarDrawerToggle = ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close)
-        drawerLayout.addDrawerListener(actionBarDrawerToggle!!)
-        actionBarDrawerToggle?.syncState()
+        actionBarDrawerToggle?.let {
+            drawerLayout.addDrawerListener(it)
+            it.syncState()
+        }
     }
 
+    override fun onNavItemSelected(itemPosition: Int) {
+        when (itemPosition) {
+            MENU_CHANGE_LOCATION -> {
+                val intent = Intent(this, LocationSelectActivity::class.java)
+                startActivityForResult(intent, LocationSelectActivity.REQUEST_LOCATION)
+            }
+            MENU_SAVE_LOCATION -> showDialog(DIALOG_SAVE)
+            MENU_TIME_ZONE -> {
+                val intent = Intent(applicationContext, TimeZonePickerActivity::class.java)
+                intent.putExtra(TimeZonePickerActivity.INTENT_MODE, TimeZonePickerActivity.MODE_CHANGE)
+                startActivityForResult(intent, TimeZonePickerActivity.REQUEST_TIMEZONE)
+            }
+            MENU_VIEW_SETTINGS -> (getRootFragment() as? ConfigurableFragment)?.openSettingsDialog()
+        }
+    }
+
+    /**
+     * Identifies the current visible fragment, and updates the back/hamburger button and action bar
+     * menu accordingly.
+     */
+    private fun refreshChrome() {
+        d(TAG, "refreshChrome")
+        getRootFragment()?.let { root ->
+            Page.fromFragment(root)?.let { page ->
+                this.page = page
+                if (page.navItem > 0) {
+                    navigationView.setCheckedItem(page.navItem)
+                }
+                page.dataGroup?.let {
+                    displayBackButton(false)
+                    val navItems = ArrayList<NavItem>()
+                    navItems.apply {
+                        if (root is ConfigurableFragment) {
+                            add(NavItem("Page settings", R.drawable.icn_bar_viewsettings, HEADER, MENU_VIEW_SETTINGS))
+                        }
+                        add(NavItem("Change location", R.drawable.icn_bar_location, HEADER, MENU_CHANGE_LOCATION))
+                        add(NavItem("Save location", R.drawable.icn_menu_myplaces, HEADER_IF_ROOM, MENU_SAVE_LOCATION))
+                        add(NavItem("Time zone", R.drawable.icn_menu_timezone, MENU, MENU_TIME_ZONE))
+                    }
+                    setNavItems(navItems)
+                } ?: run {
+                    displayBackButton(true)
+                    setNavItems(listOf())
+                }
+            }
+        }
+    }
+
+    /**
+     * Switch hamburger icon to back button.
+     */
     private fun displayBackButton(enable: Boolean) {
         if (enable) {
             drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
@@ -191,18 +259,72 @@ class MainActivity : AbstractActivity() {
         }
     }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
-        displayBackButton(false)
-        if (backPage != null) {
-            page = backPage!!
-            backPage = null
+    override fun onCreateDialog(id: Int): Dialog {
+        when (id) {
+            DIALOG_SAVE -> {
+                val dialog = AlertDialog.Builder(this)
+                dialog.setTitle("Save location")
+
+                val location = Prefs.selectedLocation(this)
+                val view = layoutInflater.inflate(R.layout.dialog_save, null)
+                val saveField = view.findViewById<EditText>(R.id.saveField)
+                if (isNotEmpty(location!!.name) && isEmpty(saveField.text.toString())) {
+                    saveField.setText(location.name)
+                } else {
+                    saveField.setText("")
+                }
+                dialog.setView(view)
+
+                dialog.setPositiveButton("OK") { _, _ ->
+                    val saveName = saveField.text.toString()
+                    var db: DatabaseHelper? = null
+                    try {
+                        if (isNotEmpty(saveName)) {
+                            db = DatabaseHelper(this@MainActivity)
+                            location.name = saveName
+                            Prefs.saveSelectedLocation(this@MainActivity, location)
+                            db.addSavedLocation(location)
+                            Toast.makeText(this@MainActivity, "This location has been saved", Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(this@MainActivity, "Please enter a name for this location", Toast.LENGTH_SHORT).show()
+                        }
+                    } finally {
+                        db?.close()
+                    }
+                    removeDialog(DIALOG_SAVE)
+                }
+                dialog.setNegativeButton("Cancel") { _, _ -> removeDialog(DIALOG_SAVE) }
+                return dialog.create()
+            }
+        }
+        return super.onCreateDialog(id)
+    }
+
+    private fun getRootFragment(): Fragment? {
+        // FIXME should this be fetching ROOT?
+        val fragments = supportFragmentManager.fragments
+        return when (fragments.isNotEmpty()) {
+            true -> fragments[0]
+            false -> null
         }
     }
 
+    override fun onBackStackChanged() {
+        refreshChrome()
+    }
+
     companion object {
+        private const val DIALOG_SAVE = 746
         private const val STATE_PAGE = "page"
         private const val STATE_DATE_TIMESTAMP = "dateTimestamp"
         private const val STATE_TIME_TIMESTAMP = "timeTimestamp"
+
+        private const val MENU_CHANGE_LOCATION = Menu.FIRST + 1
+        private const val MENU_SAVE_LOCATION = Menu.FIRST + 2
+        private const val MENU_VIEW_SETTINGS = Menu.FIRST + 10
+        private const val MENU_TIME_ZONE = Menu.FIRST + 12
+
+        private val TAG = MainActivity::class.java.name
     }
+
 }
