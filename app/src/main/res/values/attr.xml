@@ -40,7 +40,6 @@
     <attr name="button_secondary_text" format="color"/>
 
     <attr name="icn_loc_mylocation" format="reference"/>
-    <attr name="icn_loc_coords" format="reference"/>
     <attr name="icn_loc_map" format="reference"/>
     <attr name="icn_loc_search" format="reference"/>
     <attr name="icn_loc_savedplaces" format="reference"/>
@@ -50,9 +49,6 @@
     <attr name="info" format="reference"/>
 
     <attr name="disclosure" format="reference"/>
-
-    <attr name="coords_invalid" format="color"/>
-    <attr name="coords_valid" format="color"/>
 
     <attr name="calendar_title_bg" format="color"/>
 

@@ -59,18 +59,6 @@
                     style="@style/listMenuIconLabel"
                     android:text="Saved locations"/>
             </LinearLayout>
-            <View style="@style/listMenuDivider"/>
-            <LinearLayout
-                style="@style/listMenuIconButton"
-                android:id="@+id/locOptionCoords"
-                >
-                <ImageView
-                    style="@style/listMenuIconIcon"
-                    android:src="?icn_loc_coords"/>
-                <TextView
-                    style="@style/listMenuIconLabel"
-                    android:text="Enter coordinates"/>
-            </LinearLayout>
         </LinearLayout>
 
     </ScrollView>

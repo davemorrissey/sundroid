@@ -65,7 +65,6 @@ class LocationSelectFragment : AbstractFragment(), LocaterListener {
         locOptionMap.setOnClickListener { start(MapActivity::class.java) }
         locOptionSearch.setOnClickListener { start(SearchActivity::class.java) }
         locOptionSavedPlaces.setOnClickListener { start(SavedLocationsActivity::class.java) }
-        locOptionCoords.setOnClickListener { start(CoordsActivity::class.java) }
     }
 
     private fun startLocater() {

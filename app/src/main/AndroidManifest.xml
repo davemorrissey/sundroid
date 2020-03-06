@@ -42,11 +42,6 @@
             tools:ignore="LockedOrientationActivity" />
         <activity
             android:screenOrientation="portrait"
-            android:name="uk.co.sundroid.activity.location.CoordsActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            tools:ignore="LockedOrientationActivity" />
-        <activity
-            android:screenOrientation="portrait"
             android:name="uk.co.sundroid.activity.location.MapActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             tools:ignore="LockedOrientationActivity" />
