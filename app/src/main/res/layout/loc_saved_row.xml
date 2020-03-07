@@ -28,9 +28,9 @@
         android:focusable="true"
         android:orientation="vertical"
         android:paddingLeft="15dp"
-        android:paddingTop="12dp"
+        android:paddingTop="10dp"
         android:paddingRight="15dp"
-        android:paddingBottom="14dp">
+        android:paddingBottom="12dp">
 
         <TextView
             android:id="@+id/savedLocName"

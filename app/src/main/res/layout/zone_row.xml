@@ -4,30 +4,29 @@
 	android:layout_width="fill_parent"
 	android:layout_height="wrap_content"
 	android:orientation="vertical"
-	android:background="?disclosure"
+	android:background="@drawable/ripple_background"
     >
     
 	<TextView
 		android:id="@+id/timeZoneRowOffset"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:layout_marginLeft="15dp"
-		android:layout_marginRight="15dp"
-		android:layout_marginTop="2dp"
-		android:layout_marginBottom="-3dp"
+		android:layout_marginLeft="20dp"
+		android:layout_marginRight="20dp"
+		android:layout_marginTop="10dp"
 		android:textColor="?body_text"
-		android:textSize="18sp"/>
+		android:textSize="20sp"/>
 		
 	<TextView
 		android:id="@+id/timeZoneRowCities"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:layout_below="@id/timeZoneRowOffset"
-		android:layout_marginLeft="15dp"
-		android:layout_marginRight="15dp"
-		android:layout_marginBottom="5dp"
+		android:layout_marginLeft="20dp"
+		android:layout_marginRight="20dp"
+		android:layout_marginBottom="12dp"
 		android:textColor="?secondary_text"
-		android:textSize="14sp"/>
+		android:textSize="16sp"/>
 
     
 </LinearLayout>

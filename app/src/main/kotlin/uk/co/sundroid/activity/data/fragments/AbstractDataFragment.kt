@@ -1,12 +1,10 @@
 package uk.co.sundroid.activity.data.fragments
 
-import android.content.Intent
 import android.view.View
 import kotlinx.android.synthetic.main.inc_datebar.*
 import uk.co.sundroid.AbstractFragment
 import uk.co.sundroid.activity.MainActivity
 import uk.co.sundroid.activity.data.fragments.dialogs.OnViewPrefsChangedListener
-import uk.co.sundroid.activity.location.TimeZonePickerActivity
 import uk.co.sundroid.domain.LocationDetails
 import uk.co.sundroid.util.log.e
 import uk.co.sundroid.util.prefs.Prefs
@@ -80,11 +78,6 @@ abstract class AbstractDataFragment : AbstractFragment(), OnViewPrefsChangedList
         } catch (e: Exception) {
             e(TAG, "Initialise for settings change failed", e)
         }
-    }
-
-    protected fun startTimeZone() {
-        val intent = Intent(activity, TimeZonePickerActivity::class.java)
-        requireActivity().startActivityForResult(intent, TimeZonePickerActivity.REQUEST_TIMEZONE)
     }
 
     companion object {

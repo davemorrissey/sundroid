@@ -6,6 +6,7 @@ import android.view.View.OnClickListener
 import android.view.View.OnTouchListener
 import uk.co.sundroid.R
 import uk.co.sundroid.R.drawable
+import uk.co.sundroid.activity.Page
 import uk.co.sundroid.activity.data.fragments.dialogs.date.YearPickerFragment
 import uk.co.sundroid.domain.LocationDetails
 import uk.co.sundroid.util.prefs.Prefs
@@ -73,7 +74,7 @@ abstract class AbstractYearFragment : AbstractDataFragment(), OnClickListener, O
                 return
             }
             R.id.zoneButton -> {
-                startTimeZone()
+                setPage(Page.TIME_ZONE)
                 return
             }
         }

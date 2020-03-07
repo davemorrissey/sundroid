@@ -1,6 +1,5 @@
 package uk.co.sundroid.activity.location
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,18 +9,15 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
 import android.widget.Toast
-import androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE
 import kotlinx.android.synthetic.main.loc_search.*
 import uk.co.sundroid.AbstractFragment
 import uk.co.sundroid.R
 import uk.co.sundroid.R.string.*
 import uk.co.sundroid.activity.MainActivity
-import uk.co.sundroid.activity.Page
 import uk.co.sundroid.domain.LocationDetails
 import uk.co.sundroid.util.async.Async
 import uk.co.sundroid.util.isNotEmpty
 import uk.co.sundroid.util.location.Geocoder
-import uk.co.sundroid.util.prefs.Prefs
 import java.util.*
 import uk.co.sundroid.util.view.SimpleAlertFragment.Companion.show as showAlert
 import uk.co.sundroid.util.view.SimpleProgressFragment.Companion.close as closeProgress
@@ -51,14 +47,7 @@ class LocationSearchFragment : AbstractFragment() {
         listAdapter = SearchResultAdapter(ArrayList())
         searchList.adapter = listAdapter
         searchList.setOnItemClickListener { parent, _, position, _ -> run {
-            val locationDetails = parent.getItemAtPosition(position) as LocationDetails
-            Prefs.saveSelectedLocation(requireContext(), locationDetails)
-            if (locationDetails.timeZone == null) {
-                val intent = Intent(requireContext(), TimeZonePickerActivity::class.java)
-                startActivityForResult(intent, TimeZonePickerActivity.REQUEST_TIMEZONE)
-            } else {
-                requireFragmentManager().popBackStack(Page.LOCATION_OPTIONS.name, POP_BACK_STACK_INCLUSIVE)
-            }
+            onLocationSelected(parent.getItemAtPosition(position) as LocationDetails)
         }}
         searchSubmit.setOnClickListener { startSearch() }
         searchField.setOnEditorActionListener { _, id, _ -> if (id == EditorInfo.IME_ACTION_SEARCH) startSearch(); true }
@@ -107,16 +96,5 @@ class LocationSearchFragment : AbstractFragment() {
             return row
         }
     }
-
-//    override fun onItemClick(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-//        val locationDetails = parent.getItemAtPosition(position) as LocationDetails
-//        Prefs.saveSelectedLocation(requireContext(), locationDetails)
-//        if (locationDetails.timeZone == null) {
-//            val intent = Intent(requireContext(), TimeZonePickerActivity::class.java)
-//            startActivityForResult(intent, TimeZonePickerActivity.REQUEST_TIMEZONE)
-//        } else {
-//            requireFragmentManager().popBackStack(Page.LOCATION_OPTIONS.name, POP_BACK_STACK_INCLUSIVE)
-//        }
-//    }
 
 }

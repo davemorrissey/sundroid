@@ -14,6 +14,7 @@ import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.TimePicker
 import kotlinx.android.synthetic.main.inc_timebar.*
 import uk.co.sundroid.R
+import uk.co.sundroid.activity.Page
 import uk.co.sundroid.domain.LocationDetails
 import uk.co.sundroid.util.isNotEmpty
 import uk.co.sundroid.util.log.e
@@ -117,7 +118,7 @@ abstract class AbstractTimeFragment : AbstractDataFragment(), OnSeekBarChangeLis
             override fun onButtonDragRight() = changeCalendars(DAY_OF_MONTH, 1)
         }
         val dateDetector = GestureDetector(applicationContext, ButtonDragGestureDetector(dateListener, applicationContext!!))
-        zoneButton.setOnClickListener { startTimeZone() }
+        zoneButton.setOnClickListener { setPage(Page.TIME_ZONE) }
         dateButton.setOnClickListener { showDatePicker() }
         dateButton.setOnTouchListener { _, e -> dateDetector.onTouchEvent(e) }
 

@@ -2,7 +2,6 @@ package uk.co.sundroid.activity.location
 
 import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.app.AlertDialog
-import android.content.Intent
 import android.content.pm.PackageManager.PERMISSION_DENIED
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.Bundle
@@ -14,7 +13,6 @@ import android.widget.TextView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE
 import com.google.android.gms.maps.CameraUpdateFactory.newLatLng
 import com.google.android.gms.maps.CameraUpdateFactory.newLatLngZoom
 import com.google.android.gms.maps.GoogleMap
@@ -28,7 +26,6 @@ import uk.co.sundroid.AbstractFragment
 import uk.co.sundroid.R
 import uk.co.sundroid.R.drawable
 import uk.co.sundroid.activity.MainActivity
-import uk.co.sundroid.activity.Page
 import uk.co.sundroid.domain.LocationDetails
 import uk.co.sundroid.util.location.Geocoder
 import uk.co.sundroid.util.location.LatitudeLongitude
@@ -179,13 +176,7 @@ class LocationMapFragment : AbstractFragment(), OnMapClickListener, OnInfoWindow
 
     override fun onInfoWindowClick(marker: Marker) {
         val mapLocationDetails = this.mapLocationDetails ?: return
-        Prefs.saveSelectedLocation(requireContext(), mapLocationDetails)
-        if (mapLocationDetails.timeZone == null) {
-            val intent = Intent(requireContext(), TimeZonePickerActivity::class.java)
-            startActivityForResult(intent, TimeZonePickerActivity.REQUEST_TIMEZONE)
-        } else {
-            requireFragmentManager().popBackStack(Page.LOCATION_OPTIONS.name, POP_BACK_STACK_INCLUSIVE)
-        }
+        onLocationSelected(mapLocationDetails)
     }
 
     private fun addMarker(mapLocation: LatitudeLongitude) {

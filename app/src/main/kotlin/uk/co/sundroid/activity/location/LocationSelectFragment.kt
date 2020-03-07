@@ -20,8 +20,6 @@ import uk.co.sundroid.activity.LocaterListener
 import uk.co.sundroid.activity.MainActivity
 import uk.co.sundroid.activity.Page
 import uk.co.sundroid.domain.LocationDetails
-import uk.co.sundroid.util.log.d
-import uk.co.sundroid.util.prefs.Prefs
 import uk.co.sundroid.util.view.SimpleAlertFragment
 import uk.co.sundroid.util.view.SimpleProgressFragment
 
@@ -63,9 +61,9 @@ class LocationSelectFragment : AbstractFragment(), LocaterListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         locOptionMyLocation.setOnClickListener { startLocater() }
-        locOptionMap.setOnClickListener { (requireActivity() as? MainActivity)?.setPage(Page.LOCATION_MAP) }
-        locOptionSearch.setOnClickListener { (requireActivity() as? MainActivity)?.setPage(Page.LOCATION_SEARCH) }
-        locOptionSavedPlaces.setOnClickListener { (requireActivity() as? MainActivity)?.setPage(Page.LOCATION_LIST) }
+        locOptionMap.setOnClickListener { setPage(Page.LOCATION_MAP) }
+        locOptionSearch.setOnClickListener { setPage(Page.LOCATION_SEARCH) }
+        locOptionSavedPlaces.setOnClickListener { setPage(Page.LOCATION_LIST) }
     }
 
     private fun startLocater() {
@@ -121,21 +119,10 @@ class LocationSelectFragment : AbstractFragment(), LocaterListener {
 
     override fun locationReceived(locationDetails: LocationDetails) {
         SimpleProgressFragment.close(requireFragmentManager())
-
-        d(TAG, "Location received: $locationDetails")
-        Prefs.saveSelectedLocation(requireContext(), locationDetails)
-
-        if (locationDetails.timeZone == null) {
-            val intent = Intent(requireContext(), TimeZonePickerActivity::class.java)
-            startActivityForResult(intent, TimeZonePickerActivity.REQUEST_TIMEZONE)
-        } else {
-            requireFragmentManager().popBackStack()
-        }
+        onLocationSelected(locationDetails)
     }
 
     companion object {
-        private val TAG = LocationSelectFragment::class.java.simpleName
-
         const val REQUEST_LOCATION = 1110
     }
 

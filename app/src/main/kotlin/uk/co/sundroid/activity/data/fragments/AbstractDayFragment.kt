@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.DatePicker
 import kotlinx.android.synthetic.main.inc_datebar.*
+import uk.co.sundroid.activity.Page
 import uk.co.sundroid.util.view.ButtonDragGestureDetector
 import uk.co.sundroid.util.view.ButtonDragGestureDetector.ButtonDragGestureDetectorListener
 import java.text.SimpleDateFormat
@@ -60,7 +61,7 @@ abstract class AbstractDayFragment : AbstractDataFragment() {
 
         datePrev.setOnClickListener { calendarDiff(DAY_OF_MONTH, -1) }
         dateNext.setOnClickListener { calendarDiff(DAY_OF_MONTH, 1) }
-        zoneButton?.setOnClickListener { startTimeZone() }
+        zoneButton?.setOnClickListener { setPage(Page.TIME_ZONE) }
         dateButton.setOnClickListener { showDatePicker() }
         dateButton.setOnTouchListener { _, e -> dateDetector.onTouchEvent(e) }
     }

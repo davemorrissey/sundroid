@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.inc_monthbar.*
+import uk.co.sundroid.activity.Page
 import uk.co.sundroid.activity.data.fragments.dialogs.date.MonthPickerFragment
 import uk.co.sundroid.domain.LocationDetails
 import uk.co.sundroid.util.async.Async
@@ -58,7 +59,7 @@ abstract class AbstractMonthFragment<T> : AbstractDataFragment() {
 
         monthPrev.setOnClickListener { calendarDiff(MONTH, -1) }
         monthNext.setOnClickListener { calendarDiff(MONTH, 1) }
-        zoneButton?.setOnClickListener { startTimeZone() }
+        zoneButton?.setOnClickListener { setPage(Page.TIME_ZONE) }
         monthButton.setOnClickListener { showMonthPicker() }
         monthButton.setOnTouchListener { _, event -> monthDetector.onTouchEvent(event) }
     }

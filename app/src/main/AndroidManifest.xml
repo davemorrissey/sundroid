@@ -37,11 +37,6 @@
         </activity>
         <activity
             android:screenOrientation="portrait"
-            android:name="uk.co.sundroid.activity.location.TimeZonePickerActivity"
-            android:configChanges="orientation|keyboardHidden"
-            tools:ignore="LockedOrientationActivity" />
-        <activity
-            android:screenOrientation="portrait"
             android:name="uk.co.sundroid.activity.settings.AppSettingsActivity"
             android:configChanges="orientation|keyboardHidden"
             tools:ignore="LockedOrientationActivity" />

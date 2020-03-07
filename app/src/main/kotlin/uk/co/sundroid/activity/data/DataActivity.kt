@@ -12,7 +12,6 @@ import uk.co.sundroid.AbstractActivity
 import uk.co.sundroid.NavItem
 import uk.co.sundroid.R
 import uk.co.sundroid.activity.data.fragments.*
-import uk.co.sundroid.activity.location.TimeZonePickerActivity
 import uk.co.sundroid.activity.settings.AppSettingsActivity
 import uk.co.sundroid.util.dao.DatabaseHelper
 import uk.co.sundroid.domain.LocationDetails
@@ -151,8 +150,7 @@ abstract class DataActivity : AbstractActivity(), OnClickListener {
     }
 
     private fun startTimeZone() {
-        val intent = Intent(applicationContext, TimeZonePickerActivity::class.java)
-        startActivityForResult(intent, TimeZonePickerActivity.REQUEST_TIMEZONE)
+
     }
 
     companion object {

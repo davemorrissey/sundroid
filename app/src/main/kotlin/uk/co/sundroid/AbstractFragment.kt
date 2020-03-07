@@ -9,7 +9,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import uk.co.sundroid.activity.MainActivity
+import uk.co.sundroid.activity.Page
 import uk.co.sundroid.util.prefs.PrefsWrapper
+import androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE
+import uk.co.sundroid.domain.LocationDetails
+import uk.co.sundroid.util.prefs.Prefs
 
 /**
  * Provides some helper functions for fragments.
@@ -25,6 +30,23 @@ abstract class AbstractFragment : Fragment() {
             this._prefs = prefs
             return prefs
         }
+
+    protected fun onLocationSelected(location: LocationDetails) {
+        Prefs.saveSelectedLocation(requireContext(), location)
+        if (location.timeZone == null) {
+            setPage(Page.TIME_ZONE)
+        } else {
+            returnToData()
+        }
+    }
+
+    protected fun setPage(page: Page) {
+        (activity as? MainActivity)?.setPage(page)
+    }
+
+    protected fun returnToData() {
+        requireFragmentManager().popBackStack(null, POP_BACK_STACK_INCLUSIVE)
+    }
 
     @Deprecated("Use require methods")
     protected val applicationContext: Context?

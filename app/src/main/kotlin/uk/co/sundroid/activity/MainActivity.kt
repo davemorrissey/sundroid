@@ -22,7 +22,6 @@ import uk.co.sundroid.NavItem.NavItemLocation.*
 import uk.co.sundroid.R
 import uk.co.sundroid.activity.data.fragments.AbstractDataFragment
 import uk.co.sundroid.activity.data.fragments.ConfigurableFragment
-import uk.co.sundroid.activity.location.TimeZonePickerActivity
 import uk.co.sundroid.activity.settings.AppSettingsActivity
 import uk.co.sundroid.domain.LocationDetails
 import uk.co.sundroid.util.dao.DatabaseHelper
@@ -198,10 +197,7 @@ class MainActivity : AbstractActivity(), FragmentManager.OnBackStackChangedListe
         when (itemPosition) {
             MENU_CHANGE_LOCATION -> setPage(Page.LOCATION_OPTIONS)
             MENU_SAVE_LOCATION -> showDialog(DIALOG_SAVE)
-            MENU_TIME_ZONE -> {
-                val intent = Intent(applicationContext, TimeZonePickerActivity::class.java)
-                startActivityForResult(intent, TimeZonePickerActivity.REQUEST_TIMEZONE)
-            }
+            MENU_TIME_ZONE -> setPage(Page.TIME_ZONE)
             MENU_VIEW_SETTINGS -> (getRootFragment() as? ConfigurableFragment)?.openSettingsDialog()
         }
     }
