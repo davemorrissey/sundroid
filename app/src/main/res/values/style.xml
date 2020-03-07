@@ -49,6 +49,7 @@
         <item name="android:colorAccent">@color/d_accent</item>
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
+		<item name="ripple">@color/d_ripple</item>
 		<item name="primary_color">@color/d_primary</item>
 		<item name="primary_color_dark">@color/d_primary_dark</item>
 		<item name="accent_colour">@color/d_accent</item>
@@ -57,7 +58,7 @@
 		<item name="header_background">@drawable/d_action_bar_bg</item>
 		<item name="body_text">#ffffff</item>
 		<item name="dialog_text">#ffffff</item>
-		<item name="secondary_text">#e3f6aa</item>
+		<item name="secondary_text">#999999</item>
 		<item name="tabstate_active">@drawable/d_tabstate_active</item>
 		<item name="tabstate_inactive">@drawable/d_tabstate_inactive</item>
 		<item name="header_text">#ffffff</item>

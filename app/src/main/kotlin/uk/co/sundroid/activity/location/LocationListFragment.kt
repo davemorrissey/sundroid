@@ -39,7 +39,7 @@ class LocationListFragment : AbstractFragment() {
     override fun onResume() {
         super.onResume()
         (activity as MainActivity).apply {
-            setToolbarTitle("Change location")
+            setToolbarTitle("Saved locations")
             setToolbarSubtitle(null)
         }
     }

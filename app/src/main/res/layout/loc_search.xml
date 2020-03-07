@@ -1,89 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
 
     <ScrollView
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        >
+        android:layout_height="fill_parent">
 
         <LinearLayout
             android:id="@+id/searchBox"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
 
             <RelativeLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="15dp">
+                android:layout_margin="20dp">
 
-                <ImageButton android:id="@+id/searchSubmit"
-                             android:layout_width="wrap_content"
-                             android:layout_height="wrap_content"
-                             android:layout_alignParentTop="true"
-                             android:layout_alignParentRight="true"
-                             android:padding="7dp"
-                             android:src="@drawable/d_icn_loc_search"
-                        />
+                <ImageButton
+                    android:id="@+id/searchSubmit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"
+                    android:background="@drawable/ripple_background"
+                    android:padding="8dp"
+                    android:src="@drawable/d_icn_loc_search" />
 
                 <EditText
-                        android:id="@+id/searchField"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_toLeftOf="@id/searchSubmit"
-                        android:layout_alignParentTop="true"
-                        android:textSize="24sp"
-                        android:inputType="text"
-                        android:layout_marginBottom="10dp"
-                        android:maxLines="1"
-                        android:singleLine="true"
-                        android:imeOptions="actionSearch"
-                        />
+                    android:id="@+id/searchField"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginBottom="10dp"
+                    android:layout_toLeftOf="@id/searchSubmit"
+                    android:imeOptions="actionSearch"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    android:singleLine="true"
+                    android:textSize="22sp"
+                    tools:text="Edinburgh" />
 
                 <TextView
-                        android:id="@+id/searchNotes"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/searchField"
-                        android:layout_marginTop="10dp"
-                        android:textColor="?body_text"
-                        android:textSize="18sp"
-                        android:text="Search for a town, city, zip code or post code."
-                        />
+                    android:id="@+id/searchNotes"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/searchField"
+                    android:layout_marginTop="10dp"
+                    android:text="Search for a town, city, zip code or post code."
+                    android:textColor="?body_text"
+                    android:textSize="18sp" />
 
                 <TextView
-                        android:id="@+id/searchNotes2"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/searchNotes"
-                        android:layout_marginTop="5dp"
-                        android:textColor="?secondary_text"
-                        android:textSize="16sp"
-                        android:text="This feature uses Google location services, which usually return only one result even for common names. Use zip or postal code, or add state or country to make your search more specific."
-                        />
+                    android:id="@+id/searchNotes2"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/searchNotes"
+                    android:layout_marginTop="10dp"
+                    android:text="This feature uses a Google service which usually returns only one result even for common names. Use zip or postal code, or add state or country to make your search more specific."
+                    android:textColor="?secondary_text"
+                    android:textSize="16sp" />
 
             </RelativeLayout>
 
-
-
-
-            <ListView
-                android:id="@+id/searchList"
+            <LinearLayout
+                android:id="@+id/searchListWrapper"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/searchField"
-                android:layout_marginTop="12dp"
-                android:footerDividersEnabled="false"
-                android:listSelector="@drawable/d_disclosure"
-                android:divider="?list_divider"
-                android:dividerHeight="1px"
-                android:cacheColorHint="?app_background_colour">
-            </ListView>
+                android:orientation="vertical"
+                android:visibility="gone">
 
+                <View style="@style/listMenuDivider" />
+
+                <ListView
+                    android:id="@+id/searchList"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/searchField"
+                    android:cacheColorHint="?app_background_colour"
+                    android:divider="?list_divider"
+                    android:dividerHeight="1px"
+                    android:footerDividersEnabled="false"
+                    android:headerDividersEnabled="false"
+                    android:listSelector="@drawable/d_disclosure"></ListView>
+
+                <View style="@style/listMenuDivider" />
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>

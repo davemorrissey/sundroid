@@ -4,6 +4,7 @@
 	    <attr name="bounded_width" format="dimension" />
 	    <attr name="bounded_height" format="dimension" />
 	</declare-styleable>
+    <attr name="ripple" format="color"/>
     <attr name="primary_color" format="color"/>
     <attr name="primary_color_dark" format="color"/>
 

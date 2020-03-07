@@ -18,11 +18,17 @@ import java.util.*
 import kotlinx.android.synthetic.main.frag_data_daysummary.*
 import uk.co.sundroid.util.astro.RiseSetType.*
 import android.view.View.*
+import uk.co.sundroid.activity.MainActivity
 
 class DaySummaryFragment : AbstractDayFragment() {
     private val handler = Handler()
     override val layout: Int
         get() = R.layout.frag_data_daysummary
+
+    override fun onResume() {
+        super.onResume()
+        (activity as MainActivity).setToolbarSubtitle(R.string.data_summary_title)
+    }
 
     @SuppressLint("SetTextI18n")
     override fun updateData(view: View) {

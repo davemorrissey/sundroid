@@ -64,8 +64,8 @@ class LocationSelectFragment : AbstractFragment(), LocaterListener {
         super.onViewCreated(view, savedInstanceState)
         locOptionMyLocation.setOnClickListener { startLocater() }
         locOptionMap.setOnClickListener { (requireActivity() as? MainActivity)?.setPage(Page.LOCATION_MAP) }
-        locOptionSearch.setOnClickListener { start(SearchActivity::class.java) }
-        locOptionSavedPlaces.setOnClickListener { (requireActivity() as? MainActivity)?.setPage(Page.LOCATION_LIST)}
+        locOptionSearch.setOnClickListener { (requireActivity() as? MainActivity)?.setPage(Page.LOCATION_SEARCH) }
+        locOptionSavedPlaces.setOnClickListener { (requireActivity() as? MainActivity)?.setPage(Page.LOCATION_LIST) }
     }
 
     private fun startLocater() {

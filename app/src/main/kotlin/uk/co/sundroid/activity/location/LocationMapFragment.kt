@@ -67,7 +67,7 @@ class LocationMapFragment : AbstractFragment(), OnMapClickListener, OnInfoWindow
     override fun onResume() {
         super.onResume()
         (activity as MainActivity).apply {
-            setToolbarTitle("Change location")
+            setToolbarTitle("Map")
             setToolbarSubtitle(null)
         }
     }

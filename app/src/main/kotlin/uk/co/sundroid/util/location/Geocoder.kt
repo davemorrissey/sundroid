@@ -24,7 +24,7 @@ object Geocoder {
         val results = ArrayList<LocationDetails>()
         try {
             val myLocation = android.location.Geocoder(context, Locale.getDefault())
-            val myList = myLocation.getFromLocationName(search, 1)
+            val myList = myLocation.getFromLocationName(search, 10)
             for (address in myList) {
                 if ((address.locality.isNotEmpty() || address.featureName.isNotEmpty()) && address.countryName.isNotEmpty() && address.hasLatitude() && address.hasLongitude()) {
                     val locationDetails = LocationDetails(LatitudeLongitude(address.latitude, address.longitude))
