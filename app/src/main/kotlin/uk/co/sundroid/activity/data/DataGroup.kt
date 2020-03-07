@@ -1,12 +1,12 @@
 package uk.co.sundroid.activity.data
 
-enum class DataGroup constructor(val displayName: String) {
+enum class DataGroup {
 
-    DAY_SUMMARY("Day summary"),
-    DAY_DETAIL("Day in detail"),
-    TRACKER("Sun and moon tracker"),
-    MONTH_CALENDARS("Month calendars"),
-    MONTH_MOONPHASE("Moon phase calendar"),
-    YEAR_EVENTS("Year events")
+    DAY_SUMMARY,
+    DAY_DETAIL,
+    TRACKER,
+    MONTH_CALENDARS,
+    MONTH_MOONPHASE,
+    YEAR_EVENTS
 
 }
