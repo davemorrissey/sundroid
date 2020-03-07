@@ -59,6 +59,7 @@
                     style="@style/listMenuIconLabel"
                     android:text="Saved locations"/>
             </LinearLayout>
+            <View style="@style/listMenuDivider"/>
         </LinearLayout>
 
     </ScrollView>
