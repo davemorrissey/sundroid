@@ -48,4 +48,6 @@
     <color name="inactive_text">#dddddd</color>
    
     <color name="pressed_example">#CC99cc00</color>
+
+    <color name="transparent">#00000000</color>
 </resources>

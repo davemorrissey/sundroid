@@ -1,48 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-        >
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content">
 
     <ImageButton
-            android:id="@+id/savedLocDelete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
-            android:padding="5dp"
-            android:src="?icn_btn_delete"/>
+        android:id="@+id/savedLocDelete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/ripple_background"
+        android:contentDescription="Delete"
+        android:padding="18dp"
+        android:src="?icn_btn_delete" />
 
     <LinearLayout
-            android:id="@+id/savedLocText"
+        android:id="@+id/savedLocText"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/savedLocDelete"
+        android:background="@drawable/ripple_background"
+        android:clickable="true"
+        android:focusable="true"
+        android:orientation="vertical"
+        android:paddingLeft="15dp"
+        android:paddingTop="10dp"
+        android:paddingRight="15dp"
+        android:paddingBottom="10dp">
+
+        <TextView
+            android:id="@+id/savedLocName"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/savedLocDelete"
-            android:orientation="vertical"
-            android:clickable="true"
-            android:focusable="true"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
-            android:background="?disclosure">
+            android:textColor="?body_text"
+            android:textSize="20sp"
+            tools:text="Antarctica" />
 
         <TextView
-                android:id="@+id/savedLocName"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="-3dp"
-                android:textColor="?body_text"
-                android:textSize="18sp"/>
-
-        <TextView
-                android:id="@+id/savedLocCoords"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/savedLocName"
-                android:textColor="?secondary_text"
-                android:textSize="14sp"/>
+            android:id="@+id/savedLocCoords"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textColor="?secondary_text"
+            android:textSize="16sp"
+            tools:text="90S 180W" />
 
     </LinearLayout>
 
