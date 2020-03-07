@@ -84,7 +84,6 @@ abstract class AbstractDataFragment : AbstractFragment(), OnViewPrefsChangedList
 
     protected fun startTimeZone() {
         val intent = Intent(activity, TimeZonePickerActivity::class.java)
-        intent.putExtra(TimeZonePickerActivity.INTENT_MODE, TimeZonePickerActivity.MODE_CHANGE)
         requireActivity().startActivityForResult(intent, TimeZonePickerActivity.REQUEST_TIMEZONE)
     }
 

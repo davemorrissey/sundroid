@@ -18,6 +18,7 @@ import uk.co.sundroid.R
 import uk.co.sundroid.activity.Locater
 import uk.co.sundroid.activity.LocaterListener
 import uk.co.sundroid.activity.MainActivity
+import uk.co.sundroid.activity.Page
 import uk.co.sundroid.domain.LocationDetails
 import uk.co.sundroid.util.log.d
 import uk.co.sundroid.util.prefs.Prefs
@@ -62,7 +63,7 @@ class LocationSelectFragment : AbstractFragment(), LocaterListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         locOptionMyLocation.setOnClickListener { startLocater() }
-        locOptionMap.setOnClickListener { start(MapActivity::class.java) }
+        locOptionMap.setOnClickListener { (requireActivity() as? MainActivity)?.setPage(Page.LOCATION_MAP) }
         locOptionSearch.setOnClickListener { start(SearchActivity::class.java) }
         locOptionSavedPlaces.setOnClickListener { start(SavedLocationsActivity::class.java) }
     }
@@ -126,7 +127,6 @@ class LocationSelectFragment : AbstractFragment(), LocaterListener {
 
         if (locationDetails.timeZone == null) {
             val intent = Intent(requireContext(), TimeZonePickerActivity::class.java)
-            intent.putExtra(TimeZonePickerActivity.INTENT_MODE, TimeZonePickerActivity.MODE_SELECT)
             startActivityForResult(intent, TimeZonePickerActivity.REQUEST_TIMEZONE)
         } else {
             requireFragmentManager().popBackStack()

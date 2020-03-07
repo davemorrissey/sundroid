@@ -70,7 +70,6 @@ class SavedLocationsActivity : AbstractLocationActivity() {
         Prefs.saveSelectedLocation(this, location)
         if (location.timeZone == null) {
             val intent = Intent(this, TimeZonePickerActivity::class.java)
-            intent.putExtra(TimeZonePickerActivity.INTENT_MODE, TimeZonePickerActivity.MODE_SELECT)
             startActivityForResult(intent, TimeZonePickerActivity.REQUEST_TIMEZONE)
         } else {
             finish()

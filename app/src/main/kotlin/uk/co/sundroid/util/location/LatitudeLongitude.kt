@@ -1,5 +1,6 @@
 package uk.co.sundroid.util.location
 
+import com.google.android.gms.maps.model.LatLng
 import uk.co.sundroid.util.geometry.Accuracy
 
 import java.io.Serializable
@@ -82,6 +83,13 @@ class LatitudeLongitude : Serializable {
      */
     fun getPunctuatedValue(accuracy: Accuracy): String {
         return "${latitude.getPunctuatedValue(accuracy)} ${longitude.getPunctuatedValue(accuracy)}"
+    }
+
+    /**
+     * Convert to Google map coordinates.
+     */
+    fun toLatLng(): LatLng {
+        return LatLng(latitude.doubleValue, longitude.doubleValue)
     }
     
     /**

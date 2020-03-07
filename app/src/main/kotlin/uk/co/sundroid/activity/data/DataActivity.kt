@@ -152,7 +152,6 @@ abstract class DataActivity : AbstractActivity(), OnClickListener {
 
     private fun startTimeZone() {
         val intent = Intent(applicationContext, TimeZonePickerActivity::class.java)
-        intent.putExtra(TimeZonePickerActivity.INTENT_MODE, TimeZonePickerActivity.MODE_CHANGE)
         startActivityForResult(intent, TimeZonePickerActivity.REQUEST_TIMEZONE)
     }
 

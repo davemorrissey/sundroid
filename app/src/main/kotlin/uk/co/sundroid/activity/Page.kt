@@ -6,6 +6,7 @@ import uk.co.sundroid.activity.data.DataGroup
 import uk.co.sundroid.activity.data.fragments.*
 import uk.co.sundroid.activity.info.fragments.InfoFragment
 import uk.co.sundroid.activity.location.LocationSelectFragment
+import uk.co.sundroid.activity.location.LocationMapFragment
 
 enum class Page constructor(val navItem: Int, val fragmentClass: Class<out Fragment>, val dataGroup: DataGroup? = null) {
 
@@ -16,7 +17,8 @@ enum class Page constructor(val navItem: Int, val fragmentClass: Class<out Fragm
     MONTH_MOONPHASE(0, MonthMoonPhaseFragment::class.java, DataGroup.MONTH_MOONPHASE),
     YEAR_EVENTS(0, YearEventsFragment::class.java, DataGroup.YEAR_EVENTS),
     HELP(R.id.help, InfoFragment::class.java),
-    LOCATION_OPTIONS(0, LocationSelectFragment::class.java);
+    LOCATION_OPTIONS(0, LocationSelectFragment::class.java),
+    LOCATION_MAP(0, LocationMapFragment::class.java);
 
     companion object {
         fun fromFragment(fragment: Fragment): Page? {

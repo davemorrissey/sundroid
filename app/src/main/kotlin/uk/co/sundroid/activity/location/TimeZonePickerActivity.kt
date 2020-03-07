@@ -26,15 +26,9 @@ class TimeZonePickerActivity : AbstractActivity() {
             return
         }
 
-        val mode = intent.getIntExtra(INTENT_MODE, MODE_SELECT)
 
         setContentView(R.layout.zone)
-        if (mode == MODE_SELECT) {
-            setActionBarTitle(location.displayName, "Select time zone")
-        } else {
-            setActionBarTitle(location.displayName, "Change time zone")
-            setDisplayHomeAsUpEnabled()
-        }
+        setActionBarTitle(location.displayName, "Select time zone")
 
         val list = findViewById<ListView>(R.id.timeZoneList)
         val adapter = MergeAdapter()
@@ -78,11 +72,6 @@ class TimeZonePickerActivity : AbstractActivity() {
         const val REQUEST_TIMEZONE = 1111
         const val RESULT_TIMEZONE_SELECTED = 2221
         const val RESULT_CANCELLED = 2222
-
-        const val INTENT_MODE = "mode"
-
-        const val MODE_SELECT = 1
-        const val MODE_CHANGE = 2
     }
 
 }

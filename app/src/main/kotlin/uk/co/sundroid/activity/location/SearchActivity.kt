@@ -40,7 +40,6 @@ class SearchActivity : AbstractLocationActivity(), OnItemClickListener {
             Prefs.saveSelectedLocation(this, locationDetails)
             if (locationDetails.timeZone == null) {
                 val intent = Intent(applicationContext, TimeZonePickerActivity::class.java)
-                intent.putExtra(TimeZonePickerActivity.INTENT_MODE, TimeZonePickerActivity.MODE_SELECT)
                 startActivityForResult(intent, TimeZonePickerActivity.REQUEST_TIMEZONE)
             } else {
                 finish()
@@ -96,7 +95,6 @@ class SearchActivity : AbstractLocationActivity(), OnItemClickListener {
         Prefs.saveSelectedLocation(this, locationDetails)
         if (locationDetails.timeZone == null) {
             val intent = Intent(applicationContext, TimeZonePickerActivity::class.java)
-            intent.putExtra(TimeZonePickerActivity.INTENT_MODE, TimeZonePickerActivity.MODE_SELECT)
             startActivityForResult(intent, TimeZonePickerActivity.REQUEST_TIMEZONE)
         } else {
             finish()

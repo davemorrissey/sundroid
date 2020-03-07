@@ -131,7 +131,7 @@ class MainActivity : AbstractActivity(), FragmentManager.OnBackStackChangedListe
         }
     }
 
-    private fun setPage(page: Page, force: Boolean = false) {
+    fun setPage(page: Page, force: Boolean = false) {
         if (page != this.page || force) {
             if (page.dataGroup != null) {
                 Prefs.setLastDataGroup(this, page.dataGroup)
@@ -143,7 +143,7 @@ class MainActivity : AbstractActivity(), FragmentManager.OnBackStackChangedListe
                         .beginTransaction()
                         .replace(R.id.content, page.fragmentClass.newInstance(), ROOT)
                 if (page.dataGroup == null) {
-                    tx.addToBackStack(null)
+                    tx.addToBackStack(page.name)
                 } else {
                     tx.runOnCommit { refreshChrome() }
                 }
@@ -200,7 +200,6 @@ class MainActivity : AbstractActivity(), FragmentManager.OnBackStackChangedListe
             MENU_SAVE_LOCATION -> showDialog(DIALOG_SAVE)
             MENU_TIME_ZONE -> {
                 val intent = Intent(applicationContext, TimeZonePickerActivity::class.java)
-                intent.putExtra(TimeZonePickerActivity.INTENT_MODE, TimeZonePickerActivity.MODE_CHANGE)
                 startActivityForResult(intent, TimeZonePickerActivity.REQUEST_TIMEZONE)
             }
             MENU_VIEW_SETTINGS -> (getRootFragment() as? ConfigurableFragment)?.openSettingsDialog()
