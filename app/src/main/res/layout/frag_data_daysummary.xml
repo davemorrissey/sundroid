@@ -83,7 +83,7 @@
                             android:id="@+id/sunEvt0Img"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="12sp"
+                            android:layout_marginTop="10sp"
                             android:layout_marginRight="15dp"
                             android:layout_toRightOf="@id/sunEvt0Label"
                             tools:src="@drawable/d_rise" />
@@ -119,7 +119,7 @@
                             android:id="@+id/sunEvt1Img"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="12sp"
+                            android:layout_marginTop="10sp"
                             android:layout_marginRight="15dp"
                             android:layout_toRightOf="@id/sunEvt1Label"
                             tools:src="@drawable/d_set" />
@@ -229,7 +229,7 @@
                             android:id="@+id/moonEvt0Img"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="12sp"
+                            android:layout_marginTop="10sp"
                             android:layout_marginRight="15dp"
                             android:layout_toRightOf="@id/moonEvt0Label"
                             tools:src="@drawable/d_rise"/>
@@ -265,7 +265,7 @@
                             android:id="@+id/moonEvt1Img"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="12sp"
+                            android:layout_marginTop="10sp"
                             android:layout_marginRight="15dp"
                             android:layout_toRightOf="@id/moonEvt1Label"
                             tools:src="@drawable/d_set"/>

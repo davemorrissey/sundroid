@@ -92,7 +92,8 @@
                 <ImageView
                     android:id="@+id/sunEvt1Img"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp" />
 
                 <TextView
                     android:id="@+id/sunEvt1Time"
@@ -120,7 +121,8 @@
                 <ImageView
                     android:id="@+id/sunEvt2Img"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"/>
 
                 <TextView
                     android:id="@+id/sunEvt2Time"

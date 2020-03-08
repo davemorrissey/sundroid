@@ -55,7 +55,8 @@
                 <ImageView
                     android:id="@+id/planetEvt0Img"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp" />
 
                 <TextView
                     android:id="@+id/planetEvt0Time"
@@ -83,7 +84,8 @@
                 <ImageView
                     android:id="@+id/planetEvt1Img"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp" />
 
                 <TextView
                     android:id="@+id/planetEvt1Time"
