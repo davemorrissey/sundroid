@@ -3,10 +3,12 @@
     <group android:checkableBehavior="single" android:id="@+id/nav_pages">
         <item
             android:id="@+id/daySummary"
-            android:title="@string/data.summary.nav"/>
+            android:title="@string/data.summary.nav"
+            android:icon="@drawable/d_ic_day_summary"/>
         <item
             android:id="@+id/dayDetail"
-            android:title="@string/data.detail.nav"/>
+            android:title="@string/data.detail.nav"
+            android:icon="@drawable/d_ic_day_detail"/>
 <!--        <item-->
 <!--            android:id="@+id/tracker"-->
 <!--            android:title="@string/data.tracker.nav"/>-->
@@ -17,15 +19,14 @@
 <!--            android:id="@+id/yearEvents"-->
 <!--            android:title="@string/data.year.nav"/>-->
     </group>
-    <group android:checkableBehavior="single">
-<!--        <item-->
-<!--            android:id="@+id/location"-->
-<!--            android:title="@string/loc.nav"/>-->
+    <group android:checkableBehavior="none">
         <item
             android:id="@+id/help"
-            android:title="@string/help.nav"/>
+            android:title="@string/help.nav"
+            android:icon="@drawable/d_ic_help"/>
         <item
             android:id="@+id/settings"
-            android:title="@string/settings.nav"/>
+            android:title="@string/settings.nav"
+            android:icon="@drawable/d_ic_settings"/>
     </group>
 </menu>

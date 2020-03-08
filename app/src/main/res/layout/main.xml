@@ -47,7 +47,7 @@
         android:background="?primary_color"
         app:itemIconTint="?body_text"
         app:itemTextColor="?body_text"
-        app:itemBackground="?primary_color"
+        app:itemBackground="@drawable/d_drawer_state"
         app:headerLayout="@layout/main_nav_header"
         app:menu="@menu/navigation"/>
 
