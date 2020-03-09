@@ -37,13 +37,12 @@ class InfoFragment : AbstractFragment() {
 
     class InfoTabsAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
         override fun getCount(): Int {
-            return 3
+            return 2
         }
 
         override fun getPageTitle(position: Int): CharSequence {
             return when (position) {
                 1 -> "Glossary"
-                2 -> "About"
                 else -> "Guide"
             }
         }
@@ -51,7 +50,6 @@ class InfoFragment : AbstractFragment() {
         override fun getItem(position: Int): Fragment {
             return when(position) {
                 1 -> InfoGlossaryFragment()
-                2 -> InfoAboutFragment()
                 else -> InfoGuideFragment()
             }
         }

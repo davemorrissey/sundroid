@@ -84,7 +84,7 @@
     <string name="loc.search.error.msg">There was a problem searching for matching locations. Please check you have an internet connection.</string>
 
     <string name="help.nav">Help</string>
-
+    <string name="about.nav">About</string>
     <string name="settings.nav">Settings</string>
 
 </resources>

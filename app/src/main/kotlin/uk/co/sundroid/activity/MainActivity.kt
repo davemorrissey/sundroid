@@ -180,8 +180,8 @@ class MainActivity : AbstractActivity(), FragmentManager.OnBackStackChangedListe
 //                R.id.tracker -> setPage(Page.TRACKER)
 //                R.id.calendars -> setPage(Page.MONTH_CALENDARS)
 //                R.id.yearEvents -> setPage(Page.YEAR_EVENTS)
-//                R.id.location -> openActivity(LocationSelectActivity::class.java)
                 R.id.help -> setPage(Page.HELP)
+                R.id.about -> setPage(Page.ABOUT)
                 R.id.settings -> openActivity(AppSettingsActivity::class.java)
             }
             true

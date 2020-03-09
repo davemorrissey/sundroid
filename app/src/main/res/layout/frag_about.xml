@@ -33,19 +33,30 @@
             android:gravity="center" />
 
         <TextView
+            android:id="@+id/aboutCopyright"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textColor="?body_text"
+            android:textSize="20sp"
+            android:gravity="center"
+            android:text="© 2020 David Morrissey"/>
+
+        <Button
+            android:id="@+id/aboutSource"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ripple_button"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:layout_marginTop="10dp"
+            android:text="View source on GitHub" />
+
+        <TextView
             style="@style/bodyText"
             android:textSize="14sp"
             android:layout_marginTop="15dp"
             android:gravity="center"
             android:text="Sun position code adapted from original by the\nNational Oceanic and Atmospheric Administration.\nhttp://www.srrb.noaa.gov/highlights/sunrise/sunrise.html\nEclipse Predictions by Fred Espenak, NASA's GSFC" />
-
-        <TextView
-            android:id="@+id/aboutCodes"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:textSize="12sp"
-            android:gravity="center" />
 
     </LinearLayout>
 </ScrollView>

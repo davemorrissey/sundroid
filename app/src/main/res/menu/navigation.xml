@@ -25,6 +25,10 @@
             android:title="@string/help.nav"
             android:icon="@drawable/d_ic_help"/>
         <item
+            android:id="@+id/about"
+            android:title="@string/about.nav"
+            android:icon="@drawable/d_ic_info"/>
+        <item
             android:id="@+id/settings"
             android:title="@string/settings.nav"
             android:icon="@drawable/d_ic_settings"/>
