@@ -1,16 +1,22 @@
 package uk.co.sundroid.activity.location
 
-import android.app.Activity
+import android.Manifest.permission.ACCESS_FINE_LOCATION
+import android.app.AlertDialog
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager.PERMISSION_DENIED
+import android.content.pm.PackageManager.PERMISSION_GRANTED
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import kotlinx.android.synthetic.main.loc_options.*
 import uk.co.sundroid.AbstractFragment
@@ -60,7 +66,7 @@ class LocationSelectFragment : AbstractFragment(), LocaterListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        locOptionMyLocation.setOnClickListener { startLocater() }
+        locOptionMyLocation.setOnClickListener { if (checkPermission()) { startLocater() } }
         locOptionMap.setOnClickListener { setPage(Page.LOCATION_MAP) }
         locOptionSearch.setOnClickListener { setPage(Page.LOCATION_SEARCH) }
         locOptionSavedPlaces.setOnClickListener { setPage(Page.LOCATION_LIST) }
@@ -77,10 +83,33 @@ class LocationSelectFragment : AbstractFragment(), LocaterListener {
         }
     }
 
-    private fun start(activity: Class<out Activity>) {
-        requireFragmentManager().popBackStack() // FIXME needed while other screens are activities
-        val intent = Intent(requireContext(), activity)
-        startActivityForResult(intent, REQUEST_LOCATION)
+    private fun checkPermission(): Boolean {
+        if (ContextCompat.checkSelfPermission(requireContext(), ACCESS_FINE_LOCATION) != PERMISSION_GRANTED) {
+            requestPermissions(arrayOf(ACCESS_FINE_LOCATION), REQUEST_LOCATION)
+            return false
+        }
+        return true
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        // If request is cancelled, the result arrays are empty.
+        if (requestCode == REQUEST_LOCATION && grantResults.isNotEmpty()) {
+            if (grantResults[0] == PERMISSION_DENIED) {
+                AlertDialog.Builder(requireContext()).apply {
+                    setTitle("Permission denied")
+                    setMessage("Sundroid cannot get your location. To fix this, you can grant this app location permission from Android settings.")
+                    setPositiveButton(android.R.string.ok, null)
+                    setNeutralButton("Permissions") { _, _ ->
+                        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                        val uri: Uri = Uri.fromParts("package", requireContext().packageName, null)
+                        intent.data = uri
+                        startActivity(intent)
+                    }
+                }.show()
+            } else if (grantResults[0] == PERMISSION_GRANTED) {
+                startLocater()
+            }
+        }
     }
 
     private val cancelReceiver = object : BroadcastReceiver() {

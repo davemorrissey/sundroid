@@ -2,10 +2,13 @@ package uk.co.sundroid.activity.location
 
 import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.app.AlertDialog
+import android.content.Intent
 import android.content.pm.PackageManager.PERMISSION_DENIED
 import android.content.pm.PackageManager.PERMISSION_GRANTED
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -48,15 +51,15 @@ class LocationMapFragment : AbstractFragment(), OnMapClickListener, OnInfoWindow
 
         if (ContextCompat.checkSelfPermission(requireContext(), ACCESS_FINE_LOCATION) != PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), ACCESS_FINE_LOCATION)) {
-                AlertDialog.Builder(requireContext(), android.R.style.Theme_Material_Dialog_Alert).apply {
-                    setTitle("Location required")
-                    setMessage("Location permission is required to look up names and time zones. Proceed?")
-                    setPositiveButton(android.R.string.yes) { _, _ -> requestLocationPermission() }
+                AlertDialog.Builder(requireContext()).apply {
+                    setTitle("Permission required")
+                    setMessage("Sundroid needs permission to look up location names and time zones. Proceed?")
+                    setPositiveButton(android.R.string.yes) { _, _ -> requestPermissions(arrayOf(ACCESS_FINE_LOCATION), REQUEST_LOCATION) }
                     setNegativeButton(android.R.string.no, null)
                     setIcon(android.R.drawable.ic_dialog_info)
                 }.show()
             } else {
-                requestLocationPermission()
+                requestPermissions(arrayOf(ACCESS_FINE_LOCATION), REQUEST_LOCATION)
             }
         }
     }
@@ -84,10 +87,6 @@ class LocationMapFragment : AbstractFragment(), OnMapClickListener, OnInfoWindow
         }
     }
 
-    private fun requestLocationPermission() {
-        ActivityCompat.requestPermissions(requireActivity(), arrayOf(ACCESS_FINE_LOCATION), REQUEST_LOCATION)
-    }
-
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         // If request is cancelled, the result arrays are empty.
         if (requestCode == REQUEST_LOCATION && grantResults.isNotEmpty()) {
@@ -97,11 +96,16 @@ class LocationMapFragment : AbstractFragment(), OnMapClickListener, OnInfoWindow
                 // "always deny".
                 if (!Prefs.mapLocationPermissionDenied(requireContext())) {
                     Prefs.setMapLocationPermissionDenied(requireContext(), true)
-                    AlertDialog.Builder(requireContext(), android.R.style.Theme_Material_Dialog_Alert).apply {
-                        setTitle("Location denied")
+                    AlertDialog.Builder(requireContext()).apply {
+                        setTitle("Permission denied")
                         setMessage("Location name and time zone lookup will be unavailable. To fix this, you can grant this app location permission from Android settings.")
                         setPositiveButton(android.R.string.ok, null)
-                        setIcon(android.R.drawable.ic_dialog_info)
+                        setNeutralButton("Permissions") { _, _ ->
+                            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                            val uri: Uri = Uri.fromParts("package", requireContext().packageName, null)
+                            intent.data = uri
+                            startActivity(intent)
+                        }
                     }.show()
                 }
             } else if (grantResults[0] == PERMISSION_GRANTED) {
