@@ -16,8 +16,6 @@
 		<item name="body_text">#000000</item>
 		<item name="dialog_text">#000000</item>
 		<item name="secondary_text">#005895</item>
-		<item name="tabstate_active">@drawable/l_tabstate_active</item>
-		<item name="tabstate_inactive">@drawable/l_tabstate_inactive</item>
 		<item name="header_text">#ffffff</item>
 		<item name="header_secondary_text">#aaffffff</item>
 		<item name="tab_bar_bg_color">#003f6f</item>
@@ -59,8 +57,6 @@
 		<item name="body_text">#ffffff</item>
 		<item name="dialog_text">#ffffff</item>
 		<item name="secondary_text">#999999</item>
-		<item name="tabstate_active">@drawable/d_tabstate_active</item>
-		<item name="tabstate_inactive">@drawable/d_tabstate_inactive</item>
 		<item name="header_text">#ffffff</item>
 		<item name="header_secondary_text">#bbbbbb</item>
 		<item name="tab_bar_bg_color">#313431</item>
@@ -93,8 +89,6 @@
         <item name="body_text">#ffffff</item>
         <item name="dialog_text">#ffffff</item>
         <item name="secondary_text">#e3f6aa</item>
-        <item name="tabstate_active">@drawable/d_tabstate_active</item>
-        <item name="tabstate_inactive">@drawable/d_tabstate_inactive</item>
         <item name="header_text">#ffffff</item>
         <item name="header_secondary_text">#bbbbbb</item>
         <item name="tab_bar_bg_color">#313431</item>
@@ -127,8 +121,6 @@
         <item name="body_text">#000000</item>
         <item name="dialog_text">#000000</item>
         <item name="secondary_text">#005895</item>
-        <item name="tabstate_active">@drawable/l_tabstate_active</item>
-        <item name="tabstate_inactive">@drawable/l_tabstate_inactive</item>
         <item name="header_text">#ffffff</item>
         <item name="header_secondary_text">#aaffffff</item>
         <item name="tab_bar_bg_color">#003f6f</item>
@@ -504,26 +496,6 @@
 		<item name="android:layout_width">wrap_content</item>
 		<item name="android:layout_height">wrap_content</item>
 		<item name="android:textSize">18sp</item>
-	</style>
-	
-	<style name="baseTab">
-	    <item name="android:layout_width">0dp</item>
-	    <item name="android:layout_weight">0.25</item>
-	    <item name="android:layout_height">@dimen/tab_bar_height</item>
-	    <item name="android:gravity">center</item>
-		<item name="android:focusable">true</item>
-		<item name="android:clickable">true</item>
-		<item name="android:textStyle">bold</item>
-		<item name="android:textColor">?tabs_inactivetext</item>
-	</style>
-	
-	<style name="tabInactive" parent="@style/baseTab">
-	    <item name="android:background">?tabstate_inactive</item>
-	</style>
-	
-	<style name="tabActive" parent="@style/baseTab">
-	    <item name="android:textColor">?tabs_activetext</item>
-	    <item name="android:background">?tabstate_active</item>
 	</style>
 
 </resources>

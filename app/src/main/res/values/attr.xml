@@ -20,9 +20,6 @@
     <attr name="app_background" format="reference"/>
     <attr name="header_background" format="reference"/>
 
-    <attr name="tabstate_inactive" format="reference"/>
-    <attr name="tabstate_active" format="reference"/>
-
     <attr name="header_text" format="color"/>
     <attr name="header_secondary_text" format="color"/>
 
