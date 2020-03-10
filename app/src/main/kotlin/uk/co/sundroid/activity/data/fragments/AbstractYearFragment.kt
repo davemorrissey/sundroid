@@ -134,7 +134,7 @@ abstract class AbstractYearFragment : AbstractDataFragment(), OnClickListener, O
                     nextYear()
                 }
             }
-            yearDetector = GestureDetector(applicationContext, ButtonDragGestureDetector(yearListener, applicationContext!!))
+            yearDetector = GestureDetector(requireContext(), ButtonDragGestureDetector(yearListener, requireContext()))
         }
         view.findViewById<View>(R.id.yearPrev).setOnClickListener(this)
         view.findViewById<View>(R.id.yearNext).setOnClickListener(this)
@@ -144,7 +144,7 @@ abstract class AbstractYearFragment : AbstractDataFragment(), OnClickListener, O
     }
 
     private fun updateYear(location: LocationDetails, calendar: Calendar, view: View) {
-        if (Prefs.showTimeZone(applicationContext!!)) {
+        if (Prefs.showTimeZone(requireContext())) {
             show(view, R.id.zoneButton)
             val zone = location.timeZone!!.zone
             val zoneDST = zone.inDaylightTime(Date(calendar.timeInMillis + 12 * 60 * 60 * 1000))

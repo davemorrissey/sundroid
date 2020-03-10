@@ -1,9 +1,10 @@
 package uk.co.sundroid.util.geometry
 
-import uk.co.sundroid.util.geometry.parseArcValue as utilsParseArcValue
 import uk.co.sundroid.util.geometry.Accuracy.*
 import uk.co.sundroid.util.geometry.Punctuation.*
 import java.io.Serializable
+import kotlin.math.abs
+import kotlin.math.floor
 
 /**
  * Represents an angle and provides methods for getting and setting the angle using either double
@@ -32,7 +33,7 @@ open class Angle : Serializable {
      */
     val degrees: Int
         get() {
-            return Math.floor(Math.abs(doubleValue)).toInt()
+            return floor(abs(doubleValue)).toInt()
         }
 
     /**
@@ -40,8 +41,8 @@ open class Angle : Serializable {
      */
     val minutes: Int
         get() {
-            val degrees = Math.floor(Math.abs(doubleValue)).toInt()
-            return Math.floor((Math.abs(doubleValue) - degrees) * 60).toInt()
+            val degrees = floor(abs(doubleValue)).toInt()
+            return floor((abs(doubleValue) - degrees) * 60).toInt()
         }
 
     /**
@@ -49,9 +50,9 @@ open class Angle : Serializable {
      */
     val seconds: Int
         get() {
-            val degrees = Math.floor(Math.abs(doubleValue)).toInt()
-            val minutes = Math.floor((Math.abs(doubleValue) - degrees) * 60).toInt()
-            return ((((Math.abs(doubleValue) - degrees) * 60) - minutes) * 60).toInt()
+            val degrees = floor(abs(doubleValue)).toInt()
+            val minutes = floor((abs(doubleValue) - degrees) * 60).toInt()
+            return ((((abs(doubleValue) - degrees) * 60) - minutes) * 60).toInt()
         }
 
     /**

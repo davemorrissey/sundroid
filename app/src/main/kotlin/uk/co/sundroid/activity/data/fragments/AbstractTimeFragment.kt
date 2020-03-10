@@ -117,7 +117,7 @@ abstract class AbstractTimeFragment : AbstractDataFragment(), OnSeekBarChangeLis
             override fun onButtonDragLeft() = changeCalendars(DAY_OF_MONTH, -1)
             override fun onButtonDragRight() = changeCalendars(DAY_OF_MONTH, 1)
         }
-        val dateDetector = GestureDetector(applicationContext, ButtonDragGestureDetector(dateListener, applicationContext!!))
+        val dateDetector = GestureDetector(requireContext(), ButtonDragGestureDetector(dateListener, requireContext()))
         zoneButton.setOnClickListener { setPage(Page.TIME_ZONE) }
         dateButton.setOnClickListener { showDatePicker() }
         dateButton.setOnTouchListener { _, e -> dateDetector.onTouchEvent(e) }
@@ -128,7 +128,7 @@ abstract class AbstractTimeFragment : AbstractDataFragment(), OnSeekBarChangeLis
             override fun onButtonDragLeft() = prevMinute()
             override fun onButtonDragRight() = nextMinute()
         }
-        val timeDetector = GestureDetector(applicationContext, ButtonDragGestureDetector(timeListener, applicationContext!!))
+        val timeDetector = GestureDetector(requireContext(), ButtonDragGestureDetector(timeListener, requireContext()))
         timeButton.setOnClickListener { showTimePicker() }
         timeButton.setOnTouchListener { _, e -> timeDetector.onTouchEvent(e) }
         timeSeeker.setOnSeekBarChangeListener(this)
@@ -141,7 +141,7 @@ abstract class AbstractTimeFragment : AbstractDataFragment(), OnSeekBarChangeLis
         }
 
 
-        if (Prefs.showTimeZone(applicationContext!!)) {
+        if (Prefs.showTimeZone(requireContext())) {
             show(view, R.id.zoneButton)
             val zone = location.timeZone!!.zone
             val zoneDST = zone.inDaylightTime(Date(dateCalendar.timeInMillis + 12 * 60 * 60 * 1000))
@@ -157,7 +157,7 @@ abstract class AbstractTimeFragment : AbstractDataFragment(), OnSeekBarChangeLis
             remove(view, R.id.zoneButton)
         }
 
-        val time = formatTime(applicationContext!!, timeCalendar, allowSeconds = false, allowRounding = false)
+        val time = formatTime(requireContext(), timeCalendar, allowSeconds = false, allowRounding = false)
         show(view, R.id.timeHM, time.time + time.marker)
 
         dateFormat.timeZone = dateCalendar.timeZone

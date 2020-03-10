@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE
 import kotlinx.android.synthetic.main.zone.*
 import uk.co.sundroid.AbstractFragment
 import uk.co.sundroid.R
@@ -39,7 +38,7 @@ class TimeZonePickerFragment : AbstractFragment() {
         super.onViewCreated(view, savedInstanceState)
         val location = Prefs.selectedLocation(requireContext())
         if (location == null) {
-            requireFragmentManager().popBackStack(null, POP_BACK_STACK_INCLUSIVE)
+            returnToData()
             return
         }
 
@@ -59,7 +58,7 @@ class TimeZonePickerFragment : AbstractFragment() {
             d(TAG, "onItemClick($position, $id)")
             val timeZone = parent.getItemAtPosition(position) as TimeZoneDetail
             Prefs.saveSelectedLocationTimeZone(requireContext(), timeZone)
-            requireFragmentManager().popBackStack(null, POP_BACK_STACK_INCLUSIVE)
+            returnToData()
         }
     }
 

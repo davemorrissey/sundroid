@@ -70,7 +70,7 @@ class DayDetailSunFragment : AbstractDayDetailFragment() {
                         var noUptime = true
 
                         if (sunDay.riseSetType !== RiseSetType.SET && sunDay.transitAppElevation > 0) {
-                            val noon = formatTime(applicationContext!!, sunDay.transit!!, false)
+                            val noon = formatTime(requireContext(), sunDay.transit!!, false)
                             noTransit = false
                             show(view, R.id.sunTransit)
                             show(view, R.id.sunTransitTime, noon.time + noon.marker + "  " + formatElevation(sunDay.transitAppElevation))
@@ -99,8 +99,8 @@ class DayDetailSunFragment : AbstractDayDetailFragment() {
                                 val azId = view("sunEvt${index}Az")
                                 val imgId = view("sunEvt${index}Img")
 
-                                val time = formatTime(applicationContext!!, event.time, false)
-                                val az = formatBearing(applicationContext!!, event.azimuth!!, location.location, event.time)
+                                val time = formatTime(requireContext(), event.time, false)
+                                val az = formatBearing(requireContext(), event.azimuth!!, location.location, event.time)
 
                                 text(view, timeId, time.time + time.marker)
                                 text(view, azId, az)
@@ -113,7 +113,7 @@ class DayDetailSunFragment : AbstractDayDetailFragment() {
                             if (sunDay.uptimeHours > 0 && sunDay.uptimeHours < 24) {
                                 noUptime = false
                                 show(view, R.id.sunUptime)
-                                show(view, R.id.sunUptimeTime, formatDurationHMS(applicationContext!!, sunDay.uptimeHours, false))
+                                show(view, R.id.sunUptimeTime, formatDurationHMS(requireContext(), sunDay.uptimeHours, false))
                             } else {
                                 remove(view, R.id.sunUptime)
                             }

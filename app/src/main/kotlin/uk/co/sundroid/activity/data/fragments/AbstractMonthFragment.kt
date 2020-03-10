@@ -55,7 +55,7 @@ abstract class AbstractMonthFragment<T> : AbstractDataFragment() {
             override fun onButtonDragLeft() = calendarDiff(MONTH, -1)
             override fun onButtonDragRight() = calendarDiff(MONTH, 1)
         }
-        val monthDetector = GestureDetector(applicationContext, ButtonDragGestureDetector(monthListener, applicationContext!!))
+        val monthDetector = GestureDetector(requireContext(), ButtonDragGestureDetector(monthListener, requireContext()))
 
         monthPrev.setOnClickListener { calendarDiff(MONTH, -1) }
         monthNext.setOnClickListener { calendarDiff(MONTH, 1) }

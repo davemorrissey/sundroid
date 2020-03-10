@@ -1,7 +1,6 @@
 package uk.co.sundroid
 
 import androidx.fragment.app.Fragment
-import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
@@ -47,12 +46,6 @@ abstract class AbstractFragment : Fragment() {
     protected fun returnToData() {
         requireFragmentManager().popBackStack(null, POP_BACK_STACK_INCLUSIVE)
     }
-
-    @Deprecated("Use require methods")
-    protected val applicationContext: Context?
-        get() {
-            return activity?.applicationContext
-        }
 
     protected fun text(view: View, id: Int, text: CharSequence) {
         val child = view.findViewById<TextView>(id)

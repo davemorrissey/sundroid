@@ -76,7 +76,7 @@ class DayDetailPlanetsFragment : AbstractDayDetailFragment() {
 
                                 if (day.uptimeHours > 0 && day.uptimeHours < 24) {
                                     show(row, planetUptime)
-                                    show(row, planetUptimeTime, formatDurationHMS(applicationContext!!, day.uptimeHours, false))
+                                    show(row, planetUptimeTime, formatDurationHMS(requireContext(), day.uptimeHours, false))
                                 } else {
                                     remove(row, planetUptime)
                                 }
