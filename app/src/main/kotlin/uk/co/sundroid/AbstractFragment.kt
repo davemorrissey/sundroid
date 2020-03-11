@@ -47,17 +47,20 @@ abstract class AbstractFragment : Fragment() {
         requireFragmentManager().popBackStack(null, POP_BACK_STACK_INCLUSIVE)
     }
 
+    @Deprecated(message = "Use modifyChild", replaceWith = ReplaceWith("modifyChild(view, id, visibility = VISIBLE, text = text)", "android.view.View.VISIBLE"))
     protected fun text(view: View, id: Int, text: CharSequence) {
         val child = view.findViewById<TextView>(id)
         child.text = text
     }
 
+    @Deprecated(message = "Use modifyChild", replaceWith = ReplaceWith("modifyChild(view, id, visibility = VISIBLE, text = text)", "android.view.View.VISIBLE"))
     protected fun show(view: View, id: Int, text: CharSequence) {
         val child = view.findViewById<TextView>(id)
         child.visibility = View.VISIBLE
         child.text = text
     }
 
+    @Deprecated(message = "Use modifyChild", replaceWith = ReplaceWith("modifyChild(view, ids, visibility = VISIBLE)", "android.view.View.VISIBLE"))
     protected fun show(view: View, vararg ids: Int) {
         view.visibility = View.VISIBLE
         ids.forEach {
@@ -65,25 +68,30 @@ abstract class AbstractFragment : Fragment() {
         }
     }
 
+    @Deprecated(message = "Use modify", replaceWith = ReplaceWith("modify(view, visibility = VISIBLE, text = text)", "android.view.View.VISIBLE"))
     protected fun text(view: TextView, text: CharSequence) {
         view.visibility = View.VISIBLE
         view.text = text
     }
 
+    @Deprecated(message = "Use modify", replaceWith = ReplaceWith("modify(views, visibility = VISIBLE,)", "android.view.View.VISIBLE"))
     protected fun visible(vararg views: View) {
         views.forEach { it.visibility = View.VISIBLE }
     }
 
+    @Deprecated(message = "Use modify", replaceWith = ReplaceWith("modify(views, visibility = GONE)", "android.view.View.GONE"))
     protected fun gone(vararg views: View) {
         views.forEach { it.visibility = View.GONE }
     }
 
+    @Deprecated(message = "Use modifyChild", replaceWith = ReplaceWith("modifyChild(view, ids, visibility = GONE)", "android.view.View.GONE"))
     protected fun remove(view: View, vararg ids: Int) {
         ids.forEach {
             view.findViewById<View>(it).visibility = View.GONE
         }
     }
 
+    @Deprecated(message = "Use modifyChild", replaceWith = ReplaceWith("modifyChild(view, ids, visibility = INVISIBLE)", "android.view.View.INVISIBLE"))
     protected fun hide(view: View, vararg ids: Int) {
         ids.forEach {
             view.findViewById<View>(it).visibility = View.INVISIBLE
@@ -95,6 +103,7 @@ abstract class AbstractFragment : Fragment() {
         view.findViewById<View>(off).visibility = View.GONE
     }
 
+    @Deprecated(message = "Use modifyChild", replaceWith = ReplaceWith("modifyChild(view, id, image = drawable)"))
     protected fun image(view: View, id: Int, drawable: Int) {
         (view.findViewById<View>(id) as ImageView).setImageResource(drawable)
     }
@@ -103,6 +112,39 @@ abstract class AbstractFragment : Fragment() {
         view.findViewById<ImageView>(id).setImageBitmap(bitmap)
     }
 
+    protected fun modifyChild(parent: View,
+                              vararg ids: Int,
+                              visibility: Int? = null,
+                              text: CharSequence? = null,
+                              image: Int? = null) {
+        ids.forEach { id -> run {
+            val view = parent.findViewById<View>(id)
+            visibility?.let { view.visibility = it }
+            text?.let { (view as? TextView)?.text = it }
+            image?.let { view as? ImageView}?.setImageResource(image)
+        }}
+    }
+
+    protected fun modify(vararg views: View,
+                         visibility: Int? = null,
+                         text: CharSequence? = null,
+                         image: Int? = null) {
+        views.forEach { view -> run {
+            visibility?.let { view.visibility = it }
+            text?.let { (view as? TextView)?.text = it }
+            image?.let { view as? ImageView}?.setImageResource(image)
+        }}
+    }
+
+    protected fun id(name: String): Int {
+        try {
+            return R.id::class.java.getField(name).getInt(null)
+        } catch (e: Exception) {
+            throw IllegalArgumentException("No view with id $name exists")
+        }
+    }
+
+    @Deprecated(message = "Use id", replaceWith = ReplaceWith("id(name)"))
     protected fun view(name: String): Int {
         try {
             return R.id::class.java.getField(name).getInt(null)

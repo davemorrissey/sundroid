@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.os.Handler
 import android.view.View
+import android.view.View.VISIBLE
+import android.view.View.GONE
 import uk.co.sundroid.R
 import uk.co.sundroid.util.astro.Body
 import uk.co.sundroid.util.astro.MoonDay
@@ -17,7 +19,6 @@ import java.util.*
 
 import kotlinx.android.synthetic.main.frag_data_daysummary.*
 import uk.co.sundroid.util.astro.RiseSetType.*
-import android.view.View.*
 import uk.co.sundroid.activity.MainActivity
 
 class DaySummaryFragment : AbstractDayFragment() {
@@ -36,7 +37,7 @@ class DaySummaryFragment : AbstractDayFragment() {
         val calendar = getDateCalendar()
 
         val sunDay: SunDay = SunCalculator.calcDay(location.location, calendar)
-        val moonDay: MoonDay = BodyPositionCalculator.calcDay(Body.MOON, location.location, calendar, true) as MoonDay
+        val moonDay: MoonDay = BodyPositionCalculator.calcDay(Body.MOON, location.location, calendar, false) as MoonDay
 
         Thread(Runnable {
             context?.let {
@@ -48,58 +49,49 @@ class DaySummaryFragment : AbstractDayFragment() {
             }
         }).start()
 
-        gone(sunSpecial, sunEvt0Row, sunEvt1Row, sunUptimeRow)
-        if (sunDay.riseSetType in setOf(RISEN, SET)) {
-            sunSpecial.text = sunDay.riseSetType?.description
-            sunSpecial.visibility = VISIBLE
+        modify(sunSpecial, sunEvtsRow, sunEvt0, sunEvt1, sunUptime, visibility = GONE)
+        if (sunDay.riseSetType === RISEN || sunDay.riseSetType === SET) {
+            modify(sunSpecial, visibility = VISIBLE, text = if (sunDay.riseSetType === RISEN) "Risen all day" else "Set all day")
         } else {
-            val events: MutableSet<SummaryEvent> = TreeSet()
-            sunDay.rise?.let {
-                events.add(SummaryEvent("RISE", it, sunDay.riseAzimuth))
-            }
-            sunDay.set?.let {
-                events.add(SummaryEvent("SET", it, sunDay.setAzimuth))
-            }
+            modify(sunEvtsRow, visibility = VISIBLE)
+            val events = TreeSet<RiseSetEvent>()
+            sunDay.rise?.let { events.add(RiseSetEvent("Rise", it, sunDay.riseAzimuth)) }
+            sunDay.set?.let { events.add(RiseSetEvent("Set", it, sunDay.setAzimuth)) }
             events.forEachIndexed { index, event ->
-                val time: Time = formatTime(requireContext(), event.time, false)
-                text(view, view("sunEvt${index}Label"), event.name)
-                text(view, view("sunEvt${index}Time"), time.time + time.marker.toLowerCase(Locale.getDefault()))
-                image(view, view("sunEvt${index}Img"), if (event.name == "RISE") getRiseArrow() else getSetArrow())
-                show(view, view("sunEvt${index}Row"))
+                val time = formatTime(requireContext(), event.time, false)
+                modifyChild(view, id("sunEvt$index"), visibility = VISIBLE)
+                modifyChild(view, id("sunEvt${index}Img"), image = if (event.name == "Rise") getRiseArrow() else getSetArrow())
+                modifyChild(view, id("sunEvt${index}Label"), visibility = VISIBLE, text = event.name.toUpperCase(Locale.getDefault()))
+                modifyChild(view, id("sunEvt${index}Time"), visibility = VISIBLE, text = time.time + time.marker)
             }
+
             if (sunDay.uptimeHours > 0 && sunDay.uptimeHours < 24) {
-                sunUptimeRow.visibility = VISIBLE
-                sunUptimeTime.text = formatDurationHMS(requireContext(), sunDay.uptimeHours, false)
+                modify(sunUptime, visibility = VISIBLE)
+                modify(sunUptimeTime, text = formatDurationHMS(requireContext(), sunDay.uptimeHours, false))
             }
         }
 
-        gone(moonSpecial, moonEvt0Row, moonEvt1Row)
-        if (moonDay.riseSetType in setOf(RISEN, SET)) {
-            moonSpecial.text = moonDay.riseSetType?.description
-            moonSpecial.visibility = VISIBLE
+        modify(moonSpecial, moonEvtsRow, moonEvt0, moonEvt1, visibility = GONE)
+
+        if (moonDay.riseSetType === RISEN || moonDay.riseSetType === SET) {
+            modify(moonSpecial, visibility = VISIBLE, text = if (moonDay.riseSetType === RISEN) "Risen all day" else "Set all day")
         } else {
-            val events: MutableSet<SummaryEvent> = TreeSet()
-            moonDay.rise?.let {
-                events.add(SummaryEvent("RISE", it, moonDay.riseAzimuth))
-            }
-            moonDay.set?.let {
-                events.add(SummaryEvent("SET", it, moonDay.setAzimuth))
-            }
+            modify(moonEvtsRow, visibility = VISIBLE)
+            val events = TreeSet<RiseSetEvent>()
+            moonDay.rise?.let { events.add(RiseSetEvent("Rise", it, moonDay.riseAzimuth)) }
+            moonDay.set?.let { events.add(RiseSetEvent("Set", it, moonDay.setAzimuth)) }
             events.forEachIndexed { index, event ->
-                val time: Time = formatTime(requireContext(), event.time, false)
-                text(view, view("moonEvt${index}Label"), event.name)
-                text(view, view("moonEvt${index}Time"), time.time + time.marker.toLowerCase(Locale.getDefault()))
-                image(view, view("moonEvt${index}Img"), if (event.name == "RISE") getRiseArrow() else getSetArrow())
-                show(view, view("moonEvt${index}Row"))
+                val time = formatTime(requireContext(), event.time, false)
+                modifyChild(view, id("moonEvt$index"), visibility = VISIBLE)
+                modifyChild(view, id("moonEvt${index}Img"), image = if (event.name == "Rise") getRiseArrow() else getSetArrow())
+                modifyChild(view, id("moonEvt${index}Label"), text = event.name.toUpperCase(Locale.getDefault()))
+                modifyChild(view, id("moonEvt${index}Time"), text = "$time")
             }
         }
-        moonDay.phaseEvent?.let {
-            val time: Time = formatTime(requireContext(), it.time, false)
-            moonPhase.text = "${moonDay.phase.shortDisplayName} at ${time.time}${time.marker}"
-        } ?: run {
-            moonPhase.text = moonDay.phase.shortDisplayName
-        }
-        moonIllumination.text = "${moonDay.illumination}%"
+
+        modify(moonPhase, text = moonDay.phase.displayName + (moonDay.phaseEvent?.let {
+            " " + formatTime(requireContext(), it.time, false).toString()
+        } ?: ""))
     }
 
 }

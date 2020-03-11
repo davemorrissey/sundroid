@@ -18,7 +18,7 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/moonImage"
+                android:id="@+id/sunImage"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:layout_alignParentTop="true"
