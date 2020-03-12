@@ -42,9 +42,9 @@ object MoonPhaseCalculator {
         return intArrayOf(Math.floor(if (mm > 2) c - 4716 else c - 4715).toInt(), mm.toInt(), Math.floor(b - d - Math.floor(30.6001 * e) + f).toInt())
     }
 
-    private fun jhms(j: Double): IntArray {
-        val j2 = j + 0.5
-        val ij = ((j2 + 0.5) - Math.floor(j2)) * 86400.0
+    private fun jhms(arg: Double): IntArray {
+        val j = arg + 0.5
+        val ij = (j - Math.floor(j)) * 86400.0
         return intArrayOf(Math.floor(ij / 3600).toInt(), Math.floor(ij / 60 % 60).toInt(), Math.floor(ij % 60).toInt())
     }
 

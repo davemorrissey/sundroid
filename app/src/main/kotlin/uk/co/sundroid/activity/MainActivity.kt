@@ -96,11 +96,11 @@ class MainActivity : AbstractActivity(), FragmentManager.OnBackStackChangedListe
             dateDonor = Calendar.getInstance()
             timeDonor = Calendar.getInstance()
         }
-        dateCalendar.timeZone = location.timeZone!!.zone
+        dateCalendar = Calendar.getInstance(location.timeZone!!.zone)
         dateCalendar.set(dateDonor.get(Calendar.YEAR), dateDonor.get(Calendar.MONTH), dateDonor.get(Calendar.DAY_OF_MONTH), 0, 0, 0)
         dateCalendar.set(Calendar.MILLISECOND, 0)
         dateCalendar.timeInMillis
-        timeCalendar.timeZone = location.timeZone!!.zone
+        timeCalendar = Calendar.getInstance(location.timeZone!!.zone)
         timeCalendar.set(dateDonor.get(Calendar.YEAR), dateDonor.get(Calendar.MONTH), dateDonor.get(Calendar.DAY_OF_MONTH), timeDonor.get(Calendar.HOUR_OF_DAY), timeDonor.get(Calendar.MINUTE), 0)
         timeCalendar.set(Calendar.MILLISECOND, 0)
         timeCalendar.timeInMillis
