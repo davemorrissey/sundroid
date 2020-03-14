@@ -29,14 +29,13 @@ import uk.co.sundroid.AbstractFragment
 import uk.co.sundroid.R
 import uk.co.sundroid.R.drawable
 import uk.co.sundroid.activity.MainActivity
-import uk.co.sundroid.activity.data.fragments.ConfigurableFragment
 import uk.co.sundroid.domain.LocationDetails
 import uk.co.sundroid.domain.MapType
 import uk.co.sundroid.util.location.Geocoder
 import uk.co.sundroid.util.location.LatitudeLongitude
 import uk.co.sundroid.util.prefs.Prefs
 
-class LocationMapFragment : AbstractFragment(), OnMapClickListener, OnInfoWindowClickListener, ConfigurableFragment {
+class LocationMapFragment : AbstractFragment(), OnMapClickListener, OnInfoWindowClickListener {
 
     private val handler = Handler()
 
@@ -71,6 +70,7 @@ class LocationMapFragment : AbstractFragment(), OnMapClickListener, OnInfoWindow
         (activity as MainActivity).apply {
             setToolbarTitle("Map")
             setToolbarSubtitle(null)
+            setViewConfigurationCallback { openSettingsDialog() }
         }
     }
 
@@ -240,7 +240,7 @@ class LocationMapFragment : AbstractFragment(), OnMapClickListener, OnInfoWindow
         }
     }
 
-    override fun openSettingsDialog() {
+    private fun openSettingsDialog() {
         val names = MapType.displayNames()
         val selectedIndex = names.indexOf(Prefs.locMapType(requireContext()).displayName)
         val builder = AlertDialog.Builder(requireContext())

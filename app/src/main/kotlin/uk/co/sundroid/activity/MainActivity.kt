@@ -21,7 +21,6 @@ import uk.co.sundroid.NavItem
 import uk.co.sundroid.NavItem.NavItemLocation.*
 import uk.co.sundroid.R
 import uk.co.sundroid.activity.data.fragments.AbstractDataFragment
-import uk.co.sundroid.activity.data.fragments.ConfigurableFragment
 import uk.co.sundroid.activity.settings.AppSettingsActivity
 import uk.co.sundroid.domain.LocationDetails
 import uk.co.sundroid.util.dao.DatabaseHelper
@@ -40,6 +39,7 @@ class MainActivity : AbstractActivity(), FragmentManager.OnBackStackChangedListe
     var dateCalendar: Calendar = Calendar.getInstance()
     var timeCalendar: Calendar = Calendar.getInstance()
     private var actionBarDrawerToggle: ActionBarDrawerToggle? = null
+    private var viewConfigurationCallback: (() -> Unit)? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -136,6 +136,7 @@ class MainActivity : AbstractActivity(), FragmentManager.OnBackStackChangedListe
                 Prefs.setLastDataGroup(this, page.dataGroup)
             }
             this.page = page
+            this.viewConfigurationCallback = null
             val rootFragment = getRootFragment()
             if (rootFragment?.javaClass != page.fragmentClass || force) {
                 val tx = supportFragmentManager
@@ -149,6 +150,11 @@ class MainActivity : AbstractActivity(), FragmentManager.OnBackStackChangedListe
                 tx.commit()
             }
         }
+    }
+
+    fun setViewConfigurationCallback(f: (() -> Unit)?) {
+        this.viewConfigurationCallback = f
+        refreshChrome()
     }
 
     private fun openActivity(clazz: Class<out Activity>) {
@@ -198,7 +204,7 @@ class MainActivity : AbstractActivity(), FragmentManager.OnBackStackChangedListe
             MENU_CHANGE_LOCATION -> setPage(Page.LOCATION_OPTIONS)
             MENU_SAVE_LOCATION -> showDialog(DIALOG_SAVE)
             MENU_TIME_ZONE -> setPage(Page.TIME_ZONE)
-            MENU_VIEW_SETTINGS -> (getRootFragment() as? ConfigurableFragment)?.openSettingsDialog()
+            MENU_VIEW_SETTINGS -> viewConfigurationCallback?.invoke()
         }
     }
 
@@ -215,7 +221,7 @@ class MainActivity : AbstractActivity(), FragmentManager.OnBackStackChangedListe
                     navigationView.setCheckedItem(page.navItem)
                 }
                 val navItems = ArrayList<NavItem>()
-                if (root is ConfigurableFragment) {
+                if (viewConfigurationCallback != null) {
                     navItems.add(NavItem("Page settings", R.drawable.icn_bar_viewsettings, HEADER, MENU_VIEW_SETTINGS))
                 }
                 page.dataGroup?.let {

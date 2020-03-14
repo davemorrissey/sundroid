@@ -43,6 +43,10 @@ abstract class AbstractFragment : Fragment() {
         (activity as? MainActivity)?.setPage(page)
     }
 
+    protected fun enableFragmentConfiguration(f: () -> Void) {
+
+    }
+
     protected fun returnToData() {
         requireFragmentManager().popBackStack(null, POP_BACK_STACK_INCLUSIVE)
     }

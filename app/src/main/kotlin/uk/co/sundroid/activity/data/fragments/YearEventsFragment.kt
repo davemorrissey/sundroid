@@ -4,8 +4,6 @@ import android.os.Handler
 import android.text.Html
 import android.view.View
 import android.view.ViewGroup
-import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.tabs.TabLayout
 import uk.co.sundroid.R
 import uk.co.sundroid.activity.MainActivity
 import uk.co.sundroid.activity.data.fragments.dialogs.settings.YearEventsPickerFragment
@@ -24,14 +22,14 @@ import uk.co.sundroid.util.astro.YearData.EventType
 import java.util.*
 import kotlin.math.abs
 
-class YearEventsFragment : AbstractYearFragment(), ConfigurableFragment {
+class YearEventsFragment : AbstractYearFragment() {
 
     private val handler = Handler()
 
     override val layout: Int
         get() = R.layout.frag_data_yearevents
 
-    override fun openSettingsDialog() {
+    fun openSettingsDialog() {
         val settingsDialog = YearEventsPickerFragment.newInstance(requireContext())
         settingsDialog.setTargetFragment(this, 0)
         settingsDialog.show(requireFragmentManager(), "yearEventsSettings")
@@ -39,7 +37,10 @@ class YearEventsFragment : AbstractYearFragment(), ConfigurableFragment {
 
     override fun onResume() {
         super.onResume()
-        (activity as MainActivity).setToolbarSubtitle(R.string.data_year_title)
+        (activity as MainActivity).apply {
+            setToolbarSubtitle(R.string.data_year_title)
+            setViewConfigurationCallback { openSettingsDialog() }
+        }
     }
 
     @Throws(Exception::class)

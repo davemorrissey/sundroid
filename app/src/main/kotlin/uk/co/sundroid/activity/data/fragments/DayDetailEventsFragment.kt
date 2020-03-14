@@ -4,7 +4,6 @@ import android.view.View
 import android.widget.TableLayout
 import uk.co.sundroid.R
 import uk.co.sundroid.R.id.*
-import uk.co.sundroid.activity.data.fragments.dialogs.settings.DayEventsPickerFragment
 import uk.co.sundroid.util.astro.*
 import uk.co.sundroid.util.astro.math.BodyPositionCalculator
 import uk.co.sundroid.util.astro.math.SunCalculator
@@ -14,12 +13,10 @@ import uk.co.sundroid.util.time.formatTime
 import java.util.*
 import kotlin.collections.ArrayList
 
-class DayDetailEventsFragment : AbstractDayDetailFragment(), ConfigurableFragment {
+class DayDetailEventsFragment : AbstractDayDetailFragment() {
 
     override val layout: Int
         get() = R.layout.frag_data_daydetail_events
-
-    override fun openSettingsDialog() = DayEventsPickerFragment.show(this)
 
     override fun updateData(view: View) {
         val location = getLocation()
@@ -83,9 +80,9 @@ class DayDetailEventsFragment : AbstractDayDetailFragment(), ConfigurableFragmen
                             toggle(view, on = eventsTable, off = eventsNone)
                             for (event in eventsList) {
                                 val eventRow = inflate(R.layout.frag_data_daydetail_events_row)
-                                text(eventRow, eventName, event.name.toUpperCase(Locale.getDefault()))
-                                text(eventRow, eventTime, "${formatTime(requireContext(), event.time, true)}")
-                                text(eventRow, eventAz, if (event.azimuth != null) formatBearing(requireContext(), event.azimuth, location.location, calendar) else " ")
+                                modifyChild(eventRow, eventName, text = event.name.toUpperCase(Locale.getDefault()))
+                                modifyChild(eventRow, eventTime, text = "${formatTime(requireContext(), event.time, true)}")
+                                modifyChild(eventRow, eventAz, text = if (event.azimuth != null) formatBearing(requireContext(), event.azimuth, location.location, calendar) else " ")
                                 table.addView(eventRow)
                             }
                         }

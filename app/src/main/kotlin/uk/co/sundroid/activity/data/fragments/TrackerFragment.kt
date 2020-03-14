@@ -32,7 +32,7 @@ import java.util.concurrent.BlockingQueue
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.TimeUnit
 
-class TrackerFragment : AbstractTimeFragment(), ConfigurableFragment, SensorEventListener, TrackerMapFragment.MapCenterListener {
+class TrackerFragment : AbstractTimeFragment(), SensorEventListener, TrackerMapFragment.MapCenterListener {
 
     private var trackerLcation: LocationDetails? = null
     private var trackerDateCalendar: Calendar? = null
@@ -66,7 +66,10 @@ class TrackerFragment : AbstractTimeFragment(), ConfigurableFragment, SensorEven
         val windowManager = activity.getSystemService(Activity.WINDOW_SERVICE) as WindowManager
         val display = windowManager.defaultDisplay ?: return
         rotation = display.rotation * Surface.ROTATION_90
-        (activity as MainActivity).setToolbarSubtitle(R.string.data_tracker_title)
+        (activity as MainActivity).apply {
+            setToolbarSubtitle(R.string.data_tracker_title)
+            setViewConfigurationCallback { openSettingsDialog() }
+        }
     }
 
     override fun onPause() {
@@ -168,7 +171,7 @@ class TrackerFragment : AbstractTimeFragment(), ConfigurableFragment, SensorEven
         startImageUpdate(timeOnly)
     }
 
-    override fun openSettingsDialog() {
+    fun openSettingsDialog() {
         val settingsDialog = TrackerSettingsFragment.newInstance()
         settingsDialog.setTargetFragment(this, 0)
         settingsDialog.show(requireFragmentManager(), "trackerSettings")

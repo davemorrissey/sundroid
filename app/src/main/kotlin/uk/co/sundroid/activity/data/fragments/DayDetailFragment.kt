@@ -11,6 +11,7 @@ import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 import uk.co.sundroid.R
 import uk.co.sundroid.activity.MainActivity
+import uk.co.sundroid.activity.data.fragments.dialogs.settings.DayEventsPickerFragment
 
 class DayDetailFragment : AbstractDayFragment() {
 
@@ -21,6 +22,15 @@ class DayDetailFragment : AbstractDayFragment() {
         super.onViewCreated(view, savedInstanceState)
         val viewPager = view.findViewById(R.id.viewPager) as ViewPager
         viewPager.adapter = DayDetailTabsAdapter(childFragmentManager)
+        viewPager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
+            override fun onPageSelected(position: Int) {
+                if (position == 3) {
+                    (activity as MainActivity).setViewConfigurationCallback { DayEventsPickerFragment.show(this@DayDetailFragment) }
+                } else {
+                    (activity as MainActivity).setViewConfigurationCallback(null)
+                }
+            }
+        })
         val tabLayout = view.findViewById(R.id.tabLayout) as TabLayout
         tabLayout.setupWithViewPager(viewPager)
     }
