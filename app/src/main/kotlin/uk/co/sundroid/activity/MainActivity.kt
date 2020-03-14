@@ -228,8 +228,8 @@ class MainActivity : AbstractActivity(), FragmentManager.OnBackStackChangedListe
                     displayBackButton(false)
                     navItems.apply {
                         add(NavItem("Change location", R.drawable.icn_bar_location, HEADER, MENU_CHANGE_LOCATION))
-                        add(NavItem("Save location", R.drawable.icn_menu_myplaces, HEADER_IF_ROOM, MENU_SAVE_LOCATION))
-                        add(NavItem("Time zone", R.drawable.icn_menu_timezone, MENU, MENU_TIME_ZONE))
+                        add(NavItem("Save location", R.drawable.icn_bar_save_location, HEADER_IF_ROOM, MENU_SAVE_LOCATION))
+                        add(NavItem("Time zone", 0, MENU, MENU_TIME_ZONE))
                     }
                     setNavItems(navItems)
                 } ?: run {
