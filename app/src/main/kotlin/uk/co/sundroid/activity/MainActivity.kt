@@ -214,13 +214,13 @@ class MainActivity : AbstractActivity(), FragmentManager.OnBackStackChangedListe
                 if (page.navItem > 0) {
                     navigationView.setCheckedItem(page.navItem)
                 }
+                val navItems = ArrayList<NavItem>()
+                if (root is ConfigurableFragment) {
+                    navItems.add(NavItem("Page settings", R.drawable.icn_bar_viewsettings, HEADER, MENU_VIEW_SETTINGS))
+                }
                 page.dataGroup?.let {
                     displayBackButton(false)
-                    val navItems = ArrayList<NavItem>()
                     navItems.apply {
-                        if (root is ConfigurableFragment) {
-                            add(NavItem("Page settings", R.drawable.icn_bar_viewsettings, HEADER, MENU_VIEW_SETTINGS))
-                        }
                         add(NavItem("Change location", R.drawable.icn_bar_location, HEADER, MENU_CHANGE_LOCATION))
                         add(NavItem("Save location", R.drawable.icn_menu_myplaces, HEADER_IF_ROOM, MENU_SAVE_LOCATION))
                         add(NavItem("Time zone", R.drawable.icn_menu_timezone, MENU, MENU_TIME_ZONE))
@@ -228,7 +228,7 @@ class MainActivity : AbstractActivity(), FragmentManager.OnBackStackChangedListe
                     setNavItems(navItems)
                 } ?: run {
                     displayBackButton(true)
-                    setNavItems(listOf())
+                    setNavItems(navItems)
                 }
             }
         }

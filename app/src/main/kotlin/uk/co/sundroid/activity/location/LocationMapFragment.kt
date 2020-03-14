@@ -29,12 +29,14 @@ import uk.co.sundroid.AbstractFragment
 import uk.co.sundroid.R
 import uk.co.sundroid.R.drawable
 import uk.co.sundroid.activity.MainActivity
+import uk.co.sundroid.activity.data.fragments.ConfigurableFragment
 import uk.co.sundroid.domain.LocationDetails
+import uk.co.sundroid.domain.MapType
 import uk.co.sundroid.util.location.Geocoder
 import uk.co.sundroid.util.location.LatitudeLongitude
 import uk.co.sundroid.util.prefs.Prefs
 
-class LocationMapFragment : AbstractFragment(), OnMapClickListener, OnInfoWindowClickListener {
+class LocationMapFragment : AbstractFragment(), OnMapClickListener, OnInfoWindowClickListener, ConfigurableFragment {
 
     private val handler = Handler()
 
@@ -236,6 +238,24 @@ class LocationMapFragment : AbstractFragment(), OnMapClickListener, OnInfoWindow
                 button.visibility = View.VISIBLE
             }
         }
+    }
+
+    override fun openSettingsDialog() {
+        val names = MapType.displayNames()
+        val selectedIndex = names.indexOf(Prefs.locMapType(requireContext()).displayName)
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Map view")
+        builder.setSingleChoiceItems(names.toTypedArray(), selectedIndex, null)
+        builder.setNegativeButton("Cancel") { _, _ -> run { } }
+        builder.setPositiveButton("OK") { dialog, _ ->
+            if (dialog is AlertDialog) {
+                val selectedItem = dialog.listView.checkedItemPosition
+                val mapType = MapType.values()[selectedItem]
+                Prefs.setLocMapType(requireContext(), MapType.values()[selectedItem])
+                map?.mapType = mapType.googleId
+            }
+        }
+        builder.show()
     }
 
     companion object {
