@@ -197,13 +197,13 @@ object Prefs {
     }
     
     fun lastDataGroup(context: Context): DataGroup {
-        val name = prefs(context).getString(LAST_DATA_GROUP_KEY, null) ?: DataGroup.DAY_DETAIL.name
+        val name = prefs(context).getString(LAST_DATA_GROUP_KEY, null) ?: DataGroup.DAY_SUMMARY.name
         try {
             return DataGroup.valueOf(name)
         } catch (e: Exception) {
             // Return default
         }
-        return DataGroup.DAY_DETAIL
+        return DataGroup.DAY_SUMMARY
     }
     
     fun setLastDataGroup(context: Context, dataGroup: DataGroup) {

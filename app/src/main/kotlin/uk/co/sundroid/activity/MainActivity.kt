@@ -125,8 +125,8 @@ class MainActivity : AbstractActivity(), FragmentManager.OnBackStackChangedListe
                 this.dateCalendar.timeInMillis = state.getLong(STATE_DATE_TIMESTAMP)
                 this.timeCalendar.timeInMillis = state.getLong(STATE_TIME_TIMESTAMP)
             }
-//        } else {
-//            this.dataGroup = Prefs.lastDataGroup(this)
+        } else {
+            this.page = Page.values().firstOrNull { p -> p.dataGroup == Prefs.lastDataGroup(this) } ?: Page.DAY_SUMMARY
         }
     }
 
