@@ -13,26 +13,17 @@
         android:padding="@dimen/content_pane_padding"
         android:visibility="gone">
 
-        <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:id="@+id/sunImage"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:maxWidth="150dp"
-                android:maxHeight="150dp"
-                android:scaleType="fitXY"
-                android:src="@drawable/sun"
-                android:paddingLeft="7dp"
-                android:paddingRight="8dp"
-                android:paddingBottom="10dp"
-                android:paddingTop="5dp"
-                android:layout_marginLeft="5dp" />
-        </RelativeLayout>
+        <ImageView
+            android:id="@+id/sunImage"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="15dp"
+            android:maxWidth="150dp"
+            android:maxHeight="150dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/sun"
+            android:paddingTop="5dp" />
 
         <LinearLayout
             android:id="@+id/sunEvent"

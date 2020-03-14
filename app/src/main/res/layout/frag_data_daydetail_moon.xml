@@ -47,26 +47,16 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <RelativeLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:id="@+id/moonImage"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:layout_alignParentTop="true"
-                    android:layout_centerHorizontal="true"
-                    android:maxWidth="150dp"
-                    android:maxHeight="150dp"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/moon"
-                    android:paddingLeft="7dp"
-                    android:paddingRight="8dp"
-                    android:paddingBottom="10dp"
-                    android:paddingTop="5dp"
-                    android:layout_marginLeft="5dp" />
-            </RelativeLayout>
+            <ImageView
+                android:id="@+id/moonImage"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="15dp"
+                android:maxWidth="150dp"
+                android:maxHeight="150dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/moon"/>
 
             <TextView
                 android:id="@+id/moonSpecial"
@@ -273,11 +263,11 @@
 
                     <ImageView
                         android:id="@+id/moonPhase1Img"
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
                         android:layout_margin="5dp"
-                        android:maxWidth="18dp"
-                        android:maxHeight="18dp"
+                        android:maxWidth="24dp"
+                        android:maxHeight="24dp"
                         android:scaleType="fitXY" />
 
                     <TextView
@@ -285,6 +275,7 @@
                         android:id="@+id/moonPhase1Label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textSize="18sp"
                         android:paddingTop="4dp" />
                 </LinearLayout>
 
@@ -297,11 +288,11 @@
 
                     <ImageView
                         android:id="@+id/moonPhase2Img"
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
                         android:layout_margin="5dp"
-                        android:maxWidth="18dp"
-                        android:maxHeight="18dp"
+                        android:maxWidth="24dp"
+                        android:maxHeight="24dp"
                         android:scaleType="fitXY" />
 
                     <TextView
@@ -309,6 +300,7 @@
                         android:id="@+id/moonPhase2Label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textSize="18sp"
                         android:paddingTop="4dp" />
                 </LinearLayout>
 
@@ -321,11 +313,11 @@
 
                     <ImageView
                         android:id="@+id/moonPhase3Img"
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
                         android:layout_margin="5dp"
-                        android:maxWidth="18dp"
-                        android:maxHeight="18dp"
+                        android:maxWidth="24dp"
+                        android:maxHeight="24dp"
                         android:scaleType="fitXY" />
 
                     <TextView
@@ -333,6 +325,7 @@
                         android:id="@+id/moonPhase3Label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textSize="18sp"
                         android:paddingTop="4dp" />
                 </LinearLayout>
 
@@ -345,11 +338,11 @@
 
                     <ImageView
                         android:id="@+id/moonPhase4Img"
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
                         android:layout_margin="5dp"
-                        android:maxWidth="18dp"
-                        android:maxHeight="18dp"
+                        android:maxWidth="24dp"
+                        android:maxHeight="24dp"
                         android:scaleType="fitXY" />
 
                     <TextView
@@ -357,6 +350,7 @@
                         android:id="@+id/moonPhase4Label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textSize="18sp"
                         android:paddingTop="4dp" />
                 </LinearLayout>
 

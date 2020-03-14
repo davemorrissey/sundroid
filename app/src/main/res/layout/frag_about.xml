@@ -39,7 +39,7 @@
             android:textColor="?body_text"
             android:textSize="20sp"
             android:gravity="center"
-            android:text="© 2020 David Morrissey"/>
+            android:text="© 2020 Dave Morrissey"/>
 
         <Button
             android:id="@+id/aboutSource"

@@ -34,14 +34,14 @@ class DayDetailEventsFragment : AbstractDayDetailFragment(), ConfigurableFragmen
                         SunCalculator.calcDay(location.location, calendar).apply {
                             rise?.let { add("Sunrise", it, riseAzimuth) }
                             set?.let { add("Sunset", it, setAzimuth) }
-                            astDawn?.let { add("Astro. dawn", it) }
-                            astDusk?.let { add("Astro. dusk", it) }
+                            astDawn?.let { add("Astronomical dawn", it) }
+                            astDusk?.let { add("Astronomical dusk", it) }
                             ntcDawn?.let { add("Nautical dawn", it) }
                             ntcDusk?.let { add("Nautical dusk", it) }
                             civDawn?.let { add("Civil dawn", it) }
                             civDusk?.let { add("Civil dusk", it) }
-                            ghEnd?.let { add("Golden hr end", it) }
-                            ghStart?.let { add("Golden hr start", it) }
+                            ghEnd?.let { add("Golden hour end", it) }
+                            ghStart?.let { add("Golden hour start", it) }
                             transit?.let {
                                 if (riseSetType !== RiseSetType.SET) {
                                     add("Solar noon", it)
