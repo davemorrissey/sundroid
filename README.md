@@ -1,65 +1,73 @@
-This is a practice project. I cannot provide support or accept bug reports and pull requests, sorry!
+Sundroid
+========
 
-This app is gradually being refactored from a legacy codebase to current standards. It will usually
-compile and run, but currently crashes frequently, due to Marshmallow permissions and other problems.
+Sundroid is an Android app that calculates sunrise, sunset, moonrise and moonset times for any location.
 
-### History
+This app was originally published on Google Play in 2010 as a paid app with a free version. It was
+necessary to remove it from Google Play in 2015 for a variety of reasons. In 2020 I rebuilt the app
+and republished it as a free and open source project.
 
-Sundroid was released on Google Play on 13th April 2010. It supported Android SDK versions 4 (1.6/Donut)
-and up, and was developed on an HTC T-Mobile G1.
+Some of the features originally included in Sundroid Pro have not been rebuilt yet.
 
-Over the next few years, more data (twilights, planets, calendars), widgets and alarms were added.
-In March 2013, the app was redesigned to the Holo theme. By this time, fewer customers were willing
-to pay for apps, and I was running out of ideas, so this was the last major update.
+* Sun/moon/planet tracker: Coming soon
+* Month calendars: Coming soon
+* Year events: Coming soon
+* Notifications: Coming soon if supported by modern phones
+* Alarms: Not working on modern phones, investigation required
+* Widgets: Will not be restored
 
-The app was removed from Google Play in 2015 for various reasons. A huge amount of work was required
-to modernise it, and with sales now close to zero I could not afford to spend the required time
-developing and supporting it.
+Screenshots
+-----------
 
-I have uploaded it to GitHub as a demonstration of my work, and for use as practice. Once I finish
-refactoring and redesigning the app, I plan to publish it on Google Play.
+![Screenshot 1](screenshots/screenshot1.png)
+![Screenshot 2](screenshots/screenshot2.png)
+![Screenshot 3](screenshots/screenshot3.png)
 
-### Tech debt
+Features
+--------
 
-Android has evolved rapidly since 2010 and the code is now very outdated, in part because I maintained
-support for SDK 4 and OpenGL 1. I also avoided support libraries and made other compromises to keep
-the app small for installation in phone memory on old devices - required for alarms and widgets to
-work properly. I did not refactor the app to the gradle build system or Material design.
+* Sunrise and sunset times
+* Length of day and solar transit
+* Moonrise and moonset times
+* Lunar phase and illumination
+* Planet rise and set times
+* Planet transit and risen time
+* View any date and any location
+* Locate by GPS, map, and name search
+* Save locations
 
-### Recent changes
+Recent changes
+--------------
+
+Sundroid was originally built in 2010 and maintained a number of major compromises until recently,
+in order to keep package sizes very small for internal installation as required by alarms and widgets,
+and to support the oldest SDK. It has now been almost completely rebuilt but is still being improved.
 
 * Java 8
 * Ant scripts replaced with Gradle
 * Standardised project structure
 * Dropped OpenGL1 and Maps v1 support
-* Changed minimum SDK from 4 to 21
+* Bumped minimum SDK from 4 to 21
+* Migrated to Kotlin
+* Migrated to AndroidX
+* Marshmallow permissions requests
+* Material design including nav drawer
+* Dialogs refactored to fragments
+* Most deprecated API usage refactored
 
-### Ongoing changes
+Future changes
+--------------
 
-* Kotlin bulk conversion
-* Kotlin optimisation
-* Marshmallow permissions
-* Material design
-* Replace screen selector with nav drawer
-* Refactor dialogs as fragments
-* Replace uses of deprecated APIs
-
-### Future changes
-
+* Restore landscape support
+* Restore tablet support
 * Refactor preferences activity
 * Extract strings to resources
+* Open source translation
 * Extract more styles to resources
-* Tests
 * Lint
 
-### Removed features
+License
+-------
 
-I have removed these features to simplify the initial rewrite. They may be restored later.
-
-* **Alarms and notifications** Alarms can't bypass the lock screen on modern devices.
-* **Widgets** The code is horribly complicated.
-
-### License
-
-Copyright 2010-2017 David Morrissey
+Copyright 2010-2020 Dave Morrissey
 Licensed under GNU Affero General Public License v3.0. Portions licensed under Apache License 2.0.
