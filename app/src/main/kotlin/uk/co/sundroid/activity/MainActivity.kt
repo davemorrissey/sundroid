@@ -204,7 +204,7 @@ class MainActivity : AbstractActivity(), FragmentManager.OnBackStackChangedListe
             MENU_CHANGE_LOCATION -> setPage(Page.LOCATION_OPTIONS)
             MENU_SAVE_LOCATION -> showDialog(DIALOG_SAVE)
             MENU_TIME_ZONE -> setPage(Page.TIME_ZONE)
-            MENU_VIEW_SETTINGS -> viewConfigurationCallback?.invoke()
+            MENU_VIEW_SETTINGS -> try { viewConfigurationCallback?.invoke() } catch (e: Exception) { }
         }
     }
 

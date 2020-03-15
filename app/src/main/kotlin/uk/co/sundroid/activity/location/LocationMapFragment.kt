@@ -74,6 +74,11 @@ class LocationMapFragment : AbstractFragment(), OnMapClickListener, OnInfoWindow
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        (activity as MainActivity).setViewConfigurationCallback(null)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, state: Bundle?): View? {
         return when (container) {
             null -> null

@@ -13,10 +13,11 @@ object MoonPhaseImage {
     const val SIZE_LARGE = 2
 
     @Throws(Exception::class)
-    fun makeImage(resources: Resources, drawable: Int, phase: Double, southernHemisphere: Boolean, size: Int): Bitmap {
+    fun makeImage(resources: Resources, drawable: Int, phaseDouble: Double, southernHemisphere: Boolean, size: Int): Bitmap {
         val metrics = resources.displayMetrics
         val densityDpi = metrics.densityDpi
         val source = BitmapFactory.decodeResource(resources, drawable)
+        var phase = phaseDouble
 
         var targetSize = if (size == SIZE_MEDIUM) 61 else 121
         when {
@@ -34,6 +35,7 @@ object MoonPhaseImage {
 
         if (southernHemisphere) {
             matrix.postRotate(180f)
+            phase = 1 - phase
         }
 
         var radius = targetSize / 2
@@ -46,7 +48,7 @@ object MoonPhaseImage {
 
         var position = 0
         run {
-            var p = if (southernHemisphere) 1 - phase - 0.02 else phase - 0.02
+            var p = phase - 0.02
             while (p <= phase + 0.02 && position < 14) {
                 var pa = if (p < 0) p + 1.0 else p
                 pa = if (pa > 1) pa - 1 else p
