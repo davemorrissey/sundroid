@@ -20,6 +20,7 @@ import uk.co.sundroid.util.astro.RiseSetType.*
 import uk.co.sundroid.activity.MainActivity
 import uk.co.sundroid.util.astro.*
 import uk.co.sundroid.util.geometry.formatBearing
+import java.util.*
 
 class DaySummaryFragment : AbstractDayFragment() {
     private val handler = Handler()
@@ -98,7 +99,7 @@ class DaySummaryFragment : AbstractDayFragment() {
                 moonEventsRow.addView(eventCell)
             }
         }
-        modify(moonPhase, html = (moonDay.phase.displayName + (moonDay.phaseEvent?.let {
+        modify(moonPhase, html = (moonDay.phase.displayName.toUpperCase(Locale.getDefault()) + (moonDay.phaseEvent?.let {
             " at " + formatTimeStr(requireContext(), it.time, false, html = true)
         } ?: "")))
     }

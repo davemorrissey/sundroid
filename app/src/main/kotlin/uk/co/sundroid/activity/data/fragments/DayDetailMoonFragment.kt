@@ -124,7 +124,7 @@ class DayDetailMoonFragment : AbstractDayDetailFragment() {
 
                         modifyChild(view, moonTransitUptime, moonTransitUptimeDivider, visibility = if (noTransit && noUptime) GONE else VISIBLE)
 
-                        modifyChild(view, moonPhase, visibility = VISIBLE, html = (day.phase.displayName + (day.phaseEvent?.let {
+                        modifyChild(view, moonPhase, visibility = VISIBLE, html = (day.phase.displayName.toUpperCase(Locale.getDefault()) + (day.phaseEvent?.let {
                             " at " + formatTimeStr(requireContext(), it.time, false, html = true)
                         } ?: "")))
                         modifyChild(view, moonIllumination, text = "${day.illumination}%")
