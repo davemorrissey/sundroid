@@ -1,11 +1,14 @@
 package uk.co.sundroid.activity.data.fragments
 
 import android.view.View
+import android.view.View.VISIBLE
+import android.view.View.GONE
 import android.view.ViewGroup
 import uk.co.sundroid.R
 import uk.co.sundroid.R.id.*
 import uk.co.sundroid.util.astro.Body
 import uk.co.sundroid.util.astro.BodyDay
+import uk.co.sundroid.util.astro.BodyDayEventType
 import uk.co.sundroid.util.astro.RiseSetType
 import uk.co.sundroid.util.astro.math.BodyPositionCalculator
 import uk.co.sundroid.util.async.async
@@ -14,9 +17,7 @@ import uk.co.sundroid.util.geometry.formatElevation
 import uk.co.sundroid.util.theme.getRiseArrow
 import uk.co.sundroid.util.theme.getSetArrow
 import uk.co.sundroid.util.time.formatDurationHMS
-import uk.co.sundroid.util.html
 import uk.co.sundroid.util.time.formatTimeStr
-import java.util.*
 
 class DayDetailPlanetsFragment : AbstractDayDetailFragment() {
 
@@ -36,63 +37,53 @@ class DayDetailPlanetsFragment : AbstractDayDetailFragment() {
                         for ((planet, day) in days) {
                             val row = inflate(R.layout.frag_data_daydetail_planets_planet)
 
-                            text(row, planetName, planet.name)
+                            modifyChild(row, planetName, text = planet.name)
 
                             var noTransit = false
                             var noUptime = false
 
                             if (day.riseSetType !== RiseSetType.SET && day.transitAppElevation > 0) {
                                 val noon = formatTimeStr(requireContext(), day.transit!!, false, html = true)
-                                show(row, planetTransit)
-                                show(row, planetTransitTime, html("$noon &nbsp; ${formatElevation(day.transitAppElevation)}"))
+                                modifyChild(row, planetTransitTime, html = "$noon &nbsp; ${formatElevation(day.transitAppElevation)}")
                             } else {
-                                remove(row, planetTransit)
+                                modifyChild(row, planetTransit, visibility = GONE)
                                 noTransit = true
                             }
 
+                            val eventsRow = row.findViewById<ViewGroup>(planetEventsRow)
+                            eventsRow.removeAllViews()
+
                             if (day.riseSetType === RiseSetType.RISEN || day.riseSetType === RiseSetType.SET) {
-                                show(row, planetSpecial, if (day.riseSetType === RiseSetType.RISEN) "Risen all day" else "Set all day")
-                                remove(row, planetEvtsRow, planetEvt0, planetEvt1, planetUptime)
+                                val eventCell = inflate(R.layout.frag_data_daydetail_planets_planet_event, eventsRow, false)
+                                modifyChild(eventCell, planetEvtTime, text = if (day.riseSetType === RiseSetType.RISEN) "RISEN ALL DAY" else "SET ALL DAY")
+                                modifyChild(eventCell, planetEvtAz, visibility = GONE)
+                                modifyChild(row, planetUptime, visibility = GONE)
+                                eventsRow.addView(eventCell)
                                 noUptime = true
                             } else {
-                                remove(row, planetSpecial)
-                                remove(row, planetEvt0, planetEvt1)
-                                show(row, planetEvtsRow)
-                                val events = TreeSet<RiseSetEvent>()
-                                day.rise?.let { events.add(RiseSetEvent("Rise", it, day.riseAzimuth)) }
-                                day.set?.let { events.add(RiseSetEvent("Set", it, day.setAzimuth)) }
-                                events.forEachIndexed { index, event ->
-                                    val rowId = view("planetEvt$index")
-                                    val timeId = view("planetEvt${index}Time")
-                                    val azId = view("planetEvt${index}Az")
-                                    val imgId = view("planetEvt${index}Img")
-
-                                    val time = formatTimeStr(requireContext(), event.time, false, html = true)
-                                    val az = formatBearing(requireContext(), event.azimuth, location.location, event.time)
-
-                                    text(row, timeId, html(time))
-                                    text(row, azId, az)
-                                    show(row, rowId)
-                                    image(row, imgId, if (event.name == "Rise") getRiseArrow() else getSetArrow())
+                                day.events.forEach { event ->
+                                    val eventCell = inflate(R.layout.frag_data_daydetail_planets_planet_event, eventsRow, false)
+                                    val az = formatBearing(requireContext(), event.azimuth ?: 0.0, location.location, event.time)
+                                    modifyChild(eventCell, planetEvtImg, image = if (event.event == BodyDayEventType.RISE) getRiseArrow() else getSetArrow())
+                                    modifyChild(eventCell, planetEvtTime, html = formatTimeStr(requireContext(), event.time, false, html = true))
+                                    modifyChild(eventCell, planetEvtAz, text = az)
+                                    eventsRow.addView(eventCell)
                                 }
 
                                 if (day.uptimeHours > 0 && day.uptimeHours < 24) {
-                                    show(row, planetUptime)
-                                    show(row, planetUptimeTime, html(formatDurationHMS(requireContext(), day.uptimeHours, false, html = true)))
+                                    modifyChild(row, planetUptimeTime, html = formatDurationHMS(requireContext(), day.uptimeHours, false, html = true))
                                 } else {
-                                    remove(row, planetUptime)
+                                    modifyChild(row, planetUptime, visibility = GONE)
                                 }
                             }
 
                             if (noTransit && noUptime) {
-                                remove(row, planetTransitUptime)
-                            } else {
-                                show(row, planetTransitUptime)
+                                modifyChild(row, planetTransitUptime, visibility = GONE)
                             }
                             wrapper.addView(row)
 
                         }
-                        show(wrapper)
+                        modify(wrapper, visibility = VISIBLE)
                     }
                 }
         )
