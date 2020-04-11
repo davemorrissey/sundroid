@@ -10,7 +10,6 @@ and republished it as a free and open source project.
 Some of the features originally included in Sundroid Pro have not been rebuilt yet.
 
 * Sun/moon/planet tracker: Coming soon
-* Month calendars: Coming soon
 * Year events: Coming soon
 * Notifications: Coming soon if supported by modern phones
 * Alarms: Not working on modern phones, investigation required
@@ -32,6 +31,7 @@ Features
 * Lunar phase and illumination
 * Planet rise and set times
 * Planet transit and risen time
+* Monthly calendars - grid and list format
 * View any date and any location
 * Locate by GPS, map, and name search
 * Save locations
