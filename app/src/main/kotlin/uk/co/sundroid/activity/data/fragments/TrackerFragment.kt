@@ -253,10 +253,10 @@ class TrackerFragment : AbstractTimeFragment(), SensorEventListener, TrackerMapF
                             if (eventsSet != null) {
                                 if (eventsSet.size > 0) {
                                     val event1 = eventsSet.toTypedArray()[0]
-                                    val time = formatTime(requireContext(), event1.time, false)
+                                    val time = formatTimeStr(requireContext(), event1.time, false)
                                     val az = formatBearing(requireContext(), event1.azimuth!!, trackerLcation!!.location, event1.time)
                                     text(view!!, R.id.trackerEvt1Name, event1.name)
-                                    text(view!!, R.id.trackerEvt1Time, time.time + time.marker)
+                                    text(view!!, R.id.trackerEvt1Time, time)
                                     text(view!!, R.id.trackerEvt1Az, az)
                                 } else {
                                     text(view!!, R.id.trackerEvt1Name, "")
@@ -266,10 +266,10 @@ class TrackerFragment : AbstractTimeFragment(), SensorEventListener, TrackerMapF
 
                                 if (eventsSet.size > 1) {
                                     val event2 = eventsSet.toTypedArray()[1]
-                                    val time = formatTime(requireContext(), event2.time, false)
+                                    val time = formatTimeStr(requireContext(), event2.time, false)
                                     val az = formatBearing(requireContext(), event2.azimuth!!, trackerLcation!!.location, event2.time)
                                     text(view!!, R.id.trackerEvt2Name, event2.name)
-                                    text(view!!, R.id.trackerEvt2Time, time.time + time.marker)
+                                    text(view!!, R.id.trackerEvt2Time, time)
                                     text(view!!, R.id.trackerEvt2Az, az)
                                 } else {
                                     text(view!!, R.id.trackerEvt2Name, "")

@@ -12,6 +12,7 @@ import uk.co.sundroid.util.theme.*
 import uk.co.sundroid.util.astro.YearData.Event
 import uk.co.sundroid.util.astro.YearData.EventType
 import uk.co.sundroid.util.time.*
+import uk.co.sundroid.util.html
 
 import java.util.Calendar
 import java.util.TreeSet
@@ -70,10 +71,10 @@ class DayDetailSunFragment : AbstractDayDetailFragment() {
                         var noUptime = true
 
                         if (sunDay.riseSetType !== RiseSetType.SET && sunDay.transitAppElevation > 0) {
-                            val noon = formatTime(requireContext(), sunDay.transit!!, false)
+                            val noon = formatTimeStr(requireContext(), sunDay.transit!!, false, html = true)
                             noTransit = false
                             show(view, R.id.sunTransit)
-                            show(view, R.id.sunTransitTime, noon.time + noon.marker + "  " + formatElevation(sunDay.transitAppElevation))
+                            show(view, R.id.sunTransitTime, html("$noon &nbsp; ${formatElevation(sunDay.transitAppElevation)}"))
                         } else {
                             remove(view, R.id.sunTransit)
                         }
@@ -99,10 +100,10 @@ class DayDetailSunFragment : AbstractDayDetailFragment() {
                                 val azId = view("sunEvt${index}Az")
                                 val imgId = view("sunEvt${index}Img")
 
-                                val time = formatTime(requireContext(), event.time, false)
+                                val time = formatTimeStr(requireContext(), event.time, false, html = true)
                                 val az = formatBearing(requireContext(), event.azimuth!!, location.location, event.time)
 
-                                text(view, timeId, time.time + time.marker)
+                                text(view, timeId, html(time))
                                 text(view, azId, az)
                                 show(view, rowId)
                                 image(view, imgId, if (event.name == "Rise") getRiseArrow() else getSetArrow())
@@ -113,7 +114,7 @@ class DayDetailSunFragment : AbstractDayDetailFragment() {
                             if (sunDay.uptimeHours > 0 && sunDay.uptimeHours < 24) {
                                 noUptime = false
                                 show(view, R.id.sunUptime)
-                                show(view, R.id.sunUptimeTime, formatDurationHMS(requireContext(), sunDay.uptimeHours, false))
+                                show(view, R.id.sunUptimeTime, html(formatDurationHMS(requireContext(), sunDay.uptimeHours, false, html = true)))
                             } else {
                                 remove(view, R.id.sunUptime)
                             }
@@ -135,7 +136,7 @@ class DayDetailSunFragment : AbstractDayDetailFragment() {
                                     sunAstDawnTime to astDawn,
                                     sunAstDuskTime to astDusk
                             ).forEach {
-                                (view, time) -> view.text = time?.let { formatTimeStr(requireContext(), it) } ?: "-"
+                                (view, time) -> view.text = html(time?.let { formatTimeStr(requireContext(), it, html = true) } ?: "-")
                             }
                         }
                         show(view, R.id.sunDataBox)

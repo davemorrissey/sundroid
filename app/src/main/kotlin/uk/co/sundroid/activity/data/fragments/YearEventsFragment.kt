@@ -66,9 +66,8 @@ class YearEventsFragment : AbstractYearFragment() {
 
                         var first = true
                         for (event in eventsList) {
-                            val eventTime = formatTime(requireContext(), event.time, false)
                             var title = ""
-                            var time = eventTime.time + eventTime.marker.toLowerCase(Locale.getDefault())
+                            var time = formatTimeStr(requireContext(), event.time, false)
                             var subtitle = ""
                             var link: String? = null
                             var image = 0

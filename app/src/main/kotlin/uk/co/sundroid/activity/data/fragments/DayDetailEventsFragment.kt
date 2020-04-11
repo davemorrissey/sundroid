@@ -9,7 +9,7 @@ import uk.co.sundroid.util.astro.math.BodyPositionCalculator
 import uk.co.sundroid.util.astro.math.SunCalculator
 import uk.co.sundroid.util.async.async
 import uk.co.sundroid.util.geometry.formatBearing
-import uk.co.sundroid.util.time.formatTime
+import uk.co.sundroid.util.time.formatTimeStr
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -81,7 +81,7 @@ class DayDetailEventsFragment : AbstractDayDetailFragment() {
                             for (event in eventsList) {
                                 val eventRow = inflate(R.layout.frag_data_daydetail_events_row)
                                 modifyChild(eventRow, eventName, text = event.name.toUpperCase(Locale.getDefault()))
-                                modifyChild(eventRow, eventTime, text = "${formatTime(requireContext(), event.time, true)}")
+                                modifyChild(eventRow, eventTime, html = formatTimeStr(requireContext(), event.time, true, html = true))
                                 modifyChild(eventRow, eventAz, text = if (event.azimuth != null) formatBearing(requireContext(), event.azimuth, location.location, calendar) else " ")
                                 table.addView(eventRow)
                             }

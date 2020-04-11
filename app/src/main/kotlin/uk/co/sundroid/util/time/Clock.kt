@@ -8,11 +8,14 @@ class Clock(hours: Double, private val showSeconds: Boolean) {
     private val m: Int
     private val s: Int
 
-    fun toHMS(): String {
+    fun toHMS(html: Boolean = false): String {
+        val hs = if (html) "<small>H</small>" else "h"
+        val ms = if (html) "<small>M</small>" else "m"
+        val ss = if (html) "<small>S</small>" else "s"
         return if (showSeconds) {
-            h.toString() + "h " + zeroPad(m, 2) + "m " + zeroPad(s, 2) + "s"
+            "$h$hs ${zeroPad(m, 2)}$ms ${zeroPad(s, 2)}$ss"
         } else {
-            h.toString() + "h " + zeroPad(m, 2) + "m"
+            "$h$hs ${zeroPad(m, 2)}$ms"
         }
     }
 

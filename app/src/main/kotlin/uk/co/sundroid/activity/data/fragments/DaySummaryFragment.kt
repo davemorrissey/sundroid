@@ -15,6 +15,7 @@ import uk.co.sundroid.util.astro.math.SunCalculator
 import uk.co.sundroid.util.astro.image.MoonPhaseImage
 import uk.co.sundroid.util.theme.*
 import uk.co.sundroid.util.time.*
+import uk.co.sundroid.util.html
 import java.util.*
 
 import kotlinx.android.synthetic.main.frag_data_daysummary.*
@@ -58,16 +59,16 @@ class DaySummaryFragment : AbstractDayFragment() {
             sunDay.rise?.let { events.add(RiseSetEvent("Rise", it, sunDay.riseAzimuth)) }
             sunDay.set?.let { events.add(RiseSetEvent("Set", it, sunDay.setAzimuth)) }
             events.forEachIndexed { index, event ->
-                val time = formatTime(requireContext(), event.time, false)
+                val time = formatTimeStr(requireContext(), event.time, false, html = true)
                 modifyChild(view, id("sunEvt$index"), visibility = VISIBLE)
                 modifyChild(view, id("sunEvt${index}Img"), image = if (event.name == "Rise") getRiseArrow() else getSetArrow())
                 modifyChild(view, id("sunEvt${index}Label"), visibility = VISIBLE, text = event.name.toUpperCase(Locale.getDefault()))
-                modifyChild(view, id("sunEvt${index}Time"), visibility = VISIBLE, text = time.time + time.marker)
+                modifyChild(view, id("sunEvt${index}Time"), visibility = VISIBLE, html = time)
             }
 
             if (sunDay.uptimeHours > 0 && sunDay.uptimeHours < 24) {
                 modify(sunUptime, visibility = VISIBLE)
-                modify(sunUptimeTime, text = formatDurationHMS(requireContext(), sunDay.uptimeHours, false))
+                modify(sunUptimeTime, html = formatDurationHMS(requireContext(), sunDay.uptimeHours, false, html = true))
             }
         }
 
@@ -81,16 +82,16 @@ class DaySummaryFragment : AbstractDayFragment() {
             moonDay.rise?.let { events.add(RiseSetEvent("Rise", it, moonDay.riseAzimuth)) }
             moonDay.set?.let { events.add(RiseSetEvent("Set", it, moonDay.setAzimuth)) }
             events.forEachIndexed { index, event ->
-                val time = formatTime(requireContext(), event.time, false)
+                val time = formatTimeStr(requireContext(), event.time, false, html = true)
                 modifyChild(view, id("moonEvt$index"), visibility = VISIBLE)
                 modifyChild(view, id("moonEvt${index}Img"), image = if (event.name == "Rise") getRiseArrow() else getSetArrow())
                 modifyChild(view, id("moonEvt${index}Label"), text = event.name.toUpperCase(Locale.getDefault()))
-                modifyChild(view, id("moonEvt${index}Time"), text = "$time")
+                modifyChild(view, id("moonEvt${index}Time"), html = time)
             }
         }
 
         modify(moonPhase, text = moonDay.phase.displayName + (moonDay.phaseEvent?.let {
-            " " + formatTime(requireContext(), it.time, false).toString()
+            " " + formatTimeStr(requireContext(), it.time, allowSeconds = false)
         } ?: ""))
     }
 

@@ -19,7 +19,7 @@ import uk.co.sundroid.domain.LocationDetails
 import uk.co.sundroid.util.isNotEmpty
 import uk.co.sundroid.util.log.e
 import uk.co.sundroid.util.prefs.Prefs
-import uk.co.sundroid.util.time.formatTime
+import uk.co.sundroid.util.time.formatTimeStr
 import uk.co.sundroid.util.view.ButtonDragGestureDetector
 import uk.co.sundroid.util.view.ButtonDragGestureDetector.ButtonDragGestureDetectorListener
 import java.text.SimpleDateFormat
@@ -157,8 +157,8 @@ abstract class AbstractTimeFragment : AbstractDataFragment(), OnSeekBarChangeLis
             remove(view, R.id.zoneButton)
         }
 
-        val time = formatTime(requireContext(), timeCalendar, allowSeconds = false, allowRounding = false)
-        show(view, R.id.timeHM, time.time + time.marker)
+        val time = formatTimeStr(requireContext(), timeCalendar, allowSeconds = false, allowRounding = false)
+        show(view, R.id.timeHM, time)
 
         dateFormat.timeZone = dateCalendar.timeZone
         weekdayFormat.timeZone = dateCalendar.timeZone

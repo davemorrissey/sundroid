@@ -3,21 +3,26 @@ package uk.co.sundroid.util.time
 import android.content.Context
 import uk.co.sundroid.util.prefs.Prefs
 import uk.co.sundroid.util.zeroPad
-import java.util.Calendar
+import java.util.*
 import java.util.Calendar.*
+import kotlin.math.abs
 
 val shortMonths = arrayOf("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
 
-fun shortDateAndMonth(calendar: Calendar): String {
+fun shortDateAndMonth(calendar: Calendar, html: Boolean = false, upperCase: Boolean = false): String {
     val dom = calendar.get(DAY_OF_MONTH)
     var date = dom.toString()
-    date += when {
-        arrayOf(1, 21, 31).contains(dom) -> "st"
-        arrayOf(2, 22).contains(dom) -> "nd"
-        arrayOf(3, 23).contains(dom) -> "rd"
-        else -> "th"
+    var month = getShortMonth(calendar)
+    if (upperCase) {
+        month = month.toUpperCase(Locale.getDefault())
     }
-    return "$date ${getShortMonth(calendar)}"
+    date += when {
+        arrayOf(1, 21, 31).contains(dom) -> if (html) "<small>ST</small>" else "st"
+        arrayOf(2, 22).contains(dom) -> if (html) "<small>ND</small>" else "nd"
+        arrayOf(3, 23).contains(dom) -> if (html) "<small>RD</small>" else "rd"
+        else -> if (html) "<small>TH</small>" else "th"
+    }
+    return "$date $month"
 }
 
 fun getShortMonth(calendar: Calendar): String {
@@ -66,29 +71,22 @@ fun formatTime(context: Context, calendar: Calendar, allowSeconds: Boolean, allo
     return Time(time, if (is24) "" else marker)
 }
 
-fun formatTimeStr(context: Context, calendar: Calendar, allowSeconds: Boolean = false): String {
-    val time = formatTime(context, calendar, allowSeconds, allowRounding = true, html = false)
-    return time.time + time.marker
-}
-
-fun formatTime(context: Context, calendar: Calendar, allowSeconds: Boolean = false, html: Boolean = false): Time {
-    return formatTime(context, calendar, allowSeconds, allowRounding = true, html = html)
+fun formatTimeStr(context: Context, calendar: Calendar, allowSeconds: Boolean = false, allowRounding: Boolean = true, html: Boolean = false): String {
+    val time = formatTime(context, calendar, allowSeconds = allowSeconds, allowRounding = allowRounding, html = html)
+    return time.toString()
 }
 
 fun formatDuration(context: Context, durationHours: Double, allowSeconds: Boolean = false): String {
     return Clock(durationHours, Prefs.showSeconds(context) && allowSeconds).toClock()
 }
 
-fun formatDurationHMS(context: Context, durationHours: Double, allowSeconds: Boolean = false): String {
-    return Clock(durationHours, Prefs.showSeconds(context) && allowSeconds).toHMS()
+fun formatDurationHMS(context: Context, durationHours: Double, allowSeconds: Boolean = false, html: Boolean = false): String {
+    return Clock(durationHours, Prefs.showSeconds(context) && allowSeconds).toHMS(html = html)
 }
 
 fun formatDiff(context: Context, diffHours: Double, allowSeconds: Boolean = false): String {
-    var diff = diffHours
-    val sign = if (diff == 0.0) "\u00b1" else if (diff < 0) "-" else "+"
-    diff = Math.abs(diff)
-
-    val clock = Clock(diff, Prefs.showSeconds(context) && allowSeconds)
+    val sign = if (diffHours == 0.0) "\u00b1" else if (diffHours < 0) "-" else "+"
+    val clock = Clock(abs(diffHours), Prefs.showSeconds(context) && allowSeconds)
     return sign + clock.toClock()
 }
 

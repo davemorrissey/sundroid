@@ -14,6 +14,7 @@ import uk.co.sundroid.util.prefs.PrefsWrapper
 import androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE
 import uk.co.sundroid.domain.LocationDetails
 import uk.co.sundroid.util.prefs.Prefs
+import uk.co.sundroid.util.html
 
 /**
  * Provides some helper functions for fragments.
@@ -120,11 +121,13 @@ abstract class AbstractFragment : Fragment() {
                               vararg ids: Int,
                               visibility: Int? = null,
                               text: CharSequence? = null,
+                              html: String? = null,
                               image: Int? = null) {
         ids.forEach { id -> run {
             val view = parent.findViewById<View>(id)
             visibility?.let { view.visibility = it }
             text?.let { (view as? TextView)?.text = it }
+            html?.let { (view as? TextView)?.text = html(it) }
             image?.let { view as? ImageView}?.setImageResource(image)
         }}
     }
@@ -132,10 +135,12 @@ abstract class AbstractFragment : Fragment() {
     protected fun modify(vararg views: View,
                          visibility: Int? = null,
                          text: CharSequence? = null,
+                         html: String? = null,
                          image: Int? = null) {
         views.forEach { view -> run {
             visibility?.let { view.visibility = it }
             text?.let { (view as? TextView)?.text = it }
+            html?.let { (view as? TextView)?.text = html(it) }
             image?.let { view as? ImageView}?.setImageResource(image)
         }}
     }

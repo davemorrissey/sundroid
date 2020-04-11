@@ -12,10 +12,8 @@ import uk.co.sundroid.util.async.async
 import uk.co.sundroid.util.geometry.formatBearing
 import uk.co.sundroid.util.geometry.formatElevation
 import uk.co.sundroid.util.theme.*
-import uk.co.sundroid.util.time.formatDurationHMS
-import uk.co.sundroid.util.time.formatTime
-import uk.co.sundroid.util.time.isSameDay
-import uk.co.sundroid.util.time.shortDateAndMonth
+import uk.co.sundroid.util.html
+import uk.co.sundroid.util.time.*
 import java.util.*
 
 class DayDetailMoonFragment : AbstractDayDetailFragment() {
@@ -78,17 +76,17 @@ class DayDetailMoonFragment : AbstractDayDetailFragment() {
                                 phaseEvent.phase === MoonPhase.LAST_QUARTER -> phaseImg = if (location.location.latitude.doubleValue >= 0) getPhaseLeft() else getPhaseRight()
                             }
                             image(view, phaseImgView, phaseImg)
-                            text(view, phaseLabelView, shortDateAndMonth(phaseEvent.time))
+                            text(view, phaseLabelView, html(shortDateAndMonth(phaseEvent.time, html = true, upperCase = true)))
                         }
 
                         var noTransit = true
                         var noUptime = true
 
                         if (day.riseSetType !== RiseSetType.SET && day.transitAppElevation > 0) {
-                            val noon = formatTime(requireContext(), day.transit!!, false)
+                            val noon = formatTimeStr(requireContext(), day.transit!!, false, html = true)
                             noTransit = false
                             show(view, moonTransit)
-                            show(view, moonTransitTime, "$noon  ${formatElevation(day.transitAppElevation)}")
+                            show(view, moonTransitTime, html("$noon &nbsp; ${formatElevation(day.transitAppElevation)}"))
                         } else {
                             remove(view, moonTransit)
                         }
@@ -109,10 +107,10 @@ class DayDetailMoonFragment : AbstractDayDetailFragment() {
                                 val azId = view("moonEvt${index}Az")
                                 val imgId = view("moonEvt${index}Img")
 
-                                val time = formatTime(requireContext(), event.time, false)
+                                val time = formatTimeStr(requireContext(), event.time, false, html = true)
                                 val az = formatBearing(requireContext(), event.azimuth, location.location, event.time)
 
-                                text(view, timeId, "$time")
+                                text(view, timeId, html(time))
                                 text(view, azId, az)
                                 show(view, rowId)
                                 image(view, imgId, if (event.name == "Rise") getRiseArrow() else getSetArrow())
@@ -121,7 +119,7 @@ class DayDetailMoonFragment : AbstractDayDetailFragment() {
                             if (day.uptimeHours > 0 && day.uptimeHours < 24) {
                                 noUptime = false
                                 show(view, moonUptime)
-                                show(view, moonUptimeTime, formatDurationHMS(requireContext(), day.uptimeHours, false))
+                                show(view, moonUptimeTime, html(formatDurationHMS(requireContext(), day.uptimeHours, false, html = true)))
                             } else {
                                 remove(view, moonUptime)
                             }
@@ -133,9 +131,9 @@ class DayDetailMoonFragment : AbstractDayDetailFragment() {
                             show(view, moonTransitUptime, moonTransitUptimeDivider)
                         }
 
-                        show(view, moonPhase, day.phase.displayName + (day.phaseEvent?.let {
-                            " " + formatTime(requireContext(), it.time, false).toString()
-                        } ?: ""))
+                        show(view, moonPhase, day.phase.displayName + html((day.phaseEvent?.let {
+                            " at " + formatTimeStr(requireContext(), it.time, false, html = true)
+                        } ?: "")))
                         show(view, moonIllumination, "${day.illumination}%")
                         show(view, moonDataBox)
                     }

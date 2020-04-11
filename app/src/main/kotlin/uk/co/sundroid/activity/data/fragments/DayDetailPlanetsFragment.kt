@@ -14,7 +14,8 @@ import uk.co.sundroid.util.geometry.formatElevation
 import uk.co.sundroid.util.theme.getRiseArrow
 import uk.co.sundroid.util.theme.getSetArrow
 import uk.co.sundroid.util.time.formatDurationHMS
-import uk.co.sundroid.util.time.formatTime
+import uk.co.sundroid.util.html
+import uk.co.sundroid.util.time.formatTimeStr
 import java.util.*
 
 class DayDetailPlanetsFragment : AbstractDayDetailFragment() {
@@ -41,9 +42,9 @@ class DayDetailPlanetsFragment : AbstractDayDetailFragment() {
                             var noUptime = false
 
                             if (day.riseSetType !== RiseSetType.SET && day.transitAppElevation > 0) {
-                                val noon = formatTime(requireContext(), day.transit!!, false)
+                                val noon = formatTimeStr(requireContext(), day.transit!!, false, html = true)
                                 show(row, planetTransit)
-                                show(row, planetTransitTime, "$noon  ${formatElevation(day.transitAppElevation)}")
+                                show(row, planetTransitTime, html("$noon &nbsp; ${formatElevation(day.transitAppElevation)}"))
                             } else {
                                 remove(row, planetTransit)
                                 noTransit = true
@@ -66,10 +67,10 @@ class DayDetailPlanetsFragment : AbstractDayDetailFragment() {
                                     val azId = view("planetEvt${index}Az")
                                     val imgId = view("planetEvt${index}Img")
 
-                                    val time = formatTime(requireContext(), event.time, false)
+                                    val time = formatTimeStr(requireContext(), event.time, false, html = true)
                                     val az = formatBearing(requireContext(), event.azimuth, location.location, event.time)
 
-                                    text(row, timeId, "$time")
+                                    text(row, timeId, html(time))
                                     text(row, azId, az)
                                     show(row, rowId)
                                     image(row, imgId, if (event.name == "Rise") getRiseArrow() else getSetArrow())
@@ -77,7 +78,7 @@ class DayDetailPlanetsFragment : AbstractDayDetailFragment() {
 
                                 if (day.uptimeHours > 0 && day.uptimeHours < 24) {
                                     show(row, planetUptime)
-                                    show(row, planetUptimeTime, formatDurationHMS(requireContext(), day.uptimeHours, false))
+                                    show(row, planetUptimeTime, html(formatDurationHMS(requireContext(), day.uptimeHours, false, html = true)))
                                 } else {
                                     remove(row, planetUptime)
                                 }

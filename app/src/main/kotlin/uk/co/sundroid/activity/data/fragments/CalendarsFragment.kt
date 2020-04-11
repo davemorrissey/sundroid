@@ -12,7 +12,6 @@ import uk.co.sundroid.util.geometry.formatBearing
 import uk.co.sundroid.util.theme.*
 import uk.co.sundroid.util.time.formatDiff
 import uk.co.sundroid.util.time.formatDuration
-import uk.co.sundroid.util.time.formatTime
 import uk.co.sundroid.util.html
 import java.math.BigDecimal
 import java.util.*
@@ -22,6 +21,7 @@ import uk.co.sundroid.activity.data.fragments.dialogs.settings.CalendarSelectorF
 import uk.co.sundroid.util.prefs.Prefs
 import kotlinx.android.synthetic.main.frag_data_calendars.*
 import uk.co.sundroid.util.async.async
+import uk.co.sundroid.util.time.formatTimeStr
 import kotlin.collections.LinkedHashSet
 
 
@@ -79,7 +79,7 @@ class CalendarsFragment : AbstractMonthFragment<ArrayList<CalendarsFragment.DayE
             } else {
                 "<font color=\"${downColor()}\">\u25bc</font><br/>"
             }
-            timeHtml += formatTime(requireContext(), time, allowSeconds, html = true)
+            timeHtml += formatTimeStr(requireContext(), time, allowSeconds, html = true)
             val diffStr: String = previousTime?.let { formatDiff(requireContext(), time, previousTime, allowSeconds) } ?: ""
             val azStr: String = azimuth?.let { formatBearing(requireContext(), azimuth, getLocation().location, time) } ?: ""
             val detail = ("$diffStr  $azStr").trim()
@@ -381,7 +381,7 @@ class CalendarsFragment : AbstractMonthFragment<ArrayList<CalendarsFragment.DayE
                     eventsRow.addView(eventCell)
                 } else {
                     val eventCell = inflate(R.layout.frag_data_calendars_list_row_event, eventsRow, false)
-                    modifyChild(eventCell, eventText, visibility = VISIBLE, text = html(event.time))
+                    modifyChild(eventCell, eventText, visibility = VISIBLE, html = event.time)
                     if (event.detail != null) {
                         modifyChild(eventCell, eventAz, visibility = VISIBLE, text = event.detail)
                     } else {
