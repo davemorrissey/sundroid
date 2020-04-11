@@ -62,7 +62,7 @@
 
             <TableRow
                 android:id="@+id/sunEventsRow"
-                android:layout_gravity="center_vertical" />
+                android:layout_gravity="center_vertical"/>
         </TableLayout>
 
         <View

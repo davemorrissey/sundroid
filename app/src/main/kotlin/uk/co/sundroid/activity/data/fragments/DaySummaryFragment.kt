@@ -6,21 +6,20 @@ import android.os.Handler
 import android.view.View
 import android.view.View.VISIBLE
 import android.view.View.GONE
+import android.view.ViewGroup
 import uk.co.sundroid.R
-import uk.co.sundroid.util.astro.Body
-import uk.co.sundroid.util.astro.MoonDay
-import uk.co.sundroid.util.astro.SunDay
+import uk.co.sundroid.R.id.*
 import uk.co.sundroid.util.astro.math.BodyPositionCalculator
 import uk.co.sundroid.util.astro.math.SunCalculator
 import uk.co.sundroid.util.astro.image.MoonPhaseImage
 import uk.co.sundroid.util.theme.*
 import uk.co.sundroid.util.time.*
-import uk.co.sundroid.util.html
-import java.util.*
 
 import kotlinx.android.synthetic.main.frag_data_daysummary.*
 import uk.co.sundroid.util.astro.RiseSetType.*
 import uk.co.sundroid.activity.MainActivity
+import uk.co.sundroid.util.astro.*
+import uk.co.sundroid.util.geometry.formatBearing
 
 class DaySummaryFragment : AbstractDayFragment() {
     private val handler = Handler()
@@ -50,49 +49,58 @@ class DaySummaryFragment : AbstractDayFragment() {
             }
         }).start()
 
-        modify(sunSpecial, sunEvtsRow, sunEvt0, sunEvt1, sunUptime, visibility = GONE)
+        val sunEventsRow = view.findViewById<ViewGroup>(R.id.sunEventsRow)
+        modify(sunEventsRow, visibility = VISIBLE)
+        sunEventsRow.removeAllViews()
+
         if (sunDay.riseSetType === RISEN || sunDay.riseSetType === SET) {
-            modify(sunSpecial, visibility = VISIBLE, text = if (sunDay.riseSetType === RISEN) "Risen all day" else "Set all day")
+            val eventCell = inflate(R.layout.frag_data_event, sunEventsRow, false)
+            modifyChild(eventCell, evtImg, image = if (sunDay.riseSetType === RISEN) getRisenAllDay() else getSetAllDay())
+            modifyChild(eventCell, evtTime, html = if (sunDay.riseSetType === RISEN) "<small>RISEN ALL DAY</small>" else "<small>SET ALL DAY</small>")
+            modifyChild(eventCell, evtAz, visibility = GONE)
+            modifyChild(view, R.id.sunUptime, visibility = GONE)
+            sunEventsRow.addView(eventCell)
         } else {
-            modify(sunEvtsRow, visibility = VISIBLE)
-            val events = TreeSet<RiseSetEvent>()
-            sunDay.rise?.let { events.add(RiseSetEvent("Rise", it, sunDay.riseAzimuth)) }
-            sunDay.set?.let { events.add(RiseSetEvent("Set", it, sunDay.setAzimuth)) }
-            events.forEachIndexed { index, event ->
-                val time = formatTimeStr(requireContext(), event.time, false, html = true)
-                modifyChild(view, id("sunEvt$index"), visibility = VISIBLE)
-                modifyChild(view, id("sunEvt${index}Img"), image = if (event.name == "Rise") getRiseArrow() else getSetArrow())
-                modifyChild(view, id("sunEvt${index}Label"), visibility = VISIBLE, text = event.name.toUpperCase(Locale.getDefault()))
-                modifyChild(view, id("sunEvt${index}Time"), visibility = VISIBLE, html = time)
+            sunDay.events.forEach { event ->
+                val eventCell = inflate(R.layout.frag_data_event, sunEventsRow, false)
+                val az = formatBearing(requireContext(), event.azimuth ?: 0.0, location.location, event.time)
+                modifyChild(eventCell, evtImg, image = if (event.event == BodyDayEventType.RISE) getRiseArrow() else getSetArrow())
+                modifyChild(eventCell, evtTime, html = formatTimeStr(requireContext(), event.time, false, html = true))
+                modifyChild(eventCell, evtAz, text = az)
+                sunEventsRow.addView(eventCell)
             }
 
             if (sunDay.uptimeHours > 0 && sunDay.uptimeHours < 24) {
-                modify(sunUptime, visibility = VISIBLE)
-                modify(sunUptimeTime, html = formatDurationHMS(requireContext(), sunDay.uptimeHours, false, html = true))
+                modifyChild(view, R.id.sunUptimeTime, visibility = VISIBLE, html = formatDurationHMS(requireContext(), sunDay.uptimeHours, false, html = true))
+                modifyChild(view, R.id.sunUptime, visibility = VISIBLE)
+            } else {
+                modifyChild(view, R.id.sunUptime, visibility = GONE)
             }
         }
 
-        modify(moonSpecial, moonEvtsRow, moonEvt0, moonEvt1, visibility = GONE)
+        val moonEventsRow = view.findViewById<ViewGroup>(R.id.moonEventsRow)
+        modify(moonEventsRow, visibility = VISIBLE)
+        moonEventsRow.removeAllViews()
 
         if (moonDay.riseSetType === RISEN || moonDay.riseSetType === SET) {
-            modify(moonSpecial, visibility = VISIBLE, text = if (moonDay.riseSetType === RISEN) "Risen all day" else "Set all day")
+            val eventCell = inflate(R.layout.frag_data_event, moonEventsRow, false)
+            modifyChild(eventCell, evtImg, image = if (moonDay.riseSetType === RISEN) getRisenAllDay() else getSetAllDay())
+            modifyChild(eventCell, evtTime, html = if (moonDay.riseSetType === RISEN) "<small>RISEN ALL DAY</small>" else "<small>SET ALL DAY</small>")
+            modifyChild(eventCell, evtAz, visibility = GONE)
+            moonEventsRow.addView(eventCell)
         } else {
-            modify(moonEvtsRow, visibility = VISIBLE)
-            val events = TreeSet<RiseSetEvent>()
-            moonDay.rise?.let { events.add(RiseSetEvent("Rise", it, moonDay.riseAzimuth)) }
-            moonDay.set?.let { events.add(RiseSetEvent("Set", it, moonDay.setAzimuth)) }
-            events.forEachIndexed { index, event ->
-                val time = formatTimeStr(requireContext(), event.time, false, html = true)
-                modifyChild(view, id("moonEvt$index"), visibility = VISIBLE)
-                modifyChild(view, id("moonEvt${index}Img"), image = if (event.name == "Rise") getRiseArrow() else getSetArrow())
-                modifyChild(view, id("moonEvt${index}Label"), text = event.name.toUpperCase(Locale.getDefault()))
-                modifyChild(view, id("moonEvt${index}Time"), html = time)
+            moonDay.events.forEach { event ->
+                val eventCell = inflate(R.layout.frag_data_event, moonEventsRow, false)
+                val az = formatBearing(requireContext(), event.azimuth ?: 0.0, location.location, event.time)
+                modifyChild(eventCell, evtImg, image = if (event.event == BodyDayEventType.RISE) getRiseArrow() else getSetArrow())
+                modifyChild(eventCell, evtTime, html = formatTimeStr(requireContext(), event.time, false, html = true))
+                modifyChild(eventCell, evtAz, text = az)
+                moonEventsRow.addView(eventCell)
             }
         }
-
-        modify(moonPhase, text = moonDay.phase.displayName + (moonDay.phaseEvent?.let {
-            " " + formatTimeStr(requireContext(), it.time, allowSeconds = false)
-        } ?: ""))
+        modify(moonPhase, html = (moonDay.phase.displayName + (moonDay.phaseEvent?.let {
+            " at " + formatTimeStr(requireContext(), it.time, false, html = true)
+        } ?: "")))
     }
 
 }

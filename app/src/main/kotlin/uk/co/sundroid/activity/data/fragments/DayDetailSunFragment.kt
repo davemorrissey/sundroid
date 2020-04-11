@@ -87,20 +87,20 @@ class DayDetailSunFragment : AbstractDayDetailFragment() {
                         eventsRow.removeAllViews()
 
                         if (day.riseSetType === RiseSetType.RISEN || day.riseSetType === RiseSetType.SET) {
-                            val eventCell = inflate(R.layout.frag_data_daydetail_sun_event, eventsRow, false)
-                            modifyChild(eventCell, sunEvtImg, image = if (day.riseSetType === RiseSetType.RISEN) getRisenAllDay() else getSetAllDay())
-                            modifyChild(eventCell, sunEvtTime, html = if (day.riseSetType === RiseSetType.RISEN) "<small>RISEN ALL DAY</small>" else "<small>SET ALL DAY</small>")
-                            modifyChild(eventCell, sunEvtAz, visibility = GONE)
+                            val eventCell = inflate(R.layout.frag_data_event, eventsRow, false)
+                            modifyChild(eventCell, evtImg, image = if (day.riseSetType === RiseSetType.RISEN) getRisenAllDay() else getSetAllDay())
+                            modifyChild(eventCell, evtTime, html = if (day.riseSetType === RiseSetType.RISEN) "<small>RISEN ALL DAY</small>" else "<small>SET ALL DAY</small>")
+                            modifyChild(eventCell, evtAz, visibility = GONE)
                             modifyChild(view, R.id.sunUptime, visibility = GONE)
                             eventsRow.addView(eventCell)
                             noUptime = true
                         } else {
                             day.events.forEach { event ->
-                                val eventCell = inflate(R.layout.frag_data_daydetail_sun_event, eventsRow, false)
+                                val eventCell = inflate(R.layout.frag_data_event, eventsRow, false)
                                 val az = formatBearing(requireContext(), event.azimuth ?: 0.0, location.location, event.time)
-                                modifyChild(eventCell, sunEvtImg, image = if (event.event == BodyDayEventType.RISE) getRiseArrow() else getSetArrow())
-                                modifyChild(eventCell, sunEvtTime, html = formatTimeStr(requireContext(), event.time, false, html = true))
-                                modifyChild(eventCell, sunEvtAz, text = az)
+                                modifyChild(eventCell, evtImg, image = if (event.event == BodyDayEventType.RISE) getRiseArrow() else getSetArrow())
+                                modifyChild(eventCell, evtTime, html = formatTimeStr(requireContext(), event.time, false, html = true))
+                                modifyChild(eventCell, evtAz, text = az)
                                 eventsRow.addView(eventCell)
                             }
 

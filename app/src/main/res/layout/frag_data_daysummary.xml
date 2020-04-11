@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:s="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
@@ -17,15 +16,13 @@
         android:layout_height="fill_parent"
         android:layout_above="@id/incDateBar">
 
-        <uk.co.sundroid.util.view.BoundedLinearLayout
+        <LinearLayout
             android:id="@+id/sunDataBox"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:orientation="vertical"
-            android:padding="@dimen/content_pane_padding"
-            s:bounded_width="@dimen/column_max_width">
-
+            android:padding="@dimen/content_pane_padding">
 
             <ImageView
                 android:id="@+id/sunImage"
@@ -38,92 +35,17 @@
                 android:scaleType="fitXY"
                 android:src="@drawable/sun" />
 
-            <TextView
-                android:id="@+id/sunSpecial"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:paddingBottom="15dp"
-                android:textColor="?body_text"
-                android:textSize="22sp"
-                android:visibility="gone" />
-
-            <LinearLayout
-                android:id="@+id/sunEvtsRow"
+            <TableLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="15dp"
-                android:baselineAligned="false"
-                android:orientation="horizontal">
+                android:stretchColumns="*">
 
-                <LinearLayout
-                    android:id="@+id/sunEvt0"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:id="@+id/sunEvt0Img"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
-                        tools:src="@drawable/d_rise" />
-
-                    <TextView
-                        android:id="@+id/sunEvt0Label"
-                        style="@style/text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="?secondary_text"
-                        android:textSize="18sp"
-                        tools:text="RISE" />
-
-                    <TextView
-                        android:id="@+id/sunEvt0Time"
-                        style="@style/text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="32sp"
-                        tools:text="06:00" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/sunEvt1"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:id="@+id/sunEvt1Img"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
-                        tools:src="@drawable/d_set" />
-
-                    <TextView
-                        android:id="@+id/sunEvt1Label"
-                        style="@style/text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="?secondary_text"
-                        android:textSize="18sp"
-                        tools:text="SET" />
-
-                    <TextView
-                        android:id="@+id/sunEvt1Time"
-                        style="@style/text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="32sp"
-                        tools:text="18:00" />
-                </LinearLayout>
-
-            </LinearLayout>
+                <TableRow
+                    android:id="@+id/sunEventsRow"
+                    android:layout_gravity="center_vertical"
+                    android:visibility="gone"/>
+            </TableLayout>
 
             <LinearLayout
                 android:id="@+id/sunUptime"
@@ -175,83 +97,17 @@
                 android:textSize="22sp"
                 android:visibility="gone" />
 
-            <LinearLayout
-                android:id="@+id/moonEvtsRow"
+            <TableLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="15dp"
-                android:baselineAligned="false"
-                android:orientation="horizontal">
+                android:stretchColumns="*">
 
-                <LinearLayout
-                    android:id="@+id/moonEvt0"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:id="@+id/moonEvt0Img"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
-                        tools:src="@drawable/d_rise" />
-
-                    <TextView
-                        android:id="@+id/moonEvt0Label"
-                        style="@style/text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="?secondary_text"
-                        android:textSize="18sp"
-                        tools:text="RISE" />
-
-                    <TextView
-                        android:id="@+id/moonEvt0Time"
-                        style="@style/text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="32sp"
-                        tools:text="06:00" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/moonEvt1"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:id="@+id/moonEvt1Img"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
-                        tools:src="@drawable/d_rise" />
-
-                    <TextView
-                        android:id="@+id/moonEvt1Label"
-                        style="@style/text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="?secondary_text"
-                        android:textSize="18sp"
-                        tools:text="SET" />
-
-                    <TextView
-                        android:id="@+id/moonEvt1Time"
-                        style="@style/text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="32sp"
-                        tools:text="18:00" />
-
-                </LinearLayout>
-
-            </LinearLayout>
+                <TableRow
+                    android:id="@+id/moonEventsRow"
+                    android:layout_gravity="center_vertical"
+                    android:visibility="gone"/>
+            </TableLayout>
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -280,7 +136,7 @@
 
             </LinearLayout>
 
-        </uk.co.sundroid.util.view.BoundedLinearLayout>
+        </LinearLayout>
 
     </ScrollView>
 
