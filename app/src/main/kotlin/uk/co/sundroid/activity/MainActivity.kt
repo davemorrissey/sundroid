@@ -21,7 +21,6 @@ import uk.co.sundroid.NavItem
 import uk.co.sundroid.NavItem.NavItemLocation.*
 import uk.co.sundroid.R
 import uk.co.sundroid.activity.data.fragments.AbstractDataFragment
-import uk.co.sundroid.activity.settings.AppSettingsActivity
 import uk.co.sundroid.domain.LocationDetails
 import uk.co.sundroid.util.dao.DatabaseHelper
 import uk.co.sundroid.util.isEmpty
@@ -190,7 +189,7 @@ class MainActivity : AbstractActivity(), FragmentManager.OnBackStackChangedListe
 //                R.id.yearEvents -> setPage(Page.YEAR_EVENTS)
                 R.id.help -> setPage(Page.HELP)
                 R.id.about -> setPage(Page.ABOUT)
-                R.id.settings -> openActivity(AppSettingsActivity::class.java)
+                R.id.settings -> setPage(Page.SETTINGS)
             }
             true
         }

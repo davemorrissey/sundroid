@@ -7,6 +7,7 @@ import uk.co.sundroid.activity.data.fragments.*
 import uk.co.sundroid.activity.info.fragments.AboutFragment
 import uk.co.sundroid.activity.info.fragments.InfoFragment
 import uk.co.sundroid.activity.location.*
+import uk.co.sundroid.activity.settings.SettingsFragment
 
 enum class Page constructor(val navItem: Int, val fragmentClass: Class<out Fragment>, val dataGroup: DataGroup? = null) {
 
@@ -21,7 +22,8 @@ enum class Page constructor(val navItem: Int, val fragmentClass: Class<out Fragm
     LOCATION_MAP(0, LocationMapFragment::class.java),
     LOCATION_LIST(0, LocationListFragment::class.java),
     LOCATION_SEARCH(0, LocationSearchFragment::class.java),
-    TIME_ZONE(0, TimeZonePickerFragment::class.java);
+    TIME_ZONE(0, TimeZonePickerFragment::class.java),
+    SETTINGS(0, SettingsFragment::class.java);
 
     companion object {
         fun fromFragment(fragment: Fragment): Page? {
