@@ -289,7 +289,7 @@
 	
 	<style name="listMenuDivider">
 		<item name="android:layout_width">fill_parent</item>
-		<item name="android:layout_height">1px</item>
+		<item name="android:layout_height">1dp</item>
 		<item name="android:background">?divider_color</item>
 	</style>
 	<style name="verticalDivider">
@@ -302,9 +302,10 @@
 	
 	<style name="calendarTitle" parent="@style/text">
 		<item name="android:textColor">?body_text</item>
-		<item name="android:layout_marginRight">1px</item>
+		<item name="android:layout_marginRight">1dp</item>
+		<item name="android:padding">4dp</item>
 		<item name="android:background">?calendar_title_bg</item>
-		<item name="android:layout_weight">0.143</item>
+		<item name="android:layout_width">0dp</item>
 		<item name="android:gravity">center_horizontal</item>
 	</style>
 	
@@ -312,24 +313,25 @@
 		<item name="android:textColor">?body_text</item>
 		<item name="android:layout_width">fill_parent</item>
 		<item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">16sp</item>
 	</style>
 	
 	<style name="calendarTitleImage">
-		<item name="android:layout_width">10dp</item>
-		<item name="android:layout_height">10dp</item>
+		<item name="android:layout_width">12dp</item>
+		<item name="android:layout_height">12dp</item>
+		<item name="android:visibility">gone</item>
 		<item name="android:scaleType">fitXY</item>
-		<item name="android:layout_marginTop">5sp</item>
-		<item name="android:layout_marginLeft">2dp</item>
+		<item name="android:layout_marginTop">4dp</item>
+		<item name="android:layout_marginLeft">5dp</item>
 	</style>
 	
 	<style name="calendarTitleCell">
-		<item name="android:layout_marginRight">1px</item>
+		<item name="android:layout_marginRight">1dp</item>
         <item name="android:layout_marginTop">2dp</item>
-        <item name="android:padding">2dp</item>
+        <item name="android:padding">4dp</item>
 		<item name="android:background">#222522</item>
-		<item name="android:layout_weight">0.143</item>
-        <item name="android:textSize">14sp</item>
+		<item name="android:layout_width">0dp</item>
+        <item name="android:textSize">16sp</item>
 		<item name="android:gravity">center_horizontal</item>
 	</style>
 	
@@ -337,17 +339,31 @@
 	</style>
 	
 	<style name="calendarMoonCell">
-		<item name="android:layout_marginRight">1px</item>
-		<item name="android:layout_weight">0.143</item>
-		<item name="android:layout_height">39dp</item>
+		<item name="android:layout_marginRight">1dp</item>
+		<item name="android:layout_width">0dp</item>
+		<item name="android:layout_height">50dp</item>
 		<item name="android:gravity">center_horizontal</item>
-		<item name="android:paddingTop">3dp</item>
-		<item name="android:paddingBottom">3dp</item>
+		<item name="android:padding">5dp</item>
+	</style>
+
+	<style name="calendarGridCell">
+		<item name="android:layout_marginRight">1dp</item>
+		<item name="android:layout_width">0dp</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:gravity">center_horizontal</item>
+		<item name="android:paddingTop">8dp</item>
+		<item name="android:paddingBottom">8dp</item>
+		<item name="android:background">#81222522</item>
+	</style>
+
+	<style name="calendarGridCellText">
+		<item name="android:textColor">?body_text</item>
+		<item name="android:textSize">5pt</item>
 	</style>
 	
 	<style name="calendarMoonImage">
-		<item name="android:layout_width">33dp</item>
-		<item name="android:layout_height">33dp</item>
+		<item name="android:layout_width">36dp</item>
+		<item name="android:layout_height">36dp</item>
 		<item name="android:scaleType">fitXY</item>
 		<item name="android:layout_centerInParent">true</item>
 	</style>
@@ -409,8 +425,7 @@
 	
 	<style name="monthCalDateCell">
 		<item name="android:paddingTop">2dp</item>
-		<item name="android:layout_width">0dp</item>
-		<item name="android:layout_weight">.15</item>
+		<item name="android:layout_width">70dp</item>
 		<item name="android:layout_height">wrap_content</item>
 		<item name="android:layout_alignParentLeft">true</item>
 		<item name="android:layout_alignParentBottom">true</item>
@@ -424,36 +439,45 @@
 	</style>
 
     <style name="monthCalDatePhaseCell">
-        <item name="android:paddingTop">12dp</item>
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_weight">.10</item>
+		<item name="android:paddingLeft">5dp</item>
+		<item name="android:paddingRight">5dp</item>
+		<item name="android:layout_gravity">center_vertical</item>
+        <item name="android:layout_width">35dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_alignParentLeft">true</item>
         <item name="android:layout_alignParentBottom">true</item>
         <item name="android:orientation">vertical</item>
+		<item name="android:visibility">gone</item>
     </style>
 	
 	<style name="monthCalDatePhase">
 		<item name="android:layout_width">15dp</item>
 		<item name="android:layout_height">15dp</item>
 		<item name="android:scaleType">fitXY</item>
-		<item name="android:layout_marginTop">2dp</item>
 		<item name="android:visibility">gone</item>
 	</style>
 	
 	<style name="monthCalMoonCell">
-		<item name="android:layout_width">0dp</item>
-		<item name="android:layout_weight">.15</item>
-		<item name="android:layout_height">35dp</item>
-		<item name="android:layout_marginTop">4dp</item>
-		<item name="android:layout_marginBottom">4dp</item>
+		<item name="android:paddingLeft">8dp</item>
+		<item name="android:paddingRight">8dp</item>
+		<item name="android:layout_width">52dp</item>
+		<item name="android:layout_gravity">center_vertical</item>
+		<item name="android:layout_height">wrap_content</item>
 		<item name="android:gravity">center_horizontal</item>
 		<item name="android:visibility">gone</item>
 	</style>
 	
-	<style name="monthCalCell">
+	<style name="monthCalCellEvent">
 		<item name="android:layout_width">0dp</item>
-		<item name="android:layout_weight">.32</item>
+		<item name="android:layout_gravity">center_vertical</item>
+		<item name="android:gravity">center_horizontal</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:layout_marginTop">-3dp</item>
+	</style>
+
+	<style name="monthCalCellLength">
+		<item name="android:layout_width">0dp</item>
+		<item name="android:layout_gravity">center_vertical</item>
 		<item name="android:gravity">center_horizontal</item>
 		<item name="android:layout_height">wrap_content</item>
 	</style>
@@ -464,7 +488,6 @@
 		<item name="android:textColor">?body_text</item>
 		<item name="android:textSize">18sp</item>
 		<item name="android:gravity">center_horizontal</item>
-		<item name="android:layout_centerInParent">true</item>
 	</style>
 	
 	<style name="monthCalAz" parent="@style/text">
@@ -498,6 +521,39 @@
 	<style name="alarmAddValue" parent="@style/text">
 		<item name="android:layout_width">wrap_content</item>
 		<item name="android:layout_height">wrap_content</item>
+		<item name="android:textSize">18sp</item>
+	</style>
+
+	<style name="calendarSelectorRow">
+		<item name="android:layout_width">fill_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:layout_marginBottom">5dp</item>
+	</style>
+
+	<style name="calendarSelectorGrid">
+		<item name="android:layout_width">?actionBarSize</item>
+		<item name="android:layout_height">?actionBarSize</item>
+		<item name="android:layout_alignParentEnd">true</item>
+		<item name="android:layout_marginLeft">2dp</item>
+		<item name="android:background">@drawable/ripple_button</item>
+		<item name="android:src">@drawable/d_icn_grid</item>
+	</style>
+
+	<style name="calendarSelectorList">
+		<item name="android:layout_width">?actionBarSize</item>
+		<item name="android:layout_height">?actionBarSize</item>
+		<item name="android:layout_marginLeft">2dp</item>
+		<item name="android:background">@drawable/ripple_button</item>
+		<item name="android:src">@drawable/d_icn_list</item>
+	</style>
+
+	<style name="calendarSelectorLabel">
+		<item name="android:layout_width">fill_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:layout_alignParentStart">true</item>
+		<item name="android:paddingLeft">10dp</item>
+		<item name="android:paddingTop">18dp</item>
+		<item name="android:textColor">?dialog_text</item>
 		<item name="android:textSize">18sp</item>
 	</style>
 

@@ -25,7 +25,7 @@ class DayDetailFragment : AbstractDayFragment() {
         viewPager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
             override fun onPageSelected(position: Int) {
                 if (position == 3) {
-                    (activity as MainActivity).setViewConfigurationCallback { DayEventsPickerFragment.show(this@DayDetailFragment) }
+                    (activity as MainActivity).setViewConfigurationCallback({ DayEventsPickerFragment.show(this@DayDetailFragment) })
                 } else {
                     (activity as MainActivity).setViewConfigurationCallback(null)
                 }

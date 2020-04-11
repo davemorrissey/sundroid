@@ -14,7 +14,7 @@ fun shortDateAndMonth(calendar: Calendar): String {
     date += when {
         arrayOf(1, 21, 31).contains(dom) -> "st"
         arrayOf(2, 22).contains(dom) -> "nd"
-        arrayOf(3, 2).contains(dom) -> "rd"
+        arrayOf(3, 23).contains(dom) -> "rd"
         else -> "th"
     }
     return "$date ${getShortMonth(calendar)}"
@@ -36,7 +36,7 @@ fun isSameDay(calendar1: Calendar, calendar2: Calendar): Boolean {
             && calendar1.get(DAY_OF_MONTH) == calendar2.get(DAY_OF_MONTH)
 }
 
-fun formatTime(context: Context, calendar: Calendar, allowSeconds: Boolean, allowRounding: Boolean): Time {
+fun formatTime(context: Context, calendar: Calendar, allowSeconds: Boolean, allowRounding: Boolean, html: Boolean = false): Time {
     val clone = getInstance(calendar.timeZone)
     clone.timeInMillis = calendar.timeInMillis
 
@@ -58,18 +58,21 @@ fun formatTime(context: Context, calendar: Calendar, allowSeconds: Boolean, allo
     if (showSeconds) {
         time += ":" + zeroPad(clone.get(SECOND), 2)
     }
-    val marker = if (clone.get(AM_PM) == AM) "am" else "pm"
+    var marker = if (clone.get(AM_PM) == AM) "am" else "pm"
+    if (html) {
+        marker = if (clone.get(AM_PM) == AM) "<small>AM</small>" else "<small>PM</small>"
+    }
 
     return Time(time, if (is24) "" else marker)
 }
 
 fun formatTimeStr(context: Context, calendar: Calendar, allowSeconds: Boolean = false): String {
-    val time = formatTime(context, calendar, allowSeconds, true)
+    val time = formatTime(context, calendar, allowSeconds, allowRounding = true, html = false)
     return time.time + time.marker
 }
 
-fun formatTime(context: Context, calendar: Calendar, allowSeconds: Boolean = false): Time {
-    return formatTime(context, calendar, allowSeconds, true)
+fun formatTime(context: Context, calendar: Calendar, allowSeconds: Boolean = false, html: Boolean = false): Time {
+    return formatTime(context, calendar, allowSeconds, allowRounding = true, html = html)
 }
 
 fun formatDuration(context: Context, durationHours: Double, allowSeconds: Boolean = false): String {

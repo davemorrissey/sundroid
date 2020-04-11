@@ -40,6 +40,7 @@ class MainActivity : AbstractActivity(), FragmentManager.OnBackStackChangedListe
     var timeCalendar: Calendar = Calendar.getInstance()
     private var actionBarDrawerToggle: ActionBarDrawerToggle? = null
     private var viewConfigurationCallback: (() -> Unit)? = null
+    private var viewConfigurationIcon: Int = R.drawable.icn_bar_viewsettings
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -152,8 +153,9 @@ class MainActivity : AbstractActivity(), FragmentManager.OnBackStackChangedListe
         }
     }
 
-    fun setViewConfigurationCallback(f: (() -> Unit)?) {
+    fun setViewConfigurationCallback(f: (() -> Unit)?, icn: Int = R.drawable.icn_bar_viewsettings) {
         this.viewConfigurationCallback = f
+        this.viewConfigurationIcon = icn
         refreshChrome()
     }
 
@@ -184,7 +186,7 @@ class MainActivity : AbstractActivity(), FragmentManager.OnBackStackChangedListe
                 R.id.daySummary -> setPage(Page.DAY_SUMMARY)
                 R.id.dayDetail -> setPage(Page.DAY_DETAIL)
 //                R.id.tracker -> setPage(Page.TRACKER)
-//                R.id.calendars -> setPage(Page.MONTH_CALENDARS)
+                R.id.calendars -> setPage(Page.CALENDARS)
 //                R.id.yearEvents -> setPage(Page.YEAR_EVENTS)
                 R.id.help -> setPage(Page.HELP)
                 R.id.about -> setPage(Page.ABOUT)
@@ -222,7 +224,7 @@ class MainActivity : AbstractActivity(), FragmentManager.OnBackStackChangedListe
                 }
                 val navItems = ArrayList<NavItem>()
                 if (viewConfigurationCallback != null) {
-                    navItems.add(NavItem("Page settings", R.drawable.icn_bar_viewsettings, HEADER, MENU_VIEW_SETTINGS))
+                    navItems.add(NavItem("Page settings", viewConfigurationIcon, HEADER, MENU_VIEW_SETTINGS))
                 }
                 page.dataGroup?.let {
                     displayBackButton(false)

@@ -11,6 +11,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import android.text.format.DateFormat
+import uk.co.sundroid.activity.data.fragments.CalendarView
 import uk.co.sundroid.domain.MapType
 import uk.co.sundroid.util.theme.THEME_DARK
 
@@ -25,7 +26,7 @@ object Prefs {
 
     private const val LAST_DATA_GROUP_KEY = "lastDataGroup"
     private const val LAST_DETAIL_TAB_KEY = "lastDetailTab"
-    private const val LAST_CALENDAR_KEY = "lastCalendar"
+    private const val LAST_CALENDAR_VIEW_KEY = "lastCalendarView"
 
     private const val LOCATION_TIMEOUT_KEY = "locationTimeout"
     private const val SHOW_SECONDS_KEY = "showSeconds"
@@ -218,12 +219,12 @@ object Prefs {
         prefs(context).edit().putString(LAST_DETAIL_TAB_KEY, tab).apply()
     }
 
-    fun lastCalendar(context: Context): Int {
-        return prefs(context).getInt(LAST_CALENDAR_KEY, 0)
+    fun lastCalendar(context: Context): CalendarView {
+        return CalendarView.valueOf(prefs(context).getString(LAST_CALENDAR_VIEW_KEY, null) ?: CalendarView.SUN_RISE_SET_LIST.name)
     }
 
-    fun setLastCalendar(context: Context, calendar: Int) {
-        prefs(context).edit().putInt(LAST_CALENDAR_KEY, calendar).apply()
+    fun setLastCalendar(context: Context, calendarView: CalendarView) {
+        prefs(context).edit().putString(LAST_CALENDAR_VIEW_KEY, calendarView.name).apply()
     }
 
     fun locMapType(context: Context): MapType {

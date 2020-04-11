@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="?primary_color">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <RelativeLayout style="@style/calendarSelectorRow">
+
+            <ImageButton
+                android:id="@+id/calendarSunRiseSetGrid"
+                style="@style/calendarSelectorGrid" />
+
+            <ImageButton
+                android:id="@+id/calendarSunRiseSetList"
+                style="@style/calendarSelectorList"
+                android:layout_toStartOf="@id/calendarSunRiseSetGrid" />
+
+            <TextView
+                style="@style/calendarSelectorLabel"
+                android:layout_toStartOf="@id/calendarSunRiseSetList"
+                android:text="Sunrise and sunset" />
+        </RelativeLayout>
+
+        <RelativeLayout style="@style/calendarSelectorRow">
+
+            <ImageButton
+                android:id="@+id/calendarCivilDawnDuskGrid"
+                style="@style/calendarSelectorGrid" />
+
+            <ImageButton
+                android:id="@+id/calendarCivilDawnDuskList"
+                style="@style/calendarSelectorList"
+                android:layout_toStartOf="@id/calendarCivilDawnDuskGrid" />
+
+            <TextView
+                style="@style/calendarSelectorLabel"
+                android:layout_toStartOf="@id/calendarCivilDawnDuskList"
+                android:text="Civil dawn and dusk" />
+        </RelativeLayout>
+
+        <RelativeLayout style="@style/calendarSelectorRow">
+
+            <ImageButton
+                android:id="@+id/calendarNauticalDawnDuskGrid"
+                style="@style/calendarSelectorGrid" />
+
+            <ImageButton
+                android:id="@+id/calendarNauticalDawnDuskList"
+                style="@style/calendarSelectorList"
+                android:layout_toStartOf="@id/calendarNauticalDawnDuskGrid" />
+
+            <TextView
+                style="@style/calendarSelectorLabel"
+                android:layout_toStartOf="@id/calendarNauticalDawnDuskList"
+                android:text="Nautical dawn and dusk" />
+        </RelativeLayout>
+
+        <RelativeLayout style="@style/calendarSelectorRow">
+
+            <ImageButton
+                android:id="@+id/calendarAstronomicalDawnDuskGrid"
+                style="@style/calendarSelectorGrid" />
+
+            <ImageButton
+                android:id="@+id/calendarAstronomicalDawnDuskList"
+                style="@style/calendarSelectorList"
+                android:layout_toStartOf="@id/calendarAstronomicalDawnDuskGrid" />
+
+            <TextView
+                style="@style/calendarSelectorLabel"
+                android:layout_toStartOf="@id/calendarAstronomicalDawnDuskList"
+                android:text="Astronomical dawn and dusk" />
+        </RelativeLayout>
+
+        <RelativeLayout style="@style/calendarSelectorRow">
+
+            <ImageButton
+                android:id="@+id/calendarDaylightGrid"
+                style="@style/calendarSelectorGrid" />
+
+            <ImageButton
+                android:id="@+id/calendarDaylightList"
+                style="@style/calendarSelectorList"
+                android:layout_toStartOf="@id/calendarDaylightGrid" />
+
+            <TextView
+                style="@style/calendarSelectorLabel"
+                android:layout_toStartOf="@id/calendarDaylightList"
+                android:text="Length of daylight" />
+        </RelativeLayout>
+
+        <View
+            style="@style/listMenuDivider"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp" />
+
+        <RelativeLayout style="@style/calendarSelectorRow">
+
+            <ImageButton
+                android:id="@+id/calendarMoonRiseSetGrid"
+                style="@style/calendarSelectorGrid" />
+
+            <ImageButton
+                android:id="@+id/calendarMoonRiseSetList"
+                style="@style/calendarSelectorList"
+                android:layout_toStartOf="@id/calendarMoonRiseSetGrid" />
+
+            <TextView
+                style="@style/calendarSelectorLabel"
+                android:layout_toStartOf="@id/calendarMoonRiseSetList"
+                android:text="Moonrise and moonset" />
+        </RelativeLayout>
+
+        <View
+            style="@style/listMenuDivider"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp" />
+
+        <RelativeLayout style="@style/calendarSelectorRow">
+
+            <ImageButton
+                android:id="@+id/calendarMercuryRiseSetGrid"
+                style="@style/calendarSelectorGrid" />
+
+            <ImageButton
+                android:id="@+id/calendarMercuryRiseSetList"
+                style="@style/calendarSelectorList"
+                android:layout_toStartOf="@id/calendarMercuryRiseSetGrid" />
+
+            <TextView
+                style="@style/calendarSelectorLabel"
+                android:layout_toStartOf="@id/calendarMercuryRiseSetList"
+                android:text="Mercury rise and set" />
+        </RelativeLayout>
+
+        <RelativeLayout style="@style/calendarSelectorRow">
+
+            <ImageButton
+                android:id="@+id/calendarVenusRiseSetGrid"
+                style="@style/calendarSelectorGrid" />
+
+            <ImageButton
+                android:id="@+id/calendarVenusRiseSetList"
+                style="@style/calendarSelectorList"
+                android:layout_toStartOf="@id/calendarVenusRiseSetGrid" />
+
+            <TextView
+                style="@style/calendarSelectorLabel"
+                android:layout_toStartOf="@id/calendarVenusRiseSetList"
+                android:text="Venus rise and set" />
+        </RelativeLayout>
+
+        <RelativeLayout style="@style/calendarSelectorRow">
+
+            <ImageButton
+                android:id="@+id/calendarMarsRiseSetGrid"
+                style="@style/calendarSelectorGrid" />
+
+            <ImageButton
+                android:id="@+id/calendarMarsRiseSetList"
+                style="@style/calendarSelectorList"
+                android:layout_toStartOf="@id/calendarMarsRiseSetGrid" />
+
+            <TextView
+                style="@style/calendarSelectorLabel"
+                android:layout_toStartOf="@id/calendarMarsRiseSetList"
+                android:text="Mars rise and set" />
+        </RelativeLayout>
+
+        <RelativeLayout style="@style/calendarSelectorRow">
+
+            <ImageButton
+                android:id="@+id/calendarJupiterRiseSetGrid"
+                style="@style/calendarSelectorGrid" />
+
+            <ImageButton
+                android:id="@+id/calendarJupiterRiseSetList"
+                style="@style/calendarSelectorList"
+                android:layout_toStartOf="@id/calendarJupiterRiseSetGrid" />
+
+            <TextView
+                style="@style/calendarSelectorLabel"
+                android:layout_toStartOf="@id/calendarJupiterRiseSetList"
+                android:text="Jupiter rise and set" />
+        </RelativeLayout>
+
+        <RelativeLayout style="@style/calendarSelectorRow">
+
+            <ImageButton
+                android:id="@+id/calendarSaturnRiseSetGrid"
+                style="@style/calendarSelectorGrid" />
+
+            <ImageButton
+                android:id="@+id/calendarSaturnRiseSetList"
+                style="@style/calendarSelectorList"
+                android:layout_toStartOf="@id/calendarSaturnRiseSetGrid" />
+
+            <TextView
+                style="@style/calendarSelectorLabel"
+                android:layout_toStartOf="@id/calendarSaturnRiseSetList"
+                android:text="Saturn rise and set" />
+        </RelativeLayout>
+
+        <RelativeLayout style="@style/calendarSelectorRow">
+
+            <ImageButton
+                android:id="@+id/calendarUranusRiseSetGrid"
+                style="@style/calendarSelectorGrid" />
+
+            <ImageButton
+                android:id="@+id/calendarUranusRiseSetList"
+                style="@style/calendarSelectorList"
+                android:layout_toStartOf="@id/calendarUranusRiseSetGrid" />
+
+            <TextView
+                style="@style/calendarSelectorLabel"
+                android:layout_toStartOf="@id/calendarUranusRiseSetList"
+                android:text="Uranus rise and set" />
+        </RelativeLayout>
+
+        <RelativeLayout style="@style/calendarSelectorRow">
+
+            <ImageButton
+                android:id="@+id/calendarNeptuneRiseSetGrid"
+                style="@style/calendarSelectorGrid" />
+
+            <ImageButton
+                android:id="@+id/calendarNeptuneRiseSetList"
+                style="@style/calendarSelectorList"
+                android:layout_toStartOf="@id/calendarNeptuneRiseSetGrid" />
+
+            <TextView
+                style="@style/calendarSelectorLabel"
+                android:layout_toStartOf="@id/calendarNeptuneRiseSetList"
+                android:text="Neptune rise and set" />
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</ScrollView>

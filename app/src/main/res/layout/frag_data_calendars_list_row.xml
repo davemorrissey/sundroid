@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dayRow"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:id="@+id/monthCalDateCell"
+        style="@style/monthCalDateCell"
+        android:layout_marginRight="7dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/rowDate"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center_horizontal"
+            android:textColor="?body_text"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/rowWeekday"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-1dp"
+            android:layout_marginBottom="12dp"
+            android:gravity="center_horizontal"
+            android:textColor="?body_text"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/monthCalDatePhaseCell"
+        style="@style/monthCalDatePhaseCell"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/monthCalDatePhase"
+            style="@style/monthCalDatePhase" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/dayMoonCell"
+        style="@style/monthCalMoonCell">
+
+        <ImageView
+            style="@style/calendarMoonImage"
+            android:scaleType="fitXY"
+            android:src="@drawable/moonsmall" />
+
+        <ImageView
+            android:id="@+id/dayMoonOverlay"
+            style="@style/calendarMoonImage"
+            android:src="@drawable/moonoverlay000" />
+    </RelativeLayout>
+
+    <TableLayout
+        android:id="@+id/monthCalEventsTable"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:stretchColumns="*">
+
+        <TableRow
+            android:id="@+id/monthCalEventsRow"
+            android:layout_gravity="center_vertical"
+            android:minHeight="65dp" />
+    </TableLayout>
+
+</LinearLayout>

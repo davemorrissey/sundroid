@@ -31,6 +31,7 @@ class DayDetailPlanetsFragment : AbstractDayDetailFragment() {
                 onDone = { days: Map<Body, BodyDay> ->
                     if (isSafe) {
                         val wrapper = view.findViewById<ViewGroup>(planetsDataBox)
+                        wrapper.removeAllViews()
                         for ((planet, day) in days) {
                             val row = inflate(R.layout.frag_data_daydetail_planets_planet)
 

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/calendarGridCell"
+    tools:layout_width="50dp">
+
+    <ImageView
+        android:id="@+id/calendarGridCellMoon"
+        style="@style/calendarMoonImage"
+        android:layout_alignParentTop="true"
+        android:scaleType="fitXY"
+        android:src="@drawable/moonsmall"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/calendarGridCellMoonOverlay"
+        style="@style/calendarMoonImage"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="5dp"
+        android:src="@drawable/moonoverlay000"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/calendarGridCellEventsContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/calendarGridCellMoonOverlay"
+        android:gravity="center_vertical"
+        android:minHeight="70dp"
+        android:orientation="vertical" />
+
+</RelativeLayout>

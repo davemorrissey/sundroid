@@ -33,7 +33,7 @@
     <color name="d_button_highlight">#7ea50c</color>
     <color name="d_button_text">#ffffff</color>
     <color name="d_button_secondary_text">#b3b8b3</color>
-    <color name="d_button_disabledtext">#656e65</color>
+    <color name="d_button_disabledtext">#A7AEA7</color>
 
     <color name="l_button_background">#005895</color>
     <color name="l_button_divider">#0073c4</color>

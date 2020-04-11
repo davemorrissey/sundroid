@@ -39,7 +39,7 @@ class YearEventsFragment : AbstractYearFragment() {
         super.onResume()
         (activity as MainActivity).apply {
             setToolbarSubtitle(R.string.data_year_title)
-            setViewConfigurationCallback { openSettingsDialog() }
+            setViewConfigurationCallback({ openSettingsDialog() })
         }
     }
 

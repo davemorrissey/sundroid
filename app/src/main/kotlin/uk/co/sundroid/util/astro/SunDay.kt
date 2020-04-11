@@ -1,6 +1,7 @@
 package uk.co.sundroid.util.astro
 
-import java.util.Calendar
+import uk.co.sundroid.util.astro.math.SunCalculator
+import java.util.*
 
 
 class SunDay : BodyDay() {
@@ -36,5 +37,9 @@ class SunDay : BodyDay() {
     var astHours: Double = 0.0
 
     var ghHours: Double = 0.0
+
+    val eventUp: MutableMap<SunCalculator.Event, BodyDayEvent> = EnumMap(SunCalculator.Event::class.java)
+    val eventDown: MutableMap<SunCalculator.Event, BodyDayEvent> = EnumMap(SunCalculator.Event::class.java)
+    val eventType: MutableMap<SunCalculator.Event, RiseSetType> = EnumMap(SunCalculator.Event::class.java)
 
 }

@@ -30,22 +30,6 @@
         <!--<item>Terrain</item>-->
         <!--<item>Hybrid</item>-->
     <!--</string-array>-->
-    <string-array name="monthCalendars">
-        <item>Sunrise and sunset</item>
-        <item>Civil dawn and dusk</item>
-        <item>Nautical dawn and dusk</item>
-        <item>Astronomical dawn and dusk</item>
-        <item>Golden hours</item>
-        <item>Moonrise and moonset</item>
-        <item>Length of daylight</item>
-        <item>Mercury rise and set</item>
-        <item>Venus rise and set</item>
-        <item>Mars rise and set</item>
-        <item>Jupiter rise and set</item>
-        <item>Saturn rise and set</item>
-        <item>Uranus rise and set</item>
-        <item>Neptune rise and set</item>
-    </string-array>
 
     <string name="sun">Sun</string>
     <string name="moon">Moon</string>
@@ -75,6 +59,9 @@
 
     <string name="data.calendars.nav">Calendars</string>
     <string name="data.calendars.title">Calendars</string>
+
+    <string name="data.moonPhaseCalendar.nav">Month moon phase</string>
+    <string name="data.moonPhaseCalendar.title">Moon phase calendar</string>
 
     <string name="loc.nav">Change location</string>
 

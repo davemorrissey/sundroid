@@ -8,8 +8,6 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.inc_monthbar.*
 import uk.co.sundroid.activity.Page
 import uk.co.sundroid.activity.data.fragments.dialogs.date.MonthPickerFragment
-import uk.co.sundroid.domain.LocationDetails
-import uk.co.sundroid.util.async.Async
 import uk.co.sundroid.util.view.ButtonDragGestureDetector
 import uk.co.sundroid.util.view.ButtonDragGestureDetector.ButtonDragGestureDetectorListener
 import java.text.SimpleDateFormat
@@ -27,16 +25,9 @@ abstract class AbstractMonthFragment<T> : AbstractDataFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        update()
-    }
-
-    override fun initialise() {
-        val view = view
-        if (isSafe && view != null) {
-            initGestures()
-            updateMonth()
-        }
+        initGestures()
+        updateMonth()
+        updateData(view)
     }
 
     override fun update() {
@@ -44,7 +35,7 @@ abstract class AbstractMonthFragment<T> : AbstractDataFragment() {
         if (isSafe && view != null) {
             initGestures()
             updateMonth()
-            update(view)
+            updateData(view)
         }
     }
 
@@ -64,12 +55,6 @@ abstract class AbstractMonthFragment<T> : AbstractDataFragment() {
         monthButton.setOnTouchListener { _, event -> monthDetector.onTouchEvent(event) }
     }
 
-    private fun showMonthPicker() {
-        val monthPickerFragment = MonthPickerFragment.newInstance(getDateCalendar())
-        monthPickerFragment.setTargetFragment(this, 0)
-        monthPickerFragment.show(requireFragmentManager(), "monthPicker")
-    }
-
     private fun updateMonth() {
         updateTimeZone()
         val calendar = getDateCalendar()
@@ -77,17 +62,12 @@ abstract class AbstractMonthFragment<T> : AbstractDataFragment() {
         month.text = monthFormat.format(Date(calendar.timeInMillis))
     }
 
-    protected fun asyncCalculate(location: LocationDetails, calendar: Calendar, view: View) {
-        Async(
-                inBackground = { calculate(location, calendar) },
-                onDone = { data -> if (isSafe) post(view, data) }
-        ).execute()
+    private fun showMonthPicker() {
+        val monthPickerFragment = MonthPickerFragment.newInstance(getDateCalendar())
+        monthPickerFragment.setTargetFragment(this, 0)
+        monthPickerFragment.show(requireFragmentManager(), "monthPicker")
     }
 
-    protected abstract fun update(view: View)
-
-    protected abstract fun calculate(location: LocationDetails, calendar: Calendar): T
-
-    protected open fun post(view: View, data: T) { }
+    protected abstract fun updateData(view: View)
 
 }

@@ -68,7 +68,7 @@ class TrackerFragment : AbstractTimeFragment(), SensorEventListener, TrackerMapF
         rotation = display.rotation * Surface.ROTATION_90
         (activity as MainActivity).apply {
             setToolbarSubtitle(R.string.data_tracker_title)
-            setViewConfigurationCallback { openSettingsDialog() }
+            setViewConfigurationCallback({ openSettingsDialog() })
         }
     }
 

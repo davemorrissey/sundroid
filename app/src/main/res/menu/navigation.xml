@@ -12,10 +12,11 @@
 <!--        <item-->
 <!--            android:id="@+id/tracker"-->
 <!--            android:title="@string/data.tracker.nav"/>-->
-<!--        <item-->
-<!--            android:id="@+id/calendars"-->
-<!--            android:title="@string/data.calendars.nav"/>-->
-<!--        <item-->
+        <item
+            android:id="@+id/calendars"
+            android:title="@string/data.calendars.nav"
+            android:icon="@drawable/d_ic_calendars"/>
+        <!--        <item-->
 <!--            android:id="@+id/yearEvents"-->
 <!--            android:title="@string/data.year.nav"/>-->
     </group>

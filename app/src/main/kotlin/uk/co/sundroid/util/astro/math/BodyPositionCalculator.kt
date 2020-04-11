@@ -1,32 +1,27 @@
 package uk.co.sundroid.util.astro.math
 
+import uk.co.sundroid.util.astro.*
+import uk.co.sundroid.util.astro.MoonPhase.*
+import uk.co.sundroid.util.astro.math.SunCalculator.Event.RISESET
+import uk.co.sundroid.util.location.LatitudeLongitude
+import uk.co.sundroid.util.time.clone
 import java.lang.Math.PI
-import java.lang.Math.abs
-import java.lang.Math.asin
-import java.lang.Math.atan
-import java.lang.Math.atan2
-import java.lang.Math.cos
-import java.lang.Math.sin
-import java.lang.Math.sqrt
-import java.lang.Math.tan
-import java.lang.Math.toDegrees
 import java.lang.Math.toRadians
+import java.lang.Math.toDegrees
+import java.util.*
 import java.util.Calendar.HOUR_OF_DAY
 import java.util.Calendar.MINUTE
+import java.util.Calendar.SECOND
+import kotlin.math.abs
+import kotlin.math.round
+import kotlin.math.sin
+import kotlin.math.asin
+import kotlin.math.cos
+import kotlin.math.sqrt
+import kotlin.math.tan
+import kotlin.math.atan
+import kotlin.math.atan2
 
-import java.util.Calendar
-import java.util.TimeZone
-
-import uk.co.sundroid.util.astro.Body
-import uk.co.sundroid.util.astro.BodyDay
-import uk.co.sundroid.util.astro.MoonDay
-import uk.co.sundroid.util.astro.Position
-import uk.co.sundroid.util.astro.RiseSetType
-import uk.co.sundroid.util.location.LatitudeLongitude
-import uk.co.sundroid.util.time.*
-
-import uk.co.sundroid.util.astro.math.SunCalculator.Event.*
-import uk.co.sundroid.util.astro.MoonPhase.*
 
 object BodyPositionCalculator {
 
@@ -58,10 +53,12 @@ object BodyPositionCalculator {
             bodyDay = BodyDay()
         }
 
-        // For each hour, get the elevation. If a rise or set has happened during the time,
-        // use the relative elevations to guess a minute, calculate that, then work forward
-        // or back one minute at a time to find the minute nearest the event. If the body
-        // rises and sets within the same hour, both events will be missed.
+        // For each hour, get the elevation. If a rise or set has happened during the time, use the
+        // relative elevations to guess a minute, calculate that, then work forward or back one
+        // minute at a time to find the minute nearest the event. If the body rises and sets within
+        // the same hour, both events will be missed.
+        // Uptime is taken to be the time between the first rise of the day, and the next set as long
+        // as it occurs within the current or next day, so we need up to 48 hours to calculate it.
         val calendar = clone(dateMidnight)
         val hours = if (transitAndLength) 48 else 24
         val hourEls = DoubleArray(50)
@@ -87,7 +84,7 @@ object BodyPositionCalculator {
             if (hour > 0 && sign(hourEls[hour], radiusCorrection) != sign(hourEls[hour - 1], radiusCorrection)) {
 
                 val diff = hourEls[hour] - hourEls[hour - 1]
-                val minuteGuess = Math.round(60 * Math.abs(hourEls[hour - 1] / diff)).toInt()
+                val minuteGuess = round(60 * abs(hourEls[hour - 1] / diff)).toInt()
 
                 calendar.add(HOUR_OF_DAY, -1)
                 calendar.set(MINUTE, minuteGuess)
@@ -99,30 +96,40 @@ object BodyPositionCalculator {
 
                 var safety = 0
                 while (safety < 60) {
-                    calendar.add(Calendar.MINUTE, direction)
+                    calendar.add(MINUTE, direction)
 
                     val thisPosition = calcPosition(body, location, calendar)
                     val thisEl = thisPosition.appElevation
 
                     if (sign(thisEl, radiusCorrection) != sign(initEl, radiusCorrection)) {
                         var azimuth = thisPosition.azimuth
-                        if (Math.abs(thisEl + radiusCorrection) > Math.abs(initEl + radiusCorrection)) {
-                            // Previous time was closer. Use previous iteration's values.
-                            calendar.add(Calendar.MINUTE, -direction)
+                        if (abs(thisEl + radiusCorrection) > abs(initEl + radiusCorrection)) {
+                            // Previous time was closer. Use previous iteration's values, except when this changes the day of the event.
+                            if (direction != -1 || calendar[HOUR_OF_DAY] != 23 || calendar[MINUTE] != 59) {
+                                calendar.add(MINUTE, -direction)
+                            }
                             azimuth = initPosition.azimuth
                         }
                         if (sign(hourEls[hour - 1], radiusCorrection) < 0) {
                             if (hour <= 24 && calendar.get(Calendar.DAY_OF_YEAR) == dateMidnight.get(Calendar.DAY_OF_YEAR)) {
-                                bodyDay.rise = clone(calendar)
-                                bodyDay.riseAzimuth = azimuth
+                                val riseCalendar = clone(calendar)
+                                if (bodyDay.rise == null) {
+                                    bodyDay.rise = riseCalendar
+                                    bodyDay.riseAzimuth = azimuth
+                                }
+                                bodyDay.addEvent(BodyDayEvent(BodyDayEventType.RISE, riseCalendar, azimuth))
                             }
                         } else {
                             if (hour <= 24 && calendar.get(Calendar.DAY_OF_YEAR) == dateMidnight.get(Calendar.DAY_OF_YEAR)) {
-                                bodyDay.set = clone(calendar)
-                                bodyDay.setAzimuth = azimuth
-                            } else if (hour > 24 && bodyDay.rise != null) {
+                                val setCalendar = clone(calendar)
+                                if (bodyDay.set == null) {
+                                    bodyDay.set = setCalendar
+                                    bodyDay.setAzimuth = azimuth
+                                }
+                                bodyDay.addEvent(BodyDayEvent(BodyDayEventType.SET, setCalendar, azimuth))
+                            }
+                            if (bodyDay.rise != null) {
                                 bodyDay.uptimeHours = (calendar.timeInMillis - bodyDay.rise!!.timeInMillis) / (1000.0 * 60.0 * 60.0)
-                                break@hourLoop
                             }
                         }
                         break
@@ -135,14 +142,9 @@ object BodyPositionCalculator {
                 }
             }
 
-            // If rise and set already calculated and rise before set, use them to calculate uptime.
-            // If there is no rise it's a risen or set day.
-            val rise = bodyDay.rise
-            val set = bodyDay.set
-            if (rise != null && set != null && (rise.timeInMillis < set.timeInMillis || !transitAndLength)) {
-                bodyDay.uptimeHours = (set.timeInMillis - rise.timeInMillis) / (1000.0 * 60.0 * 60.0)
-                break
-            } else if (rise == null && hour == 24) {
+            // Abort at 24 hours if there has been no rise, an uptime has been calculated already, or
+            // the uptime is not needed.
+            if (hour > 24 && (bodyDay.rise == null || bodyDay.uptimeHours != 0.0 || !transitAndLength)) {
                 break
             }
         }
@@ -414,7 +416,7 @@ object BodyPositionCalculator {
         val year = dateTime.get(Calendar.YEAR)
         val month = dateTime.get(Calendar.MONTH) + 1
         val day = dateTime.get(Calendar.DAY_OF_MONTH)
-        val fraction = dateTime.get(Calendar.HOUR_OF_DAY) / 24.0 + dateTime.get(Calendar.MINUTE) / (60.0 * 24.0) + dateTime.get(Calendar.SECOND) / (60.0 * 60.0 * 24.0)
+        val fraction = dateTime.get(HOUR_OF_DAY) / 24.0 + dateTime.get(MINUTE) / (60.0 * 24.0) + dateTime.get(SECOND) / (60.0 * 60.0 * 24.0)
         return 367 * year - 7 * (year + (month + 9) / 12) / 4 + 275 * month / 9 + day - 730530 + fraction
     }
 
@@ -493,7 +495,7 @@ object BodyPositionCalculator {
 
     private fun localSiderealTimeHours(location: LatitudeLongitude, dateTime: Calendar): Double {
         val day = dayNumber(dateTime)
-        val ut = dateTime.get(Calendar.HOUR_OF_DAY).toDouble() + dateTime.get(Calendar.MINUTE) / 60.0 + dateTime.get(Calendar.SECOND) / 3600.0
+        val ut = dateTime.get(HOUR_OF_DAY).toDouble() + dateTime.get(MINUTE) / 60.0 + dateTime.get(SECOND) / 3600.0
         val ws = norm360(282.9404 + 4.70935E-5 * day) // (longitude of perihelion)
         val ms = norm360(356.0470 + 0.9856002585 * day) // (mean anomaly)
         val ls = norm360(ws + ms)
@@ -544,85 +546,5 @@ object BodyPositionCalculator {
         val directionChange = if (thisSector == initialSector) 1 else -1
         return binarySearchNoon(body, location, thisSector, thisTimestamp, intervalMs / 2, searchDirection * directionChange, depth + 1)
     }
-
-    //
-    //	private static String hms(double degrees) {
-    //		double hours = degrees/15d;
-    //		int iHours = (int)Math.floor(hours);
-    //		hours = hours - iHours;
-    //		double minutes = hours*60d;
-    //		int iMinutes = (int)Math.floor(minutes);
-    //		minutes = minutes - iMinutes;
-    //		double seconds = minutes*60d;
-    //		int iSeconds = (int)Math.floor(seconds);
-    //
-    //		return iHours + "h " + iMinutes + "'" + iSeconds + "\"";
-    //	}
-    //
-    //	private static String dms(double degrees) {
-    //		int iDegrees = (int)Math.floor(degrees);
-    //		degrees = degrees - iDegrees;
-    //		double minutes = degrees*60d;
-    //		int iMinutes = (int)Math.floor(minutes);
-    //		minutes = minutes - iMinutes;
-    //		double seconds = minutes*60d;
-    //		int iSeconds = (int)Math.floor(seconds);
-    //
-    //		return iDegrees + "�" + iMinutes + "'" + iSeconds + "\"";
-    //	}
-    //
-    //
-    //
-    //	public static void main(String[] args) throws Exception {
-    //
-    //		Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/London"));
-    //		cal.set(Calendar.YEAR, 1990);
-    //		cal.set(Calendar.MONTH, Calendar.APRIL);
-    //		cal.set(Calendar.DAY_OF_MONTH, 19);
-    //		cal.set(Calendar.HOUR_OF_DAY, 1);
-    //		cal.set(Calendar.MINUTE, 0);
-    //		cal.set(Calendar.SECOND, 0);
-    //
-    //		double lastEl = 0;
-    //
-    //		for (int i = 0; i < 1; i++) {
-    //			Position position = calcPosition(Body.MOON, new LatitudeLongitude("600000N 0150000E"), cal);
-    //
-    //			System.out.println("-------------------");
-    //			System.out.println("Topo RA: " + position.getTopoRightAscension());
-    //			System.out.println("Topo Dec: " + position.getTopoDeclination());
-    //			System.out.println("Geo RA: " + position.getGeoRightAscension() + " (" + hms(position.getGeoRightAscension()) + ")");
-    //			System.out.println("Geo Dec: " + position.getGeoDeclination() + " (" + dms(position.getGeoDeclination()));
-    //			System.out.println("Az: "+ position.getAzimuth());
-    //			System.out.println("El: "+ position.getAppElevation());
-    //
-    //			System.out.println("geo eclip lon: "+ position.getGeoEclipticLongitude());
-    //			System.out.println("geo eclip lat: " + position.getGeoEclipticLatitude());
-    //			System.out.println("geo r: " + position.getGeoDistance());
-    //			System.out.println("rkm: " + position.getGeoDistanceKm());
-    //
-    //			System.out.println("Helio r: " + position.getHelioDistance());
-    //			System.out.println("Helio lat:" + position.getHelioEclipticLatitude());
-    //			System.out.println("Helio lon: " + position.getHelioEclipticLongitude());
-    //
-    ////			System.out.println("dec: " + position.getDeclination());
-    ////
-    //			if (position.getAppElevation() > -0.5 && position.getAppElevation() < 0.5) {
-    //				System.out.println(cal.get(Calendar.HOUR_OF_DAY) + ":" + cal.get(Calendar.MINUTE) + "  " + position.getAppElevation() + ", " + position.getAzimuth());
-    //			}
-    ////
-    ////
-    //	//		if (i > 0 && sign(position.getElevation()) != sign(lastEl)) {
-    //	//			System.out.println("event at " + cal.get(Calendar.HOUR_OF_DAY) + ":" + cal.get(Calendar.MINUTE));
-    //
-    //	//		}
-    //
-    //
-    //		//	lastEl = position.getElevation();
-    //			cal.add(Calendar.MINUTE, 1);
-    //		}
-    //
-    //	}
-
 
 }

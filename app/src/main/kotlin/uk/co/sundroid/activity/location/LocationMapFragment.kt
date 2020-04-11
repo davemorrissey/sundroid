@@ -70,7 +70,7 @@ class LocationMapFragment : AbstractFragment(), OnMapClickListener, OnInfoWindow
         (activity as MainActivity).apply {
             setToolbarTitle("Map")
             setToolbarSubtitle(null)
-            setViewConfigurationCallback { openSettingsDialog() }
+            setViewConfigurationCallback({ openSettingsDialog() })
         }
     }
 

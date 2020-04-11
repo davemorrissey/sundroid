@@ -1,5 +1,7 @@
 package uk.co.sundroid.util
 
+import android.text.Html
+import android.text.Spanned
 import kotlin.math.max
 
 fun isEmpty(string: String?): Boolean {
@@ -16,4 +18,8 @@ fun zeroPad(string: String, length: Int): String {
 
 fun zeroPad(number: Int, length: Int): String {
     return zeroPad(number.toString(), length)
+}
+
+fun html(html: String): Spanned {
+    return Html.fromHtml(html)
 }

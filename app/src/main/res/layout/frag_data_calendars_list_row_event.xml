@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/monthCalCellEvent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/eventText"
+        style="@style/monthCalTime" />
+
+    <TextView
+        android:id="@+id/eventAz"
+        style="@style/monthCalAz" />
+</LinearLayout>

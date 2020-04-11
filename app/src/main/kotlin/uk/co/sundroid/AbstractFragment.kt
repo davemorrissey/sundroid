@@ -157,8 +157,8 @@ abstract class AbstractFragment : Fragment() {
         }
     }
 
-    protected fun inflate(id: Int, parent: ViewGroup? = null): View {
-        return requireActivity().layoutInflater.inflate(id, parent)
+    protected fun inflate(id: Int, parent: ViewGroup? = null, attachToRoot: Boolean = false): View {
+        return requireActivity().layoutInflater.inflate(id, parent, attachToRoot)
     }
 
 

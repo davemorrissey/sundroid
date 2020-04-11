@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <include
+        android:id="@+id/incMonthBar"
+        layout="@layout/inc_monthbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" />
+
+    <ListView
+        android:id="@+id/calendarList"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@id/incMonthBar"
+        android:cacheColorHint="?app_background_colour"
+        android:divider="?app_background_colour"
+        android:dividerHeight="1dp"
+        android:listSelector="@android:color/transparent"
+        android:visibility="gone" />
+
+    <ScrollView
+        android:id="@+id/calendarGrid"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@id/incMonthBar"
+        android:visibility="gone">
+
+        <TableLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:stretchColumns="*">
+
+            <TableRow>
+
+                <TextView
+                    android:id="@+id/calendarGridD1"
+                    style="@style/calendarDay" />
+
+                <TextView
+                    android:id="@+id/calendarGridD2"
+                    style="@style/calendarDay" />
+
+                <TextView
+                    android:id="@+id/calendarGridD3"
+                    style="@style/calendarDay" />
+
+                <TextView
+                    android:id="@+id/calendarGridD4"
+                    style="@style/calendarDay" />
+
+                <TextView
+                    android:id="@+id/calendarGridD5"
+                    style="@style/calendarDay" />
+
+                <TextView
+                    android:id="@+id/calendarGridD6"
+                    style="@style/calendarDay" />
+
+                <TextView
+                    android:id="@+id/calendarGridD7"
+                    style="@style/calendarDay" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/calendarGridDates1"
+                android:layout_width="fill_parent" />
+
+            <TableRow
+                android:id="@+id/calendarGridCells1"
+                android:layout_width="fill_parent" />
+
+            <TableRow
+                android:id="@+id/calendarGridDates2"
+                android:layout_width="fill_parent" />
+
+            <TableRow
+                android:id="@+id/calendarGridCells2"
+                android:layout_width="fill_parent" />
+
+            <TableRow
+                android:id="@+id/calendarGridDates3"
+                android:layout_width="fill_parent" />
+
+            <TableRow
+                android:id="@+id/calendarGridCells3"
+                android:layout_width="fill_parent" />
+
+            <TableRow
+                android:id="@+id/calendarGridDates4"
+                android:layout_width="fill_parent" />
+
+            <TableRow
+                android:id="@+id/calendarGridCells4"
+                android:layout_width="fill_parent" />
+
+            <TableRow
+                android:id="@+id/calendarGridDates5"
+                android:layout_width="fill_parent" />
+
+            <TableRow
+                android:id="@+id/calendarGridCells5"
+                android:layout_width="fill_parent" />
+
+            <TableRow
+                android:id="@+id/calendarGridDates6"
+                android:layout_width="fill_parent" />
+
+            <TableRow
+                android:id="@+id/calendarGridCells6"
+                android:layout_width="fill_parent" />
+
+        </TableLayout>
+
+    </ScrollView>
+
+
+</RelativeLayout>

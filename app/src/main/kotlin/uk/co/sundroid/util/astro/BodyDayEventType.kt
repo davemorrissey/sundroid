@@ -1,9 +1,9 @@
 package uk.co.sundroid.util.astro
 
 
-enum class RiseSetType {
+enum class BodyDayEventType {
 
-    RISEN,
+    RISE,
     SET
 
 }

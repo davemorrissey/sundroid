@@ -2,6 +2,7 @@ package uk.co.sundroid.util.prefs
 
 import android.content.Context
 import uk.co.sundroid.activity.data.DataGroup
+import uk.co.sundroid.activity.data.fragments.CalendarView
 import uk.co.sundroid.domain.MapType
 import uk.co.sundroid.domain.TimeZoneDetail
 import uk.co.sundroid.util.astro.Body
@@ -24,8 +25,8 @@ class PrefsWrapper(val context: Context) {
     fun lastDataGroup(dataGroup: DataGroup) = Prefs.setLastDataGroup(context, dataGroup)
     fun lastDetailTab(): String = Prefs.lastDetailTab(context)
     fun setLastDayDetailTab(tab: String) = Prefs.setLastDayDetailTab(context, tab)
-    fun lastCalendar(): Int = Prefs.lastCalendar(context)
-    fun setLastCalendar(calendar: Int) = Prefs.setLastCalendar(context, calendar)
+    fun lastCalendar(): CalendarView = Prefs.lastCalendar(context)
+    fun setLastCalendar(calendar: CalendarView) = Prefs.setLastCalendar(context, calendar)
     fun locMapType(): MapType = Prefs.locMapType(context)
     fun setLocMapType(type: MapType) = Prefs.setLocMapType(context, type)
     fun sunTrackerBody(): Body? = Prefs.sunTrackerBody(context)
