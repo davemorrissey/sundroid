@@ -49,6 +49,13 @@ class CalendarsFragment : AbstractMonthFragment<ArrayList<CalendarsFragment.DayE
             setToolbarSubtitle(Prefs.lastCalendar(requireContext()).title)
         }
         val calendarView = Prefs.lastCalendar(requireContext())
+        if (prefs.showElement("tipCalendarView", true)) {
+            modify(tip, visibility = VISIBLE)
+            tipHide.setOnClickListener {
+                prefs.setShowElement("tipCalendarView", false)
+                modify(tip, visibility = GONE)
+            }
+        }
         if (calendarView.grid) {
             modify(calendarList, visibility = GONE)
         } else {
