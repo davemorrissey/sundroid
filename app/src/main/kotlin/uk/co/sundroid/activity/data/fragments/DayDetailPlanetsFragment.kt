@@ -58,7 +58,7 @@ class DayDetailPlanetsFragment : AbstractDayDetailFragment() {
                             if (day.riseSetType === RiseSetType.RISEN || day.riseSetType === RiseSetType.SET) {
                                 val eventCell = inflate(R.layout.frag_data_daydetail_planets_planet_event, eventsRow, false)
                                 modifyChild(eventCell, planetEvtImg, image = if (day.riseSetType === RiseSetType.RISEN) getRisenAllDay() else getSetAllDay())
-                                modifyChild(eventCell, planetEvtTime, text = if (day.riseSetType === RiseSetType.RISEN) "RISEN ALL DAY" else "SET ALL DAY")
+                                modifyChild(eventCell, planetEvtTime, html = if (day.riseSetType === RiseSetType.RISEN) "<small>RISEN ALL DAY</small>" else "<small>SET ALL DAY</small>")
                                 modifyChild(eventCell, planetEvtAz, visibility = GONE)
                                 modifyChild(row, planetUptime, visibility = GONE)
                                 eventsRow.addView(eventCell)

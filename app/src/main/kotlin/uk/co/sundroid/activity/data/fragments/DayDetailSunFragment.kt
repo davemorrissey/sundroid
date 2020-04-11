@@ -2,7 +2,11 @@ package uk.co.sundroid.activity.data.fragments
 
 import android.os.Handler
 import android.view.View
+import android.view.View.VISIBLE
+import android.view.View.GONE
+import android.view.ViewGroup
 import uk.co.sundroid.R
+import uk.co.sundroid.R.id.*
 import uk.co.sundroid.util.astro.Body
 import uk.co.sundroid.util.astro.RiseSetType
 import uk.co.sundroid.util.astro.YearData
@@ -15,11 +19,11 @@ import uk.co.sundroid.util.time.*
 import uk.co.sundroid.util.html
 
 import java.util.Calendar
-import java.util.TreeSet
 
 import uk.co.sundroid.util.time.formatDurationHMS
 
 import kotlinx.android.synthetic.main.frag_data_daydetail_sun.*
+import uk.co.sundroid.util.astro.BodyDayEventType
 import kotlin.math.abs
 
 class DayDetailSunFragment : AbstractDayDetailFragment() {
@@ -40,94 +44,77 @@ class DayDetailSunFragment : AbstractDayDetailFragment() {
                 }
 
                 val yearEvents = YearData.getYearEvents(calendar.get(Calendar.YEAR), calendar.timeZone)
-                val yearEventToday: Event? = yearEvents.lastOrNull { it.type.body === Body.SUN && isSameDay(calendar, it.time) }
-                val sunDay = SunCalculator.calcDay(location.location, calendar)
+                val yearEvent: Event? = yearEvents.lastOrNull { it.type.body === Body.SUN && isSameDay(calendar, it.time) }
+                val day = SunCalculator.calcDay(location.location, calendar)
 
                 handler.post {
                     if (isSafe) {
-                        if (yearEventToday != null) {
+                        if (yearEvent != null) {
                             view.findViewById<View>(R.id.sunEvent).setOnClickListener(null)
-                            show(view, R.id.sunEvent)
-                            show(view, R.id.sunEventTitle, yearEventToday.type.displayName)
-                            if (yearEventToday.type === EventType.NORTHERN_SOLSTICE && abs(location.location.latitude.doubleValue) > 23.44) {
+                            modifyChild(view, R.id.sunEvent, visibility = VISIBLE)
+                            modifyChild(view, R.id.sunEventTitle, visibility = VISIBLE, text = yearEvent.type.displayName)
+                            if (yearEvent.type === EventType.NORTHERN_SOLSTICE && abs(location.location.latitude.doubleValue) > 23.44) {
                                 val localExtreme = if (location.location.latitude.doubleValue >= 0) "Longest" else "Shortest"
-                                show(view, R.id.sunEventSubtitle, "$localExtreme day")
-                            } else if (yearEventToday.type === EventType.SOUTHERN_SOLSTICE && abs(location.location.latitude.doubleValue) > 23.44) {
+                                modifyChild(view, R.id.sunEventSubtitle, visibility = VISIBLE, text = "$localExtreme day")
+                            } else if (yearEvent.type === EventType.SOUTHERN_SOLSTICE && abs(location.location.latitude.doubleValue) > 23.44) {
                                 val localExtreme = if (location.location.latitude.doubleValue >= 0) "Shortest" else "Longest"
-                                show(view, R.id.sunEventSubtitle, "$localExtreme day")
-                            } else if (yearEventToday.type === EventType.ANNULAR_SOLAR || yearEventToday.type === EventType.HYBRID_SOLAR || yearEventToday.type === EventType.PARTIAL_SOLAR || yearEventToday.type === EventType.TOTAL_SOLAR) {
-                                show(view, R.id.sunEventSubtitle, "Tap to check Wikipedia for visibility")
+                                modifyChild(view, R.id.sunEventSubtitle, visibility = VISIBLE, text = "$localExtreme day")
+                            } else if (yearEvent.type === EventType.ANNULAR_SOLAR || yearEvent.type === EventType.HYBRID_SOLAR || yearEvent.type === EventType.PARTIAL_SOLAR || yearEvent.type === EventType.TOTAL_SOLAR) {
+                                modifyChild(view, R.id.sunEventSubtitle, visibility = VISIBLE, text = "Tap to check Wikipedia for visibility")
                                 view.findViewById<View>(R.id.sunEvent).setOnClickListener {
-                                    browseTo(yearEventToday.link)
+                                    browseTo(yearEvent.link)
                                 }
                             } else {
-                                remove(view, R.id.sunEventSubtitle)
+                                modifyChild(view, R.id.sunEventSubtitle, visibility = GONE)
                             }
                         } else {
-                            remove(view, R.id.sunEvent)
+                            modifyChild(view, R.id.sunEvent, visibility = GONE)
                         }
 
                         var noTransit = true
                         var noUptime = true
 
-                        if (sunDay.riseSetType !== RiseSetType.SET && sunDay.transitAppElevation > 0) {
-                            val noon = formatTimeStr(requireContext(), sunDay.transit!!, false, html = true)
+                        if (day.riseSetType !== RiseSetType.SET && day.transitAppElevation > 0) {
+                            val noon = formatTimeStr(requireContext(), day.transit!!, false, html = true)
                             noTransit = false
-                            show(view, R.id.sunTransit)
-                            show(view, R.id.sunTransitTime, html("$noon &nbsp; ${formatElevation(sunDay.transitAppElevation)}"))
+                            modifyChild(view, R.id.sunTransit, visibility = VISIBLE)
+                            modifyChild(view, R.id.sunTransitTime, html = "$noon &nbsp; ${formatElevation(day.transitAppElevation)}")
                         } else {
-                            remove(view, R.id.sunTransit)
+                            modifyChild(view, R.id.sunTransit, visibility = GONE)
                         }
 
-                        if (sunDay.riseSetType === RiseSetType.RISEN || sunDay.riseSetType === RiseSetType.SET) {
-                            show(view, R.id.sunSpecial, if (sunDay.riseSetType === RiseSetType.RISEN) "Risen all day" else "Set all day")
-                            remove(view, R.id.sunEvtsRow, R.id.sunEvt1, R.id.sunEvt2, R.id.sunUptime)
+                        val eventsRow = view.findViewById<ViewGroup>(R.id.sunEventsRow)
+                        eventsRow.removeAllViews()
+
+                        if (day.riseSetType === RiseSetType.RISEN || day.riseSetType === RiseSetType.SET) {
+                            val eventCell = inflate(R.layout.frag_data_daydetail_sun_event, eventsRow, false)
+                            modifyChild(eventCell, sunEvtImg, image = if (day.riseSetType === RiseSetType.RISEN) getRisenAllDay() else getSetAllDay())
+                            modifyChild(eventCell, sunEvtTime, html = if (day.riseSetType === RiseSetType.RISEN) "<small>RISEN ALL DAY</small>" else "<small>SET ALL DAY</small>")
+                            modifyChild(eventCell, sunEvtAz, visibility = GONE)
+                            modifyChild(view, R.id.sunUptime, visibility = GONE)
+                            eventsRow.addView(eventCell)
+                            noUptime = true
                         } else {
-                            remove(view, R.id.sunSpecial)
-                            remove(view, R.id.sunEvt1, R.id.sunEvt2)
-                            show(view, R.id.sunEvtsRow)
-                            val events = TreeSet<SummaryEvent>()
-                            if (sunDay.rise != null) {
-                                events.add(SummaryEvent("Rise", sunDay.rise!!, sunDay.riseAzimuth))
-                            }
-                            if (sunDay.set != null) {
-                                events.add(SummaryEvent("Set", sunDay.set!!, sunDay.setAzimuth))
-                            }
-                            var index = 1
-                            for (event in events) {
-                                val rowId = view("sunEvt$index")
-                                val timeId = view("sunEvt${index}Time")
-                                val azId = view("sunEvt${index}Az")
-                                val imgId = view("sunEvt${index}Img")
-
-                                val time = formatTimeStr(requireContext(), event.time, false, html = true)
-                                val az = formatBearing(requireContext(), event.azimuth!!, location.location, event.time)
-
-                                text(view, timeId, html(time))
-                                text(view, azId, az)
-                                show(view, rowId)
-                                image(view, imgId, if (event.name == "Rise") getRiseArrow() else getSetArrow())
-
-                                index++
+                            day.events.forEach { event ->
+                                val eventCell = inflate(R.layout.frag_data_daydetail_sun_event, eventsRow, false)
+                                val az = formatBearing(requireContext(), event.azimuth ?: 0.0, location.location, event.time)
+                                modifyChild(eventCell, sunEvtImg, image = if (event.event == BodyDayEventType.RISE) getRiseArrow() else getSetArrow())
+                                modifyChild(eventCell, sunEvtTime, html = formatTimeStr(requireContext(), event.time, false, html = true))
+                                modifyChild(eventCell, sunEvtAz, text = az)
+                                eventsRow.addView(eventCell)
                             }
 
-                            if (sunDay.uptimeHours > 0 && sunDay.uptimeHours < 24) {
-                                noUptime = false
-                                show(view, R.id.sunUptime)
-                                show(view, R.id.sunUptimeTime, html(formatDurationHMS(requireContext(), sunDay.uptimeHours, false, html = true)))
+                            if (day.uptimeHours > 0 && day.uptimeHours < 24) {
+                                modifyChild(view, R.id.sunUptimeTime, visibility = VISIBLE, html = formatDurationHMS(requireContext(), day.uptimeHours, false, html = true))
+                                modifyChild(view, R.id.sunUptime, visibility = VISIBLE)
                             } else {
-                                remove(view, R.id.sunUptime)
+                                modifyChild(view, R.id.sunUptime, visibility = GONE)
                             }
-
                         }
 
-                        if (noTransit && noUptime) {
-                            remove(view, R.id.sunTransitUptime, R.id.sunTransitUptimeDivider)
-                        } else {
-                            show(view, R.id.sunTransitUptime, R.id.sunTransitUptimeDivider)
-                        }
+                        modifyChild(view, R.id.sunTransitUptime, R.id.sunTransitUptimeDivider, visibility = if (noTransit && noUptime) GONE else VISIBLE)
 
-                        sunDay.apply {
+                        day.apply {
                             hashMapOf(
                                     sunCivDawnTime to civDawn,
                                     sunCivDuskTime to civDusk,
@@ -139,7 +126,7 @@ class DayDetailSunFragment : AbstractDayDetailFragment() {
                                 (view, time) -> view.text = html(time?.let { formatTimeStr(requireContext(), it, html = true) } ?: "-")
                             }
                         }
-                        show(view, R.id.sunDataBox)
+                        modifyChild(view, R.id.sunDataBox, visibility = VISIBLE)
                     }
                 }
             }

@@ -99,7 +99,7 @@ class DayDetailMoonFragment : AbstractDayDetailFragment() {
                         if (day.riseSetType === RiseSetType.RISEN || day.riseSetType === RiseSetType.SET) {
                             val eventCell = inflate(R.layout.frag_data_daydetail_moon_event, eventsRow, false)
                             modifyChild(eventCell, moonEvtImg, image = if (day.riseSetType === RiseSetType.RISEN) getRisenAllDay() else getSetAllDay())
-                            modifyChild(eventCell, moonEvtTime, text = if (day.riseSetType === RiseSetType.RISEN) "RISEN ALL DAY" else "SET ALL DAY")
+                            modifyChild(eventCell, moonEvtTime, html = if (day.riseSetType === RiseSetType.RISEN) "<small>RISEN ALL DAY</small>" else "<small>SET ALL DAY</small>")
                             modifyChild(eventCell, moonEvtAz, visibility = GONE)
                             modifyChild(view, moonUptime, visibility = GONE)
                             eventsRow.addView(eventCell)
