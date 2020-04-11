@@ -15,6 +15,8 @@ import uk.co.sundroid.util.async.async
 import uk.co.sundroid.util.geometry.formatBearing
 import uk.co.sundroid.util.geometry.formatElevation
 import uk.co.sundroid.util.theme.getRiseArrow
+import uk.co.sundroid.util.theme.getRisenAllDay
+import uk.co.sundroid.util.theme.getSetAllDay
 import uk.co.sundroid.util.theme.getSetArrow
 import uk.co.sundroid.util.time.formatDurationHMS
 import uk.co.sundroid.util.time.formatTimeStr
@@ -55,6 +57,7 @@ class DayDetailPlanetsFragment : AbstractDayDetailFragment() {
 
                             if (day.riseSetType === RiseSetType.RISEN || day.riseSetType === RiseSetType.SET) {
                                 val eventCell = inflate(R.layout.frag_data_daydetail_planets_planet_event, eventsRow, false)
+                                modifyChild(eventCell, planetEvtImg, image = if (day.riseSetType === RiseSetType.RISEN) getRisenAllDay() else getSetAllDay())
                                 modifyChild(eventCell, planetEvtTime, text = if (day.riseSetType === RiseSetType.RISEN) "RISEN ALL DAY" else "SET ALL DAY")
                                 modifyChild(eventCell, planetEvtAz, visibility = GONE)
                                 modifyChild(row, planetUptime, visibility = GONE)

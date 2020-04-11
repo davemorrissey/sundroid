@@ -1,14 +1,12 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:s="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
 
-    <uk.co.sundroid.util.view.BoundedLinearLayout
+    <LinearLayout
         android:id="@+id/moonDataBox"
-        android:layout_gravity="center_horizontal"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        s:bounded_width="@dimen/column_max_width"
+        android:layout_gravity="center_horizontal"
         android:orientation="vertical"
         android:padding="@dimen/content_pane_padding"
         android:visibility="gone">
@@ -17,25 +15,25 @@
             android:id="@+id/moonEvent"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="8dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingBottom="8dp">
 
             <TextView
-                style="@style/text"
                 android:id="@+id/moonEventTitle"
+                style="@style/text"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:gravity="center_horizontal" />
+                android:gravity="center_horizontal"
+                android:textSize="20sp" />
 
             <TextView
-                style="@style/text"
                 android:id="@+id/moonEventSubtitle"
+                style="@style/text"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"
+                android:gravity="center_horizontal"
                 android:textColor="?secondary_text"
-                android:gravity="center_horizontal" />
+                android:textSize="16sp" />
 
             <View
                 style="@style/listMenuDivider"
@@ -56,145 +54,78 @@
                 android:maxWidth="150dp"
                 android:maxHeight="150dp"
                 android:scaleType="fitXY"
-                android:src="@drawable/moon"/>
+                android:src="@drawable/moon" />
 
-            <TextView
-                android:id="@+id/moonSpecial"
-                android:textColor="?body_text"
-                android:textSize="22sp"
+            <TableLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:visibility="gone"
-                android:paddingBottom="15dp" />
-
-            <LinearLayout
-                android:id="@+id/moonEvtsRow"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:layout_marginBottom="15dp"
-                android:baselineAligned="false">
+                android:stretchColumns="*">
 
-                <LinearLayout
-                    android:id="@+id/moonEvt0"
-                    android:layout_width="0dp"
-                    android:layout_weight="0.5"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:id="@+id/moonEvt0Img"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp" />
-
-                    <TextView
-                        android:id="@+id/moonEvt0Time"
-                        style="@style/text"
-                        android:textSize="32sp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-
-                    <TextView
-                        android:id="@+id/moonEvt0Az"
-                        style="@style/text"
-                        android:textSize="16sp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/moonEvt1"
-                    android:layout_width="0dp"
-                    android:layout_weight="0.5"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:id="@+id/moonEvt1Img"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp" />
-
-                    <TextView
-                        android:id="@+id/moonEvt1Time"
-                        style="@style/text"
-                        android:textSize="32sp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-
-                    <TextView
-                        android:id="@+id/moonEvt1Az"
-                        style="@style/text"
-                        android:textSize="16sp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-                </LinearLayout>
-
-            </LinearLayout>
+                <TableRow
+                    android:id="@+id/moonEventsRow"
+                    android:layout_gravity="center_vertical" />
+            </TableLayout>
 
             <View
+                android:id="@+id/moonTransitUptimeDivider"
                 style="@style/listMenuDivider"
-                android:layout_marginBottom="15dp"
-                android:id="@+id/moonTransitUptimeDivider" />
+                android:layout_marginBottom="15dp" />
 
             <LinearLayout
                 android:id="@+id/moonTransitUptime"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:layout_marginBottom="15dp"
-                android:baselineAligned="false">
+                android:baselineAligned="false"
+                android:orientation="horizontal">
 
                 <LinearLayout
                     android:id="@+id/moonTransit"
                     android:layout_width="0dp"
-                    android:layout_weight="0.5"
                     android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
                     android:gravity="center_horizontal"
                     android:orientation="vertical">
 
                     <TextView
                         style="@style/text"
-                        android:textSize="14sp"
-                        android:textColor="?secondary_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="TRANSIT" />
+                        android:text="TRANSIT"
+                        android:textColor="?secondary_text"
+                        android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/moonTransitTime"
                         style="@style/text"
-                        android:textSize="20sp"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:textSize="20sp" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/moonUptime"
                     android:layout_width="0dp"
-                    android:layout_weight="0.5"
                     android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
                     android:gravity="center_horizontal"
                     android:orientation="vertical">
 
                     <TextView
                         style="@style/text"
-                        android:textSize="14sp"
-                        android:textColor="?secondary_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="UPTIME" />
+                        android:text="UPTIME"
+                        android:textColor="?secondary_text"
+                        android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/moonUptimeTime"
                         style="@style/text"
-                        android:textSize="20sp"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:textSize="20sp" />
                 </LinearLayout>
 
 
@@ -207,38 +138,38 @@
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:layout_marginBottom="15dp"
-                android:baselineAligned="false">
+                android:baselineAligned="false"
+                android:orientation="horizontal">
 
                 <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_weight="0.5"
                     android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
                     android:gravity="center_horizontal"
                     android:orientation="vertical">
 
                     <TextView
                         style="@style/text"
-                        android:textSize="14sp"
-                        android:textColor="?secondary_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="PHASE &amp; ILLUMINATION" />
+                        android:text="PHASE &amp; ILLUMINATION"
+                        android:textColor="?secondary_text"
+                        android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/moonPhase"
                         style="@style/text"
-                        android:textSize="20sp"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:textSize="20sp" />
 
                     <TextView
                         android:id="@+id/moonIllumination"
                         style="@style/text"
-                        android:textSize="20sp"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:textSize="20sp" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -250,14 +181,14 @@
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:layout_marginBottom="15dp"
-                android:baselineAligned="false">
+                android:baselineAligned="false"
+                android:orientation="horizontal">
 
                 <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_weight="0.25"
                     android:layout_height="wrap_content"
+                    android:layout_weight="0.25"
                     android:gravity="center_horizontal"
                     android:orientation="vertical">
 
@@ -271,18 +202,18 @@
                         android:scaleType="fitXY" />
 
                     <TextView
-                        style="@style/text"
                         android:id="@+id/moonPhase1Label"
+                        style="@style/text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="18sp"
-                        android:paddingTop="4dp" />
+                        android:paddingTop="4dp"
+                        android:textSize="18sp" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_weight="0.25"
                     android:layout_height="wrap_content"
+                    android:layout_weight="0.25"
                     android:gravity="center_horizontal"
                     android:orientation="vertical">
 
@@ -296,18 +227,18 @@
                         android:scaleType="fitXY" />
 
                     <TextView
-                        style="@style/text"
                         android:id="@+id/moonPhase2Label"
+                        style="@style/text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="18sp"
-                        android:paddingTop="4dp" />
+                        android:paddingTop="4dp"
+                        android:textSize="18sp" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_weight="0.25"
                     android:layout_height="wrap_content"
+                    android:layout_weight="0.25"
                     android:gravity="center_horizontal"
                     android:orientation="vertical">
 
@@ -321,18 +252,18 @@
                         android:scaleType="fitXY" />
 
                     <TextView
-                        style="@style/text"
                         android:id="@+id/moonPhase3Label"
+                        style="@style/text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="18sp"
-                        android:paddingTop="4dp" />
+                        android:paddingTop="4dp"
+                        android:textSize="18sp" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_weight="0.25"
                     android:layout_height="wrap_content"
+                    android:layout_weight="0.25"
                     android:gravity="center_horizontal"
                     android:orientation="vertical">
 
@@ -346,18 +277,18 @@
                         android:scaleType="fitXY" />
 
                     <TextView
-                        style="@style/text"
                         android:id="@+id/moonPhase4Label"
+                        style="@style/text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="18sp"
-                        android:paddingTop="4dp" />
+                        android:paddingTop="4dp"
+                        android:textSize="18sp" />
                 </LinearLayout>
 
             </LinearLayout>
 
         </LinearLayout>
 
-    </uk.co.sundroid.util.view.BoundedLinearLayout>
+    </LinearLayout>
 
 </ScrollView>

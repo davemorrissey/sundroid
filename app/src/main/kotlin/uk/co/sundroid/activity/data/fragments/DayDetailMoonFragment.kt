@@ -1,6 +1,9 @@
 package uk.co.sundroid.activity.data.fragments
 
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
+import android.view.ViewGroup
 import uk.co.sundroid.R
 import uk.co.sundroid.R.id.*
 import uk.co.sundroid.util.astro.*
@@ -12,7 +15,6 @@ import uk.co.sundroid.util.async.async
 import uk.co.sundroid.util.geometry.formatBearing
 import uk.co.sundroid.util.geometry.formatElevation
 import uk.co.sundroid.util.theme.*
-import uk.co.sundroid.util.html
 import uk.co.sundroid.util.time.*
 import java.util.*
 
@@ -57,26 +59,26 @@ class DayDetailMoonFragment : AbstractDayDetailFragment() {
 
                         if (yearEvent != null) {
                             view.findViewById<View>(moonEvent).setOnClickListener(null)
-                            show(view, moonEvent)
-                            show(view, moonEventTitle, yearEvent.type.displayName)
-                            show(view, moonEventSubtitle, "Tap to check Wikipedia for visibility")
+                            modifyChild(view, moonEvent, visibility = VISIBLE)
+                            modifyChild(view, moonEventTitle, visibility = VISIBLE, text = yearEvent.type.displayName)
+                            modifyChild(view, moonEventSubtitle, visibility = VISIBLE, text = "Tap to check Wikipedia for visibility")
                             view.findViewById<View>(moonEvent).setOnClickListener { browseTo(yearEvent.link) }
                         } else {
-                            remove(view, moonEvent)
+                            modifyChild(view, moonEvent, visibility = GONE)
                         }
 
                         for (i in 1..4) {
                             val phaseEvent = phaseEvents[i - 1]
-                            val phaseImgView = view("moonPhase${i}Img")
-                            val phaseLabelView = view("moonPhase${i}Label")
+                            val phaseImgView = id("moonPhase${i}Img")
+                            val phaseLabelView = id("moonPhase${i}Label")
                             var phaseImg = getPhaseFull()
                             when {
                                 phaseEvent.phase === MoonPhase.NEW -> phaseImg = getPhaseNew()
                                 phaseEvent.phase === MoonPhase.FIRST_QUARTER -> phaseImg = if (location.location.latitude.doubleValue >= 0) getPhaseRight() else getPhaseLeft()
                                 phaseEvent.phase === MoonPhase.LAST_QUARTER -> phaseImg = if (location.location.latitude.doubleValue >= 0) getPhaseLeft() else getPhaseRight()
                             }
-                            image(view, phaseImgView, phaseImg)
-                            text(view, phaseLabelView, html(shortDateAndMonth(phaseEvent.time, html = true, upperCase = true)))
+                            modifyChild(view, phaseImgView, image = phaseImg)
+                            modifyChild(view, phaseLabelView, visibility = VISIBLE, html = shortDateAndMonth(phaseEvent.time, html = true, upperCase = true))
                         }
 
                         var noTransit = true
@@ -85,57 +87,48 @@ class DayDetailMoonFragment : AbstractDayDetailFragment() {
                         if (day.riseSetType !== RiseSetType.SET && day.transitAppElevation > 0) {
                             val noon = formatTimeStr(requireContext(), day.transit!!, false, html = true)
                             noTransit = false
-                            show(view, moonTransit)
-                            show(view, moonTransitTime, html("$noon &nbsp; ${formatElevation(day.transitAppElevation)}"))
+                            modifyChild(view, moonTransit, visibility = VISIBLE)
+                            modifyChild(view, moonTransitTime, html = "$noon &nbsp; ${formatElevation(day.transitAppElevation)}")
                         } else {
-                            remove(view, moonTransit)
+                            modifyChild(view, moonTransit, visibility = GONE)
                         }
 
+                        val eventsRow = view.findViewById<ViewGroup>(moonEventsRow)
+                        eventsRow.removeAllViews()
+
                         if (day.riseSetType === RiseSetType.RISEN || day.riseSetType === RiseSetType.SET) {
-                            show(view, moonSpecial, if (day.riseSetType === RiseSetType.RISEN) "Risen all day" else "Set all day")
-                            remove(view, moonEvtsRow, moonEvt0, moonEvt1, moonUptime)
+                            val eventCell = inflate(R.layout.frag_data_daydetail_moon_event, eventsRow, false)
+                            modifyChild(eventCell, moonEvtImg, image = if (day.riseSetType === RiseSetType.RISEN) getRisenAllDay() else getSetAllDay())
+                            modifyChild(eventCell, moonEvtTime, text = if (day.riseSetType === RiseSetType.RISEN) "RISEN ALL DAY" else "SET ALL DAY")
+                            modifyChild(eventCell, moonEvtAz, visibility = GONE)
+                            modifyChild(view, moonUptime, visibility = GONE)
+                            eventsRow.addView(eventCell)
+                            noUptime = true
                         } else {
-                            remove(view, moonSpecial)
-                            remove(view, moonEvt0, moonEvt1)
-                            show(view, moonEvtsRow)
-                            val events = TreeSet<RiseSetEvent>()
-                            day.rise?.let { events.add(RiseSetEvent("Rise", it, day.riseAzimuth)) }
-                            day.set?.let { events.add(RiseSetEvent("Set", it, day.setAzimuth)) }
-                            events.forEachIndexed { index, event ->
-                                val rowId = view("moonEvt$index")
-                                val timeId = view("moonEvt${index}Time")
-                                val azId = view("moonEvt${index}Az")
-                                val imgId = view("moonEvt${index}Img")
-
-                                val time = formatTimeStr(requireContext(), event.time, false, html = true)
-                                val az = formatBearing(requireContext(), event.azimuth, location.location, event.time)
-
-                                text(view, timeId, html(time))
-                                text(view, azId, az)
-                                show(view, rowId)
-                                image(view, imgId, if (event.name == "Rise") getRiseArrow() else getSetArrow())
+                            day.events.forEach { event ->
+                                val eventCell = inflate(R.layout.frag_data_daydetail_moon_event, eventsRow, false)
+                                val az = formatBearing(requireContext(), event.azimuth ?: 0.0, location.location, event.time)
+                                modifyChild(eventCell, moonEvtImg, image = if (event.event == BodyDayEventType.RISE) getRiseArrow() else getSetArrow())
+                                modifyChild(eventCell, moonEvtTime, html = formatTimeStr(requireContext(), event.time, false, html = true))
+                                modifyChild(eventCell, moonEvtAz, text = az)
+                                eventsRow.addView(eventCell)
                             }
 
                             if (day.uptimeHours > 0 && day.uptimeHours < 24) {
-                                noUptime = false
-                                show(view, moonUptime)
-                                show(view, moonUptimeTime, html(formatDurationHMS(requireContext(), day.uptimeHours, false, html = true)))
+                                modifyChild(view, moonUptimeTime, visibility = VISIBLE, html = formatDurationHMS(requireContext(), day.uptimeHours, false, html = true))
+                                modifyChild(view, moonUptime, visibility = VISIBLE)
                             } else {
-                                remove(view, moonUptime)
+                                modifyChild(view, moonUptime, visibility = GONE)
                             }
                         }
 
-                        if (noTransit && noUptime) {
-                            remove(view, moonTransitUptime, moonTransitUptimeDivider)
-                        } else {
-                            show(view, moonTransitUptime, moonTransitUptimeDivider)
-                        }
+                        modifyChild(view, moonTransitUptime, moonTransitUptimeDivider, visibility = if (noTransit && noUptime) GONE else VISIBLE)
 
-                        show(view, moonPhase, day.phase.displayName + html((day.phaseEvent?.let {
+                        modifyChild(view, moonPhase, visibility = VISIBLE, html = (day.phase.displayName + (day.phaseEvent?.let {
                             " at " + formatTimeStr(requireContext(), it.time, false, html = true)
                         } ?: "")))
-                        show(view, moonIllumination, "${day.illumination}%")
-                        show(view, moonDataBox)
+                        modifyChild(view, moonIllumination, text = "${day.illumination}%")
+                        modifyChild(view, moonDataBox, visibility = VISIBLE)
                     }
                 }
         )

@@ -52,6 +52,14 @@ fun getSetArrow(): Int {
     return if (theme == THEME_LIGHT) l_set else d_set
 }
 
+fun getRisenAllDay(): Int {
+    return d_risen_all_day
+}
+
+fun getSetAllDay(): Int {
+    return d_set_all_day
+}
+
 fun getAppBg(): Int {
     return if (theme == THEME_LIGHT) l_app_bg else d_app_bg
 }
