@@ -3,35 +3,46 @@
     <group android:checkableBehavior="single" android:id="@+id/nav_pages">
         <item
             android:id="@+id/daySummary"
-            android:title="@string/data.summary.nav"
-            android:icon="@drawable/d_ic_day_summary"/>
+            android:icon="@drawable/d_ic_day_summary"
+            android:title="@string/data.summary.nav" />
         <item
             android:id="@+id/dayDetail"
-            android:title="@string/data.detail.nav"
-            android:icon="@drawable/d_ic_day_detail"/>
-<!--        <item-->
-<!--            android:id="@+id/tracker"-->
-<!--            android:title="@string/data.tracker.nav"/>-->
+            android:icon="@drawable/d_ic_day_detail"
+            android:title="@string/data.detail.nav" />
+        <!--        <item-->
+        <!--            android:id="@+id/tracker"-->
+        <!--            android:title="@string/data.tracker.nav"/>-->
         <item
             android:id="@+id/calendars"
-            android:title="@string/data.calendars.nav"
-            android:icon="@drawable/d_ic_calendars"/>
+            android:icon="@drawable/d_ic_calendars"
+            android:title="@string/data.calendars.nav" />
         <!--        <item-->
-<!--            android:id="@+id/yearEvents"-->
-<!--            android:title="@string/data.year.nav"/>-->
+        <!--            android:id="@+id/yearEvents"-->
+        <!--            android:title="@string/data.year.nav"/>-->
     </group>
-    <group android:checkableBehavior="none">
+    <group android:checkableBehavior="none" android:id="@+id/nav_location">
+        <item
+            android:id="@+id/location"
+            android:icon="@drawable/d_ic_location"
+            android:title="Change location" />
+        <item
+            android:id="@+id/timeZone"
+            android:icon="@drawable/d_ic_zone"
+            android:title="Set time zone" />
+    </group>
+
+    <group android:checkableBehavior="none" android:id="@+id/nav_opts">
         <item
             android:id="@+id/help"
-            android:title="@string/help.nav"
-            android:icon="@drawable/d_ic_help"/>
+            android:icon="@drawable/d_ic_help"
+            android:title="@string/help.nav" />
         <item
             android:id="@+id/about"
-            android:title="@string/about.nav"
-            android:icon="@drawable/d_ic_info"/>
+            android:icon="@drawable/d_ic_info"
+            android:title="@string/about.nav" />
         <item
             android:id="@+id/settings"
-            android:title="@string/settings.nav"
-            android:icon="@drawable/d_ic_settings"/>
+            android:icon="@drawable/d_ic_settings"
+            android:title="@string/settings.nav" />
     </group>
 </menu>

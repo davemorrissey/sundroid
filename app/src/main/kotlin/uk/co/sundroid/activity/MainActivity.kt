@@ -190,6 +190,8 @@ class MainActivity : AbstractActivity(), FragmentManager.OnBackStackChangedListe
                 R.id.help -> setPage(Page.HELP)
                 R.id.about -> setPage(Page.ABOUT)
                 R.id.settings -> setPage(Page.SETTINGS)
+                R.id.location -> setPage(Page.LOCATION_OPTIONS)
+                R.id.timeZone -> setPage(Page.TIME_ZONE)
             }
             true
         }
@@ -202,9 +204,7 @@ class MainActivity : AbstractActivity(), FragmentManager.OnBackStackChangedListe
 
     override fun onNavItemSelected(itemPosition: Int) {
         when (itemPosition) {
-            MENU_CHANGE_LOCATION -> setPage(Page.LOCATION_OPTIONS)
             MENU_SAVE_LOCATION -> showDialog(DIALOG_SAVE)
-            MENU_TIME_ZONE -> setPage(Page.TIME_ZONE)
             MENU_VIEW_SETTINGS -> try { viewConfigurationCallback?.invoke() } catch (e: Exception) { }
         }
     }
@@ -228,9 +228,7 @@ class MainActivity : AbstractActivity(), FragmentManager.OnBackStackChangedListe
                 page.dataGroup?.let {
                     displayBackButton(false)
                     navItems.apply {
-                        add(NavItem("Change location", R.drawable.icn_bar_location, HEADER, MENU_CHANGE_LOCATION))
-                        add(NavItem("Save location", R.drawable.icn_bar_save_location, HEADER_IF_ROOM, MENU_SAVE_LOCATION))
-                        add(NavItem("Time zone", 0, MENU, MENU_TIME_ZONE))
+                        add(NavItem("Save location", R.drawable.icn_bar_save_location, HEADER, MENU_SAVE_LOCATION))
                     }
                     setNavItems(navItems)
                 } ?: run {
@@ -322,10 +320,8 @@ class MainActivity : AbstractActivity(), FragmentManager.OnBackStackChangedListe
         private const val STATE_DATE_TIMESTAMP = "dateTimestamp"
         private const val STATE_TIME_TIMESTAMP = "timeTimestamp"
 
-        private const val MENU_CHANGE_LOCATION = Menu.FIRST + 1
         private const val MENU_SAVE_LOCATION = Menu.FIRST + 2
         private const val MENU_VIEW_SETTINGS = Menu.FIRST + 10
-        private const val MENU_TIME_ZONE = Menu.FIRST + 12
 
         private const val ROOT = "ROOT"
 
