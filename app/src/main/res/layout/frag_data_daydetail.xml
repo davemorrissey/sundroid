@@ -20,7 +20,7 @@
             style="@style/TabLayoutStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?primary_color" />
+            android:background="?tab_bar_bg_color"/>
 
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/viewPager"

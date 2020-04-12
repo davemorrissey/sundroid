@@ -25,13 +25,13 @@
 			android:entryValues="@array/locationTimeoutKeys"/>
 	</PreferenceCategory>
 	<PreferenceCategory android:title="Display">
-		<!--        <ListPreference-->
-		<!--            android:key="theme"-->
-		<!--            android:title="Theme"-->
-		<!--            android:summary="Choose between light and dark color schemes"-->
-		<!--            android:dialogTitle="Theme"-->
-		<!--            android:entries="@array/themeValues"-->
-		<!--            android:entryValues="@array/themeKeys"/>-->
+        <ListPreference
+            android:key="theme"
+            android:title="Theme"
+            android:summary="Choose between light and dark color schemes"
+            android:dialogTitle="Theme"
+            android:entries="@array/themeValues"
+            android:entryValues="@array/themeKeys"/>
 		<ListPreference
 			android:key="clock"
 			android:title="12/24 hour clock"

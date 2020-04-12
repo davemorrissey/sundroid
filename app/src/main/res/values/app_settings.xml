@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-<!--    <string-array name="themeKeys">-->
-<!--        <item>DARK</item>-->
-<!--        <item>LIGHT</item>-->
-<!--    </string-array>-->
-<!--    <string-array name="themeValues">-->
-<!--        <item>Midnight</item>-->
-<!--        <item>Daylight</item>-->
-<!--    </string-array>-->
+    <string-array name="themeKeys">
+        <item>DARK</item>
+        <item>DARKBLUE</item>
+    </string-array>
+    <string-array name="themeValues">
+        <item>Midnight</item>
+        <item>Twilight</item>
+    </string-array>
 	<string-array name="clockOptionKeys">
 		<item>DEFAULT</item>
 		<item>TWELVE</item>

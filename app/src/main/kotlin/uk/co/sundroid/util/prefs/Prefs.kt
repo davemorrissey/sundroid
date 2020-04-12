@@ -53,7 +53,7 @@ object Prefs {
     private const val LOCMAP_TYPE_KEY = "locMapType"
 
     private const val MAP_LOCATION_PERMISSION_DENIED_KEY = "mapLocationPermissionDenied"
-    
+
     fun selectedLocation(context: Context): LocationDetails? {
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
         if (prefs.contains(LOC_LAT_KEY) && prefs.contains(LOC_LON_KEY)) {
@@ -151,9 +151,12 @@ object Prefs {
         return clockType == ClockType.TWENTYFOUR || (clockType == ClockType.DEFAULT && default24)
     }
 
+    fun setTheme(context: Context, theme: String) {
+        prefs(context).edit().putString(THEME_KEY, theme).commit()
+    }
+
     fun theme(context: Context): String {
-//        return prefs(context).getString(THEME_KEY, null) ?: THEME_DARK
-        return THEME_DARK
+        return prefs(context).getString(THEME_KEY, null) ?: THEME_DARK
     }
 
     fun locationTimeout(context: Context): Int {

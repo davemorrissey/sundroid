@@ -24,7 +24,6 @@
     <attr name="header_secondary_text" format="color"/>
 
     <attr name="tab_bar_bg_color" format="color"/>
-    <attr name="tab_bar_bg" format="reference"/>
     <attr name="tabs_activetext" format="color"/>
     <attr name="tabs_inactivetext" format="color"/>
 
@@ -32,7 +31,6 @@
     <attr name="body_text" format="color"/>
     <attr name="secondary_text" format="color"/>
 
-    <attr name="button_divider_color" format="color"/>
     <attr name="button_bar_bg" format="reference"/>
     <attr name="button_text" format="color"/>
     <attr name="button_secondary_text" format="color"/>

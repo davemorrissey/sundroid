@@ -4,7 +4,7 @@
     <style name="SundroidLight" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:colorPrimary">@color/l_primary</item>
         <item name="android:colorPrimaryDark">@color/l_primary_dark</item>
-        <item name="android:colorAccent">@color/l_accent</item>
+		<item name="android:colorAccent">@color/l_accent</item>
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
 		<item name="primary_color">@color/l_primary</item>
@@ -19,11 +19,9 @@
 		<item name="header_text">#ffffff</item>
 		<item name="header_secondary_text">#aaffffff</item>
 		<item name="tab_bar_bg_color">#003f6f</item>
-		<item name="tab_bar_bg">@drawable/l_tab_bar_bg</item>
 		<item name="tabs_activetext">#ffffff</item>
 		<item name="tabs_inactivetext">#88ffffff</item>
 		<item name="divider_color">#dddddd</item>
-		<item name="button_divider_color">@color/l_button_divider</item>
 		<item name="button_bar_bg">@drawable/l_button_bar_bg</item>
 		<item name="button_text">@color/l_button_text</item>
 		<item name="button_secondary_text">@color/l_button_secondary_text</item>
@@ -42,9 +40,13 @@
     </style>
 
     <style name="SundroidDark" parent="Theme.AppCompat.NoActionBar">
+		<item name="android:dialogTheme">@style/SundroidDarkBlueDialog</item>
+		<item name="android:alertDialogTheme">@style/SundroidDarkBlueAlertDialog</item>
+		<item name="android:datePickerDialogTheme">@style/SundroidDarkBlueDialog</item>
         <item name="android:colorPrimary">@color/d_primary</item>
         <item name="android:colorPrimaryDark">@color/d_primary_dark</item>
         <item name="android:colorAccent">@color/d_accent</item>
+		<item name="android:colorControlHighlight">@color/d_ripple</item>
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
 		<item name="ripple">@color/d_ripple</item>
@@ -60,11 +62,9 @@
 		<item name="header_text">#ffffff</item>
 		<item name="header_secondary_text">#bbbbbb</item>
 		<item name="tab_bar_bg_color">#313431</item>
-		<item name="tab_bar_bg">@drawable/d_tab_bar_bg</item>
 		<item name="tabs_activetext">#ffffff</item>
 		<item name="tabs_inactivetext">#aaaaaa</item>
 		<item name="divider_color">#333333</item>
-		<item name="button_divider_color">@color/d_button_divider</item>
 		<item name="button_bar_bg">@drawable/d_button_bar_bg</item>
 		<item name="button_text">@color/d_button_text</item>
 		<item name="button_secondary_text">@color/d_button_secondary_text</item>
@@ -82,69 +82,56 @@
 		<item name="list_divider">@drawable/d_list_divider</item>
     </style>
 
-    <style name="SundroidDarkOld" parent="android:Theme.Holo">
-        <item name="app_background_colour">@color/d_app_background_start</item>
-        <item name="app_background">@drawable/d_app_bg</item>
-        <item name="header_background">@drawable/d_action_bar_bg</item>
-        <item name="body_text">#ffffff</item>
-        <item name="dialog_text">#ffffff</item>
-        <item name="secondary_text">#e3f6aa</item>
-        <item name="header_text">#ffffff</item>
-        <item name="header_secondary_text">#bbbbbb</item>
-        <item name="tab_bar_bg_color">#313431</item>
-        <item name="tab_bar_bg">@drawable/d_tab_bar_bg</item>
-        <item name="tabs_activetext">#ffffff</item>
-        <item name="tabs_inactivetext">#aaaaaa</item>
-        <item name="divider_color">#222222</item>
-        <item name="button_divider_color">@color/d_button_divider</item>
-        <item name="button_bar_bg">@drawable/d_button_bar_bg</item>
-        <item name="button_text">@color/d_button_text</item>
-        <item name="button_secondary_text">@color/d_button_secondary_text</item>
-        <item name="icn_loc_mylocation">@drawable/d_icn_loc_mylocation</item>
-        <item name="icn_loc_map">@drawable/d_icn_loc_map</item>
-        <item name="icn_loc_search">@drawable/d_icn_loc_search</item>
-        <item name="icn_loc_savedplaces">@drawable/d_icn_loc_savedplaces</item>
-        <item name="icn_btn_delete">@drawable/d_icn_btn_delete</item>
-        <item name="disclosure">@drawable/d_disclosure</item>
-        <item name="info">@drawable/d_info</item>
-        <item name="calendar_title_bg">#222522</item>
-        <item name="disclosure_open">@drawable/d_disclosure_open</item>
-        <item name="disclosure_closed">@drawable/d_disclosure_closed</item>
-        <item name="spinner_style">@style/d_spinner</item>
-        <item name="list_divider">@drawable/d_list_divider</item>
-    </style>
+	<style name="SundroidDarkBlue" parent="Theme.AppCompat.NoActionBar">
+		<item name="android:dialogTheme">@style/SundroidDarkBlueDialog</item>
+		<item name="android:alertDialogTheme">@style/SundroidDarkBlueAlertDialog</item>
+		<item name="android:datePickerDialogTheme">@style/SundroidDarkBlueDialog</item>
+		<item name="android:colorPrimary">@color/db_primary</item>
+		<item name="android:colorPrimaryDark">@color/db_primary_dark</item>
+		<item name="android:colorAccent">@color/db_accent</item>
+		<item name="android:colorControlHighlight">@color/db_ripple</item>
+		<item name="android:windowActionBar">false</item>
+		<item name="android:windowNoTitle">true</item>
+		<item name="ripple">@color/db_ripple</item>
+		<item name="primary_color">@color/db_primary</item>
+		<item name="primary_color_dark">@color/db_primary_dark</item>
+		<item name="accent_colour">@color/db_accent</item>
+		<item name="app_background_colour">@color/db_app_background_start</item>
+		<item name="app_background">@drawable/db_app_bg</item>
+		<item name="header_background">@drawable/db_action_bar_bg</item>
+		<item name="body_text">#ffffff</item>
+		<item name="dialog_text">#ffffff</item>
+		<item name="secondary_text">#8FA0C2</item>
+		<item name="header_text">#ffffff</item>
+		<item name="header_secondary_text">#8FA0C2</item>
+		<item name="tab_bar_bg_color">#162544</item>
+		<item name="tabs_activetext">#ffffff</item>
+		<item name="tabs_inactivetext">#8FA0C2</item>
+		<item name="divider_color">#1F2E4E</item>
+		<item name="button_bar_bg">@drawable/db_button_bar_bg</item>
+		<item name="button_text">@color/d_button_text</item>
+		<item name="button_secondary_text">@color/db_button_secondary_text</item>
+		<item name="icn_loc_mylocation">@drawable/d_icn_loc_mylocation</item>
+		<item name="icn_loc_map">@drawable/d_icn_loc_map</item>
+		<item name="icn_loc_search">@drawable/d_icn_loc_search</item>
+		<item name="icn_loc_savedplaces">@drawable/d_icn_loc_savedplaces</item>
+		<item name="icn_btn_delete">@drawable/d_icn_btn_delete</item>
+		<item name="disclosure">@drawable/d_disclosure</item>
+		<item name="info">@drawable/d_info</item>
+		<item name="calendar_title_bg">#0D1629</item>
+		<item name="disclosure_open">@drawable/d_disclosure_open</item>
+		<item name="disclosure_closed">@drawable/d_disclosure_closed</item>
+		<item name="spinner_style">@style/d_spinner</item>
+		<item name="list_divider">@drawable/db_list_divider</item>
+	</style>
 
-    <style name="SundroidLightOld" parent="android:Theme.Holo.Light.DarkActionBar">
-        <item name="app_background_colour">@color/l_app_background_start</item>
-        <item name="app_background">@drawable/l_app_bg</item>
-        <item name="header_background">@drawable/l_action_bar_bg</item>
-        <item name="body_text">#000000</item>
-        <item name="dialog_text">#000000</item>
-        <item name="secondary_text">#005895</item>
-        <item name="header_text">#ffffff</item>
-        <item name="header_secondary_text">#aaffffff</item>
-        <item name="tab_bar_bg_color">#003f6f</item>
-        <item name="tab_bar_bg">@drawable/l_tab_bar_bg</item>
-        <item name="tabs_activetext">#ffffff</item>
-        <item name="tabs_inactivetext">#aaffffff</item>
-        <item name="divider_color">#dddddd</item>
-        <item name="button_divider_color">@color/l_button_divider</item>
-        <item name="button_bar_bg">@drawable/l_button_bar_bg</item>
-        <item name="button_text">@color/l_button_text</item>
-        <item name="button_secondary_text">@color/l_button_secondary_text</item>
-        <item name="icn_loc_mylocation">@drawable/l_icn_loc_mylocation</item>
-        <item name="icn_loc_map">@drawable/l_icn_loc_map</item>
-        <item name="icn_loc_search">@drawable/l_icn_loc_search</item>
-        <item name="icn_loc_savedplaces">@drawable/l_icn_loc_savedplaces</item>
-        <item name="icn_btn_delete">@drawable/l_icn_btn_delete</item>
-        <item name="disclosure">@drawable/l_disclosure</item>
-        <item name="info">@drawable/l_info</item>
-        <item name="calendar_title_bg">#c4eaf8</item>
-        <item name="disclosure_open">@drawable/l_disclosure_open</item>
-        <item name="disclosure_closed">@drawable/l_disclosure_closed</item>
-        <item name="spinner_style">@style/l_spinner</item>
-        <item name="list_divider">@drawable/l_list_divider</item>
-    </style>
+	<style name="SundroidDarkBlueAlertDialog" parent="Theme.AppCompat.Dialog.Alert">
+		<item name="android:background">?header_background</item>
+	</style>
+
+	<style name="SundroidDarkBlueDialog" parent="Theme.AppCompat.Dialog">
+		<item name="android:background">?header_background</item>
+	</style>
 
 	<style name="Theme.Transparent" parent="android:Theme.Holo.Dialog">
 		<item name="android:windowIsTranslucent">true</item>
@@ -163,6 +150,7 @@
 		<item name="tabBackground">?primary_color</item>
 		<item name="tabTextAppearance">@style/TabTextAppearance</item>
 		<item name="tabSelectedTextColor">?tabs_activetext</item>
+		<item name="tabRippleColor">?ripple</item>
 	</style>
 
 	<style name="TabTextAppearance" parent="TextAppearance.Design.Tab">
@@ -372,7 +360,7 @@
 		<item name="android:layout_width">fill_parent</item>
 		<item name="android:layout_height">wrap_content</item>
 		<item name="android:layout_alignParentBottom">true</item>
-        <item name="android:background">?button_divider_color</item>
+        <item name="android:background">?app_background_colour</item>
 	</style>
 	
 	<style name="zoneButton">

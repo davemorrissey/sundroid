@@ -6,6 +6,8 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 import uk.co.sundroid.R
 import uk.co.sundroid.activity.MainActivity
+import uk.co.sundroid.util.prefs.Prefs
+import uk.co.sundroid.util.theme.changeToTheme
 
 class SettingsFragment : PreferenceFragmentCompat() {
 
@@ -36,6 +38,16 @@ class SettingsFragment : PreferenceFragmentCompat() {
         clock?.summaryProvider = ListPreference.SimpleSummaryProvider.getInstance()
         val firstWeekday: ListPreference? = findPreference("firstWeekday")
         firstWeekday?.summaryProvider = ListPreference.SimpleSummaryProvider.getInstance()
+
+        val theme: ListPreference? = findPreference("theme")
+        theme?.summaryProvider = ListPreference.SimpleSummaryProvider.getInstance()
+        theme?.setOnPreferenceChangeListener { _, value ->
+            Prefs.setTheme(requireContext(), value as String)
+            changeToTheme(requireActivity(), Prefs.theme(requireContext()))
+            true
+        }
     }
+
+
 
 }

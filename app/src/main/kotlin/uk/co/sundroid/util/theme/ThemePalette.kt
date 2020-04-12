@@ -1,7 +1,6 @@
 package uk.co.sundroid.util.theme
 
 import android.app.Activity
-import android.content.Intent
 import android.graphics.Color
 
 import uk.co.sundroid.R.style
@@ -12,6 +11,7 @@ import uk.co.sundroid.R.drawable.*
 
 const val THEME_DARK = "DARK"
 const val THEME_LIGHT = "LIGHT"
+const val THEME_DARKBLUE = "DARKBLUE"
 var theme: String? = null
 
 private val radarLight = TrackerStyle(
@@ -49,7 +49,11 @@ fun getRiseArrow(): Int {
 }
 
 fun getSetArrow(): Int {
-    return if (theme == THEME_LIGHT) l_set else d_set
+    return when (theme) {
+        THEME_LIGHT -> l_set
+        THEME_DARKBLUE -> db_set
+        else -> d_set
+    }
 }
 
 fun getRisenAllDay(): Int {
@@ -57,15 +61,18 @@ fun getRisenAllDay(): Int {
 }
 
 fun getSetAllDay(): Int {
-    return d_set_all_day
+    return when (theme) {
+        THEME_DARKBLUE -> db_set_all_day
+        else -> d_set_all_day
+    }
 }
 
 fun getAppBg(): Int {
-    return if (theme == THEME_LIGHT) l_app_bg else d_app_bg
-}
-
-fun getActionBarBg(): Int {
-    return if (theme == THEME_LIGHT) l_action_bar_bg else d_action_bar_bg
+    return when (theme) {
+        THEME_LIGHT -> l_app_bg
+        THEME_DARKBLUE -> db_app_bg
+        else -> d_app_bg
+    }
 }
 
 fun getPhaseFull(): Int {
@@ -85,23 +92,43 @@ fun getPhaseRight(): Int {
 }
 
 fun getCalendarHighlightColor(): Int {
-    return if (theme == THEME_LIGHT) 0xffa6dff5.toInt() else 0xff222522.toInt()
+    return when (theme) {
+        THEME_LIGHT -> 0xffa6dff5.toInt()
+        THEME_DARKBLUE -> 0xff162544.toInt()
+        else -> 0xff222522.toInt()
+    }
 }
 
 fun getCalendarDefaultColor(): Int {
-    return if (theme == THEME_LIGHT) 0x00ffffff else 0x00000000
+    return when (theme) {
+        THEME_LIGHT -> 0x00ffffff
+        THEME_DARKBLUE -> 0x00000000
+        else -> 0x00000000
+    }
 }
 
 fun getCalendarGridHighlightColor(): Int {
-    return if (theme == THEME_LIGHT) 0xffa6dff5.toInt() else 0xff323632.toInt()
+    return when (theme) {
+        THEME_LIGHT -> 0xffa6dff5.toInt()
+        THEME_DARKBLUE -> 0xff162544.toInt()
+        else -> 0xff323632.toInt()
+    }
 }
 
 fun getCalendarGridDefaultColor(): Int {
-    return if (theme == THEME_LIGHT) 0x00ffffff else 0x81222522.toInt()
+    return when (theme) {
+        THEME_LIGHT -> 0x00ffffff
+        THEME_DARKBLUE -> 0x810D1629.toInt()
+        else -> 0x81222522.toInt()
+    }
 }
 
 fun getCalendarHeaderColor(): Int {
-    return if (theme == THEME_LIGHT) 0xffc4eaf8.toInt() else 0xff222522.toInt()
+    return when (theme) {
+        THEME_LIGHT -> 0xffc4eaf8.toInt()
+        THEME_DARKBLUE -> 0xff0D1629.toInt()
+        else -> 0xff222522.toInt()
+    }
 }
 
 fun upColor(): Int {
@@ -109,7 +136,10 @@ fun upColor(): Int {
 }
 
 fun downColor(): Int {
-    return 0xff8a918a.toInt()
+    return when (theme) {
+        THEME_DARKBLUE -> 0xff5C76A8.toInt()
+        else -> 0xff8a918a.toInt()
+    }
 }
 
 fun getDisclosureOpen(): Int {
@@ -130,16 +160,18 @@ fun getTrackerRadarStyle(): TrackerStyle {
 
 fun changeToTheme(activity: Activity, newTheme: String) {
     theme = newTheme
-    activity.finish()
-    activity.startActivity(Intent(activity, activity::class.java))
+    activity.recreate()
 }
 
 fun onActivityCreateSetTheme(activity: Activity) {
     if (theme == null) {
         val prefsTheme = Prefs.theme(activity)
-        if (prefsTheme == THEME_DARK || prefsTheme == THEME_LIGHT) {
+        if (prefsTheme == THEME_DARK || prefsTheme == THEME_DARKBLUE) {
             theme = prefsTheme
         }
     }
-    activity.setTheme(if (theme == THEME_LIGHT) style.SundroidLight else style.SundroidDark)
+    when (theme) {
+        THEME_DARKBLUE -> activity.setTheme(style.SundroidDarkBlue)
+        else -> activity.setTheme(style.SundroidDark)
+    }
 }
