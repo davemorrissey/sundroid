@@ -5,8 +5,18 @@ import androidx.preference.ListPreference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 import uk.co.sundroid.R
+import uk.co.sundroid.activity.MainActivity
 
 class SettingsFragment : PreferenceFragmentCompat() {
+
+    override fun onResume() {
+        super.onResume()
+        (activity as MainActivity).apply {
+            setToolbarTitle("Preferences")
+            setToolbarSubtitle(null)
+        }
+    }
+
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.app_settings, rootKey)
 
@@ -27,4 +37,5 @@ class SettingsFragment : PreferenceFragmentCompat() {
         val firstWeekday: ListPreference? = findPreference("firstWeekday")
         firstWeekday?.summaryProvider = ListPreference.SimpleSummaryProvider.getInstance()
     }
+
 }

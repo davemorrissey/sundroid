@@ -30,7 +30,7 @@ class LocationSearchFragment : AbstractFragment() {
     override fun onResume() {
         super.onResume()
         (activity as MainActivity).apply {
-            setToolbarTitle("Saved locations")
+            setToolbarTitle("Search")
             setToolbarSubtitle(null)
         }
     }

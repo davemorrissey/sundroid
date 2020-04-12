@@ -72,6 +72,6 @@
 
     <string name="help.nav">Help</string>
     <string name="about.nav">About</string>
-    <string name="settings.nav">Settings</string>
+    <string name="settings.nav">Preferences</string>
 
 </resources>
