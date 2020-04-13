@@ -83,7 +83,7 @@ class YearEventsFragment : AbstractYearFragment() {
                                     }
                                 }
                                 EventType.PARTIAL_SOLAR, EventType.TOTAL_SOLAR, EventType.ANNULAR_SOLAR, EventType.HYBRID_SOLAR -> {
-                                    if (!Prefs.showElement(requireContext(), "yearSolarEclipse", true)) {
+                                    if (Prefs.showElement(requireContext(), "yearSolarEclipse", true)) {
                                         title = event.type.displayName
                                         time = "Greatest eclipse: $time"
                                         subtitle = event.extra as String
@@ -160,7 +160,7 @@ class YearEventsFragment : AbstractYearFragment() {
                                     eventRow.setBackgroundColor(getCalendarGridHighlightColor())
                                     eventRow.findViewById<View>(yearEventDateMonth).setBackgroundColor(getCalendarGridHighlightColor())
                                 } else {
-                                    eventRow.setBackgroundColor(getCalendarDefaultColor())
+                                    eventRow.setBackgroundColor(getCalendarGridDefaultColor())
                                     eventRow.findViewById<View>(yearEventDateMonth).setBackgroundColor(getCalendarHeaderColor())
                                 }
 
