@@ -16,9 +16,10 @@
             android:id="@+id/calendars"
             android:icon="@drawable/d_ic_calendars"
             android:title="@string/data.calendars.nav" />
-        <!--        <item-->
-        <!--            android:id="@+id/yearEvents"-->
-        <!--            android:title="@string/data.year.nav"/>-->
+        <item
+            android:id="@+id/yearEvents"
+            android:icon="@drawable/d_ic_yearevents"
+            android:title="@string/data.year.nav"/>
     </group>
     <group android:checkableBehavior="none" android:id="@+id/nav_location">
         <item

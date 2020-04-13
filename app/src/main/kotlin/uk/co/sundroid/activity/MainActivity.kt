@@ -186,7 +186,7 @@ class MainActivity : AbstractActivity(), FragmentManager.OnBackStackChangedListe
                 R.id.dayDetail -> setPage(Page.DAY_DETAIL)
 //                R.id.tracker -> setPage(Page.TRACKER)
                 R.id.calendars -> setPage(Page.CALENDARS)
-//                R.id.yearEvents -> setPage(Page.YEAR_EVENTS)
+                R.id.yearEvents -> setPage(Page.YEAR_EVENTS)
                 R.id.help -> setPage(Page.HELP)
                 R.id.about -> setPage(Page.ABOUT)
                 R.id.settings -> setPage(Page.SETTINGS)

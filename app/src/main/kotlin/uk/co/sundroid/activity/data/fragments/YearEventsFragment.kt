@@ -1,10 +1,11 @@
 package uk.co.sundroid.activity.data.fragments
 
-import android.os.Handler
-import android.text.Html
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import uk.co.sundroid.R
+import uk.co.sundroid.R.id.*
 import uk.co.sundroid.activity.MainActivity
 import uk.co.sundroid.activity.data.fragments.dialogs.settings.YearEventsPickerFragment
 import uk.co.sundroid.util.*
@@ -19,12 +20,12 @@ import uk.co.sundroid.util.time.*
 import uk.co.sundroid.util.astro.YearData
 import uk.co.sundroid.util.astro.YearData.Event
 import uk.co.sundroid.util.astro.YearData.EventType
+import uk.co.sundroid.util.async.async
 import java.util.*
+import java.util.Calendar.*
 import kotlin.math.abs
 
 class YearEventsFragment : AbstractYearFragment() {
-
-    private val handler = Handler()
 
     override val layout: Int
         get() = R.layout.frag_data_yearevents
@@ -46,22 +47,18 @@ class YearEventsFragment : AbstractYearFragment() {
     @Throws(Exception::class)
     override fun update(location: LocationDetails, calendar: Calendar, view: View) {
 
-        val thread = object : Thread() {
-            @Suppress("DEPRECATION")
-            override fun run() {
-                if (!isSafe) {
-                    return
-                }
-
-                val todayCalendar = Calendar.getInstance(calendar.timeZone)
-                val eventsSet = YearData.getYearEvents(calendar.get(Calendar.YEAR), location.timeZone!!.zone)
-                val moonPhases = MoonPhaseCalculator.getYearEvents(calendar.get(Calendar.YEAR), location.timeZone!!.zone)
-                moonPhases.mapTo(eventsSet) { Event(EventType.PHASE, it, it.time, null) }
-
-                handler.post {
+        async(
+                inBackground = {
+                    val eventsSet = YearData.getYearEvents(calendar.get(YEAR), location.timeZone!!.zone)
+                    val moonPhases = MoonPhaseCalculator.getYearEvents(calendar.get(YEAR), location.timeZone!!.zone)
+                    moonPhases.mapTo(eventsSet) { Event(EventType.PHASE, it, it.time, null) }
+                    eventsSet
+                },
+                onDone = { eventsSet: Set<Event> ->
                     if (isSafe) {
+                        val todayCalendar = getInstance(calendar.timeZone)
                         val eventsList = ArrayList(eventsSet)
-                        val eventsBox = view.findViewById<ViewGroup>(R.id.yearEventsBox)
+                        val eventsBox = view.findViewById<ViewGroup>(yearEventsBox)
                         eventsBox.removeAllViews()
 
                         var first = true
@@ -152,33 +149,33 @@ class YearEventsFragment : AbstractYearFragment() {
 
                             if (title.isNotEmpty()) {
                                 if (!first) {
-                                    requireActivity().layoutInflater.inflate(R.layout.divider, eventsBox)
+                                    requireActivity().layoutInflater.inflate(R.layout.divider_background, eventsBox)
                                 }
                                 val eventRow = inflate(R.layout.frag_data_yearevents_event)
 
-                                val today = todayCalendar.get(Calendar.YEAR) == event.time.get(Calendar.YEAR) &&
-                                        todayCalendar.get(Calendar.MONTH) == event.time.get(Calendar.MONTH) &&
-                                        todayCalendar.get(Calendar.DAY_OF_MONTH) == event.time.get(Calendar.DAY_OF_MONTH)
+                                val today = todayCalendar.get(YEAR) == event.time.get(YEAR) &&
+                                        todayCalendar.get(MONTH) == event.time.get(MONTH) &&
+                                        todayCalendar.get(DAY_OF_MONTH) == event.time.get(DAY_OF_MONTH)
                                 if (today) {
-                                    eventRow.setBackgroundColor(getCalendarHighlightColor())
+                                    eventRow.setBackgroundColor(getCalendarGridHighlightColor())
+                                    eventRow.findViewById<View>(yearEventDateMonth).setBackgroundColor(getCalendarGridHighlightColor())
                                 } else {
                                     eventRow.setBackgroundColor(getCalendarDefaultColor())
+                                    eventRow.findViewById<View>(yearEventDateMonth).setBackgroundColor(getCalendarHeaderColor())
                                 }
 
                                 if (image > 0) {
-                                    image(eventRow, R.id.yearEventImg, image)
-                                    show(eventRow, R.id.yearEventImg)
+                                    modifyChild(eventRow, yearEventImg, visibility = VISIBLE, image = image)
                                 }
-                                text(eventRow, R.id.yearEventDate, event.time.get(Calendar.DAY_OF_MONTH).toString())
-                                text(eventRow, R.id.yearEventMonth, getShortMonth(event.time).toUpperCase(Locale.getDefault()))
-                                text(eventRow, R.id.yearEventTitle, Html.fromHtml(title))
-                                text(eventRow, R.id.yearEventTime, Html.fromHtml(time))
+                                modifyChild(eventRow, yearEventDate, visibility = VISIBLE, text = event.time.get(DAY_OF_MONTH).toString())
+                                modifyChild(eventRow, yearEventMonth, visibility = VISIBLE, text = getShortMonth(event.time).toUpperCase(Locale.getDefault()))
+                                modifyChild(eventRow, yearEventTitle, visibility = VISIBLE, html = title)
+                                modifyChild(eventRow, yearEventTime, visibility = VISIBLE, html = time)
                                 if (isNotEmpty(subtitle)) {
-                                    text(eventRow, R.id.yearEventSubtitle, Html.fromHtml(subtitle))
-                                    show(eventRow, R.id.yearEventSubtitle)
+                                    modifyChild(eventRow, yearEventSubtitle, visibility = VISIBLE, html = subtitle)
                                 }
                                 if (isNotEmpty(link)) {
-                                    show(eventRow, R.id.yearEventLink)
+                                    modifyChild(eventRow, yearEventLink, visibility = VISIBLE)
                                     eventRow.setOnClickListener {
                                         browseTo(link)
                                     }
@@ -186,23 +183,20 @@ class YearEventsFragment : AbstractYearFragment() {
                                     eventRow.isClickable = false
                                     eventRow.isFocusable = false
                                 }
-
                                 eventsBox.addView(eventRow)
                                 first = false
                             }
                         }
                         if (first) {
-                            remove(view, R.id.yearEventsBox)
-                            show(view, R.id.yearEventsNone)
+                            modifyChild(view, yearEventsBox, visibility = GONE)
+                            modifyChild(view, yearEventsNone, visibility = VISIBLE)
                         } else {
-                            show(view, R.id.yearEventsBox)
-                            remove(view, R.id.yearEventsNone)
+                            modifyChild(view, yearEventsBox, visibility = VISIBLE)
+                            modifyChild(view, yearEventsNone, visibility = GONE)
                         }
                     }
                 }
-            }
-        }
-        thread.start()
+        )
     }
 
 }

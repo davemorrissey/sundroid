@@ -37,7 +37,7 @@ class YearPickerFragment : DialogFragment() {
 
         view.findViewById<NumberPicker>(R.id.yearPicker)?.apply {
             minValue = 2000
-            maxValue = 2020
+            maxValue = 2025
             wrapSelectorWheel = false
             value = calendar.get(YEAR)
             setOnValueChangedListener { _, _, year -> calendar.set(YEAR, year) }
