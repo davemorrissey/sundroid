@@ -227,6 +227,7 @@ class MainActivity : AbstractActivity(), FragmentManager.OnBackStackChangedListe
      */
     private fun refreshChrome() {
         d(TAG, "refreshChrome")
+        val context = this
         getRootFragment()?.let { root ->
             Page.fromFragment(root)?.let { page ->
                 this.page = page
@@ -240,7 +241,13 @@ class MainActivity : AbstractActivity(), FragmentManager.OnBackStackChangedListe
                 page.dataGroup?.let {
                     displayBackButton(false)
                     navItems.apply {
-                        add(NavItem("Save location", R.drawable.icn_bar_save_location, HEADER, MENU_SAVE_LOCATION))
+                        var icn = R.drawable.d_ic_star_off
+                        Prefs.selectedLocation(context)?.let {
+                            if (it.id > 0) {
+                                icn = R.drawable.d_ic_star_on
+                            }
+                        }
+                        add(NavItem("Save location", icn, HEADER, MENU_SAVE_LOCATION))
                     }
                     setNavItems(navItems)
                 } ?: run {
@@ -273,39 +280,61 @@ class MainActivity : AbstractActivity(), FragmentManager.OnBackStackChangedListe
     override fun onCreateDialog(id: Int): Dialog {
         when (id) {
             DIALOG_SAVE -> {
-                val dialog = AlertDialog.Builder(this)
-                dialog.setTitle("Save location")
-
                 val location = Prefs.selectedLocation(this)
-                val view = layoutInflater.inflate(R.layout.dialog_save, null)
-                val saveField = view.findViewById<EditText>(R.id.saveField)
-                if (isNotEmpty(location!!.name) && isEmpty(saveField.text.toString())) {
-                    saveField.setText(location.name)
-                } else {
-                    saveField.setText("")
-                }
-                dialog.setView(view)
-
-                dialog.setPositiveButton("OK") { _, _ ->
-                    val saveName = saveField.text.toString()
-                    var db: DatabaseHelper? = null
-                    try {
-                        if (isNotEmpty(saveName)) {
+                if (location!!.id > 0) {
+                    val dialog = AlertDialog.Builder(this)
+                    dialog.setTitle("Delete saved location?")
+                    dialog.setPositiveButton("OK") { _, _ ->
+                        var db: DatabaseHelper? = null
+                        try {
                             db = DatabaseHelper(this@MainActivity)
-                            location.name = saveName
+                            db.deleteSavedLocation(location.id)
+                            location.id = 0
                             Prefs.saveSelectedLocation(this@MainActivity, location)
-                            db.addSavedLocation(location)
-                            Toast.makeText(this@MainActivity, "This location has been saved", Toast.LENGTH_SHORT).show()
-                        } else {
-                            Toast.makeText(this@MainActivity, "Please enter a name for this location", Toast.LENGTH_SHORT).show()
+                            refreshChrome()
+                        } finally {
+                            db?.close()
                         }
-                    } finally {
-                        db?.close()
+                        removeDialog(DIALOG_SAVE)
                     }
-                    removeDialog(DIALOG_SAVE)
+                    dialog.setNegativeButton("Cancel") { _, _ -> removeDialog(DIALOG_SAVE) }
+                    return dialog.create()
+                } else {
+
+                    val dialog = AlertDialog.Builder(this)
+                    dialog.setTitle("Save location")
+
+                    val view = layoutInflater.inflate(R.layout.dialog_save, null)
+                    val saveField = view.findViewById<EditText>(R.id.saveField)
+                    if (isNotEmpty(location.name) && isEmpty(saveField.text.toString())) {
+                        saveField.setText(location.name)
+                    } else {
+                        saveField.setText("")
+                    }
+                    dialog.setView(view)
+
+                    dialog.setPositiveButton("OK") { _, _ ->
+                        val saveName = saveField.text.toString()
+                        var db: DatabaseHelper? = null
+                        try {
+                            if (isNotEmpty(saveName)) {
+                                location.name = saveName
+                                db = DatabaseHelper(this@MainActivity)
+                                db!!.addSavedLocation(location)
+                                Prefs.saveSelectedLocation(this@MainActivity, location)
+                                refreshChrome()
+                                Toast.makeText(this@MainActivity, "This location has been saved", Toast.LENGTH_SHORT).show()
+                            } else {
+                                Toast.makeText(this@MainActivity, "Please enter a name for this location", Toast.LENGTH_SHORT).show()
+                            }
+                        } finally {
+                            db?.close()
+                        }
+                        removeDialog(DIALOG_SAVE)
+                    }
+                    dialog.setNegativeButton("Cancel") { _, _ -> removeDialog(DIALOG_SAVE) }
+                    return dialog.create()
                 }
-                dialog.setNegativeButton("Cancel") { _, _ -> removeDialog(DIALOG_SAVE) }
-                return dialog.create()
             }
         }
         return super.onCreateDialog(id)

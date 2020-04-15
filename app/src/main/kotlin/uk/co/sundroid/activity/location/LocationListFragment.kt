@@ -15,6 +15,7 @@ import uk.co.sundroid.activity.MainActivity
 import uk.co.sundroid.domain.LocationDetails
 import uk.co.sundroid.util.dao.DatabaseHelper
 import uk.co.sundroid.util.geometry.Accuracy
+import uk.co.sundroid.util.prefs.Prefs
 
 
 class LocationListFragment : AbstractFragment() {
@@ -80,6 +81,13 @@ class LocationListFragment : AbstractFragment() {
             .setPositiveButton("OK") { _, _ -> run {
                 db?.deleteSavedLocation(location.id)
                 populateSavedLocations()
+                val currentLocation = Prefs.selectedLocation(requireContext())
+                currentLocation?.let {
+                    if (it.id == location.id) {
+                        currentLocation.id = 0
+                        Prefs.saveSelectedLocation(requireContext(), currentLocation)
+                    }
+                }
             }}
             .setNegativeButton("Cancel", null)
             .create()

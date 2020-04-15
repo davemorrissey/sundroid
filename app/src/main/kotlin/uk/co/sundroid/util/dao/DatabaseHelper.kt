@@ -49,7 +49,8 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         cv.put(COUNTRY, location.country)
         cv.put(TIMEZONE_ID, location.timeZone!!.id)
         cv.put(TIMESTAMP, System.currentTimeMillis())
-        db.insert("saved_locations", NAME, cv)
+        val id = db.insert("saved_locations", NAME, cv)
+        location.id = id
     }
 
     fun deleteSavedLocation(rowId: Long) {

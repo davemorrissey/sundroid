@@ -13,11 +13,11 @@ import android.preference.PreferenceManager
 import android.text.format.DateFormat
 import uk.co.sundroid.activity.data.fragments.CalendarView
 import uk.co.sundroid.domain.MapType
-import uk.co.sundroid.util.theme.THEME_DARK
 import uk.co.sundroid.util.theme.THEME_DARKBLUE
 
 object Prefs {
-    
+
+    private const val LOC_ID_KEY = "location-id"
     private const val LOC_LAT_KEY = "location-lat"
     private const val LOC_LON_KEY = "location-lon"
     private const val LOC_NAME_KEY = "location-name"
@@ -61,6 +61,7 @@ object Prefs {
             try {
                 val location = LatitudeLongitude(prefs.getFloat(LOC_LAT_KEY, 0f).toDouble(), prefs.getFloat(LOC_LON_KEY, 0f).toDouble())
                 val locationDetails = LocationDetails(location)
+                locationDetails.id = prefs.getLong(LOC_ID_KEY, 0)
                 locationDetails.name = prefs.getString(LOC_NAME_KEY, null)
                 locationDetails.country = prefs.getString(LOC_COUNTRY_KEY, null)
                 locationDetails.state = prefs.getString(LOC_STATE_KEY, null)
@@ -77,6 +78,7 @@ object Prefs {
     fun saveSelectedLocation(context: Context, locationDetails: LocationDetails) {
         val location = locationDetails.location
         prefs(context).edit()
+                .putLong(LOC_ID_KEY, locationDetails.id)
                 .putFloat(LOC_LAT_KEY, location.latitude.doubleValue.toFloat())
                 .putFloat(LOC_LON_KEY, location.longitude.doubleValue.toFloat())
                 .putString(LOC_NAME_KEY, locationDetails.name)
