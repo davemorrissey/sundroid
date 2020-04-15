@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.main.*
 import uk.co.sundroid.AbstractActivity
 import uk.co.sundroid.BuildConfig
 import uk.co.sundroid.NavItem
-import uk.co.sundroid.NavItem.NavItemLocation.*
+import uk.co.sundroid.NavItem.NavItemLocation.HEADER
 import uk.co.sundroid.R
 import uk.co.sundroid.activity.data.fragments.AbstractDataFragment
 import uk.co.sundroid.domain.LocationDetails
@@ -63,6 +63,18 @@ class MainActivity : AbstractActivity(), FragmentManager.OnBackStackChangedListe
     public override fun onResume() {
         super.onResume()
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+        var newInstall = false
+        var newUpdate = false
+        val lastVersion = prefs.getInt("last-version", 0)
+        if (lastVersion == 0) {
+            newInstall = true
+        } else if (lastVersion > 0 && lastVersion < BuildConfig.VERSION_CODE) {
+            newUpdate = true
+        }
+        if (newUpdate) {
+            ReleaseNotesDialogFragment().show(supportFragmentManager, "releaseNotes")
+        }
+
         prefs.edit().putInt("last-version", BuildConfig.VERSION_CODE).apply()
         (getRootFragment() as? AbstractDataFragment)?.update()
     }
