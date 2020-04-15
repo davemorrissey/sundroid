@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="themeKeys">
-        <item>DARK</item>
         <item>DARKBLUE</item>
+        <item>DARK</item>
     </string-array>
     <string-array name="themeValues">
-        <item>Midnight</item>
         <item>Twilight</item>
+        <item>Midnight</item>
     </string-array>
 	<string-array name="clockOptionKeys">
 		<item>DEFAULT</item>

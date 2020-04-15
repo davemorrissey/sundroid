@@ -14,6 +14,7 @@ import android.text.format.DateFormat
 import uk.co.sundroid.activity.data.fragments.CalendarView
 import uk.co.sundroid.domain.MapType
 import uk.co.sundroid.util.theme.THEME_DARK
+import uk.co.sundroid.util.theme.THEME_DARKBLUE
 
 object Prefs {
     
@@ -98,7 +99,7 @@ object Prefs {
             editor.putString(CLOCK_KEY, ClockType.DEFAULT.name)
         }
         if (!prefs.contains(THEME_KEY)) {
-            editor.putString(THEME_KEY, THEME_DARK)
+            editor.putString(THEME_KEY, THEME_DARKBLUE)
         }
         if (!prefs.contains(SHOW_SECONDS_KEY)) {
             editor.putBoolean(SHOW_SECONDS_KEY, false)
@@ -156,7 +157,7 @@ object Prefs {
     }
 
     fun theme(context: Context): String {
-        return prefs(context).getString(THEME_KEY, null) ?: THEME_DARK
+        return prefs(context).getString(THEME_KEY, null) ?: THEME_DARKBLUE
     }
 
     fun locationTimeout(context: Context): Int {
