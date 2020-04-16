@@ -46,6 +46,13 @@ class YearEventsFragment : AbstractYearFragment() {
 
     @Throws(Exception::class)
     override fun update(location: LocationDetails, calendar: Calendar, view: View) {
+        if (prefs.showElement("tipYearEvents", true)) {
+            modifyChild(view, tip, visibility = VISIBLE)
+            view.findViewById<View>(tipHide).setOnClickListener {
+                prefs.setShowElement("tipYearEvents", false)
+                modifyChild(view, tip, visibility = GONE)
+            }
+        }
 
         async(
                 inBackground = {

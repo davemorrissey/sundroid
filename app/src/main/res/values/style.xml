@@ -74,7 +74,7 @@
 		<item name="icn_loc_savedplaces">@drawable/d_icn_loc_savedplaces</item>
 		<item name="icn_btn_delete">@drawable/d_icn_btn_delete</item>
 		<item name="disclosure">@drawable/d_disclosure</item>
-		<item name="info">@drawable/d_info</item>
+		<item name="info">@drawable/d_icn_info</item>
 		<item name="calendar_title_bg">#222522</item>
 		<item name="disclosure_open">@drawable/d_disclosure_open</item>
 		<item name="disclosure_closed">@drawable/d_disclosure_closed</item>
@@ -117,7 +117,7 @@
 		<item name="icn_loc_savedplaces">@drawable/d_icn_loc_savedplaces</item>
 		<item name="icn_btn_delete">@drawable/d_icn_btn_delete</item>
 		<item name="disclosure">@drawable/d_disclosure</item>
-		<item name="info">@drawable/d_info</item>
+		<item name="info">@drawable/d_icn_info</item>
 		<item name="calendar_title_bg">#0D1629</item>
 		<item name="disclosure_open">@drawable/d_disclosure_open</item>
 		<item name="disclosure_closed">@drawable/d_disclosure_closed</item>

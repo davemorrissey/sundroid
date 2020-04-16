@@ -11,10 +11,52 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"/>
 
+    <RelativeLayout
+        android:id="@+id/tip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_alignParentTop="true"
+        android:padding="10dp"
+        android:background="?primary_color_dark"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/tipInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:src="@drawable/d_icn_info"/>
+
+        <ImageButton
+            android:id="@+id/tipHide"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:padding="10dp"
+            android:background="@drawable/ripple_button"
+            android:src="@drawable/d_icn_close"/>
+
+        <TextView
+            style="@style/text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/tipHide"
+            android:layout_toRightOf="@id/tipInfo"
+            android:layout_centerVertical="true"
+            android:text="Tap the toggles icon above to choose which events to display."/>
+
+    </RelativeLayout>
+
     <ScrollView
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_above="@id/incYearBar"
+            android:layout_below="@id/tip"
             >
 
         <LinearLayout
@@ -31,8 +73,8 @@
                     android:visibility="gone"
                     >
                 <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
                         android:layout_gravity="center_horizontal"
                         android:layout_margin="15dp"
                         android:src="?info"/>
