@@ -42,7 +42,6 @@
     <style name="SundroidDark" parent="Theme.AppCompat.NoActionBar">
 		<item name="android:dialogTheme">@style/SundroidDarkBlueDialog</item>
 		<item name="android:alertDialogTheme">@style/SundroidDarkBlueAlertDialog</item>
-		<item name="android:datePickerDialogTheme">@style/SundroidDarkBlueDialog</item>
         <item name="android:colorPrimary">@color/d_primary</item>
         <item name="android:colorPrimaryDark">@color/d_primary_dark</item>
         <item name="android:colorAccent">@color/d_accent</item>
@@ -85,7 +84,6 @@
 	<style name="SundroidDarkBlue" parent="Theme.AppCompat.NoActionBar">
 		<item name="android:dialogTheme">@style/SundroidDarkBlueDialog</item>
 		<item name="android:alertDialogTheme">@style/SundroidDarkBlueAlertDialog</item>
-		<item name="android:datePickerDialogTheme">@style/SundroidDarkBlueDialog</item>
 		<item name="android:colorPrimary">@color/db_primary</item>
 		<item name="android:colorPrimaryDark">@color/db_primary_dark</item>
 		<item name="android:colorAccent">@color/db_accent</item>

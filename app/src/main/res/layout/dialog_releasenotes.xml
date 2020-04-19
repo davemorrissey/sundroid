@@ -9,7 +9,7 @@
 
     <TextView
         style="@style/text"
-        android:text="5.2.0"
+        android:text="5.2.1"
         android:textSize="18sp"
         android:textStyle="bold"
         android:layout_marginTop="10dp"
