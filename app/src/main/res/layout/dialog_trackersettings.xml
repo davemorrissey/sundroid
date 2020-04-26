@@ -7,21 +7,20 @@
     <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp"
+            android:padding="25dp"
             android:orientation="vertical"
             >
         <RelativeLayout
                 android:id="@+id/trackerSettingBodyWrapper"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp">
+                android:layout_marginBottom="15dp">
 
             <Spinner
                     android:id="@+id/trackerSettingBody"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:entries="@array/trackerSettingBodyNames"
                     />
 
             <TextView
@@ -40,9 +39,9 @@
                 android:id="@+id/trackerSettingMapWrapper"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp">
+                android:layout_marginBottom="15dp">
 
-            <CheckBox
+            <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/trackerSettingMap"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -64,7 +63,7 @@
                 android:id="@+id/trackerSettingMapTypeWrapper"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp">
+                android:layout_marginBottom="15dp">
 
             <Spinner
                     android:id="@+id/trackerSettingMapType"
@@ -89,9 +88,9 @@
                 android:id="@+id/trackerSettingCompassWrapper"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp">
+                android:layout_marginBottom="15dp">
 
-            <CheckBox
+            <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/trackerSettingCompass"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -113,9 +112,9 @@
                 android:id="@+id/trackerSettingHourMarkersWrapper"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp">
+                android:layout_marginBottom="15dp">
 
-            <CheckBox
+            <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/trackerSettingHourMarkers"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -137,9 +136,9 @@
                 android:id="@+id/trackerSettingLinearElevationWrapper"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp">
+                android:layout_marginBottom="15dp">
 
-            <CheckBox
+            <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/trackerSettingLinearElevation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -160,10 +159,9 @@
         <RelativeLayout
                 android:id="@+id/trackerSettingTextWrapper"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp">
+                android:layout_height="wrap_content">
 
-            <CheckBox
+            <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/trackerSettingText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

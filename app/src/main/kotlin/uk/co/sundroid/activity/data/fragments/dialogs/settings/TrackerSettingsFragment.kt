@@ -5,8 +5,8 @@ import android.app.Dialog
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
-import android.widget.CheckBox
 import android.widget.Spinner
+import androidx.appcompat.widget.SwitchCompat
 import androidx.fragment.app.DialogFragment
 
 import uk.co.sundroid.R
@@ -23,6 +23,10 @@ class TrackerSettingsFragment : DialogFragment() {
         val view = View.inflate(context, R.layout.dialog_trackersettings, null)
 
         val body = view.findViewById<Spinner>(R.id.trackerSettingBody)
+        val bodyAdapter = ArrayAdapter(requireContext(), R.layout.dialog_trackersettings_spinneritem, resources.getStringArray(R.array.trackerSettingBodyNames))
+        bodyAdapter.setDropDownViewResource(R.layout.dialog_trackersettings_spinneritem_dropdown)
+        body.adapter = bodyAdapter
+
         val currentBody = Prefs.sunTrackerBody(requireContext())
         if (currentBody != null) {
             body.setSelection(currentBody.ordinal)
@@ -30,7 +34,7 @@ class TrackerSettingsFragment : DialogFragment() {
             body.setSelection(Body.values().size)
         }
 
-        val map = view.findViewById<CheckBox>(R.id.trackerSettingMap)
+        val map = view.findViewById<SwitchCompat>(R.id.trackerSettingMap)
         map.isChecked = Prefs.sunTrackerMode(requireContext()) == "map"
         map.setOnCheckedChangeListener { _, checked ->
             view.findViewById<View>(R.id.trackerSettingCompassWrapper).visibility = if (checked) View.GONE else View.VISIBLE
@@ -38,23 +42,23 @@ class TrackerSettingsFragment : DialogFragment() {
         }
 
         val mapType = view.findViewById<Spinner>(R.id.trackerSettingMapType)
-        val mapTypeAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, MapType.displayNames())
-        mapTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        val mapTypeAdapter = ArrayAdapter(requireContext(), R.layout.dialog_trackersettings_spinneritem, MapType.displayNames())
+        mapTypeAdapter.setDropDownViewResource(R.layout.dialog_trackersettings_spinneritem_dropdown)
         mapType.adapter = mapTypeAdapter
 
         val currentMapType = Prefs.sunTrackerMapType(requireContext())
         mapType.setSelection(currentMapType.ordinal)
 
-        val compass = view.findViewById<CheckBox>(R.id.trackerSettingCompass)
+        val compass = view.findViewById<SwitchCompat>(R.id.trackerSettingCompass)
         compass.isChecked = Prefs.sunTrackerCompass(requireContext())
 
-        val linearElevation = view.findViewById<CheckBox>(R.id.trackerSettingLinearElevation)
+        val linearElevation = view.findViewById<SwitchCompat>(R.id.trackerSettingLinearElevation)
         linearElevation.isChecked = Prefs.sunTrackerLinearElevation(requireContext())
 
-        val hourMarkers = view.findViewById<CheckBox>(R.id.trackerSettingHourMarkers)
+        val hourMarkers = view.findViewById<SwitchCompat>(R.id.trackerSettingHourMarkers)
         hourMarkers.isChecked = Prefs.sunTrackerHourMarkers(requireContext())
 
-        val text = view.findViewById<CheckBox>(R.id.trackerSettingText)
+        val text = view.findViewById<SwitchCompat>(R.id.trackerSettingText)
         text.isChecked = Prefs.sunTrackerText(requireContext())
 
         if (Prefs.sunTrackerMode(requireContext()) == "map") {

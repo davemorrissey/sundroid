@@ -21,6 +21,7 @@ import java.util.*
 import kotlin.math.*
 import uk.co.sundroid.util.astro.BodyDayEvent.Direction.*
 import uk.co.sundroid.util.astro.BodyDayEvent.Event.*
+import kotlin.collections.ArrayList
 
 
 class TrackerImage(val style: TrackerStyle, val context: Context, val location: LatitudeLongitude) {
@@ -30,9 +31,8 @@ class TrackerImage(val style: TrackerStyle, val context: Context, val location: 
     }
 
     class TrackerStyle(val cardinals: Int, val circles: Int, val day: Int, val golden: Int,
-                       val civ: Int, val ntc: Int, val ast: Int,
-                       val night: Int, val nightLine: Int,
-                       val bodyRisen: Int, val bodySet: Int, val stroke: Int, val markerStroke: Int, val dash: Array<Float>, val isRadar: Boolean) {
+                       val civ: Int, val ntc: Int, val ast: Int, val night: Int,
+                       val bodyRisen: Int, val bodySet: Int, val stroke: Int, val markerStroke: Int, val isRadar: Boolean) {
 
         companion object {
 
@@ -41,16 +41,14 @@ class TrackerImage(val style: TrackerStyle, val context: Context, val location: 
                     Color.argb(100, 0, 0, 0),
                     Color.argb(255, 255, 204, 0),
                     Color.argb(255, 255, 157, 0),
+                    Color.argb(255, 156, 168, 207),
+                    Color.argb(255, 124, 139, 187),
                     Color.argb(255, 99, 116, 166),
                     Color.argb(255, 72, 90, 144),
-                    Color.argb(255, 47, 65, 119),
-                    Color.argb(255, 26, 41, 88),
-                    Color.argb(255, 26, 41, 88),
                     Color.argb(255, 255, 204, 0),
                     Color.argb(255, 72, 90, 144),
                     3,
                     2,
-                    arrayOf(4f, 6f),
                     false
             )
             private val SATELLITE_MAP: TrackerStyle = TrackerStyle(
@@ -62,12 +60,10 @@ class TrackerImage(val style: TrackerStyle, val context: Context, val location: 
                     Color.argb(255, 72, 90, 144),
                     Color.argb(255, 47, 65, 119),
                     Color.argb(255, 26, 41, 88),
-                    Color.argb(255, 26, 41, 88),
                     Color.argb(255, 255, 204, 0),
                     Color.argb(255, 72, 90, 144),
                     3,
                     2,
-                    arrayOf(4f, 6f),
                     false
             )
 
@@ -219,8 +215,8 @@ class TrackerImage(val style: TrackerStyle, val context: Context, val location: 
             }
                 
             paint.strokeWidth = size(style.stroke)
-            val lineColor = getElevationColor(position.appElevation, true)
-            val bodyColor = getElevationColor(90.0, true)
+            val lineColor = getElevationColor(position.appElevation)
+            val bodyColor = getElevationColor(90.0)
             paint.color = lineColor
             canvas.drawLine(centerX, centerY, centerX + x, centerY - y, paint)
             paint.color = appBackground()
@@ -306,7 +302,8 @@ class TrackerImage(val style: TrackerStyle, val context: Context, val location: 
             var apparentRadius = if (linearElevation) (outerRadius - ((abs(position.appElevation)/90.0) * outerRadius)).toFloat() else (cos(degToRad(position.appElevation)) * outerRadius).toFloat()
             var x = (sin(degToRad(position.azimuth)) * apparentRadius).toFloat()
             var y = (cos(degToRad(position.azimuth)) * apparentRadius).toFloat()
-            var currentColor = getElevationColor(position.appElevation, false)
+            var currentColor = getElevationColor(position.appElevation)
+            var currentGlowAlpha = getElevationGlowAlpha(position.appElevation)
             paint.color = currentColor
             path.moveTo(centerX + x, centerY - y)
             loopCalendar.add(Calendar.MINUTE, 10)
@@ -345,7 +342,8 @@ class TrackerImage(val style: TrackerStyle, val context: Context, val location: 
             var prevX = x
             var prevY = y
             
-            val paths = LinkedHashMap<Path, Int>()
+            val paths = ArrayList<PathSegment>()
+            val markers = ArrayList<Marker>()
             
             for (calcTime in calcTimes) {
                 loopCalendar.timeInMillis = calcTime
@@ -360,7 +358,8 @@ class TrackerImage(val style: TrackerStyle, val context: Context, val location: 
                 } else if (calcTime in setTimes) {
                     nudge = -0.1
                 }
-                val thisColor = getElevationColor(position.appElevation + nudge, false)
+                val thisColor = getElevationColor(position.appElevation + nudge)
+                val thisGlowAlpha = getElevationGlowAlpha(position.appElevation + nudge)
 
                 if (loopCalendar.get(Calendar.MINUTE) == 0 && hourMarkers) {
                     // Draw lines across the path at a tangent to the line from the previous
@@ -371,38 +370,14 @@ class TrackerImage(val style: TrackerStyle, val context: Context, val location: 
                     val inverse = (Math.PI/2) - angle
                     val markY = (size(5) * sin(inverse)).toFloat()
                     val markX = (size(5) * cos(inverse)).toFloat()
-                    
-                    val cap = paint.strokeCap
-                    
-                    paint.strokeCap = Cap.ROUND
-                    if (!style.isRadar) {
-                        val color = paint.color
-                        paint.color = Color.argb(100, 0, 0, 0)
-                        paint.strokeWidth = size(style.markerStroke + 1)
-                        canvas.drawLine((centerX + x) + markX, (centerY - y) + markY, (centerX + x) - markX, (centerY - y) - markY, paint)
-                        paint.color = color
-                    }
-
-                    paint.strokeWidth = size(style.markerStroke)
-                    canvas.drawLine((centerX + x) + markX, (centerY - y) + markY, (centerX + x) - markX, (centerY - y) - markY, paint)
-                    paint.strokeWidth = size(style.stroke)
-                    
-                    paint.strokeCap = cap
-                    
+                    markers.add(Marker(loopCalendar.get(Calendar.HOUR_OF_DAY), thisColor, (centerX + x) + markX, (centerY - y) + markY, (centerX + x) - markX, (centerY - y) - markY))
                 }
                 
                 if (thisColor != currentColor) {
                     path.lineTo(centerX + x, centerY - y)
-                    paint.alpha = 50
-                    paint.maskFilter = BlurMaskFilter(size(style.stroke * 6), BlurMaskFilter.Blur.NORMAL)
-                    paint.strokeWidth = size(style.stroke * 8)
-                    canvas.drawPath(path, paint)
-                    paint.alpha = 255
-                    paint.maskFilter = null
-                    paint.strokeWidth = size(style.stroke)
-                    canvas.drawPath(path, paint)
-                    paths[path] = currentColor
+                    paths.add(PathSegment(path, currentColor, currentGlowAlpha))
                     currentColor = thisColor
+                    currentGlowAlpha = thisGlowAlpha
                     paint.color = currentColor
                     path = Path()
                     path.moveTo(centerX + x, centerY - y)
@@ -414,36 +389,65 @@ class TrackerImage(val style: TrackerStyle, val context: Context, val location: 
                 prevY = y
             }
 
-            paths[path] = currentColor
-            
+            paths.add(PathSegment(path, currentColor, currentGlowAlpha))
+
+            // Glow
+            paint.strokeWidth = size(style.stroke)
+            paint.maskFilter = BlurMaskFilter(size(style.stroke * 6), BlurMaskFilter.Blur.NORMAL)
+            paint.strokeWidth = size(style.stroke * 8)
+            paths.forEach { p ->
+                paint.color = p.color
+                paint.alpha = p.glowAlpha
+                canvas.drawPath(p.path, paint)
+            }
+            paint.maskFilter = null
+
+
+
+            // Line border - markers and primary line
             if (!style.isRadar) {
+                val cap = paint.strokeCap
+                paint.strokeCap = Cap.ROUND
+                paint.strokeWidth = size(style.markerStroke + 1)
+                paint.color = Color.argb(100, 0, 0, 0)
+                markers.forEach { m ->
+                    canvas.drawLine(m.x1, m.y1, m.x2, m.y2, paint)
+                }
+                paint.strokeCap = cap
                 paint.strokeWidth = size(style.stroke + 1)
                 paint.color = Color.argb(100, 0, 0, 0)
-                paths.keys.forEach { canvas.drawPath(it, paint) }
+                paths.forEach { p -> canvas.drawPath(p.path, paint) }
             }
-            
+
+            // Markers
+            val cap = paint.strokeCap
+            paint.strokeCap = Cap.ROUND
+            paint.strokeWidth = size(style.markerStroke)
+            markers.forEach { m ->
+                paint.color = m.color
+                canvas.drawLine(m.x1, m.y1, m.x2, m.y2, paint)
+            }
+            paint.strokeCap = cap
             paint.strokeWidth = size(style.stroke)
-            paths.forEach { (path, color) ->
-                paint.color = color
-                canvas.drawPath(path, paint)
+
+            // Primary line
+            paint.strokeWidth = size(style.stroke)
+            paths.forEach { p ->
+                paint.color = p.color
+                canvas.drawPath(p.path, paint)
             }
     
-            // Draw dotted lines for rise and set.
-            
-            paint.pathEffect = DashPathEffect(style.dash.toFloatArray(), 0F)
-            
+            // Dotted rise and set lines
             for (event in eventsSet.filter { e -> e.event == RISESET }) {
                 x = (sin(degToRad(event.azimuth!!)) * outerRadius).toFloat()
                 y = (cos(degToRad(event.azimuth)) * outerRadius).toFloat()
                 
                 if (!style.isRadar) {
-                    paint.pathEffect = null
                     paint.strokeWidth = size(style.stroke + 1)
                     paint.color = Color.argb(50, 0, 0, 0)
                     canvas.drawLine(centerX, centerY, centerX + x, centerY - y, paint)
                 }
                 
-                paint.pathEffect = DashPathEffect(style.dash.toFloatArray(), 0F)
                 paint.strokeWidth = size(style.stroke)
                 paint.color = if (body == Body.SUN) style.golden else style.bodyRisen
                 canvas.drawLine(centerX, centerY, centerX + x, centerY - y, paint)
@@ -463,11 +467,11 @@ class TrackerImage(val style: TrackerStyle, val context: Context, val location: 
         return ((metrics.densityDpi/160.0) * size).toInt().toFloat()
     }
     
-    private fun getElevationColor(elevation: Double, line: Boolean): Int {
+    private fun getElevationColor(elevation: Double): Int {
         when (body) {
             Body.SUN -> {
                 return when {
-                    elevation < -18 -> if (line) style.nightLine else style.night
+                    elevation < -18 -> style.night
                     elevation < -12 -> style.ast
                     elevation < -6 -> style.ntc
                     elevation <= -0.833 -> style.civ
@@ -489,9 +493,39 @@ class TrackerImage(val style: TrackerStyle, val context: Context, val location: 
             }
         }
     }
+
+    private fun getElevationGlowAlpha(elevation: Double): Int {
+        when (body) {
+            Body.SUN -> {
+                return when {
+                    elevation < -18 -> 0
+                    elevation < -12 -> 15
+                    elevation < -6 -> 30
+                    elevation <= -0.833 -> 45
+                    elevation < 6 -> 60
+                    else -> return 60
+                }
+            }
+            Body.MOON -> {
+                return when {
+                    elevation >= -0.5 -> 60
+                    else -> 0
+                }
+            }
+            else -> {
+                return when {
+                    elevation >= 0.0 -> 60
+                    else -> 0
+                }
+            }
+        }
+    }
     
     private fun degToRad(angleDeg: Double): Double {
         return (Math.PI * angleDeg / 180.0)
     }
-    
+
+    private class Marker(val hour: Int, val color: Int, val x1: Float, val y1: Float, val x2: Float, val y2: Float)
+    private class PathSegment(val path: Path, val color: Int, val glowAlpha: Int)
+
 }
