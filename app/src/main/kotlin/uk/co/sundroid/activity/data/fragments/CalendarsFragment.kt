@@ -8,6 +8,8 @@ import uk.co.sundroid.R
 import uk.co.sundroid.util.astro.*
 import uk.co.sundroid.util.astro.math.BodyPositionCalculator
 import uk.co.sundroid.util.astro.math.SunCalculator
+import uk.co.sundroid.util.astro.BodyDayEvent.Event.*
+import uk.co.sundroid.util.astro.BodyDayEvent.Direction.*
 import uk.co.sundroid.util.geometry.formatBearing
 import uk.co.sundroid.util.theme.*
 import uk.co.sundroid.util.time.formatDiff
@@ -79,9 +81,9 @@ class CalendarsFragment : AbstractMonthFragment<ArrayList<CalendarsFragment.DayE
         )
     }
 
-    private fun addEvent(dayEntry: DayEntry, event: BodyDayEventType, time: Calendar?, previousTime: Calendar?, allowSeconds: Boolean = false, azimuth: Double? = null) {
+    private fun addEvent(dayEntry: DayEntry, event: BodyDayEvent.Direction, time: Calendar?, previousTime: Calendar?, allowSeconds: Boolean = false, azimuth: Double? = null) {
         time?.let {
-            var timeHtml = if (event == BodyDayEventType.RISE) {
+            var timeHtml = if (event == RISING) {
                 "<font color=\"${upColor()}\">\u25b2</font><br/>"
             } else {
                 "<font color=\"${downColor()}\">\u25bc</font><br/>"
@@ -145,17 +147,17 @@ class CalendarsFragment : AbstractMonthFragment<ArrayList<CalendarsFragment.DayE
             if (type == "sun" || type == "civ" || type == "ntc" || type == "ast") {
                 // Sunrise/sunset and dawn/dusk only allowing one of each per day, to allow diffs
                 val event = when(type) {
-                    "sun" -> SunCalculator.Event.RISESET
-                    "civ" -> SunCalculator.Event.CIVIL
-                    "ntc" -> SunCalculator.Event.NAUTICAL
-                    else -> SunCalculator.Event.ASTRONOMICAL
+                    "sun" -> RISESET
+                    "civ" -> CIVIL
+                    "ntc" -> NAUTICAL
+                    else -> ASTRONOMICAL
                 }
                 val sunDay = SunCalculator.calcDay(location.location, loopCalendar, event)
                 if (sunDay.eventUp[event] == null && sunDay.eventDown[event] == null) {
                     addRisenSet(dayEntry, sunDay.eventType[event] == RiseSetType.RISEN, true)
                 } else {
-                    addEvent(dayEntry, BodyDayEventType.RISE, sunDay.eventUp[event]?.time, previousSunDay!!.eventUp[event]?.time, allowSeconds = allowSeconds, azimuth = sunDay.eventUp[event]?.azimuth)
-                    addEvent(dayEntry, BodyDayEventType.SET, sunDay.eventDown[event]?.time, previousSunDay.eventDown[event]?.time, allowSeconds = allowSeconds, azimuth = sunDay.eventDown[event]?.azimuth)
+                    addEvent(dayEntry, RISING, sunDay.eventUp[event]?.time, previousSunDay!!.eventUp[event]?.time, allowSeconds = allowSeconds, azimuth = sunDay.eventUp[event]?.azimuth)
+                    addEvent(dayEntry, DESCENDING, sunDay.eventDown[event]?.time, previousSunDay.eventDown[event]?.time, allowSeconds = allowSeconds, azimuth = sunDay.eventDown[event]?.azimuth)
                 }
                 previousSunDay = sunDay
             } else if (body != null) {
@@ -165,7 +167,7 @@ class CalendarsFragment : AbstractMonthFragment<ArrayList<CalendarsFragment.DayE
                     addRisenSet(dayEntry, bodyDay.riseSetType == RiseSetType.RISEN, false)
                 } else {
                     for (event in bodyDay.events) {
-                        addEvent(dayEntry, event.event, event.time, null, allowSeconds = false, azimuth = event.azimuth)
+                        addEvent(dayEntry, event.direction, event.time, null, allowSeconds = false, azimuth = event.azimuth)
                     }
                 }
                 (bodyDay as? MoonDay)?.let { moonDay ->
@@ -190,7 +192,7 @@ class CalendarsFragment : AbstractMonthFragment<ArrayList<CalendarsFragment.DayE
                     dayEntry.moonImg = resources.getIdentifier("$packageName:drawable/moonoverlay$moonImg", null, null)
                 }
             } else if (type == "daylight") {
-                val sunDay = SunCalculator.calcDay(location.location, loopCalendar, SunCalculator.Event.RISESET)
+                val sunDay = SunCalculator.calcDay(location.location, loopCalendar, RISESET)
                 val length = sunDay.uptimeHours
                 val diff = sunDay.uptimeHours - previousSunDay!!.uptimeHours
                 val lengthStr = formatDuration(requireContext(), length, allowSeconds)

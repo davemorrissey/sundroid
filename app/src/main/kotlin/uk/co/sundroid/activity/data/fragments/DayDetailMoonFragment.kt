@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import uk.co.sundroid.R
 import uk.co.sundroid.R.id.*
 import uk.co.sundroid.util.astro.*
+import uk.co.sundroid.util.astro.BodyDayEvent.Direction.RISING
 import uk.co.sundroid.util.astro.YearData.Event
 import uk.co.sundroid.util.astro.image.MoonPhaseImage
 import uk.co.sundroid.util.astro.math.BodyPositionCalculator
@@ -108,7 +109,7 @@ class DayDetailMoonFragment : AbstractDayDetailFragment() {
                             day.events.forEach { event ->
                                 val eventCell = inflate(R.layout.frag_data_event, eventsRow, false)
                                 val az = formatBearing(requireContext(), event.azimuth ?: 0.0, location.location, event.time)
-                                modifyChild(eventCell, evtImg, image = if (event.event == BodyDayEventType.RISE) getRiseArrow() else getSetArrow())
+                                modifyChild(eventCell, evtImg, image = if (event.direction == RISING) getRiseArrow() else getSetArrow())
                                 modifyChild(eventCell, evtTime, html = formatTimeStr(requireContext(), event.time, false, html = true))
                                 modifyChild(eventCell, evtAz, text = az)
                                 eventsRow.addView(eventCell)

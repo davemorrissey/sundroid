@@ -1,8 +1,9 @@
 package uk.co.sundroid.util.astro.math
 
 import uk.co.sundroid.util.astro.*
+import uk.co.sundroid.util.astro.BodyDayEvent.Event.*
+import uk.co.sundroid.util.astro.BodyDayEvent.Direction.*
 import uk.co.sundroid.util.astro.MoonPhase.*
-import uk.co.sundroid.util.astro.math.SunCalculator.Event.RISESET
 import uk.co.sundroid.util.location.LatitudeLongitude
 import uk.co.sundroid.util.time.clone
 import java.lang.Math.PI
@@ -117,7 +118,7 @@ object BodyPositionCalculator {
                                     bodyDay.rise = riseCalendar
                                     bodyDay.riseAzimuth = azimuth
                                 }
-                                bodyDay.addEvent(BodyDayEvent(BodyDayEventType.RISE, riseCalendar, azimuth))
+                                bodyDay.addEvent(BodyDayEvent(RISESET, RISING, riseCalendar, azimuth))
                             }
                         } else {
                             if (hour <= 24 && calendar.get(Calendar.DAY_OF_YEAR) == dateMidnight.get(Calendar.DAY_OF_YEAR)) {
@@ -126,7 +127,7 @@ object BodyPositionCalculator {
                                     bodyDay.set = setCalendar
                                     bodyDay.setAzimuth = azimuth
                                 }
-                                bodyDay.addEvent(BodyDayEvent(BodyDayEventType.SET, setCalendar, azimuth))
+                                bodyDay.addEvent(BodyDayEvent(RISESET, DESCENDING, setCalendar, azimuth))
                             }
                             if (bodyDay.rise != null) {
                                 bodyDay.uptimeHours = (calendar.timeInMillis - bodyDay.rise!!.timeInMillis) / (1000.0 * 60.0 * 60.0)

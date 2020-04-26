@@ -9,6 +9,8 @@ import android.view.View.GONE
 import android.view.ViewGroup
 import uk.co.sundroid.R
 import uk.co.sundroid.R.id.*
+import uk.co.sundroid.util.astro.BodyDayEvent.Direction.RISING
+import uk.co.sundroid.util.astro.BodyDayEvent.Event.RISESET
 import uk.co.sundroid.util.astro.math.BodyPositionCalculator
 import uk.co.sundroid.util.astro.math.SunCalculator
 import uk.co.sundroid.util.astro.image.MoonPhaseImage
@@ -37,7 +39,7 @@ class DaySummaryFragment : AbstractDayFragment() {
         val location = getLocation()
         val calendar = getDateCalendar()
 
-        val sunDay: SunDay = SunCalculator.calcDay(location.location, calendar)
+        val sunDay: SunDay = SunCalculator.calcDay(location.location, calendar, RISESET)
         val moonDay: MoonDay = BodyPositionCalculator.calcDay(Body.MOON, location.location, calendar, false) as MoonDay
 
         Thread(Runnable {
@@ -65,7 +67,7 @@ class DaySummaryFragment : AbstractDayFragment() {
             sunDay.events.forEach { event ->
                 val eventCell = inflate(R.layout.frag_data_event, sunEventsRow, false)
                 val az = formatBearing(requireContext(), event.azimuth ?: 0.0, location.location, event.time)
-                modifyChild(eventCell, evtImg, image = if (event.event == BodyDayEventType.RISE) getRiseArrow() else getSetArrow())
+                modifyChild(eventCell, evtImg, image = if (event.direction == RISING) getRiseArrow() else getSetArrow())
                 modifyChild(eventCell, evtTime, html = formatTimeStr(requireContext(), event.time, false, html = true))
                 modifyChild(eventCell, evtAz, text = az)
                 sunEventsRow.addView(eventCell)
@@ -93,7 +95,7 @@ class DaySummaryFragment : AbstractDayFragment() {
             moonDay.events.forEach { event ->
                 val eventCell = inflate(R.layout.frag_data_event, moonEventsRow, false)
                 val az = formatBearing(requireContext(), event.azimuth ?: 0.0, location.location, event.time)
-                modifyChild(eventCell, evtImg, image = if (event.event == BodyDayEventType.RISE) getRiseArrow() else getSetArrow())
+                modifyChild(eventCell, evtImg, image = if (event.direction == RISING) getRiseArrow() else getSetArrow())
                 modifyChild(eventCell, evtTime, html = formatTimeStr(requireContext(), event.time, false, html = true))
                 modifyChild(eventCell, evtAz, text = az)
                 moonEventsRow.addView(eventCell)

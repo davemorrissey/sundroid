@@ -12,6 +12,7 @@ import uk.co.sundroid.util.*
 import uk.co.sundroid.util.astro.MoonPhaseEvent
 import uk.co.sundroid.util.astro.math.MoonPhaseCalculator
 import uk.co.sundroid.util.astro.math.SunCalculator
+import uk.co.sundroid.util.astro.BodyDayEvent.Event.*
 import uk.co.sundroid.domain.LocationDetails
 import uk.co.sundroid.util.astro.MoonPhase
 import uk.co.sundroid.util.prefs.Prefs
@@ -106,7 +107,7 @@ class YearEventsFragment : AbstractYearFragment() {
                                     if (Prefs.showElement(requireContext(), "yearSolstice", true)) {
                                         title = event.type.displayName
                                         if (abs(location.location.latitude.doubleValue) > 23.44) {
-                                            val sunDay = SunCalculator.calcDay(location.location, event.time, SunCalculator.Event.RISESET)
+                                            val sunDay = SunCalculator.calcDay(location.location, event.time, RISESET)
                                             val localExtreme = if (location.location.latitude.doubleValue >= 0) "Longest" else "Shortest"
                                             subtitle = localExtreme + " day: " + formatDurationHMS(requireContext(), sunDay.uptimeHours, true)
                                         }
@@ -116,7 +117,7 @@ class YearEventsFragment : AbstractYearFragment() {
                                     if (Prefs.showElement(requireContext(), "yearSolstice", true)) {
                                         title = event.type.displayName
                                         if (abs(location.location.latitude.doubleValue) > 23.44) {
-                                            val sunDay = SunCalculator.calcDay(location.location, event.time, SunCalculator.Event.RISESET)
+                                            val sunDay = SunCalculator.calcDay(location.location, event.time, RISESET)
                                             val localExtreme = if (location.location.latitude.doubleValue >= 0) "Shortest" else "Longest"
                                             subtitle = localExtreme + " day: " + formatDurationHMS(requireContext(), sunDay.uptimeHours, true)
                                         }

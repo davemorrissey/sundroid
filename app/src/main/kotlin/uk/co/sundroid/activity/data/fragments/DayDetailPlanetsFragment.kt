@@ -8,7 +8,7 @@ import uk.co.sundroid.R
 import uk.co.sundroid.R.id.*
 import uk.co.sundroid.util.astro.Body
 import uk.co.sundroid.util.astro.BodyDay
-import uk.co.sundroid.util.astro.BodyDayEventType
+import uk.co.sundroid.util.astro.BodyDayEvent.Direction.RISING
 import uk.co.sundroid.util.astro.RiseSetType
 import uk.co.sundroid.util.astro.math.BodyPositionCalculator
 import uk.co.sundroid.util.async.async
@@ -67,7 +67,7 @@ class DayDetailPlanetsFragment : AbstractDayDetailFragment() {
                                 day.events.forEach { event ->
                                     val eventCell = inflate(R.layout.frag_data_daydetail_planets_planet_event, eventsRow, false)
                                     val az = formatBearing(requireContext(), event.azimuth ?: 0.0, location.location, event.time)
-                                    modifyChild(eventCell, planetEvtImg, image = if (event.event == BodyDayEventType.RISE) getRiseArrow() else getSetArrow())
+                                    modifyChild(eventCell, planetEvtImg, image = if (event.direction == RISING) getRiseArrow() else getSetArrow())
                                     modifyChild(eventCell, planetEvtTime, html = formatTimeStr(requireContext(), event.time, false, html = true))
                                     modifyChild(eventCell, planetEvtAz, text = az)
                                     eventsRow.addView(eventCell)

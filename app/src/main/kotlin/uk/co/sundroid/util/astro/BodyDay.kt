@@ -1,6 +1,7 @@
 package uk.co.sundroid.util.astro
 
 import java.util.*
+import uk.co.sundroid.util.astro.BodyDayEvent.Direction.*
 
 
 open class BodyDay {
@@ -25,6 +26,14 @@ open class BodyDay {
 
     fun addEvent(event: BodyDayEvent) {
         events.add(event)
+        when (event.direction) {
+            RISING -> eventUp[event.event] = event
+            DESCENDING -> eventDown[event.event] = event
+        }
     }
+
+    val eventUp: MutableMap<BodyDayEvent.Event, BodyDayEvent> = EnumMap(BodyDayEvent.Event::class.java)
+    val eventDown: MutableMap<BodyDayEvent.Event, BodyDayEvent> = EnumMap(BodyDayEvent.Event::class.java)
+    val eventType: MutableMap<BodyDayEvent.Event, RiseSetType> = EnumMap(BodyDayEvent.Event::class.java)
 
 }

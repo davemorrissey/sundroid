@@ -11,6 +11,7 @@ import uk.co.sundroid.util.astro.Body
 import uk.co.sundroid.util.astro.RiseSetType
 import uk.co.sundroid.util.astro.YearData
 import uk.co.sundroid.util.astro.math.SunCalculator
+import uk.co.sundroid.util.astro.BodyDayEvent.Event.RISESET
 import uk.co.sundroid.util.geometry.*
 import uk.co.sundroid.util.theme.*
 import uk.co.sundroid.util.astro.YearData.Event
@@ -23,7 +24,7 @@ import java.util.Calendar
 import uk.co.sundroid.util.time.formatDurationHMS
 
 import kotlinx.android.synthetic.main.frag_data_daydetail_sun.*
-import uk.co.sundroid.util.astro.BodyDayEventType
+import uk.co.sundroid.util.astro.BodyDayEvent.Direction.*
 import kotlin.math.abs
 
 class DayDetailSunFragment : AbstractDayDetailFragment() {
@@ -95,10 +96,10 @@ class DayDetailSunFragment : AbstractDayDetailFragment() {
                             eventsRow.addView(eventCell)
                             noUptime = true
                         } else {
-                            day.events.forEach { event ->
+                            day.events.filter { e -> e.event == RISESET }.forEach { event ->
                                 val eventCell = inflate(R.layout.frag_data_event, eventsRow, false)
                                 val az = formatBearing(requireContext(), event.azimuth ?: 0.0, location.location, event.time)
-                                modifyChild(eventCell, evtImg, image = if (event.event == BodyDayEventType.RISE) getRiseArrow() else getSetArrow())
+                                modifyChild(eventCell, evtImg, image = if (event.direction == RISING) getRiseArrow() else getSetArrow())
                                 modifyChild(eventCell, evtTime, html = formatTimeStr(requireContext(), event.time, false, html = true))
                                 modifyChild(eventCell, evtAz, text = az)
                                 eventsRow.addView(eventCell)
