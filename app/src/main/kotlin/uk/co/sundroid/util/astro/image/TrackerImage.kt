@@ -45,8 +45,8 @@ class TrackerImage(val style: TrackerStyle, val context: Context, val location: 
                     Color.argb(255, 124, 139, 187),
                     Color.argb(255, 99, 116, 166),
                     Color.argb(255, 72, 90, 144),
-                    Color.argb(255, 255, 204, 0),
-                    Color.argb(255, 72, 90, 144),
+                    Color.argb(255, 255, 255, 255),
+                    Color.argb(255, 92, 118, 168),
                     3,
                     2,
                     false
@@ -60,8 +60,8 @@ class TrackerImage(val style: TrackerStyle, val context: Context, val location: 
                     Color.argb(255, 72, 90, 144),
                     Color.argb(255, 47, 65, 119),
                     Color.argb(255, 26, 41, 88),
-                    Color.argb(255, 255, 204, 0),
-                    Color.argb(255, 72, 90, 144),
+                    Color.argb(255, 255, 255, 255),
+                    Color.argb(255, 38, 55, 91),
                     3,
                     2,
                     false
@@ -208,7 +208,7 @@ class TrackerImage(val style: TrackerStyle, val context: Context, val location: 
             val y = (cos(degToRad(position.azimuth)) * apparentRadius).toFloat()
             
             if (!style.isRadar) {
-                paint.strokeWidth = size(style.stroke + 1)
+                paint.strokeWidth = size(style.stroke + 2)
                 paint.color = Color.argb(100, 0, 0, 0)
                 canvas.drawLine(centerX, centerY, centerX + x, centerY - y, paint)
                 canvas.drawCircle(centerX + x, centerY - y, size(7), paint)
@@ -307,7 +307,8 @@ class TrackerImage(val style: TrackerStyle, val context: Context, val location: 
             paint.color = currentColor
             path.moveTo(centerX + x, centerY - y)
             loopCalendar.add(Calendar.MINUTE, 10)
-            
+
+
             // Get rise/set events that happen on this calendar day, midnight to midnight. Positions
             // will be calculated at these times as well as 10 minute intervals, to allow accurate
             // colour changes.
@@ -341,6 +342,8 @@ class TrackerImage(val style: TrackerStyle, val context: Context, val location: 
 
             var prevX = x
             var prevY = y
+            val midnightX = x
+            val midnightY = y
             
             val paths = ArrayList<PathSegment>()
             val markers = ArrayList<Marker>()
@@ -361,7 +364,7 @@ class TrackerImage(val style: TrackerStyle, val context: Context, val location: 
                 val thisColor = getElevationColor(position.appElevation + nudge)
                 val thisGlowAlpha = getElevationGlowAlpha(position.appElevation + nudge)
 
-                if (loopCalendar.get(Calendar.MINUTE) == 0 && hourMarkers) {
+                if ((loopCalendar.get(Calendar.MINUTE) == 0 || (loopCalendar.get(Calendar.HOUR_OF_DAY) == 0 && loopCalendar.get(Calendar.MINUTE) == 10)) && hourMarkers) {
                     // Draw lines across the path at a tangent to the line from the previous
                     // point. Could improve slightly by averaging next point as well.
                     val dx = x - prevX
@@ -370,7 +373,9 @@ class TrackerImage(val style: TrackerStyle, val context: Context, val location: 
                     val inverse = (Math.PI/2) - angle
                     val markY = (size(5) * sin(inverse)).toFloat()
                     val markX = (size(5) * cos(inverse)).toFloat()
-                    markers.add(Marker(loopCalendar.get(Calendar.HOUR_OF_DAY), thisColor, (centerX + x) + markX, (centerY - y) + markY, (centerX + x) - markX, (centerY - y) - markY))
+                    val markCX = if (loopCalendar.get(Calendar.MINUTE) == 0) x else midnightX
+                    val markCY = if (loopCalendar.get(Calendar.MINUTE) == 0) y else midnightY
+                    markers.add(Marker(loopCalendar.get(Calendar.HOUR_OF_DAY), thisColor, (centerX + markCX) + markX, (centerY - markCY) + markY, (centerX + markCX) - markX, (centerY - markCY) - markY))
                 }
                 
                 if (thisColor != currentColor) {
@@ -402,19 +407,17 @@ class TrackerImage(val style: TrackerStyle, val context: Context, val location: 
             }
             paint.maskFilter = null
 
-
-
             // Line border - markers and primary line
             if (!style.isRadar) {
                 val cap = paint.strokeCap
                 paint.strokeCap = Cap.ROUND
-                paint.strokeWidth = size(style.markerStroke + 1)
+                paint.strokeWidth = size(style.markerStroke + 2)
                 paint.color = Color.argb(100, 0, 0, 0)
                 markers.forEach { m ->
                     canvas.drawLine(m.x1, m.y1, m.x2, m.y2, paint)
                 }
                 paint.strokeCap = cap
-                paint.strokeWidth = size(style.stroke + 1)
+                paint.strokeWidth = size(style.stroke + 2)
                 paint.color = Color.argb(100, 0, 0, 0)
                 paths.forEach { p -> canvas.drawPath(p.path, paint) }
             }
@@ -443,7 +446,7 @@ class TrackerImage(val style: TrackerStyle, val context: Context, val location: 
                 y = (cos(degToRad(event.azimuth)) * outerRadius).toFloat()
                 
                 if (!style.isRadar) {
-                    paint.strokeWidth = size(style.stroke + 1)
+                    paint.strokeWidth = size(style.stroke + 2)
                     paint.color = Color.argb(50, 0, 0, 0)
                     canvas.drawLine(centerX, centerY, centerX + x, centerY - y, paint)
                 }

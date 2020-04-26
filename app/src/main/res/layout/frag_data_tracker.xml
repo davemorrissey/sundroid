@@ -1,134 +1,146 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
 
     <include
-            layout="@layout/inc_timebar"
-            android:id="@+id/incTimeBar"
-            android:layout_alignParentBottom="true"/>
+        android:id="@+id/incTimeBar"
+        layout="@layout/inc_timebar"
+        android:layout_alignParentBottom="true" />
 
 
     <LinearLayout
-            android:id="@+id/trackerText"
-            android:layout_above="@id/incTimeBar"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:orientation="vertical"
-            android:gravity="center_horizontal">
-
-        <TextView
-                style="@style/text"
-                android:id="@+id/trackerBodyAndLight"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:textSize="16sp"
-                />
+        android:id="@+id/trackerText"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/incTimeBar"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp">
 
         <LinearLayout
-                android:layout_width="fill_parent"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/trackerBody"
+                style="@style/text"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:baselineAligned="false"
-                android:orientation="horizontal">
+                android:layout_weight="0.25"
+                android:gravity="center_horizontal"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/trackerLight"
+                style="@style/text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:gravity="center_horizontal"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
+
             <LinearLayout
-                    android:layout_width="0dp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/text"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.25"
-                    android:orientation="vertical"
-                    android:gravity="center">
+                    android:text="AZIMUTH"
+                    android:textColor="?secondary_text"
+                    android:textSize="14sp" />
+
                 <TextView
-                        style="@style/text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="14sp"
-                        android:textColor="?secondary_text"
-                        android:text="AZ."
-                        />
-                <TextView
-                        style="@style/text"
-                        android:id="@+id/trackerAz"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="16sp"/>
+                    android:id="@+id/trackerAz"
+                    style="@style/text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp" />
             </LinearLayout>
+
             <LinearLayout
-                    android:layout_width="0dp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/text"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.25"
-                    android:orientation="vertical"
-                    android:gravity="center">
+                    android:text="ELEVATION"
+                    android:textColor="?secondary_text"
+                    android:textSize="14sp" />
+
                 <TextView
-                        style="@style/text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="14sp"
-                        android:textColor="?secondary_text"
-                        android:text="EL."
-                        />
-                <TextView
-                        style="@style/text"
-                        android:id="@+id/trackerEl"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="16sp"/>
+                    android:id="@+id/trackerEl"
+                    style="@style/text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp" />
             </LinearLayout>
+
             <LinearLayout
-                    android:layout_width="0dp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/trackerEvt1Name"
+                    style="@style/text"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.25"
-                    android:orientation="vertical"
-                    android:gravity="center">
+                    android:textColor="?secondary_text"
+                    android:textSize="14sp" />
+
                 <TextView
-                        style="@style/text"
-                        android:id="@+id/trackerEvt1Name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="14sp"
-                        android:textColor="?secondary_text"
-                        />
-                <TextView
-                        style="@style/text"
-                        android:id="@+id/trackerEvt1Time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="16sp"/>
-                <TextView
-                        style="@style/text"
-                        android:id="@+id/trackerEvt1Az"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="14sp"/>
+                    android:id="@+id/trackerEvt1Time"
+                    style="@style/text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp" />
             </LinearLayout>
+
             <LinearLayout
-                    android:layout_width="0dp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/trackerEvt2Name"
+                    style="@style/text"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.25"
-                    android:orientation="vertical"
-                    android:gravity="center">
+                    android:textColor="?secondary_text"
+                    android:textSize="14sp" />
+
                 <TextView
-                        style="@style/text"
-                        android:id="@+id/trackerEvt2Name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="14sp"
-                        android:textColor="?secondary_text"
-                        />
-                <TextView
-                        style="@style/text"
-                        android:id="@+id/trackerEvt2Time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="16sp"/>
-                <TextView
-                        style="@style/text"
-                        android:id="@+id/trackerEvt2Az"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="14sp"/>
+                    android:id="@+id/trackerEvt2Time"
+                    style="@style/text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp" />
             </LinearLayout>
 
         </LinearLayout>
@@ -136,24 +148,23 @@
     </LinearLayout>
 
     <FrameLayout
-            android:id="@+id/trackerContainer"
+        android:id="@+id/trackerContainer"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@id/trackerText"
+        android:layout_alignParentTop="true">
+
+        <LinearLayout
+            android:id="@+id/trackerMapContainer"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_above="@id/trackerText"
-            android:layout_alignParentTop="true">
+            android:orientation="horizontal"></LinearLayout>
 
         <LinearLayout
-                android:id="@+id/trackerMapContainer"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:orientation="horizontal">
-        </LinearLayout>
-
-        <LinearLayout
-                android:id="@+id/trackerRadarContainer"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:orientation="vertical"/>
+            android:id="@+id/trackerRadarContainer"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical" />
 
     </FrameLayout>
 

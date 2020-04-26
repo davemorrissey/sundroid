@@ -66,10 +66,18 @@ class TrackerFragment : AbstractTimeFragment(), SensorEventListener, TrackerMapF
         val windowManager = activity.getSystemService(Activity.WINDOW_SERVICE) as WindowManager
         val display = windowManager.defaultDisplay ?: return
         rotation = display.rotation * Surface.ROTATION_90
+        setSubtitle()
         (activity as MainActivity).apply {
-            setToolbarSubtitle(R.string.data_tracker_title)
             setViewConfigurationCallback({ openSettingsDialog() })
         }
+        if (compassActive) {
+            val sensorManager = requireContext().getSystemService(Activity.SENSOR_SERVICE) as SensorManager
+            val orientationSensors = sensorManager.getSensorList(Sensor.TYPE_ORIENTATION)
+            if (orientationSensors.isNotEmpty()) {
+                compassActive = sensorManager.registerListener(this, orientationSensors[0], SensorManager.SENSOR_DELAY_GAME)
+            }
+        }
+        initialise()
     }
 
     override fun onPause() {
@@ -169,6 +177,15 @@ class TrackerFragment : AbstractTimeFragment(), SensorEventListener, TrackerMapF
         this.trackerDateCalendar = dateCalendar
         this.trackerTimeCalendar = timeCalendar
         startImageUpdate(timeOnly)
+        setSubtitle()
+    }
+
+    private fun setSubtitle() {
+        val body = Prefs.sunTrackerBody(requireContext())
+        val bodyName = if (body == null) "All" else body.name.substring(0, 1) + body.name.substring(1).toLowerCase(Locale.getDefault())
+        (activity as MainActivity).apply {
+            setToolbarSubtitle("Tracker: $bodyName")
+        }
     }
 
     fun openSettingsDialog() {
@@ -254,27 +271,21 @@ class TrackerFragment : AbstractTimeFragment(), SensorEventListener, TrackerMapF
                                 if (eventsSet.size > 0) {
                                     val event1 = eventsSet.toTypedArray()[0]
                                     val time = formatTimeStr(requireContext(), event1.time, false)
-                                    val az = formatBearing(requireContext(), event1.azimuth!!, trackerLcation!!.location, event1.time)
                                     text(view!!, R.id.trackerEvt1Name, event1.name)
                                     text(view!!, R.id.trackerEvt1Time, time)
-                                    text(view!!, R.id.trackerEvt1Az, az)
                                 } else {
                                     text(view!!, R.id.trackerEvt1Name, "")
                                     text(view!!, R.id.trackerEvt1Time, "")
-                                    text(view!!, R.id.trackerEvt1Az, "")
                                 }
 
                                 if (eventsSet.size > 1) {
                                     val event2 = eventsSet.toTypedArray()[1]
                                     val time = formatTimeStr(requireContext(), event2.time, false)
-                                    val az = formatBearing(requireContext(), event2.azimuth!!, trackerLcation!!.location, event2.time)
                                     text(view!!, R.id.trackerEvt2Name, event2.name)
                                     text(view!!, R.id.trackerEvt2Time, time)
-                                    text(view!!, R.id.trackerEvt2Az, az)
                                 } else {
                                     text(view!!, R.id.trackerEvt2Name, "")
                                     text(view!!, R.id.trackerEvt2Time, "")
-                                    text(view!!, R.id.trackerEvt2Az, "")
                                 }
                             }
 
@@ -285,7 +296,8 @@ class TrackerFragment : AbstractTimeFragment(), SensorEventListener, TrackerMapF
 
                             text(view!!, R.id.trackerAz, az)
                             text(view!!, R.id.trackerEl, el)
-                            text(view!!, R.id.trackerBodyAndLight, body!!.name.substring(0, 1) + body.name.substring(1).toLowerCase(Locale.getDefault()) + ": " + getLight(body, position.appElevation))
+                            text(view!!, R.id.trackerBody, body!!.name)
+                            text(view!!, R.id.trackerLight, getLight(body, position.appElevation).toUpperCase(Locale.getDefault()))
                         }
 
                         trackerImageView!!.invalidate()
