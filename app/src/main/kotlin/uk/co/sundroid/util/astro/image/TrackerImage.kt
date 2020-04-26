@@ -1,27 +1,31 @@
 package uk.co.sundroid.util.astro.image
 
-import uk.co.sundroid.util.log.*
-import uk.co.sundroid.util.prefs.Prefs
-import uk.co.sundroid.util.astro.Body
-import uk.co.sundroid.util.astro.math.BodyPositionCalculator
-import uk.co.sundroid.util.location.LatitudeLongitude
-import uk.co.sundroid.util.geometry.*
-import uk.co.sundroid.util.theme.*
-import uk.co.sundroid.util.time.*
-
 import android.content.Context
 import android.graphics.*
 import android.graphics.Paint.Cap
 import android.graphics.Paint.Style
 import android.view.View
 import uk.co.sundroid.domain.MapType
+import uk.co.sundroid.util.astro.Body
 import uk.co.sundroid.util.astro.BodyDayEvent
-import uk.co.sundroid.util.astro.math.SunCalculator
-import java.util.*
-import kotlin.math.*
-import uk.co.sundroid.util.astro.BodyDayEvent.Direction.*
+import uk.co.sundroid.util.astro.BodyDayEvent.Direction.DESCENDING
+import uk.co.sundroid.util.astro.BodyDayEvent.Direction.RISING
 import uk.co.sundroid.util.astro.BodyDayEvent.Event.*
+import uk.co.sundroid.util.astro.math.BodyPositionCalculator
+import uk.co.sundroid.util.astro.math.SunCalculator
+import uk.co.sundroid.util.geometry.getMagneticDeclination
+import uk.co.sundroid.util.location.LatitudeLongitude
+import uk.co.sundroid.util.log.d
+import uk.co.sundroid.util.log.e
+import uk.co.sundroid.util.prefs.Prefs
+import uk.co.sundroid.util.theme.appBackground
+import uk.co.sundroid.util.theme.getBodyColor
+import uk.co.sundroid.util.theme.getTrackerRadarStyle
+import uk.co.sundroid.util.time.clone
+import uk.co.sundroid.util.time.isSameDay
+import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.math.*
 
 
 class TrackerImage(val style: TrackerStyle, val context: Context, val location: LatitudeLongitude) {
@@ -32,7 +36,8 @@ class TrackerImage(val style: TrackerStyle, val context: Context, val location: 
 
     class TrackerStyle(val cardinals: Int, val circles: Int, val day: Int, val golden: Int,
                        val civ: Int, val ntc: Int, val ast: Int, val night: Int,
-                       val bodyRisen: Int, val bodySet: Int, val stroke: Int, val markerStroke: Int, val isRadar: Boolean) {
+                       val bodyRisen: Int, val bodySet: Int, val hourText: Int, val hourShadow: Int,
+                       val stroke: Int, val markerStroke: Int, val isRadar: Boolean) {
 
         companion object {
 
@@ -47,6 +52,8 @@ class TrackerImage(val style: TrackerStyle, val context: Context, val location: 
                     Color.argb(255, 72, 90, 144),
                     Color.argb(255, 255, 255, 255),
                     Color.argb(255, 92, 118, 168),
+                    Color.argb(255, 0, 0, 0),
+                    Color.argb(255, 255, 255, 255),
                     3,
                     2,
                     false
@@ -62,6 +69,8 @@ class TrackerImage(val style: TrackerStyle, val context: Context, val location: 
                     Color.argb(255, 26, 41, 88),
                     Color.argb(255, 255, 255, 255),
                     Color.argb(255, 38, 55, 91),
+                    Color.argb(255, 255, 255, 255),
+                    Color.argb(255, 0, 0, 0),
                     3,
                     2,
                     false
@@ -375,7 +384,17 @@ class TrackerImage(val style: TrackerStyle, val context: Context, val location: 
                     val markX = (size(5) * cos(inverse)).toFloat()
                     val markCX = if (loopCalendar.get(Calendar.MINUTE) == 0) x else midnightX
                     val markCY = if (loopCalendar.get(Calendar.MINUTE) == 0) y else midnightY
-                    markers.add(Marker(loopCalendar.get(Calendar.HOUR_OF_DAY), thisColor, (centerX + markCX) + markX, (centerY - markCY) + markY, (centerX + markCX) - markX, (centerY - markCY) - markY))
+                    val x1 = (centerX + markCX) + markX
+                    val y1 = (centerY - markCY) + markY
+                    val x2 = (centerX + markCX) - markX
+                    val y2 = (centerY - markCY) - markY
+                    var tx = (centerX + markCX) + (4 * markX)
+                    var ty = (centerY - markCY) + (4 * markY)
+                    if (distance(x2, y2, centerX, centerY) > distance(x1, y1, centerX, centerY)) {
+                        tx = (centerX + markCX) - (4 * markX)
+                        ty = (centerY - markCY) - (4 * markY)
+                    }
+                    markers.add(Marker(loopCalendar.get(Calendar.HOUR_OF_DAY), thisColor, x1, y1, x2, y2, tx, ty))
                 }
                 
                 if (thisColor != currentColor) {
@@ -423,12 +442,25 @@ class TrackerImage(val style: TrackerStyle, val context: Context, val location: 
             }
 
             // Markers
+            val bounds = Rect()
             val cap = paint.strokeCap
             paint.strokeCap = Cap.ROUND
             paint.strokeWidth = size(style.markerStroke)
             markers.forEach { m ->
                 paint.color = m.color
                 canvas.drawLine(m.x1, m.y1, m.x2, m.y2, paint)
+                if (m.hour % 1 == 0) {
+                    val hour = "${m.hour}"
+                    textPaint.getTextBounds(hour, 0, hour.length, bounds)
+                    if (!style.isRadar) {
+                        textPaint.color = style.hourShadow
+                        textPaint.maskFilter = BlurMaskFilter(size(2), BlurMaskFilter.Blur.NORMAL)
+                        canvas.drawText("${m.hour}", m.tx, m.ty + (bounds.height() / 2), textPaint)
+                        textPaint.maskFilter = null
+                    }
+                    textPaint.color = style.hourText
+                    canvas.drawText("${m.hour}", m.tx, m.ty + (bounds.height() / 2), textPaint)
+                }
             }
             paint.strokeCap = cap
             paint.strokeWidth = size(style.stroke)
@@ -528,7 +560,17 @@ class TrackerImage(val style: TrackerStyle, val context: Context, val location: 
         return (Math.PI * angleDeg / 180.0)
     }
 
-    private class Marker(val hour: Int, val color: Int, val x1: Float, val y1: Float, val x2: Float, val y2: Float)
+    private class Marker(val hour: Int, val color: Int, val x1: Float, val y1: Float, val x2: Float, val y2: Float, val tx: Float, val ty: Float)
     private class PathSegment(val path: Path, val color: Int, val glowAlpha: Int)
+
+    private fun distance(
+            x1: Float,
+            y1: Float,
+            x2: Float,
+            y2: Float): Float {
+        val ac = abs(y2 - y1)
+        val cb = abs(x2 - x1)
+        return hypot(ac.toDouble(), cb.toDouble()).toFloat()
+    }
 
 }

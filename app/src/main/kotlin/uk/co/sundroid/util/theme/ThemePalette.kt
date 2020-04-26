@@ -26,6 +26,8 @@ private val radarLight = TrackerStyle(
         Color.argb(255, 26, 41, 88),
         Color.argb(255, 255, 204, 0),
         Color.argb(255, 72, 90, 144),
+        Color.argb(255, 0, 0, 0),
+        Color.argb(0, 0, 0, 0),
         3,
         2,
         true
@@ -42,6 +44,8 @@ private val radarDark = TrackerStyle(
         Color.argb(255, 26, 41, 88),
         Color.argb(255, 255, 255, 255),
         Color.argb(255, 92, 118, 168),
+        Color.argb(255, 255, 255, 255),
+        Color.argb(0, 0, 0, 0),
         3,
         2,
         true
