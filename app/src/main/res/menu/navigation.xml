@@ -9,9 +9,10 @@
             android:id="@+id/dayDetail"
             android:icon="@drawable/d_ic_day_detail"
             android:title="@string/data.detail.nav" />
-        <!--        <item-->
-        <!--            android:id="@+id/tracker"-->
-        <!--            android:title="@string/data.tracker.nav"/>-->
+        <item
+            android:id="@+id/tracker"
+            android:icon="@drawable/d_ic_tracker"
+            android:title="@string/data.tracker.nav"/>
         <item
             android:id="@+id/calendars"
             android:icon="@drawable/d_ic_calendars"

@@ -422,13 +422,17 @@ object SunCalculator {
         if (events.isEmpty() || events.contains(Event.CIVIL)) {
             val civDawn = calcUpUTC(julianDay, latitude, longitude, 96.0)
             if (!civDawn.isNaN()) {
-                sunDay.civDawn = createCalendar(dateMidnightUtc, civDawn, dateMidnight.timeZone)
-                sunDay.eventUp[Event.CIVIL] = BodyDayEvent(BodyDayEventType.RISE, sunDay.civDawn!!)
+                val time = createCalendar(dateMidnightUtc, civDawn, dateMidnight.timeZone)
+                val position = calcPosition(location, time)
+                sunDay.civDawn = time
+                sunDay.eventUp[Event.CIVIL] = BodyDayEvent(BodyDayEventType.RISE, time, position.azimuth)
             }
             val civDusk = calcDownUTC(julianDay, latitude, longitude, 96.0)
             if (!civDusk.isNaN()) {
-                sunDay.civDusk = createCalendar(dateMidnightUtc, civDusk, dateMidnight.timeZone)
-                sunDay.eventDown[Event.CIVIL] = BodyDayEvent(BodyDayEventType.SET, sunDay.civDusk!!)
+                val time = createCalendar(dateMidnightUtc, civDusk, dateMidnight.timeZone)
+                val position = calcPosition(location, time)
+                sunDay.civDusk = time
+                sunDay.eventDown[Event.CIVIL] = BodyDayEvent(BodyDayEventType.SET, time, position.azimuth)
             }
             if (sunDay.civDawn == null && sunDay.civDusk == null) {
                 if (solarNoonPosition.appElevation > -5.9) {
@@ -450,13 +454,17 @@ object SunCalculator {
         if (events.isEmpty() || events.contains(Event.NAUTICAL)) {
             val ntcDawn = calcUpUTC(julianDay, latitude, longitude, 102.0)
             if (!ntcDawn.isNaN()) {
-                sunDay.ntcDawn = createCalendar(dateMidnightUtc, ntcDawn, dateMidnight.timeZone)
-                sunDay.eventUp[Event.NAUTICAL] = BodyDayEvent(BodyDayEventType.RISE, sunDay.ntcDawn!!)
+                val time = createCalendar(dateMidnightUtc, ntcDawn, dateMidnight.timeZone)
+                val position = calcPosition(location, time)
+                sunDay.ntcDawn = time
+                sunDay.eventUp[Event.NAUTICAL] = BodyDayEvent(BodyDayEventType.RISE, time, position.azimuth)
             }
             val ntcDusk = calcDownUTC(julianDay, latitude, longitude, 102.0)
             if (!ntcDusk.isNaN()) {
-                sunDay.ntcDusk = createCalendar(dateMidnightUtc, ntcDusk, dateMidnight.timeZone)
-                sunDay.eventDown[Event.NAUTICAL] = BodyDayEvent(BodyDayEventType.SET, sunDay.ntcDusk!!)
+                val time = createCalendar(dateMidnightUtc, ntcDusk, dateMidnight.timeZone)
+                val position = calcPosition(location, time)
+                sunDay.ntcDusk = time
+                sunDay.eventDown[Event.NAUTICAL] = BodyDayEvent(BodyDayEventType.SET, time, position.azimuth)
             }
             if (sunDay.ntcDawn == null && sunDay.ntcDusk == null) {
                 if (solarNoonPosition.appElevation > -11.9) {
@@ -478,13 +486,17 @@ object SunCalculator {
         if (events.isEmpty() || events.contains(Event.ASTRONOMICAL)) {
             val astDawn = calcUpUTC(julianDay, latitude, longitude, 108.0)
             if (!astDawn.isNaN()) {
-                sunDay.astDawn = createCalendar(dateMidnightUtc, astDawn, dateMidnight.timeZone)
-                sunDay.eventUp[Event.ASTRONOMICAL] = BodyDayEvent(BodyDayEventType.RISE, sunDay.astDawn!!)
+                val time = createCalendar(dateMidnightUtc, astDawn, dateMidnight.timeZone)
+                val position = calcPosition(location, time)
+                sunDay.astDawn = time
+                sunDay.eventUp[Event.ASTRONOMICAL] = BodyDayEvent(BodyDayEventType.RISE, time, position.azimuth)
             }
             val astDusk = calcDownUTC(julianDay, latitude, longitude, 108.0)
             if (!astDusk.isNaN()) {
-                sunDay.astDusk = createCalendar(dateMidnightUtc, astDusk, dateMidnight.timeZone)
-                sunDay.eventDown[Event.ASTRONOMICAL] = BodyDayEvent(BodyDayEventType.SET, sunDay.astDusk!!)
+                val time = createCalendar(dateMidnightUtc, astDusk, dateMidnight.timeZone)
+                val position = calcPosition(location, time)
+                sunDay.astDusk = time
+                sunDay.eventDown[Event.ASTRONOMICAL] = BodyDayEvent(BodyDayEventType.SET, time, position.azimuth)
             }
             if (sunDay.astDawn == null && sunDay.astDusk == null) {
                 if (solarNoonPosition.appElevation > -17.9) {
@@ -506,11 +518,17 @@ object SunCalculator {
         if (events.isEmpty() || events.contains(Event.GOLDENHOUR)) {
             val ghEnd = calcUpUTC(julianDay, latitude, longitude, 84.0)
             if (!ghEnd.isNaN()) {
-                sunDay.ghEnd = createCalendar(dateMidnightUtc, ghEnd, dateMidnight.timeZone)
+                val time = createCalendar(dateMidnightUtc, ghEnd, dateMidnight.timeZone)
+                val position = calcPosition(location, time)
+                sunDay.ghEnd = time
+                sunDay.eventUp[Event.GOLDENHOUR] = BodyDayEvent(BodyDayEventType.RISE, time, position.azimuth)
             }
             val ghStart = calcDownUTC(julianDay, latitude, longitude, 84.0)
             if (!ghStart.isNaN()) {
-                sunDay.ghStart = createCalendar(dateMidnightUtc, ghStart, dateMidnight.timeZone)
+                val time = createCalendar(dateMidnightUtc, ghStart, dateMidnight.timeZone)
+                val position = calcPosition(location, time)
+                sunDay.ghStart = time
+                sunDay.eventDown[Event.GOLDENHOUR] = BodyDayEvent(BodyDayEventType.SET, time, position.azimuth)
             }
             if (sunDay.ghEnd == null && sunDay.ghStart == null) {
                 if (solarNoonPosition.appElevation > 6) {

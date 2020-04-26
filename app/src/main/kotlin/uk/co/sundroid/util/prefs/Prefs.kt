@@ -287,7 +287,7 @@ object Prefs {
     }
     
     fun sunTrackerHourMarkers(context: Context): Boolean {
-        return prefs(context).getBoolean(SUNTRACKER_HOURMARKERS_KEY, false)
+        return prefs(context).getBoolean(SUNTRACKER_HOURMARKERS_KEY, true)
     }
     
     fun setSunTrackerHourMarkers(context: Context, on: Boolean) {

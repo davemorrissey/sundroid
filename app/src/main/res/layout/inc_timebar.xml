@@ -1,70 +1,99 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/dateBox" style="@style/dateBox" android:orientation="vertical">
-	<LinearLayout android:id="@+id/dateRow" android:layout_width="fill_parent" android:layout_height="wrap_content" android:baselineAligned="false" android:background="?button_bar_bg">
-		<LinearLayout android:id="@+id/dateButton" android:layout_width="0dp" android:layout_weight="0.6" android:layout_height="@dimen/date_bar_height" android:orientation="vertical" android:layout_marginRight="1px" android:gravity="center_vertical">
-            <TextView
-                    android:id="@+id/dateWeekday"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="?button_text"
-                    android:textSize="14sp"
-                    android:gravity="center_horizontal"
-                    />
-            <TextView
-                    android:id="@+id/dateDMY"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="-4dp"
-                    android:textColor="?button_text"
-                    android:textSize="18sp"
-                    android:gravity="center_horizontal"
-                    />
-		</LinearLayout>
-        <LinearLayout android:id="@+id/timeButton" android:layout_width="0dp" android:layout_weight="0.4" android:layout_height="@dimen/date_bar_height" android:orientation="vertical" android:gravity="center_vertical">
-            <TextView
-                    android:id="@+id/timeHM"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="?button_text"
-                    android:textSize="20sp"
-                    android:gravity="center_horizontal"
-                    />
-        </LinearLayout>
-	</LinearLayout>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dateBox"
+    style="@style/dateBox"
+    android:orientation="vertical">
+
     <LinearLayout
-        android:id="@+id/zoneSeekerRow"
+        android:id="@+id/dateRow"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="1px"
-        android:background="?button_bar_bg"
-        android:orientation="horizontal"
         android:baselineAligned="false">
 
         <LinearLayout
-                android:id="@+id/zoneButton"
-                android:layout_marginRight="1px"
-                android:layout_width="0dp"
-                android:layout_height="fill_parent"
-                android:layout_weight="0.6"
+            android:id="@+id/dateButton"
+            style="@style/dateBoxButton"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/date_bar_height"
+            android:layout_weight="0.6"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
 
-                android:gravity="center_vertical"
-                android:padding="5dp">
-            <TextView android:id="@+id/zoneName" style="@style/zoneName"/>
-            <TextView android:id="@+id/zoneCities" style="@style/zoneCities"/>
+            <TextView
+                android:id="@+id/dateWeekday"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:textColor="?button_secondary_text"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/dateDMY"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:textColor="?button_text"
+                android:textSize="18sp" />
         </LinearLayout>
 
         <LinearLayout
-                android:id="@+id/timeSeekerBox"
-                android:layout_width="0dp"
-                android:layout_height="fill_parent"
-                android:layout_weight="0.4"
-                android:padding="5dp"
-                android:gravity="center_vertical">
+            android:id="@+id/timeButton"
+            style="@style/dateBoxButton"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/date_bar_height"
+            android:layout_weight="0.4"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/timeHM"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:textColor="?button_text"
+                android:textSize="20sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/zoneSeekerRow"
+        android:layout_width="fill_parent"
+        android:layout_height="?actionBarSize"
+        android:background="?primary_color"
+        android:baselineAligned="false"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/zoneButton"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_marginRight="1px"
+            android:layout_weight="0.6"
+
+            android:gravity="center_vertical"
+            android:padding="5dp">
+
+            <TextView
+                android:id="@+id/zoneName"
+                style="@style/zoneName" />
+
+            <TextView
+                android:id="@+id/zoneCities"
+                style="@style/zoneCities" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/timeSeekerBox"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="0.4"
+            android:gravity="center_vertical"
+            android:padding="5dp">
+
             <SeekBar
-                    android:id="@+id/timeSeeker"
-                    android:max="1439"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    />
+                android:id="@+id/timeSeeker"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:max="1439" />
         </LinearLayout>
 
     </LinearLayout>

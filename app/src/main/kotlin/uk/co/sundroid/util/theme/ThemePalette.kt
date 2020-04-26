@@ -2,6 +2,7 @@ package uk.co.sundroid.util.theme
 
 import android.app.Activity
 import android.graphics.Color
+import uk.co.sundroid.R
 
 import uk.co.sundroid.R.style
 import uk.co.sundroid.util.prefs.Prefs
@@ -18,31 +19,45 @@ private val radarLight = TrackerStyle(
         Color.argb(255, 0, 0, 0),
         Color.argb(100, 0, 0, 0),
         Color.argb(255, 255, 204, 0),
-        Color.argb(255, 255, 168, 0),
+        Color.argb(255, 255, 157, 0),
+        Color.argb(255, 99, 116, 166),
         Color.argb(255, 72, 90, 144),
-        Color.argb(255, 72, 90, 144),
+        Color.argb(255, 47, 65, 119),
+        Color.argb(255, 26, 41, 88),
+        Color.argb(255, 26, 41, 88),
         Color.argb(255, 255, 204, 0),
         Color.argb(255, 72, 90, 144),
+        3,
         2,
-        1,
-        arrayOf( 2f, 3f ),
+        arrayOf( 4f, 6f ),
         true
 )
 
 private val radarDark = TrackerStyle(
         Color.argb(255, 255, 255, 255),
         Color.argb(170, 120, 120, 120),
-        Color.argb(255, 255, 222, 107),
-        Color.argb(255, 255, 198, 0),
+        Color.argb(255, 255, 204, 0),
+        Color.argb(255, 255, 157, 0),
+        Color.argb(255, 99, 116, 166),
         Color.argb(255, 72, 90, 144),
-        Color.argb(255, 115, 142, 204),
-        Color.argb(255, 255, 255, 255),
-        Color.argb(255, 100, 100, 100),
+        Color.argb(255, 47, 65, 119),
+        Color.argb(255, 26, 41, 88),
+        Color.argb(255, 26, 41, 88),
+        Color.argb(255, 255, 204, 0),
+        Color.argb(255, 72, 90, 144),
+        3,
         2,
-        1,
-        arrayOf( 2f, 3f ),
+        arrayOf( 4f, 6f ),
         true
 )
+
+fun appBackground(): Int {
+    return when (theme) {
+        THEME_LIGHT -> R.color.l_app_background_start
+        THEME_DARK -> R.color.d_app_background_start
+        else -> R.color.db_app_background_start
+    }
+}
 
 fun getRiseArrow(): Int {
     return if (theme == THEME_LIGHT) l_rise else d_rise

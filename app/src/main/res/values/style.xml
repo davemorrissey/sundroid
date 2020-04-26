@@ -42,6 +42,7 @@
     <style name="SundroidDark" parent="Theme.AppCompat.NoActionBar">
 		<item name="android:dialogTheme">@style/SundroidDarkBlueDialog</item>
 		<item name="android:alertDialogTheme">@style/SundroidDarkBlueAlertDialog</item>
+		<item name="android:datePickerDialogTheme">@style/SundroidDarkBlueDialog</item>
         <item name="android:colorPrimary">@color/d_primary</item>
         <item name="android:colorPrimaryDark">@color/d_primary_dark</item>
         <item name="android:colorAccent">@color/d_accent</item>
@@ -84,6 +85,9 @@
 	<style name="SundroidDarkBlue" parent="Theme.AppCompat.NoActionBar">
 		<item name="android:dialogTheme">@style/SundroidDarkBlueDialog</item>
 		<item name="android:alertDialogTheme">@style/SundroidDarkBlueAlertDialog</item>
+		<item name="android:timePickerStyle">@style/SundroidDarkBlueTimePickerStyle</item>
+		<item name="android:datePickerStyle">@style/SundroidDarkBlueDatePickerStyle</item>
+		<item name="android:datePickerDialogTheme">@style/SundroidDarkBlueDatePickerDialog</item>
 		<item name="android:colorPrimary">@color/db_primary</item>
 		<item name="android:colorPrimaryDark">@color/db_primary_dark</item>
 		<item name="android:colorAccent">@color/db_accent</item>
@@ -124,11 +128,27 @@
 	</style>
 
 	<style name="SundroidDarkBlueAlertDialog" parent="Theme.AppCompat.Dialog.Alert">
-		<item name="android:background">?header_background</item>
+		<item name="android:background">?primary_color</item>
 	</style>
 
 	<style name="SundroidDarkBlueDialog" parent="Theme.AppCompat.Dialog">
-		<item name="android:background">?header_background</item>
+		<item name="android:background">?primary_color</item>
+	</style>
+
+	<style name="SundroidDarkBlueDatePickerDialog" parent="Theme.AppCompat.Dialog">
+		<item name="android:windowBackground">?primary_color</item>
+		<item name="android:headerBackground">#0000ff</item>
+		<item name="android:datePickerStyle">@style/SundroidDarkBlueDatePickerStyle</item>
+	</style>
+
+	<style name="SundroidDarkBlueDatePickerStyle" parent="android:Widget.Material.DatePicker">
+		<item name="android:headerBackground">?primary_color_dark</item>
+	</style>
+
+	<style name="SundroidDarkBlueTimePickerStyle" parent="android:Widget.Material.TimePicker">
+		<item name="android:background">?primary_color</item>
+		<item name="android:headerBackground">?primary_color_dark</item>
+		<item name="android:numbersBackgroundColor">?primary_color_dark</item>
 	</style>
 
 	<style name="Theme.Transparent" parent="android:Theme.Holo.Dialog">

@@ -122,7 +122,7 @@ class TrackerFragment : AbstractTimeFragment(), SensorEventListener, TrackerMapF
 
             show(view, R.id.trackerMapContainer)
 
-            val mapFragment = TrackerMapFragment()
+            val mapFragment = TrackerMapFragment(location, this)
             requireFragmentManager()
                     .beginTransaction()
                     .replace(R.id.trackerMapContainer, mapFragment, MAP_TAG)

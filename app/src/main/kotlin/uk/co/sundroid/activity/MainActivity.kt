@@ -196,7 +196,7 @@ class MainActivity : AbstractActivity(), FragmentManager.OnBackStackChangedListe
             when (menuItem.itemId) {
                 R.id.daySummary -> setPage(Page.DAY_SUMMARY)
                 R.id.dayDetail -> setPage(Page.DAY_DETAIL)
-//                R.id.tracker -> setPage(Page.TRACKER)
+                R.id.tracker -> setPage(Page.TRACKER)
                 R.id.calendars -> setPage(Page.CALENDARS)
                 R.id.yearEvents -> setPage(Page.YEAR_EVENTS)
                 R.id.help -> setPage(Page.HELP)

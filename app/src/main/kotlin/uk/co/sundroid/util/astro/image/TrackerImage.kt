@@ -14,17 +14,12 @@ import uk.co.sundroid.util.theme.*
 import uk.co.sundroid.util.time.*
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.DashPathEffect
-import android.graphics.Paint
+import android.graphics.*
 import android.graphics.Paint.Cap
 import android.graphics.Paint.Style
-import android.graphics.Path
-import android.graphics.Typeface
 import android.view.View
 import uk.co.sundroid.domain.MapType
+import uk.co.sundroid.util.astro.math.SunCalculator
 
 
 class TrackerImage(val style: TrackerStyle, val context: Context, val location: LatitudeLongitude) {
@@ -33,7 +28,9 @@ class TrackerImage(val style: TrackerStyle, val context: Context, val location: 
         val TAG: String = TrackerImage::class.java.name
     }
 
-    class TrackerStyle(val cardinals: Int, val circles: Int, val day: Int, val golden: Int, val night: Int, val nightLine: Int,
+    class TrackerStyle(val cardinals: Int, val circles: Int, val day: Int, val golden: Int,
+                       val civ: Int, val ntc: Int, val ast: Int,
+                       val night: Int, val nightLine: Int,
                        val bodyRisen: Int, val bodySet: Int, val stroke: Int, val markerStroke: Int, val dash: Array<Float>, val isRadar: Boolean) {
 
         companion object {
@@ -42,28 +39,34 @@ class TrackerImage(val style: TrackerStyle, val context: Context, val location: 
                     Color.argb(255, 0, 0, 0),
                     Color.argb(100, 0, 0, 0),
                     Color.argb(255, 255, 204, 0),
-                    Color.argb(255, 255, 168, 0),
+                    Color.argb(255, 255, 157, 0),
+                    Color.argb(255, 99, 116, 166),
                     Color.argb(255, 72, 90, 144),
-                    Color.argb(255, 72, 90, 144),
+                    Color.argb(255, 47, 65, 119),
+                    Color.argb(255, 26, 41, 88),
+                    Color.argb(255, 26, 41, 88),
                     Color.argb(255, 255, 204, 0),
                     Color.argb(255, 72, 90, 144),
                     3,
                     2,
-                    arrayOf(2f, 2f),
+                    arrayOf(4f, 6f),
                     false
             )
             private val SATELLITE_MAP: TrackerStyle = TrackerStyle(
                     Color.argb(255, 255, 255, 255),
                     Color.argb(150, 255, 255, 255),
-                    Color.argb(255, 255, 222, 107),
-                    Color.argb(255, 255, 198, 0),
-                    Color.argb(255, 129, 161, 241),
-                    Color.argb(255, 129, 161, 241),
-                    Color.argb(255, 255, 255, 255),
-                    Color.argb(255, 129, 161, 241),
+                    Color.argb(255, 255, 204, 0),
+                    Color.argb(255, 255, 157, 0),
+                    Color.argb(255, 99, 116, 166),
+                    Color.argb(255, 72, 90, 144),
+                    Color.argb(255, 47, 65, 119),
+                    Color.argb(255, 26, 41, 88),
+                    Color.argb(255, 26, 41, 88),
+                    Color.argb(255, 255, 204, 0),
+                    Color.argb(255, 72, 90, 144),
                     3,
                     2,
-                    arrayOf(2f, 2f),
+                    arrayOf(4f, 6f),
                     false
             )
 
@@ -145,7 +148,7 @@ class TrackerImage(val style: TrackerStyle, val context: Context, val location: 
         }
         val bitmap = createBitmap()
         
-        val padding = size(17)
+        val padding = size(25)
         val size = bitmap.width
         val outerRadius = (size - (2 * padding))/2
         val centerX = (size/2f)
@@ -199,7 +202,7 @@ class TrackerImage(val style: TrackerStyle, val context: Context, val location: 
             
         } else {
             
-            paint.style = Style.STROKE
+            paint.style = Style.FILL
             
             val position = BodyPositionCalculator.calcPosition(body, location, timeCalendar)
 
@@ -215,10 +218,18 @@ class TrackerImage(val style: TrackerStyle, val context: Context, val location: 
             }
                 
             paint.strokeWidth = size(style.stroke)
-            val color = getElevationColor(position.appElevation, true)
-            paint.color = color
+            val lineColor = getElevationColor(position.appElevation, true)
+            val bodyColor = getElevationColor(90.0, true)
+            paint.color = lineColor
             canvas.drawLine(centerX, centerY, centerX + x, centerY - y, paint)
-            canvas.drawCircle(centerX + x, centerY - y, size(7), paint)
+            paint.color = appBackground()
+            if (style.isRadar) {
+                canvas.drawCircle(centerX + x, centerY - y, size(8), paint)
+            } else {
+                canvas.drawCircle(centerX + x, centerY - y, size(7), paint)
+            }
+            paint.color = bodyColor
+            canvas.drawCircle(centerX + x, centerY - y, size(6), paint)
             
         }
         
@@ -236,7 +247,7 @@ class TrackerImage(val style: TrackerStyle, val context: Context, val location: 
         }
         val bitmap = createBitmap()
         
-        val padding = size(17)
+        val padding = size(25)
         val size = bitmap.width.toFloat()
         val outerRadius = (size - (2 * padding))/2
         val fontSize = size(14)
@@ -248,7 +259,7 @@ class TrackerImage(val style: TrackerStyle, val context: Context, val location: 
         paint.color = style.circles
         paint.style = Style.STROKE
         paint.isAntiAlias = true
-        paint.strokeWidth = 0F
+        paint.strokeWidth = size(1)
 
         (0 until 90 step 15)
                 .map { if (linearElevation) (outerRadius - ((Math.abs(it)/90.0) * outerRadius)).toFloat() else (Math.cos(degToRad(it.toDouble())) * outerRadius).toFloat() }
@@ -267,9 +278,9 @@ class TrackerImage(val style: TrackerStyle, val context: Context, val location: 
         textPaint.color = style.cardinals
         
         canvas.drawText(if (magneticBearings) "N(M)" else "N(T)", (size/2), size(12), textPaint)
-        canvas.drawText("S", size/2, size - size(2), textPaint)
-        canvas.drawText("E", size - 10, size/2 + size(5), textPaint)
-        canvas.drawText("W", 10F, size/2 + size(5), textPaint)
+        canvas.drawText("S", size/2, size - size(4), textPaint)
+        canvas.drawText("E", size - size(10), size/2 + size(5), textPaint)
+        canvas.drawText("W", size(10), size/2 + size(5), textPaint)
         
         paint.color = style.circles
         for (az in 0 until 360 step 45) {
@@ -300,34 +311,59 @@ class TrackerImage(val style: TrackerStyle, val context: Context, val location: 
             loopCalendar.add(Calendar.MINUTE, 10)
             
             // Get rise/set events that happen on this calendar day, midnight to midnight.
-            val eventsSet = TreeSet<Event>()
+            val riseSetEventsSet = TreeSet<Event>()
+            val otherEventsSet = TreeSet<Event>()
+            val riseTimesSet = TreeSet<Long>()
+            val setTimesSet = TreeSet<Long>()
             val dayLoopCalendar = clone(dateCalendar)
             dayLoopCalendar.add(Calendar.DAY_OF_MONTH, -1)
-            var riseTime = 0L
-            var setTime = 0L
+
             for (i in 0 until 3) {
                 val bodyDay = BodyPositionCalculator.calcDay(body, location, dayLoopCalendar, false)
                 val rise = bodyDay.rise
-                if (rise != null && isSameDay(rise, dateCalendar) && eventsSet.size < 2) {
-                    eventsSet.add(Event(rise, bodyDay.riseAzimuth))
-                    riseTime = rise.timeInMillis
+                if (rise != null && isSameDay(rise, dateCalendar) && riseSetEventsSet.size < 2) {
+                    val e = Event(rise, bodyDay.riseAzimuth)
+                    otherEventsSet.add(e)
+                    riseSetEventsSet.add(e)
+                    riseTimesSet.add(rise.timeInMillis)
                 }
                 val set = bodyDay.set
-                if (set != null && isSameDay(set, dateCalendar) && eventsSet.size < 2) {
-                    eventsSet.add(Event(set, bodyDay.setAzimuth))
-                    setTime = set.timeInMillis
+                if (set != null && isSameDay(set, dateCalendar) && riseSetEventsSet.size < 2) {
+                    val e = Event(set, bodyDay.setAzimuth)
+                    otherEventsSet.add(e)
+                    riseSetEventsSet.add(e)
+                    setTimesSet.add(set.timeInMillis)
                 }
+                // FIXME could be combined into rise/set list
+                if (body == Body.SUN) {
+                    val twilightsDay = SunCalculator.calcDay(location, dayLoopCalendar, SunCalculator.Event.CIVIL, SunCalculator.Event.NAUTICAL, SunCalculator.Event.ASTRONOMICAL, SunCalculator.Event.GOLDENHOUR)
+                    for (event in twilightsDay.eventUp.values) {
+                        if (isSameDay(event.time, dateCalendar)) {
+                            otherEventsSet.add(Event(event.time, event.azimuth!!))
+                            riseTimesSet.add(event.time.timeInMillis)
+                        }
+                    }
+                    for (event in twilightsDay.eventDown.values) {
+                        if (isSameDay(event.time, dateCalendar)) {
+                            otherEventsSet.add(Event(event.time, event.azimuth!!))
+                            setTimesSet.add(event.time.timeInMillis)
+                        }
+                    }
+                }
+
                 dayLoopCalendar.add(Calendar.DAY_OF_MONTH, 1)
             }
             
             // Determine calculated times in advance so sunrise and sunset can be inserted in order.
             val calcTimes = TreeSet<Long>()
+            calcTimes.add(loopCalendar.timeInMillis)
             do {
                 loopCalendar.add(Calendar.MINUTE, 10)
                 calcTimes.add(loopCalendar.timeInMillis)
             } while (loopCalendar.get(Calendar.DAY_OF_YEAR) == dateCalendar.get(Calendar.DAY_OF_YEAR))
-            eventsSet.mapTo(calcTimes) { it.time.timeInMillis }
-            
+            riseSetEventsSet.mapTo(calcTimes) { it.time.timeInMillis }
+            otherEventsSet.mapTo(calcTimes) { it.time.timeInMillis }
+
             var prevX = x
             var prevY = y
             
@@ -339,14 +375,15 @@ class TrackerImage(val style: TrackerStyle, val context: Context, val location: 
                 apparentRadius = if (linearElevation) (outerRadius - ((Math.abs(position.appElevation)/90.0) * outerRadius)).toFloat() else (Math.cos(degToRad(position.appElevation)) * outerRadius).toFloat()
                 x = (Math.sin(degToRad(position.azimuth)) * apparentRadius).toFloat()
                 y = (Math.cos(degToRad(position.azimuth)) * apparentRadius).toFloat()
-                
-                var thisColor = getElevationColor(position.appElevation, false)
-                if (calcTime == riseTime) {
-                    thisColor = if (body == Body.SUN) style.golden else style.bodyRisen
-                } else if (calcTime == setTime) {
-                    thisColor = if (body == Body.SUN) style.night else style.bodySet
+
+                var nudge = 0.0
+                if (calcTime in riseTimesSet) {
+                    nudge = 0.1
+                } else if (calcTime in setTimesSet) {
+                    nudge = -0.1
                 }
-                
+                val thisColor = getElevationColor(position.appElevation + nudge, false)
+
                 if (loopCalendar.get(Calendar.MINUTE) == 0 && hourMarkers) {
                     // Draw lines across the path at a tangent to the line from the previous
                     // point. Could improve slightly by averaging next point as well.
@@ -363,11 +400,11 @@ class TrackerImage(val style: TrackerStyle, val context: Context, val location: 
                     if (!style.isRadar) {
                         val color = paint.color
                         paint.color = Color.argb(100, 0, 0, 0)
-                        paint.strokeWidth = size(style.markerStroke + 2)
+                        paint.strokeWidth = size(style.markerStroke + 1)
                         canvas.drawLine((centerX + x) + markX, (centerY - y) + markY, (centerX + x) - markX, (centerY - y) - markY, paint)
                         paint.color = color
                     }
-    
+
                     paint.strokeWidth = size(style.markerStroke)
                     canvas.drawLine((centerX + x) + markX, (centerY - y) + markY, (centerX + x) - markX, (centerY - y) - markY, paint)
                     paint.strokeWidth = size(style.stroke)
@@ -378,6 +415,13 @@ class TrackerImage(val style: TrackerStyle, val context: Context, val location: 
                 
                 if (thisColor != currentColor) {
                     path.lineTo(centerX + x, centerY - y)
+                    paint.alpha = 50
+                    paint.maskFilter = BlurMaskFilter(size(style.stroke * 6), BlurMaskFilter.Blur.NORMAL)
+                    paint.strokeWidth = size(style.stroke * 8)
+                    canvas.drawPath(path, paint)
+                    paint.alpha = 255
+                    paint.maskFilter = null
+                    paint.strokeWidth = size(style.stroke)
                     canvas.drawPath(path, paint)
                     paths[path] = currentColor
                     currentColor = thisColor
@@ -410,7 +454,7 @@ class TrackerImage(val style: TrackerStyle, val context: Context, val location: 
             
             paint.pathEffect = DashPathEffect(style.dash.toFloatArray(), 0F)
             
-            for (event in eventsSet) {
+            for (event in riseSetEventsSet) {
                 x = (Math.sin(degToRad(event.azimuth)) * outerRadius).toFloat()
                 y = (Math.cos(degToRad(event.azimuth)) * outerRadius).toFloat()
                 
@@ -426,6 +470,23 @@ class TrackerImage(val style: TrackerStyle, val context: Context, val location: 
                 paint.color = if (body == Body.SUN) style.golden else style.bodyRisen
                 canvas.drawLine(centerX, centerY, centerX + x, centerY - y, paint)
             }
+
+//            for (event in otherEventsSet) {
+//                x = (Math.sin(degToRad(event.azimuth)) * outerRadius).toFloat()
+//                y = (Math.cos(degToRad(event.azimuth)) * outerRadius).toFloat()
+//
+//                if (!style.isRadar) {
+//                    paint.pathEffect = null
+//                    paint.strokeWidth = size(style.stroke + 1)
+//                    paint.color = Color.argb(50, 0, 0, 0)
+//                    canvas.drawLine(centerX, centerY, centerX + x, centerY - y, paint)
+//                }
+//
+//                paint.pathEffect = DashPathEffect(style.dash.toFloatArray(), 0F)
+//                paint.strokeWidth = 0.5f
+//                paint.color = if (body == Body.SUN) style.golden else style.bodyRisen
+//                canvas.drawLine(centerX, centerY, centerX + x, centerY - y, paint)
+//            }
             
         }
 
@@ -445,12 +506,18 @@ class TrackerImage(val style: TrackerStyle, val context: Context, val location: 
     private fun getElevationColor(elevation: Double, line: Boolean): Int {
         when (body) {
             Body.SUN -> {
-                if (elevation >= 6) {
-                    return style.day
-                } else if (elevation >= -0.833) {
+                if (elevation < -18) {
+                    return if (line) style.nightLine else style.night
+                } else if (elevation < -12) {
+                    return style.ast
+                } else if (elevation < -6) {
+                    return style.ntc
+                } else if (elevation <= -0.833) {
+                    return style.civ
+                } else if (elevation < 6) {
                     return style.golden
                 }
-                return if (line) style.nightLine else style.night
+                return style.day
             }
             Body.MOON -> {
                 if (elevation >= -0.5) {

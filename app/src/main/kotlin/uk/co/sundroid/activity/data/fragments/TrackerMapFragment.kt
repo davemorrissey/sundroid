@@ -11,10 +11,10 @@ import com.google.android.gms.maps.model.LatLng
 import uk.co.sundroid.domain.LocationDetails
 import uk.co.sundroid.util.prefs.Prefs
 
-class TrackerMapFragment : SupportMapFragment() {
+class TrackerMapFragment(location: LocationDetails, mapCenterListener: MapCenterListener) : SupportMapFragment() {
 
-    private var location: LocationDetails? = null
-    private var mapCenterListener: MapCenterListener? = null
+    private var location: LocationDetails? = location
+    private var mapCenterListener: MapCenterListener? = mapCenterListener
 
     @FunctionalInterface
     interface MapCenterListener {
@@ -23,18 +23,9 @@ class TrackerMapFragment : SupportMapFragment() {
 
     }
 
-
-//    constructor()
-
-//    constructor(location: LocationDetails, mapCenterListener: MapCenterListener) {
-//        retainInstance = true
-//        this.location = location
-//        this.mapCenterListener = mapCenterListener
-//    }
-//
-//    override fun setArguments(p0: Bundle?) {
-//        super.setArguments(p0)
-//    }
+    init {
+        retainInstance = true
+    }
 
     override fun onCreateView(layoutInflater: LayoutInflater, viewGroup: ViewGroup?, bundle: Bundle?): View? {
         val view = super.onCreateView(layoutInflater, viewGroup, bundle)
