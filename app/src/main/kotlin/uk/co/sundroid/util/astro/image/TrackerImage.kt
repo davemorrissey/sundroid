@@ -394,7 +394,8 @@ class TrackerImage(val style: TrackerStyle, val context: Context, val location: 
                         tx = (centerX + markCX) - (4 * markX)
                         ty = (centerY - markCY) - (4 * markY)
                     }
-                    markers.add(Marker(loopCalendar.get(Calendar.HOUR_OF_DAY), thisColor, x1, y1, x2, y2, tx, ty))
+                    val label = if (loopCalendar.get(Calendar.DAY_OF_YEAR) == dateCalendar.get(Calendar.DAY_OF_YEAR) || body == Body.MOON) "${loopCalendar.get(Calendar.HOUR_OF_DAY)}" else ""
+                    markers.add(Marker(loopCalendar.get(Calendar.HOUR_OF_DAY), label, thisColor, x1, y1, x2, y2, tx, ty))
                 }
                 
                 if (thisColor != currentColor) {
@@ -450,8 +451,8 @@ class TrackerImage(val style: TrackerStyle, val context: Context, val location: 
                 paint.color = m.color
                 canvas.drawLine(m.x1, m.y1, m.x2, m.y2, paint)
                 if (m.hour % 1 == 0) {
-                    val hour = "${m.hour}"
-                    textPaint.getTextBounds(hour, 0, hour.length, bounds)
+                    val label = m.label
+                    textPaint.getTextBounds(label, 0, label.length, bounds)
                     if (!style.isRadar) {
                         textPaint.color = style.hourShadow
                         textPaint.maskFilter = BlurMaskFilter(size(2), BlurMaskFilter.Blur.NORMAL)
@@ -459,7 +460,7 @@ class TrackerImage(val style: TrackerStyle, val context: Context, val location: 
                         textPaint.maskFilter = null
                     }
                     textPaint.color = style.hourText
-                    canvas.drawText("${m.hour}", m.tx, m.ty + (bounds.height() / 2), textPaint)
+                    canvas.drawText(label, m.tx, m.ty + (bounds.height() / 2), textPaint)
                 }
             }
             paint.strokeCap = cap
@@ -560,7 +561,7 @@ class TrackerImage(val style: TrackerStyle, val context: Context, val location: 
         return (Math.PI * angleDeg / 180.0)
     }
 
-    private class Marker(val hour: Int, val color: Int, val x1: Float, val y1: Float, val x2: Float, val y2: Float, val tx: Float, val ty: Float)
+    private class Marker(val hour: Int, val label: String, val color: Int, val x1: Float, val y1: Float, val x2: Float, val y2: Float, val tx: Float, val ty: Float)
     private class PathSegment(val path: Path, val color: Int, val glowAlpha: Int)
 
     private fun distance(
