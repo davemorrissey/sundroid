@@ -1,5 +1,6 @@
 package uk.co.sundroid.activity.location
 
+import android.app.Activity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +8,7 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import kotlinx.android.synthetic.main.loc_search.*
@@ -22,6 +24,7 @@ import java.util.*
 import uk.co.sundroid.util.view.SimpleAlertFragment.Companion.show as showAlert
 import uk.co.sundroid.util.view.SimpleProgressFragment.Companion.close as closeProgress
 import uk.co.sundroid.util.view.SimpleProgressFragment.Companion.show as showProgress
+
 
 class LocationSearchFragment : AbstractFragment() {
 
@@ -49,7 +52,11 @@ class LocationSearchFragment : AbstractFragment() {
         searchList.setOnItemClickListener { parent, _, position, _ -> run {
             onLocationSelected(parent.getItemAtPosition(position) as LocationDetails)
         }}
-        searchSubmit.setOnClickListener { startSearch() }
+        searchSubmit.setOnClickListener { v ->
+            val imm = requireActivity().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(v.windowToken, 0)
+            startSearch()
+        }
         searchField.setOnEditorActionListener { _, id, _ -> if (id == EditorInfo.IME_ACTION_SEARCH) startSearch(); true }
     }
 
