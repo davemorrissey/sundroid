@@ -13,19 +13,17 @@ import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.TimePicker
 import kotlinx.android.synthetic.main.inc_timebar.*
-import uk.co.sundroid.R
+import kotlinx.android.synthetic.main.inc_timebar.dateButton
+import kotlinx.android.synthetic.main.inc_timebar.dateDMY
+import kotlinx.android.synthetic.main.inc_timebar.dateWeekday
+import kotlinx.android.synthetic.main.inc_timebar.zoneButton
 import uk.co.sundroid.activity.Page
-import uk.co.sundroid.domain.LocationDetails
-import uk.co.sundroid.util.isNotEmpty
-import uk.co.sundroid.util.log.e
-import uk.co.sundroid.util.prefs.Prefs
 import uk.co.sundroid.util.time.formatTimeStr
 import uk.co.sundroid.util.view.ButtonDragGestureDetector
 import uk.co.sundroid.util.view.ButtonDragGestureDetector.ButtonDragGestureDetectorListener
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.Calendar.DAY_OF_MONTH
-import java.util.Calendar.DAY_OF_YEAR
 import java.util.Calendar.MONTH
 import java.util.Calendar.MINUTE
 import java.util.Calendar.HOUR_OF_DAY
@@ -38,84 +36,46 @@ abstract class AbstractTimeFragment : AbstractDataFragment(), OnSeekBarChangeLis
 
     protected abstract val layout: Int
 
-    protected abstract fun initialise(location: LocationDetails, dateCalendar: Calendar, timeCalendar: Calendar, view: View)
-
-    protected abstract fun update(location: LocationDetails, dateCalendar: Calendar, timeCalendar: Calendar, view: View, timeOnly: Boolean)
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, state: Bundle?): View? {
-        if (container == null) {
-            return null
-        }
         return inflater.inflate(layout, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        safeInitialise(view)
-        safeUpdate(view, false)
+        initGestures()
+        updateDate()
+        updateTime()
+        initialise()
+        updateData(view, false)
     }
 
-    override fun initialise() {
-        if (view != null) {
-            safeInitialise(view)
-        }
-    }
-
-    override fun update() {
-        if (view != null) {
-            safeUpdate(view, false)
+    override fun update(dateChanged: Boolean, timeChanged: Boolean) {
+        val view = view
+        if (isSafe && view != null) {
+            initGestures()
+            updateDate()
+            updateTime()
+            updateData(view, !dateChanged)
         }
     }
 
     private fun onDateSet(year: Int, month: Int, date: Int) {
         getDateCalendar().set(year, month, date)
         getTimeCalendar().set(year, month, date)
-        update()
+        update(dateChanged = true, timeChanged = false)
     }
 
     private fun onTimeSet(hour: Int, minute: Int) {
         getTimeCalendar().set(HOUR_OF_DAY, hour)
         getTimeCalendar().set(MINUTE, minute)
-        update()
-    }
-
-    private fun safeInitialise(view: View?) {
-        val location = getLocation()
-        val dateCalendar = getDateCalendar()
-        val timeCalendar = getTimeCalendar()
-        try {
-            if (view != null && !isDetached) {
-                initGestures()
-                updateDateAndTime(view, dateCalendar, timeCalendar)
-                initialise(location, dateCalendar, timeCalendar, view)
-            }
-        } catch (e: Exception) {
-            e(TAG, "Failed to init data view", e)
-        }
-
-    }
-
-    private fun safeUpdate(view: View?, timeOnly: Boolean) {
-        val location = getLocation()
-        val dateCalendar = getDateCalendar()
-        val timeCalendar = getTimeCalendar()
-        try {
-            if (view != null && !isDetached) {
-                updateDateAndTime(view, dateCalendar, timeCalendar)
-                update(location, dateCalendar, timeCalendar, view, timeOnly)
-            }
-        } catch (e: Exception) {
-            e(TAG, "Failed to update data view", e)
-        }
-
+        update(dateChanged = false, timeChanged = true)
     }
 
     private fun initGestures() {
         val dateListener = object : ButtonDragGestureDetectorListener {
-            override fun onButtonDragUp() = changeCalendars(MONTH, -1)
-            override fun onButtonDragDown() = changeCalendars(MONTH, 1)
-            override fun onButtonDragLeft() = changeCalendars(DAY_OF_MONTH, -1)
-            override fun onButtonDragRight() = changeCalendars(DAY_OF_MONTH, 1)
+            override fun onButtonDragUp() = calendarDiff(MONTH, -1)
+            override fun onButtonDragDown() = calendarDiff(MONTH, 1)
+            override fun onButtonDragLeft() = calendarDiff(DAY_OF_MONTH, -1)
+            override fun onButtonDragRight() = calendarDiff(DAY_OF_MONTH, 1)
         }
         val dateDetector = GestureDetector(requireContext(), ButtonDragGestureDetector(dateListener, requireContext()))
         zoneButton.setOnClickListener { setPage(Page.TIME_ZONE) }
@@ -123,10 +83,10 @@ abstract class AbstractTimeFragment : AbstractDataFragment(), OnSeekBarChangeLis
         dateButton.setOnTouchListener { _, e -> dateDetector.onTouchEvent(e) }
 
         val timeListener = object : ButtonDragGestureDetectorListener {
-            override fun onButtonDragUp() = prevHour()
-            override fun onButtonDragDown() = nextHour()
-            override fun onButtonDragLeft() = prevMinute()
-            override fun onButtonDragRight() = nextMinute()
+            override fun onButtonDragUp() = calendarDiff(HOUR_OF_DAY, -1)
+            override fun onButtonDragDown() = calendarDiff(HOUR_OF_DAY, 1)
+            override fun onButtonDragLeft() = calendarDiff(MINUTE, -1)
+            override fun onButtonDragRight() = calendarDiff(MINUTE, 1)
         }
         val timeDetector = GestureDetector(requireContext(), ButtonDragGestureDetector(timeListener, requireContext()))
         timeButton.setOnClickListener { showTimePicker() }
@@ -134,41 +94,22 @@ abstract class AbstractTimeFragment : AbstractDataFragment(), OnSeekBarChangeLis
         timeSeeker.setOnSeekBarChangeListener(this)
     }
 
-    private fun updateDateAndTime(view: View?, dateCalendar: Calendar, timeCalendar: Calendar) {
-        val location = getLocation()
-        if (view == null) {
-            return
-        }
+    private fun updateDate() {
+        updateTimeZone()
+        val calendar = getDateCalendar()
+        dateFormat.timeZone = calendar.timeZone
+        weekdayFormat.timeZone = calendar.timeZone
+        val date = dateFormat.format(Date(calendar.timeInMillis))
+        val weekday = weekdayFormat.format(Date(calendar.timeInMillis))
+        dateDMY.text = date
+        dateWeekday.text = weekday
+    }
 
-
-        if (Prefs.showTimeZone(requireContext())) {
-            show(view, R.id.zoneButton)
-            val zone = location.timeZone!!.zone
-            val zoneDST = zone.inDaylightTime(Date(dateCalendar.timeInMillis + 12 * 60 * 60 * 1000))
-            val zoneName = zone.getDisplayName(zoneDST, TimeZone.LONG)
-            text(view, R.id.zoneName, zoneName)
-
-            var zoneCities = location.timeZone!!.getOffset(dateCalendar.timeInMillis + 12 * 60 * 60 * 1000) // Get day's main offset.
-            if (isNotEmpty(location.timeZone!!.cities)) {
-                zoneCities += " " + location.timeZone!!.cities!!
-            }
-            text(view, R.id.zoneCities, zoneCities)
-        } else {
-            remove(view, R.id.zoneButton)
-        }
-
-        val time = formatTimeStr(requireContext(), timeCalendar, allowSeconds = false, allowRounding = false)
-        show(view, R.id.timeHM, time)
-
-        dateFormat.timeZone = dateCalendar.timeZone
-        weekdayFormat.timeZone = dateCalendar.timeZone
-        val date = dateFormat.format(Date(dateCalendar.timeInMillis))
-        val weekday = weekdayFormat.format(Date(dateCalendar.timeInMillis))
-        show(view, R.id.dateDMY, date)
-        show(view, R.id.dateWeekday, weekday)
-
-        val minutes = timeCalendar.get(HOUR_OF_DAY) * 60 + timeCalendar.get(MINUTE)
-        (view.findViewById<View>(R.id.timeSeeker) as SeekBar).progress = minutes
+    private fun updateTime() {
+        val calendar = getTimeCalendar()
+        val time = formatTimeStr(requireContext(), calendar, allowSeconds = false, allowRounding = false)
+        timeHM.text = time
+        timeSeeker.progress = calendar.get(HOUR_OF_DAY) * 60 + calendar.get(MINUTE)
     }
 
     private fun showDatePicker() {
@@ -191,90 +132,15 @@ abstract class AbstractTimeFragment : AbstractDataFragment(), OnSeekBarChangeLis
 
     override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
         if (fromUser) {
-            val hours = progress / 60
-            val minutes = progress - hours * 60
-            getTimeCalendar().set(HOUR_OF_DAY, hours)
-            getTimeCalendar().set(MINUTE, minutes)
-            safeUpdate(view, false)
+            val hour = progress / 60
+            val minute = progress - hour * 60
+            onTimeSet(hour, minute)
         }
     }
 
-    override fun onStartTrackingTouch(seekBar: SeekBar) {
-        // No action.
-    }
+    override fun onStartTrackingTouch(seekBar: SeekBar) { }
+    override fun onStopTrackingTouch(seekBar: SeekBar) { }
 
-    override fun onStopTrackingTouch(seekBar: SeekBar) {
-        // No action.
-    }
-
-    private fun changeCalendars(field: Int, diff: Int) {
-        arrayOf(getDateCalendar(), getTimeCalendar()).forEach { it.add(field, diff) }
-        update()
-    }
-
-    private fun nextMinute() {
-        if (view != null) {
-            val dayOfYear = getTimeCalendar().get(DAY_OF_YEAR)
-            getTimeCalendar().add(MINUTE, 1)
-            val minutes = getTimeCalendar().get(HOUR_OF_DAY) * 60 + getTimeCalendar().get(MINUTE)
-            (view!!.findViewById<View>(R.id.timeSeeker) as SeekBar).progress = minutes
-            if (getTimeCalendar().get(DAY_OF_YEAR) != dayOfYear) {
-                getDateCalendar().add(DAY_OF_MONTH, 1)
-                safeUpdate(view, false)
-            } else {
-                safeUpdate(view, true)
-            }
-        }
-    }
-
-    private fun prevMinute() {
-        if (view != null) {
-            val dayOfYear = getTimeCalendar().get(DAY_OF_YEAR)
-            getTimeCalendar().add(MINUTE, -1)
-            val minutes = getTimeCalendar().get(HOUR_OF_DAY) * 60 + getTimeCalendar().get(MINUTE)
-            (view!!.findViewById<View>(R.id.timeSeeker) as SeekBar).progress = minutes
-            if (getTimeCalendar().get(DAY_OF_YEAR) != dayOfYear) {
-                getDateCalendar().add(DAY_OF_MONTH, -1)
-                safeUpdate(view, false)
-            } else {
-                safeUpdate(view, true)
-            }
-        }
-    }
-
-    private fun nextHour() {
-        if (view != null) {
-            val dayOfYear = getTimeCalendar().get(DAY_OF_YEAR)
-            getTimeCalendar().add(HOUR_OF_DAY, 1)
-            val minutes = getTimeCalendar().get(HOUR_OF_DAY) * 60 + getTimeCalendar().get(MINUTE)
-            (view!!.findViewById<View>(R.id.timeSeeker) as SeekBar).progress = minutes
-            if (getTimeCalendar().get(DAY_OF_YEAR) != dayOfYear) {
-                getDateCalendar().add(DAY_OF_MONTH, 1)
-                safeUpdate(view, false)
-            } else {
-                safeUpdate(view, true)
-            }
-        }
-    }
-
-    private fun prevHour() {
-        if (view != null) {
-            val dayOfYear = getTimeCalendar().get(DAY_OF_YEAR)
-            getTimeCalendar().add(HOUR_OF_DAY, -1)
-            val minutes = getTimeCalendar().get(HOUR_OF_DAY) * 60 + getTimeCalendar().get(MINUTE)
-            (view!!.findViewById<View>(R.id.timeSeeker) as SeekBar).progress = minutes
-            if (getTimeCalendar().get(DAY_OF_YEAR) != dayOfYear) {
-                getDateCalendar().add(DAY_OF_MONTH, -1)
-                safeUpdate(view, false)
-            } else {
-                safeUpdate(view, true)
-            }
-        }
-    }
-
-    companion object {
-
-        private val TAG = AbstractTimeFragment::class.java.simpleName
-    }
+    protected abstract fun updateData(view: View, timeOnly: Boolean)
 
 }

@@ -47,7 +47,7 @@ abstract class AbstractYearFragment : AbstractDataFragment(), OnClickListener, O
         }
     }
 
-    override fun update() {
+    override fun update(dateChanged: Boolean, timeChanged: Boolean) {
         if (view != null) {
             safeUpdate(view)
         }

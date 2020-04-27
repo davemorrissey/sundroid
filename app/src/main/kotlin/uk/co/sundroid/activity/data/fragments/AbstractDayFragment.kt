@@ -35,7 +35,7 @@ abstract class AbstractDayFragment : AbstractDataFragment() {
         updateData(view)
     }
 
-    override fun update() {
+    override fun update(dateChanged: Boolean, timeChanged: Boolean) {
         val view = view
         if (isSafe && view != null) {
             initGestures()

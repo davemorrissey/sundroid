@@ -18,9 +18,7 @@ class TrackerMapFragment(location: LocationDetails, mapCenterListener: MapCenter
 
     @FunctionalInterface
     interface MapCenterListener {
-
         fun setLocationPoint(point: Point)
-
     }
 
     init {

@@ -10,6 +10,7 @@ import uk.co.sundroid.util.log.e
 import uk.co.sundroid.util.prefs.Prefs
 import uk.co.sundroid.util.time.TimeZoneResolver
 import java.util.*
+import java.util.Calendar.*
 
 /**
  * Parent class for fragments that show data.
@@ -37,13 +38,26 @@ abstract class AbstractDataFragment : AbstractFragment(), OnViewPrefsChangedList
     }
 
     fun calendarDiff(field: Int, diff: Int) {
-        arrayOf(getDateCalendar(), getTimeCalendar()).forEach { it.add(field, diff) }
-        update()
+        var dateChanged = false
+        var timeChanged = false
+        if (field == DAY_OF_MONTH || field == MONTH || field == YEAR) {
+            dateChanged = true
+            arrayOf(getDateCalendar(), getTimeCalendar()).forEach { it.add(field, diff) }
+        } else if (field == MINUTE || field == HOUR_OF_DAY) {
+            val dayOfYear = getTimeCalendar().get(DAY_OF_YEAR)
+            getTimeCalendar().add(field, diff)
+            timeChanged = true
+            if (getTimeCalendar().get(DAY_OF_YEAR) != dayOfYear) {
+                getDateCalendar().add(DAY_OF_MONTH, if (diff > 0) 1 else -1)
+                dateChanged = true
+            }
+        }
+        update(dateChanged, timeChanged)
     }
 
     fun calendarSet(year: Int, month: Int, day: Int) {
         arrayOf(getDateCalendar(), getTimeCalendar()).forEach { it.set(year, month, day) }
-        update()
+        update(dateChanged = true, timeChanged = false)
     }
 
     protected fun updateTimeZone() {
@@ -69,7 +83,7 @@ abstract class AbstractDataFragment : AbstractFragment(), OnViewPrefsChangedList
 
     open fun initialise() {}
 
-    open fun update() {}
+    open fun update(dateChanged: Boolean = true, timeChanged: Boolean = true) {}
 
     override fun onViewPrefsUpdated() {
         try {

@@ -43,7 +43,7 @@ abstract class AbstractDayDetailFragment : AbstractDataFragment() {
         update()
     }
 
-    override fun update() {
+    override fun update(dateChanged: Boolean, timeChanged: Boolean) {
         val view = view
         if (isSafe && view != null) {
             updateData(view)

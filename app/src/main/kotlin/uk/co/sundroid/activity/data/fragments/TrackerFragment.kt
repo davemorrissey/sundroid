@@ -6,22 +6,19 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
-import android.os.Bundle
 import android.os.Handler
 import android.view.Surface
 import android.view.View
-import android.view.ViewGroup
-import android.view.ViewGroup.LayoutParams
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.WindowManager
 import uk.co.sundroid.R
 import uk.co.sundroid.activity.MainActivity
 import uk.co.sundroid.activity.data.fragments.dialogs.settings.TrackerSettingsFragment
-import uk.co.sundroid.util.astro.image.TrackerImageView
 import uk.co.sundroid.util.astro.Body
 import uk.co.sundroid.util.astro.image.TrackerImage
 import uk.co.sundroid.util.astro.math.BodyPositionCalculator
 import uk.co.sundroid.util.geometry.*
-import uk.co.sundroid.domain.LocationDetails
 import uk.co.sundroid.util.prefs.Prefs
 import uk.co.sundroid.util.time.*
 
@@ -31,34 +28,21 @@ import java.util.concurrent.ArrayBlockingQueue
 import java.util.concurrent.BlockingQueue
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.TimeUnit
+import kotlinx.android.synthetic.main.frag_data_tracker.*
 
 class TrackerFragment : AbstractTimeFragment(), SensorEventListener, TrackerMapFragment.MapCenterListener {
 
-    private var trackerLcation: LocationDetails? = null
-    private var trackerDateCalendar: Calendar? = null
-    private var trackerTimeCalendar: Calendar? = null
-
-    private var compassActive: Boolean = false
-
     private var trackerImage: TrackerImage? = null
-    private var trackerImageView: TrackerImageView? = null
 
     private val handler = Handler()
-    private var executor: ThreadPoolExecutor? = null
-    private var queue: BlockingQueue<Runnable>? = null
+    private var queue: BlockingQueue<Runnable> = ArrayBlockingQueue(1)
+    private var executor: ThreadPoolExecutor = ThreadPoolExecutor(1, 1, 10000, TimeUnit.MILLISECONDS, queue)
 
     private var magneticDeclination = 0.0
     private var rotation: Int = 0
 
     override val layout: Int
         get() = R.layout.frag_data_tracker
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        queue = ArrayBlockingQueue(1)
-        executor = ThreadPoolExecutor(1, 1, 10000, TimeUnit.MILLISECONDS, queue)
-    }
 
     override fun onResume() {
         super.onResume()
@@ -70,21 +54,12 @@ class TrackerFragment : AbstractTimeFragment(), SensorEventListener, TrackerMapF
         (activity as MainActivity).apply {
             setViewConfigurationCallback({ openSettingsDialog() })
         }
-        if (compassActive) {
-            val sensorManager = requireContext().getSystemService(Activity.SENSOR_SERVICE) as SensorManager
-            val orientationSensors = sensorManager.getSensorList(Sensor.TYPE_ORIENTATION)
-            if (orientationSensors.isNotEmpty()) {
-                compassActive = sensorManager.registerListener(this, orientationSensors[0], SensorManager.SENSOR_DELAY_GAME)
-            }
-        }
         initialise()
+        registerCompass()
     }
 
     override fun onPause() {
-        if (compassActive) {
-            val sensorManager = requireContext().getSystemService(Activity.SENSOR_SERVICE) as SensorManager
-            sensorManager.unregisterListener(this)
-        }
+        unregisterCompass()
         val mapFragment = requireFragmentManager().findFragmentByTag(MAP_TAG)
         if (mapFragment != null) {
             requireFragmentManager()
@@ -95,54 +70,41 @@ class TrackerFragment : AbstractTimeFragment(), SensorEventListener, TrackerMapF
         super.onPause()
     }
 
-    override fun initialise(location: LocationDetails, dateCalendar: Calendar, timeCalendar: Calendar, view: View) {
-        this.trackerLcation = location
-        this.trackerDateCalendar = dateCalendar
-        this.trackerTimeCalendar = timeCalendar
-
+    override fun initialise() {
         val body = Prefs.sunTrackerBody(requireContext())
         val mode = Prefs.sunTrackerMode(requireContext())
         val mapType = Prefs.sunTrackerMapType(requireContext())
 
         if (mode == "radar" && Prefs.sunTrackerCompass(requireContext())) {
-            magneticDeclination = getMagneticDeclination(location.location, trackerDateCalendar!!)
+            magneticDeclination = getMagneticDeclination(getLocation().location, getDateCalendar())
         }
 
-        if (compassActive) {
-            val sensorManager = requireContext().getSystemService(Activity.SENSOR_SERVICE) as SensorManager
-            sensorManager.unregisterListener(this)
-        }
-        compassActive = false
+        unregisterCompass()
 
         if (Prefs.sunTrackerText(requireContext()) && body != null) {
-            show(view, R.id.trackerText)
+            modify(trackerText, visibility = VISIBLE)
         } else {
-            remove(view, R.id.trackerText)
+            modify(trackerText, visibility = GONE)
         }
 
-        trackerImage = TrackerImage(TrackerImage.TrackerStyle.forMode(mode, mapType), requireContext(), location.location)
-        trackerImage!!.setDate(trackerDateCalendar!!, trackerTimeCalendar!!)
-        trackerImageView = TrackerImageView(requireContext())
-        trackerImageView!!.setTrackerImage(trackerImage!!)
-        trackerImageView!!.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
+        trackerImage = TrackerImage(TrackerImage.TrackerStyle.forMode(mode, mapType), requireContext(), getLocation().location)
+        trackerImage!!.setDate(getDateCalendar(), getTimeCalendar())
+        trackerImageView.setTrackerImage(trackerImage!!)
 
         if (mode != "radar") {
+            modify(trackerMapContainer, visibility = VISIBLE)
+            modify(trackerRadarContainer, visibility = VISIBLE)
 
-            show(view, R.id.trackerMapContainer)
-
-            val mapFragment = TrackerMapFragment(location, this)
+            val mapFragment = TrackerMapFragment(getLocation(), this)
             requireFragmentManager()
                     .beginTransaction()
                     .replace(R.id.trackerMapContainer, mapFragment, MAP_TAG)
                     .commit()
-            show(view, R.id.trackerRadarContainer)
-
-            trackerImageView!!.setDirection(0f)
-
+            trackerImageView.setDirection(0f)
         } else {
-
-            remove(view, R.id.trackerMapContainer)
-            show(view, R.id.trackerRadarContainer)
+            modify(trackerMapContainer, visibility = GONE)
+            modify(trackerRadarContainer, visibility = VISIBLE)
+            trackerImageView.setCenter(Point(Int.MIN_VALUE, Int.MIN_VALUE))
 
             val mapFragment = requireFragmentManager().findFragmentByTag(MAP_TAG)
             if (mapFragment != null) {
@@ -153,29 +115,16 @@ class TrackerFragment : AbstractTimeFragment(), SensorEventListener, TrackerMapF
             }
 
             if (Prefs.sunTrackerCompass(requireContext())) {
-                val sensorManager = requireContext().getSystemService(Activity.SENSOR_SERVICE) as SensorManager
-                val orientationSensors = sensorManager.getSensorList(Sensor.TYPE_ORIENTATION)
-                if (orientationSensors.isNotEmpty()) {
-                    compassActive = sensorManager.registerListener(this, orientationSensors[0], SensorManager.SENSOR_DELAY_GAME)
-                }
+                registerCompass()
             } else {
-                trackerImageView!!.setDirection(0f)
+                trackerImageView.setDirection(0f)
             }
-
         }
 
-        // TODO Try embedding this view in the layout
-        (view.findViewById<View>(R.id.trackerRadarContainer) as ViewGroup).removeAllViews()
-        (view.findViewById<View>(R.id.trackerRadarContainer) as ViewGroup).addView(trackerImageView)
-
         startImageUpdate(false)
-
     }
 
-    override fun update(location: LocationDetails, dateCalendar: Calendar, timeCalendar: Calendar, view: View, timeOnly: Boolean) {
-        this.trackerLcation = location
-        this.trackerDateCalendar = dateCalendar
-        this.trackerTimeCalendar = timeCalendar
+    override fun updateData(view: View, timeOnly: Boolean) {
         startImageUpdate(timeOnly)
         setSubtitle()
     }
@@ -188,59 +137,48 @@ class TrackerFragment : AbstractTimeFragment(), SensorEventListener, TrackerMapF
         }
     }
 
-    fun openSettingsDialog() {
+    private fun openSettingsDialog() {
         val settingsDialog = TrackerSettingsFragment.newInstance()
         settingsDialog.setTargetFragment(this, 0)
         settingsDialog.show(requireFragmentManager(), "trackerSettings")
     }
 
     override fun onSensorChanged(event: SensorEvent) {
-        if (!isSafe) {
+        if (!isSafe || Prefs.sunTrackerMode(requireContext()) != "radar") {
             return
         }
-        val mode = Prefs.sunTrackerMode(requireContext())
-        if (mode != "radar") {
-            return
-        }
-        if (trackerImageView != null && Prefs.sunTrackerCompass(requireContext())) {
-            trackerImageView!!.setDirection(event.values[0] + rotation.toFloat() + java.lang.Double.valueOf(magneticDeclination).toFloat())
+        if (Prefs.sunTrackerCompass(requireContext())) {
+            trackerImageView.setDirection(event.values[0] + rotation.toFloat() + magneticDeclination.toFloat())
         }
     }
 
     override fun setLocationPoint(point: Point) {
-        if (trackerImageView != null) {
-            trackerImageView!!.setCenter(point)
-        }
+        trackerImageView.setCenter(point)
     }
 
     override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {
 
     }
 
-
     @Synchronized
     private fun startImageUpdate(timeOnly: Boolean) {
-        if (view == null || trackerDateCalendar == null || trackerTimeCalendar == null) {
-            return
-        }
-        val dateCalendar = clone(this.trackerDateCalendar!!)
-        val timeCalendar = clone(this.trackerTimeCalendar!!)
+        val dateCalendar = clone(getDateCalendar())
+        val timeCalendar = clone(getTimeCalendar())
         val body = Prefs.sunTrackerBody(requireContext())
 
-        if (trackerImage != null) {
+        trackerImage?.apply {
             if (timeOnly) {
-                trackerImage!!.setTime(timeCalendar)
+                setTime(timeCalendar)
             } else {
-                trackerImage!!.setDate(dateCalendar, timeCalendar)
+                setDate(dateCalendar, timeCalendar)
             }
         }
 
-        queue!!.clear()
-        executor!!.submit {
+        queue.clear()
+        executor.submit {
             if (isSafe) {
-
                 var eventsSet: MutableSet<Event>? = null
-                val position = if (body != null && Prefs.sunTrackerText(requireContext())) BodyPositionCalculator.calcPosition(body, trackerLcation!!.location, timeCalendar) else null
+                val position = if (body != null && Prefs.sunTrackerText(requireContext())) BodyPositionCalculator.calcPosition(body, getLocation().location, timeCalendar) else null
 
                 // Get the first two rise/set events that happen on this calendar day,
                 // midnight to midnight.
@@ -250,7 +188,7 @@ class TrackerFragment : AbstractTimeFragment(), SensorEventListener, TrackerMapF
                     val loopCalendar = clone(dateCalendar)
                     loopCalendar.add(Calendar.DAY_OF_MONTH, -1)
                     for (i in 0..2) {
-                        val bodyDay = BodyPositionCalculator.calcDay(body, trackerLcation!!.location, loopCalendar, false)
+                        val bodyDay = BodyPositionCalculator.calcDay(body, getLocation().location, loopCalendar, false)
                         if (bodyDay.rise != null && isSameDay(bodyDay.rise!!, dateCalendar) && eventsSet.size < 2) {
                             eventsSet.add(Event("RISE", bodyDay.rise!!, bodyDay.riseAzimuth))
                         }
@@ -270,43 +208,40 @@ class TrackerFragment : AbstractTimeFragment(), SensorEventListener, TrackerMapF
                             if (eventsSet != null) {
                                 if (eventsSet.size > 0) {
                                     val event1 = eventsSet.toTypedArray()[0]
-                                    val time = formatTimeStr(requireContext(), event1.time, false)
-                                    text(view!!, R.id.trackerEvt1Name, event1.name)
-                                    text(view!!, R.id.trackerEvt1Time, time)
+                                    val time = formatTimeStr(requireContext(), event1.time, allowSeconds = false, html = true)
+                                    modify(trackerEvt1Name, text = event1.name)
+                                    modify(trackerEvt1Time, html = time)
                                 } else {
-                                    text(view!!, R.id.trackerEvt1Name, "")
-                                    text(view!!, R.id.trackerEvt1Time, "")
+                                    modify(trackerEvt1Name, text = "")
+                                    modify(trackerEvt1Time, text = "")
                                 }
 
                                 if (eventsSet.size > 1) {
                                     val event2 = eventsSet.toTypedArray()[1]
-                                    val time = formatTimeStr(requireContext(), event2.time, false)
-                                    text(view!!, R.id.trackerEvt2Name, event2.name)
-                                    text(view!!, R.id.trackerEvt2Time, time)
+                                    val time = formatTimeStr(requireContext(), event2.time, allowSeconds = false, html = true)
+                                    modify(trackerEvt2Name, text = event2.name)
+                                    modify(trackerEvt2Time, html = time)
                                 } else {
-                                    text(view!!, R.id.trackerEvt2Name, "")
-                                    text(view!!, R.id.trackerEvt2Time, "")
+                                    modify(trackerEvt2Name, text = "")
+                                    modify(trackerEvt2Time, text = "")
                                 }
                             }
 
                             var elBd = BigDecimal(position.appElevation)
                             elBd = elBd.setScale(1, BigDecimal.ROUND_HALF_DOWN)
                             val el = elBd.toString() + "\u00b0"
-                            val az = formatBearing(requireContext(), position.azimuth, trackerLcation!!.location, timeCalendar)
+                            val az = formatBearing(requireContext(), position.azimuth, getLocation().location, timeCalendar)
 
-                            text(view!!, R.id.trackerAz, az)
-                            text(view!!, R.id.trackerEl, el)
-                            text(view!!, R.id.trackerBody, body!!.name)
-                            text(view!!, R.id.trackerLight, getLight(body, position.appElevation).toUpperCase(Locale.getDefault()))
+                            modify(trackerAz, text = az)
+                            modify(trackerEl, text = el)
+                            modify(trackerBody, text = body!!.name)
+                            modify(trackerLight, text = getLight(body, position.appElevation).toUpperCase(Locale.getDefault()))
                         }
-
-                        trackerImageView!!.invalidate()
+                        trackerImageView.invalidate()
                     }
                 }
             }
-
         }
-
     }
 
     class Event(val name: String, val time: Calendar, val azimuth: Double?) : Comparable<Event> {
@@ -340,8 +275,22 @@ class TrackerFragment : AbstractTimeFragment(), SensorEventListener, TrackerMapF
             } else {
                 "Set"
             }
-
         }
+    }
+
+    private fun registerCompass() {
+        if (Prefs.sunTrackerMode(requireContext()) == "radar" && Prefs.sunTrackerCompass(requireContext())) {
+            val sensorManager = requireContext().getSystemService(Activity.SENSOR_SERVICE) as SensorManager
+            val orientationSensors = sensorManager.getSensorList(Sensor.TYPE_ORIENTATION)
+            if (orientationSensors.isNotEmpty()) {
+                sensorManager.registerListener(this, orientationSensors[0], SensorManager.SENSOR_DELAY_GAME)
+            }
+        }
+    }
+
+    private fun unregisterCompass() {
+        val sensorManager = requireContext().getSystemService(Activity.SENSOR_SERVICE) as SensorManager
+        sensorManager.unregisterListener(this)
     }
 
     companion object {
