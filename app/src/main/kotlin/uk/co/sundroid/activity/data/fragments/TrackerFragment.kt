@@ -71,6 +71,15 @@ class TrackerFragment : AbstractTimeFragment(), SensorEventListener, TrackerMapF
     }
 
     override fun initialise() {
+        if (prefs.showElement("tipTracker", true)) {
+            modify(tip, visibility = VISIBLE)
+            tipHide.setOnClickListener {
+                prefs.setShowElement("tipTracker", false)
+                modify(tip, visibility = GONE)
+                initialise()
+            }
+        }
+
         val body = Prefs.sunTrackerBody(requireContext())
         val mode = Prefs.sunTrackerMode(requireContext())
         val mapType = Prefs.sunTrackerMapType(requireContext())
