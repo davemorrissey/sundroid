@@ -9,8 +9,6 @@ and republished it as a free and open source project.
 
 Some of the features originally included in Sundroid Pro have not been rebuilt yet.
 
-* Sun/moon/planet tracker: Coming soon
-* Year events: Coming soon
 * Notifications: Coming soon if supported by modern phones
 * Alarms: Not working on modern phones, investigation required
 * Widgets: Will not be restored
@@ -31,7 +29,9 @@ Features
 * Lunar phase and illumination
 * Planet rise and set times
 * Planet transit and risen time
-* Monthly calendars - grid and list format
+* Sun, moon and planet tracker with map view
+* Monthly calendars with list and grid views
+* Yearly aphelion, perihelion, eclipse, solstice and equinox dates
 * View any date and any location
 * Locate by GPS, map, and name search
 * Save locations
@@ -60,7 +60,6 @@ Future changes
 
 * Restore landscape support
 * Restore tablet support
-* Refactor preferences activity
 * Extract strings to resources
 * Open source translation
 * Extract more styles to resources
