@@ -71,7 +71,7 @@
 		<item name="icn_loc_mylocation">@drawable/d_icn_loc_mylocation</item>
 		<item name="icn_loc_map">@drawable/d_icn_loc_map</item>
 		<item name="icn_loc_search">@drawable/d_icn_loc_search</item>
-		<item name="icn_loc_savedplaces">@drawable/d_icn_loc_savedplaces</item>
+		<item name="icn_loc_savedplaces">@drawable/d_ic_star_off</item>
 		<item name="icn_btn_delete">@drawable/d_icn_btn_delete</item>
 		<item name="disclosure">@drawable/d_disclosure</item>
 		<item name="info">@drawable/d_icn_info</item>
@@ -116,7 +116,7 @@
 		<item name="icn_loc_mylocation">@drawable/d_icn_loc_mylocation</item>
 		<item name="icn_loc_map">@drawable/d_icn_loc_map</item>
 		<item name="icn_loc_search">@drawable/d_icn_loc_search</item>
-		<item name="icn_loc_savedplaces">@drawable/d_icn_loc_savedplaces</item>
+		<item name="icn_loc_savedplaces">@drawable/d_ic_star_off</item>
 		<item name="icn_btn_delete">@drawable/d_icn_btn_delete</item>
 		<item name="disclosure">@drawable/d_disclosure</item>
 		<item name="info">@drawable/d_icn_info</item>

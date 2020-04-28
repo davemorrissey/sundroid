@@ -9,57 +9,95 @@
         android:layout_height="wrap_content"
        >
         <LinearLayout
-            style="@style/listMenuBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             >
+
             <LinearLayout
-                style="@style/listMenuIconButton"
                 android:id="@+id/locOptionMyLocation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ripple_background"
+                android:gravity="center_horizontal"
+                android:padding="20dp"
+                android:orientation="vertical"
                 >
                 <ImageView
-                    style="@style/listMenuIconIcon"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginBottom="10dp"
                     android:src="?icn_loc_mylocation"/>
                 <TextView
-                    style="@style/listMenuIconLabel"
-                    android:text="My location"/>
+                    style="@style/text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:text="MY LOCATION"/>
             </LinearLayout>
-            <View style="@style/listMenuDivider"/>
             <LinearLayout
-                    style="@style/listMenuIconButton"
-                    android:id="@+id/locOptionMap"
-                    >
-                <ImageView
-                        style="@style/listMenuIconIcon"
-                        android:src="?icn_loc_map"/>
-                <TextView
-                        style="@style/listMenuIconLabel"
-                        android:text="Map"/>
-            </LinearLayout>
-            <View style="@style/listMenuDivider"/>
-            <LinearLayout
-                style="@style/listMenuIconButton"
-                android:id="@+id/locOptionSearch"
+                android:id="@+id/locOptionMap"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ripple_background"
+                android:gravity="center_horizontal"
+                android:padding="20dp"
+                android:orientation="vertical"
                 >
                 <ImageView
-                    style="@style/listMenuIconIcon"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginBottom="10dp"
+                    android:src="?icn_loc_map"/>
+                <TextView
+                    style="@style/text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:text="MAP"/>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/locOptionSearch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ripple_background"
+                android:gravity="center_horizontal"
+                android:padding="20dp"
+                android:orientation="vertical"
+                >
+                <ImageView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginBottom="10dp"
                     android:src="?icn_loc_search"/>
                 <TextView
-                    style="@style/listMenuIconLabel"
-                    android:text="Search"/>
+                    style="@style/text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:text="SEARCH"/>
             </LinearLayout>
-            <View style="@style/listMenuDivider"/>
             <LinearLayout
-                style="@style/listMenuIconButton"
                 android:id="@+id/locOptionSavedPlaces"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ripple_background"
+                android:gravity="center_horizontal"
+                android:padding="20dp"
+                android:orientation="vertical"
                 >
                 <ImageView
-                    style="@style/listMenuIconIcon"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginBottom="10dp"
                     android:src="?icn_loc_savedplaces"/>
                 <TextView
-                    style="@style/listMenuIconLabel"
-                    android:text="Saved locations"/>
+                    style="@style/text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:text="SAVED LOCATIONS"/>
             </LinearLayout>
-            <View style="@style/listMenuDivider"/>
         </LinearLayout>
 
     </ScrollView>
