@@ -73,6 +73,8 @@ class MainActivity : AbstractActivity(), FragmentManager.OnBackStackChangedListe
         }
         if (newUpdate) {
             ReleaseNotesDialogFragment().show(supportFragmentManager, "releaseNotes")
+        } else if (newInstall) {
+            WelcomeDialogFragment().show(supportFragmentManager, "welcome")
         }
 
         prefs.edit().putInt("last-version", BuildConfig.VERSION_CODE).apply()

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="20dp"
+    android:paddingRight="25dp"
+    android:paddingLeft="25dp"
+    android:orientation="vertical">
+
+    <TextView
+        style="@style/text"
+        android:text="Thank you for installing this app. I hope you enjoy using it!"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+    <TextView
+        style="@style/text"
+        android:text="To get started, select your location. Open the main menu by swiping right from the left of the screen, or tapping the &#9776; icon at the top left. Then tap Change Location."
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+    <TextView
+        style="@style/text"
+        android:text="You'll find more information about this app's features and a glossary of terms under Menu > Help."
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+</LinearLayout>
