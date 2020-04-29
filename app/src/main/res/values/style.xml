@@ -1,44 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="SundroidLight" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:colorPrimary">@color/l_primary</item>
-        <item name="android:colorPrimaryDark">@color/l_primary_dark</item>
-		<item name="android:colorAccent">@color/l_accent</item>
-        <item name="android:windowActionBar">false</item>
-        <item name="android:windowNoTitle">true</item>
-		<item name="primary_color">@color/l_primary</item>
-		<item name="primary_color_dark">@color/l_primary_dark</item>
-		<item name="accent_colour">@color/l_accent</item>
-		<item name="app_background_colour">@color/l_app_background_start</item>
-		<item name="app_background">@drawable/l_app_bg</item>
-		<item name="header_background">@drawable/l_action_bar_bg</item>
-		<item name="body_text">#000000</item>
-		<item name="dialog_text">#000000</item>
-		<item name="secondary_text">#005895</item>
-		<item name="header_text">#ffffff</item>
-		<item name="header_secondary_text">#aaffffff</item>
-		<item name="tab_bar_bg_color">#003f6f</item>
-		<item name="tabs_activetext">#ffffff</item>
-		<item name="tabs_inactivetext">#88ffffff</item>
-		<item name="divider_color">#dddddd</item>
-		<item name="button_bar_bg">@drawable/l_button_bar_bg</item>
-		<item name="button_text">@color/l_button_text</item>
-		<item name="button_secondary_text">@color/l_button_secondary_text</item>
-		<item name="icn_loc_mylocation">@drawable/l_icn_loc_mylocation</item>
-		<item name="icn_loc_map">@drawable/l_icn_loc_map</item>
-		<item name="icn_loc_search">@drawable/l_icn_loc_search</item>
-		<item name="icn_loc_savedplaces">@drawable/l_icn_loc_savedplaces</item>
-		<item name="icn_btn_delete">@drawable/l_icn_btn_delete</item>
-		<item name="disclosure">@drawable/l_disclosure</item>
-		<item name="info">@drawable/l_info</item>
-		<item name="calendar_title_bg">#c4eaf8</item>
-		<item name="disclosure_open">@drawable/l_disclosure_open</item>
-		<item name="disclosure_closed">@drawable/l_disclosure_closed</item>
-		<item name="spinner_style">@style/l_spinner</item>
-		<item name="list_divider">@drawable/l_list_divider</item>
-    </style>
-
     <style name="SundroidDark" parent="Theme.AppCompat.NoActionBar">
 		<item name="android:dialogTheme">@style/SundroidDarkBlueDialog</item>
 		<item name="android:alertDialogTheme">@style/SundroidDarkBlueAlertDialog</item>

@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
-    <color name="l_primary">#303F9F</color>
-    <color name="l_primary_dark">#283593</color>
-    <color name="l_accent">#FF6F00</color>
-
     <color name="d_primary">#222522</color>
     <color name="d_primary_dark">#323632</color>
     <color name="d_ripple">#424742</color>
@@ -22,10 +18,6 @@
     <color name="db_app_background_end">#080D18</color>
     <color name="db_header_background">#121E36</color>
 
-    <color name="l_app_background_start">#eeeeee</color>
-    <color name="l_app_background_end">#eeeeee</color>
-    <color name="l_header_background">#005895</color>
-
     <color name="d_tabs_background">#313431</color>
     <color name="d_tabs_divider">#33ffffff</color>
     <color name="d_tabs_active">#99cc00</color>
@@ -35,11 +27,6 @@
     <color name="db_tabs_divider">#ff0000</color>
     <color name="db_tabs_active">#4A90E2</color>
     <color name="db_tabs_highlight">#4A90E2</color>
-
-    <color name="l_tabs_background">#003f6f</color>
-    <color name="l_tabs_divider">#33ffffff</color>
-    <color name="l_tabs_active">#009ccc</color>
-    <color name="l_tabs_highlight">#009ccc</color>
 
     <color name="d_button_background">#222522</color>
     <color name="d_button_divider">#444744</color>
@@ -57,17 +44,8 @@
     <color name="db_button_secondary_text">#8FA0C2</color>
     <color name="db_button_disabledtext">#8190AE</color>
 
-    <color name="l_button_background">#005895</color>
-    <color name="l_button_divider">#0073c4</color>
-    <color name="l_button_active">#009ccc</color>
-    <color name="l_button_highlight">#1ab1e3</color>
-    <color name="l_button_text">#ffffff</color>
-    <color name="l_button_secondary_text">#aaffffff</color>
-    <color name="l_button_disabledtext">#a6dff5</color>
-
     <color name="d_list_divider_color">#222222</color>
     <color name="db_list_divider_color">#1F2E4E</color>
-    <color name="l_list_divider_color">#dddddd</color>
 
     <color name="inactive_text">#dddddd</color>
    
