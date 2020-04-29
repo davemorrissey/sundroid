@@ -2,6 +2,7 @@ package uk.co.sundroid.activity.data.fragments
 
 import android.view.View
 import kotlinx.android.synthetic.main.inc_datebar.*
+import kotlinx.android.synthetic.main.inc_zonebutton.*
 import uk.co.sundroid.AbstractFragment
 import uk.co.sundroid.activity.MainActivity
 import uk.co.sundroid.activity.data.fragments.dialogs.OnViewPrefsChangedListener

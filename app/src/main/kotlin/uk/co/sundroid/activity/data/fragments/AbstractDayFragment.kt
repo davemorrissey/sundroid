@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.DatePicker
 import kotlinx.android.synthetic.main.inc_datebar.*
+import kotlinx.android.synthetic.main.inc_zonebutton.*
 import uk.co.sundroid.activity.Page
 import uk.co.sundroid.util.view.ButtonDragGestureDetector
 import uk.co.sundroid.util.view.ButtonDragGestureDetector.ButtonDragGestureDetectorListener

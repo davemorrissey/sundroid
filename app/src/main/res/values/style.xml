@@ -11,12 +11,12 @@
 		<item name="android:colorControlHighlight">@color/d_ripple</item>
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
+		<item name="android:windowBackground">@color/d_app_background</item>
 		<item name="ripple">@color/d_ripple</item>
 		<item name="primary_color">@color/d_primary</item>
 		<item name="primary_color_dark">@color/d_primary_dark</item>
 		<item name="accent_colour">@color/d_accent</item>
-		<item name="app_background_colour">@color/d_app_background_start</item>
-		<item name="app_background">@drawable/d_app_bg</item>
+		<item name="app_background_colour">@color/d_app_background</item>
 		<item name="header_background">@drawable/d_action_bar_bg</item>
 		<item name="body_text">#ffffff</item>
 		<item name="dialog_text">#ffffff</item>
@@ -27,7 +27,6 @@
 		<item name="tabs_activetext">#ffffff</item>
 		<item name="tabs_inactivetext">#aaaaaa</item>
 		<item name="divider_color">#333333</item>
-		<item name="button_bar_bg">@drawable/d_button_bar_bg</item>
 		<item name="button_text">@color/d_button_text</item>
 		<item name="button_secondary_text">@color/d_button_secondary_text</item>
 		<item name="icn_loc_mylocation">@drawable/d_icn_loc_mylocation</item>
@@ -35,7 +34,6 @@
 		<item name="icn_loc_search">@drawable/d_icn_loc_search</item>
 		<item name="icn_loc_savedplaces">@drawable/d_ic_star_off</item>
 		<item name="icn_btn_delete">@drawable/d_icn_btn_delete</item>
-		<item name="disclosure">@drawable/d_disclosure</item>
 		<item name="info">@drawable/d_icn_info</item>
 		<item name="calendar_title_bg">#222522</item>
 		<item name="disclosure_open">@drawable/d_disclosure_open</item>
@@ -56,12 +54,12 @@
 		<item name="android:colorControlHighlight">@color/db_ripple</item>
 		<item name="android:windowActionBar">false</item>
 		<item name="android:windowNoTitle">true</item>
+		<item name="android:windowBackground">@color/db_app_background</item>
 		<item name="ripple">@color/db_ripple</item>
 		<item name="primary_color">@color/db_primary</item>
 		<item name="primary_color_dark">@color/db_primary_dark</item>
 		<item name="accent_colour">@color/db_accent</item>
-		<item name="app_background_colour">@color/db_app_background_start</item>
-		<item name="app_background">@drawable/db_app_bg</item>
+		<item name="app_background_colour">@color/db_app_background</item>
 		<item name="header_background">@drawable/db_action_bar_bg</item>
 		<item name="body_text">#ffffff</item>
 		<item name="dialog_text">#ffffff</item>
@@ -72,7 +70,6 @@
 		<item name="tabs_activetext">#ffffff</item>
 		<item name="tabs_inactivetext">#8FA0C2</item>
 		<item name="divider_color">#1F2E4E</item>
-		<item name="button_bar_bg">@drawable/db_button_bar_bg</item>
 		<item name="button_text">@color/d_button_text</item>
 		<item name="button_secondary_text">@color/db_button_secondary_text</item>
 		<item name="icn_loc_mylocation">@drawable/d_icn_loc_mylocation</item>
@@ -80,7 +77,6 @@
 		<item name="icn_loc_search">@drawable/d_icn_loc_search</item>
 		<item name="icn_loc_savedplaces">@drawable/d_ic_star_off</item>
 		<item name="icn_btn_delete">@drawable/d_icn_btn_delete</item>
-		<item name="disclosure">@drawable/d_disclosure</item>
 		<item name="info">@drawable/d_icn_info</item>
 		<item name="calendar_title_bg">#0D1629</item>
 		<item name="disclosure_open">@drawable/d_disclosure_open</item>
@@ -99,7 +95,6 @@
 
 	<style name="SundroidDarkBlueDatePickerDialog" parent="Theme.AppCompat.Dialog">
 		<item name="android:windowBackground">?primary_color</item>
-		<item name="android:headerBackground">#0000ff</item>
 		<item name="android:datePickerStyle">@style/SundroidDarkBlueDatePickerStyle</item>
 	</style>
 

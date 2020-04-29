@@ -85,8 +85,7 @@
                     android:divider="?list_divider"
                     android:dividerHeight="1px"
                     android:footerDividersEnabled="false"
-                    android:headerDividersEnabled="false"
-                    android:listSelector="@drawable/d_disclosure"></ListView>
+                    android:headerDividersEnabled="false"></ListView>
 
                 <View style="@style/listMenuDivider" />
             </LinearLayout>

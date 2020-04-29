@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.inc_monthbar.*
+import kotlinx.android.synthetic.main.inc_zonebutton.*
 import uk.co.sundroid.activity.Page
 import uk.co.sundroid.activity.data.fragments.dialogs.date.MonthPickerFragment
 import uk.co.sundroid.util.view.ButtonDragGestureDetector

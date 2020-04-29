@@ -10,12 +10,10 @@
     <color name="db_ripple">#26375B</color>
     <color name="db_accent">#4A90E2</color>
 
-    <color name="d_app_background_start">#101210</color>
-    <color name="d_app_background_end">#101210</color>
+    <color name="d_app_background">#101210</color>
     <color name="d_header_background">#252925</color>
 
-    <color name="db_app_background_start">#080D18</color>
-    <color name="db_app_background_end">#080D18</color>
+    <color name="db_app_background">#080D18</color>
     <color name="db_header_background">#121E36</color>
 
     <color name="d_tabs_background">#313431</color>
@@ -28,18 +26,10 @@
     <color name="db_tabs_active">#4A90E2</color>
     <color name="db_tabs_highlight">#4A90E2</color>
 
-    <color name="d_button_background">#222522</color>
-    <color name="d_button_divider">#444744</color>
-    <color name="d_button_active">#99cc00</color>
-    <color name="d_button_highlight">#7ea50c</color>
     <color name="d_button_text">#ffffff</color>
     <color name="d_button_secondary_text">#b3b8b3</color>
     <color name="d_button_disabledtext">#A7AEA7</color>
 
-    <color name="db_button_background">#0D1629</color>
-    <color name="db_button_divider">#ffff00</color>
-    <color name="db_button_active">#00ff00</color>
-    <color name="db_button_highlight">#0000ff</color>
     <color name="db_button_text">#ffffff</color>
     <color name="db_button_secondary_text">#8FA0C2</color>
     <color name="db_button_disabledtext">#8190AE</color>

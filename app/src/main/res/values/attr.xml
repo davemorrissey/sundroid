@@ -17,7 +17,6 @@
 
     <attr name="accent_colour" format="color"/>
     <attr name="app_background_colour" format="color"/>
-    <attr name="app_background" format="reference"/>
     <attr name="header_background" format="reference"/>
 
     <attr name="header_text" format="color"/>
@@ -31,7 +30,6 @@
     <attr name="body_text" format="color"/>
     <attr name="secondary_text" format="color"/>
 
-    <attr name="button_bar_bg" format="reference"/>
     <attr name="button_text" format="color"/>
     <attr name="button_secondary_text" format="color"/>
 

@@ -18,7 +18,8 @@ abstract class AbstractActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         onActivityCreateSetTheme(this)
-        window.setBackgroundDrawableResource(getAppBg())
+//        window.setBack
+//        window.setBackgroundDrawableResource(getAppBg())
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

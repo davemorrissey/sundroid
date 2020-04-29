@@ -34,8 +34,8 @@ private val radarDark = TrackerStyle(
 
 fun appBackground(): Int {
     return when (theme) {
-        THEME_DARK -> R.color.d_app_background_start
-        else -> R.color.db_app_background_start
+        THEME_DARK -> R.color.d_app_background
+        else -> R.color.db_app_background
     }
 }
 
@@ -61,12 +61,12 @@ fun getSetAllDay(): Int {
     }
 }
 
-fun getAppBg(): Int {
-    return when (theme) {
-        THEME_DARKBLUE -> db_app_bg
-        else -> d_app_bg
-    }
-}
+//fun getAppBg(): Int {
+//    return when (theme) {
+//        THEME_DARKBLUE -> db_app_bg
+//        else -> d_app_bg
+//    }
+//}
 
 fun getPhaseFull(): Int {
     return d_phase_full

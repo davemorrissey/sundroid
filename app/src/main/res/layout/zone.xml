@@ -7,7 +7,6 @@
 		android:id="@+id/timeZoneList"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:listSelector="?disclosure"
         android:divider="?list_divider"
         android:dividerHeight="1px"
         android:cacheColorHint="?app_background_colour">
