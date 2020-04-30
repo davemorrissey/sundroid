@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="BoundedLinearLayout">
-	    <attr name="bounded_width" format="dimension" />
-	    <attr name="bounded_height" format="dimension" />
-	</declare-styleable>
     <attr name="ripple" format="color"/>
     <attr name="primary_color" format="color"/>
     <attr name="primary_color_dark" format="color"/>
@@ -48,6 +44,4 @@
 
     <attr name="disclosure_open" format="reference"/>
     <attr name="disclosure_closed" format="reference"/>
-
-    <attr name="spinner_style" format="reference"/>
 </resources>

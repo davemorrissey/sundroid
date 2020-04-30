@@ -13,7 +13,7 @@
             android:id="@+id/dateButton"
             style="@style/dateBoxButton"
             android:layout_width="0dp"
-            android:layout_height="@dimen/date_bar_height"
+            android:layout_height="?actionBarSize"
             android:layout_weight="0.6"
             android:gravity="center_vertical"
             android:orientation="vertical">
@@ -39,7 +39,7 @@
             android:id="@+id/timeButton"
             style="@style/dateBoxButton"
             android:layout_width="0dp"
-            android:layout_height="@dimen/date_bar_height"
+            android:layout_height="?actionBarSize"
             android:layout_weight="0.4"
             android:gravity="center_vertical"
             android:orientation="vertical">

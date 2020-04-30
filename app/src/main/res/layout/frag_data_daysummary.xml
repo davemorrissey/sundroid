@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:orientation="vertical"
-            android:padding="@dimen/content_pane_padding">
+            android:padding="15dp">
 
             <ImageView
                 android:id="@+id/sunImage"

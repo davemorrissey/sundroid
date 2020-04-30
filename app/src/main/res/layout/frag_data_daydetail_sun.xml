@@ -1,16 +1,14 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:s="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
 
-    <uk.co.sundroid.util.view.BoundedLinearLayout
+    <LinearLayout
         android:id="@+id/sunDataBox"
         android:layout_gravity="center_horizontal"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        s:bounded_width="@dimen/column_max_width"
         android:orientation="vertical"
-        android:padding="@dimen/content_pane_padding"
+        android:padding="15dp"
         android:visibility="gone">
 
         <ImageView
@@ -269,6 +267,6 @@
 
         </TableLayout>
 
-    </uk.co.sundroid.util.view.BoundedLinearLayout>
+    </LinearLayout>
 
 </ScrollView>
