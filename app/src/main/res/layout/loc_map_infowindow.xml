@@ -19,7 +19,7 @@
         android:layout_height="40dp"
         android:layout_margin="2dp"
         android:background="#000000"
-        android:src="@drawable/icn_btn_ok"/>
+        android:src="@drawable/d_check"/>
 
 
 

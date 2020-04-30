@@ -171,7 +171,7 @@ abstract class AbstractYearFragment : AbstractDataFragment(), OnClickListener, O
             view.findViewById<View>(R.id.yearPrev).isEnabled = true
             image(view, R.id.yearPrev, drawable.navigation_previous_item)
         }
-        if (calendar.get(YEAR) >= 2020) {
+        if (calendar.get(YEAR) >= 2025) {
             view.findViewById<View>(R.id.yearNext).isEnabled = false
             image(view, R.id.yearNext, drawable.navigation_next_item_disabled)
         } else {
@@ -187,7 +187,7 @@ abstract class AbstractYearFragment : AbstractDataFragment(), OnClickListener, O
     }
 
     private fun nextYear() {
-        if (getDateCalendar().get(YEAR) < 2020) {
+        if (getDateCalendar().get(YEAR) < 2025) {
             getDateCalendar().add(YEAR, 1)
             getTimeCalendar().add(YEAR, 1)
             update()
