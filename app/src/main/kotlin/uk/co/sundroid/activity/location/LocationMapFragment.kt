@@ -12,7 +12,6 @@ import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -26,9 +25,10 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import uk.co.sundroid.AbstractFragment
-import uk.co.sundroid.R
 import uk.co.sundroid.R.drawable
 import uk.co.sundroid.activity.MainActivity
+import uk.co.sundroid.databinding.LocMapBinding
+import uk.co.sundroid.databinding.LocMapInfowindowBinding
 import uk.co.sundroid.domain.LocationDetails
 import uk.co.sundroid.domain.MapType
 import uk.co.sundroid.util.location.Geocoder
@@ -80,10 +80,7 @@ class LocationMapFragment : AbstractFragment(), OnMapClickListener, OnInfoWindow
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, state: Bundle?): View? {
-        return when (container) {
-            null -> null
-            else -> inflater.inflate(R.layout.loc_map, container, false)
-        }
+        return LocMapBinding.inflate(inflater).root
     }
 
     override fun onAttachFragment(child: Fragment) {
@@ -220,27 +217,25 @@ class LocationMapFragment : AbstractFragment(), OnMapClickListener, OnInfoWindow
 
     internal inner class CustomInfoWindowAdapter : InfoWindowAdapter {
 
-        private val window: View = View.inflate(requireContext(), R.layout.loc_map_infowindow, null)
-        private val contents: View = View.inflate(requireContext(), R.layout.loc_map_infowindow, null)
+        private val window = LocMapInfowindowBinding.inflate(layoutInflater)
+        private val contents = LocMapInfowindowBinding.inflate(layoutInflater)
 
         override fun getInfoWindow(marker: Marker): View {
             render(window)
-            return window
+            return window.root
         }
 
         override fun getInfoContents(marker: Marker): View {
             render(contents)
-            return contents
+            return contents.root
         }
 
-        private fun render(view: View) {
-            val title = view.findViewById<TextView>(R.id.title)
-            val button = view.findViewById<View>(R.id.button)
-            title.text = "Loading..."
-            button.visibility = View.INVISIBLE
+        private fun render(b: LocMapInfowindowBinding) {
+            b.title.text = "Loading..."
+            b.button.visibility = View.INVISIBLE
             mapLocationDetails?.let {
-                title.text = it.displayName
-                button.visibility = View.VISIBLE
+                b.title.text = it.displayName
+                b.button.visibility = View.VISIBLE
             }
         }
     }

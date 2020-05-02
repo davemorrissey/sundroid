@@ -3,12 +3,9 @@ package uk.co.sundroid.activity.data.fragments.dialogs.date
 import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
-import android.view.View
-import android.widget.NumberPicker
 import androidx.fragment.app.DialogFragment
-import uk.co.sundroid.R
-import uk.co.sundroid.R.layout
 import uk.co.sundroid.activity.data.fragments.AbstractMonthFragment
+import uk.co.sundroid.databinding.DialogMonthpickerBinding
 import uk.co.sundroid.util.time.shortMonths
 import java.util.*
 import java.util.Calendar.*
@@ -30,9 +27,9 @@ class MonthPickerFragment : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         restore(savedInstanceState)
 
-        val view = View.inflate(activity, layout.dialog_monthpicker, null)
+        val view = DialogMonthpickerBinding.inflate(layoutInflater)
 
-        view.findViewById<NumberPicker>(R.id.monthPicker).apply {
+        view.monthPicker.apply {
             minValue = 0
             maxValue = 11
             wrapSelectorWheel = true
@@ -40,7 +37,7 @@ class MonthPickerFragment : DialogFragment() {
             value = calendar.get(MONTH)
             setOnValueChangedListener { _, _, month -> calendar.set(MONTH, month) }
         }
-        view.findViewById<NumberPicker>(R.id.yearPicker)?.apply {
+        view.yearPicker.apply {
             minValue = 1900
             maxValue = 2100
             wrapSelectorWheel = false
@@ -49,7 +46,7 @@ class MonthPickerFragment : DialogFragment() {
         }
 
         return AlertDialog.Builder(activity).apply {
-            setView(view)
+            setView(view.root)
             setTitle("Set month")
             setPositiveButton("Set") { _, _ -> set(calendar) }
             setNeutralButton("This month") { _, _ -> set(getInstance()) }

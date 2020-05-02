@@ -3,11 +3,8 @@ package uk.co.sundroid.activity.data.fragments.dialogs.date
 import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
-import android.view.View
-import android.widget.NumberPicker
 import androidx.fragment.app.DialogFragment
-import uk.co.sundroid.R
-import uk.co.sundroid.R.layout
+import uk.co.sundroid.databinding.DialogYearpickerBinding
 import java.util.*
 import java.util.Calendar.*
 
@@ -33,9 +30,9 @@ class YearPickerFragment : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         restore(savedInstanceState)
 
-        val view = View.inflate(activity, layout.dialog_yearpicker, null)
+        val view = DialogYearpickerBinding.inflate(layoutInflater)
 
-        view.findViewById<NumberPicker>(R.id.yearPicker)?.apply {
+        view.yearPicker.apply {
             minValue = 2000
             maxValue = 2025
             wrapSelectorWheel = false
@@ -44,7 +41,7 @@ class YearPickerFragment : DialogFragment() {
         }
 
         return AlertDialog.Builder(activity).apply {
-            setView(view)
+            setView(view.root)
             setTitle("Set year")
             setPositiveButton("Set") { _, _ -> set(calendar) }
             setNeutralButton("This year") { _, _ -> set(getInstance()) }

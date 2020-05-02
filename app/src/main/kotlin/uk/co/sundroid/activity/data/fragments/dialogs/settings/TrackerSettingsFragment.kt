@@ -5,12 +5,11 @@ import android.app.Dialog
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
-import android.widget.Spinner
-import androidx.appcompat.widget.SwitchCompat
 import androidx.fragment.app.DialogFragment
 
 import uk.co.sundroid.R
 import uk.co.sundroid.activity.data.fragments.dialogs.OnViewPrefsChangedListener
+import uk.co.sundroid.databinding.DialogTrackersettingsBinding
 import uk.co.sundroid.domain.MapType
 import uk.co.sundroid.util.astro.Body
 import uk.co.sundroid.util.prefs.Prefs
@@ -19,10 +18,9 @@ import uk.co.sundroid.util.prefs.Prefs
 class TrackerSettingsFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val context = activity
-        val view = View.inflate(context, R.layout.dialog_trackersettings, null)
+        val view = DialogTrackersettingsBinding.inflate(layoutInflater)
 
-        val body = view.findViewById<Spinner>(R.id.trackerSettingBody)
+        val body = view.trackerSettingBody
         val bodyAdapter = ArrayAdapter(requireContext(), R.layout.dialog_trackersettings_spinneritem, resources.getStringArray(R.array.trackerSettingBodyNames))
         bodyAdapter.setDropDownViewResource(R.layout.dialog_trackersettings_spinneritem_dropdown)
         body.adapter = bodyAdapter
@@ -34,42 +32,33 @@ class TrackerSettingsFragment : DialogFragment() {
             body.setSelection(Body.values().size)
         }
 
-        val map = view.findViewById<SwitchCompat>(R.id.trackerSettingMap)
-        map.isChecked = Prefs.sunTrackerMode(requireContext()) == "map"
-        map.setOnCheckedChangeListener { _, checked ->
-            view.findViewById<View>(R.id.trackerSettingCompassWrapper).visibility = if (checked) View.GONE else View.VISIBLE
-            view.findViewById<View>(R.id.trackerSettingMapTypeWrapper).visibility = if (checked) View.VISIBLE else View.GONE
+        view.trackerSettingMap.isChecked = Prefs.sunTrackerMode(requireContext()) == "map"
+        view.trackerSettingMap.setOnCheckedChangeListener { _, checked ->
+            view.trackerSettingCompassWrapper.visibility = if (checked) View.GONE else View.VISIBLE
+            view.trackerSettingMapTypeWrapper.visibility = if (checked) View.VISIBLE else View.GONE
         }
 
-        val mapType = view.findViewById<Spinner>(R.id.trackerSettingMapType)
         val mapTypeAdapter = ArrayAdapter(requireContext(), R.layout.dialog_trackersettings_spinneritem, MapType.displayNames())
         mapTypeAdapter.setDropDownViewResource(R.layout.dialog_trackersettings_spinneritem_dropdown)
-        mapType.adapter = mapTypeAdapter
+        view.trackerSettingMapType.adapter = mapTypeAdapter
 
         val currentMapType = Prefs.sunTrackerMapType(requireContext())
-        mapType.setSelection(currentMapType.ordinal)
+        view.trackerSettingMapType.setSelection(currentMapType.ordinal)
 
-        val compass = view.findViewById<SwitchCompat>(R.id.trackerSettingCompass)
-        compass.isChecked = Prefs.sunTrackerCompass(requireContext())
-
-        val linearElevation = view.findViewById<SwitchCompat>(R.id.trackerSettingLinearElevation)
-        linearElevation.isChecked = Prefs.sunTrackerLinearElevation(requireContext())
-
-        val hourMarkers = view.findViewById<SwitchCompat>(R.id.trackerSettingHourMarkers)
-        hourMarkers.isChecked = Prefs.sunTrackerHourMarkers(requireContext())
-
-        val text = view.findViewById<SwitchCompat>(R.id.trackerSettingText)
-        text.isChecked = Prefs.sunTrackerText(requireContext())
+        view.trackerSettingCompass.isChecked = Prefs.sunTrackerCompass(requireContext())
+        view.trackerSettingLinearElevation.isChecked = Prefs.sunTrackerLinearElevation(requireContext())
+        view.trackerSettingHourMarkers.isChecked = Prefs.sunTrackerHourMarkers(requireContext())
+        view.trackerSettingText.isChecked = Prefs.sunTrackerText(requireContext())
 
         if (Prefs.sunTrackerMode(requireContext()) == "map") {
-            view.findViewById<View>(R.id.trackerSettingCompassWrapper).visibility = View.GONE
+            view.trackerSettingCompassWrapper.visibility = View.GONE
         } else {
-            view.findViewById<View>(R.id.trackerSettingMapTypeWrapper).visibility = View.GONE
+            view.trackerSettingMapTypeWrapper.visibility = View.GONE
         }
 
         return AlertDialog.Builder(activity).apply {
             setTitle("Settings")
-            setView(view)
+            setView(view.root)
             setNegativeButton("Cancel", null)
             setPositiveButton("OK") { _, _ ->
                 if (body.selectedItemPosition >= Body.values().size) {
@@ -78,16 +67,16 @@ class TrackerSettingsFragment : DialogFragment() {
                     Prefs.setSunTrackerBody(requireContext(), Body.values()[body.selectedItemPosition])
                 }
 
-                if (map.isChecked) {
+                if (view.trackerSettingMap.isChecked) {
                     Prefs.setSunTrackerMode(requireContext(), "map")
-                    Prefs.setSunTrackerMapType(requireContext(), MapType.values()[mapType.selectedItemPosition])
+                    Prefs.setSunTrackerMapType(requireContext(), MapType.values()[view.trackerSettingMapType.selectedItemPosition])
                 } else {
                     Prefs.setSunTrackerMode(requireContext(), "radar")
                 }
-                Prefs.setSunTrackerCompass(requireContext(), compass.isChecked)
-                Prefs.setSunTrackerLinearElevation(requireContext(), linearElevation.isChecked)
-                Prefs.setSunTrackerHourMarkers(requireContext(), hourMarkers.isChecked)
-                Prefs.setSunTrackerText(requireContext(), text.isChecked)
+                Prefs.setSunTrackerCompass(requireContext(), view.trackerSettingCompass.isChecked)
+                Prefs.setSunTrackerLinearElevation(requireContext(), view.trackerSettingLinearElevation.isChecked)
+                Prefs.setSunTrackerHourMarkers(requireContext(), view.trackerSettingHourMarkers.isChecked)
+                Prefs.setSunTrackerText(requireContext(), view.trackerSettingText.isChecked)
 
                 val parent = targetFragment
                 if (parent != null && parent is OnViewPrefsChangedListener) {

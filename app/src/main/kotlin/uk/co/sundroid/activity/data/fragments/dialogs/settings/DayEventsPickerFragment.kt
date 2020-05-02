@@ -62,7 +62,7 @@ class DayEventsPickerFragment : DialogFragment() {
             DayEventsPickerFragment().apply {
                 arguments = save(currentEvents)
                 setTargetFragment(target, 0)
-                show(target.requireFragmentManager(), "SETTINGS")
+                show(target.parentFragmentManager, "SETTINGS")
             }
         }
 

@@ -18,18 +18,19 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import kotlinx.android.synthetic.main.loc_options.*
 import uk.co.sundroid.AbstractFragment
-import uk.co.sundroid.R
 import uk.co.sundroid.activity.Locater
 import uk.co.sundroid.activity.LocaterListener
 import uk.co.sundroid.activity.MainActivity
 import uk.co.sundroid.activity.Page
+import uk.co.sundroid.databinding.LocOptionsBinding
 import uk.co.sundroid.domain.LocationDetails
 import uk.co.sundroid.util.view.SimpleAlertFragment
 import uk.co.sundroid.util.view.SimpleProgressFragment
 
 class LocationSelectFragment : AbstractFragment(), LocaterListener {
+
+    private lateinit var b: LocOptionsBinding
 
     private var locater: Locater? = null
 
@@ -58,25 +59,23 @@ class LocationSelectFragment : AbstractFragment(), LocaterListener {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, state: Bundle?): View? {
-        return when (container) {
-            null -> null
-            else -> inflater.inflate(R.layout.loc_options, container, false)
-        }
+        b = LocOptionsBinding.inflate(inflater)
+        return b.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        locOptionMyLocation.setOnClickListener { if (checkPermission()) { startLocater() } }
-        locOptionMap.setOnClickListener { setPage(Page.LOCATION_MAP) }
-        locOptionSearch.setOnClickListener { setPage(Page.LOCATION_SEARCH) }
-        locOptionSavedPlaces.setOnClickListener { setPage(Page.LOCATION_LIST) }
+        b.locOptionMyLocation.setOnClickListener { if (checkPermission()) { startLocater() } }
+        b.locOptionMap.setOnClickListener { setPage(Page.LOCATION_MAP) }
+        b.locOptionSearch.setOnClickListener { setPage(Page.LOCATION_SEARCH) }
+        b.locOptionSavedPlaces.setOnClickListener { setPage(Page.LOCATION_LIST) }
     }
 
     private fun startLocater() {
         locater?.cancel()
         locater = Locater(this, requireContext()).apply {
             if (this.start()) {
-                SimpleProgressFragment.show(requireFragmentManager(), "Finding your location...")
+                SimpleProgressFragment.show(parentFragmentManager, "Finding your location...")
             } else {
                 locationError()
             }
@@ -128,7 +127,7 @@ class LocationSelectFragment : AbstractFragment(), LocaterListener {
 
     override fun locationError() {
         SimpleAlertFragment.show(
-                requireFragmentManager(),
+                parentFragmentManager,
                 "Location lookup failed",
                 "Location services are disabled. Enable wireless networks or GPS in your location settings."
         )
@@ -138,7 +137,7 @@ class LocationSelectFragment : AbstractFragment(), LocaterListener {
         handler.post {
             if (!isDetached) {
                 SimpleAlertFragment.show(
-                        requireFragmentManager(),
+                        parentFragmentManager,
                         "Location lookup timeout",
                         "Couldn't find your location. Make sure you have a good signal or a clear view of the sky."
                 )
@@ -147,7 +146,7 @@ class LocationSelectFragment : AbstractFragment(), LocaterListener {
     }
 
     override fun locationReceived(locationDetails: LocationDetails) {
-        SimpleProgressFragment.close(requireFragmentManager())
+        SimpleProgressFragment.close(parentFragmentManager)
         onLocationSelected(locationDetails)
     }
 
