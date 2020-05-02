@@ -7,12 +7,13 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import kotlinx.android.synthetic.main.frag_info.*
 import uk.co.sundroid.AbstractFragment
-import uk.co.sundroid.R
 import uk.co.sundroid.activity.MainActivity
+import uk.co.sundroid.databinding.FragInfoBinding
 
 class InfoFragment : AbstractFragment() {
+
+    private lateinit var b: FragInfoBinding
 
     override fun onResume() {
         super.onResume()
@@ -23,16 +24,14 @@ class InfoFragment : AbstractFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, state: Bundle?): View? {
-        return when (container) {
-            null -> null
-            else -> inflater.inflate(R.layout.frag_info, container, false)
-        }
+        b = FragInfoBinding.inflate(inflater)
+        return b.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewPager.adapter = InfoTabsAdapter(childFragmentManager)
-        tabLayout.setupWithViewPager(viewPager)
+        b.viewPager.adapter = InfoTabsAdapter(childFragmentManager)
+        b.tabLayout.setupWithViewPager(b.viewPager)
     }
 
     class InfoTabsAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {

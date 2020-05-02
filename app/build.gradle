@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 def keystorePropertiesFile = rootProject.file("keystore.properties")
 def keystoreProperties = new Properties()
@@ -29,6 +30,9 @@ android {
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
+    viewBinding {
+        enabled = true
+    }
 }
 
 dependencies {
@@ -36,7 +40,8 @@ dependencies {
     implementation 'androidx.core:core:1.2.0'
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.localbroadcastmanager:localbroadcastmanager:1.0.0'
-    implementation 'androidx.preference:preference:1.1.0'
+    implementation 'androidx.preference:preference:1.1.1'
     implementation 'com.google.android.material:material:1.1.0'
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
+    kapt 'com.android.databinding:compiler:3.1.4'
 }

@@ -7,12 +7,13 @@ import android.view.ViewGroup
 
 import uk.co.sundroid.AbstractFragment
 import uk.co.sundroid.BuildConfig
-import uk.co.sundroid.R.layout
 
-import kotlinx.android.synthetic.main.frag_about.*
 import uk.co.sundroid.activity.MainActivity
+import uk.co.sundroid.databinding.FragAboutBinding
 
 class AboutFragment : AbstractFragment() {
+
+    private lateinit var b: FragAboutBinding
 
     override fun onResume() {
         super.onResume()
@@ -23,12 +24,13 @@ class AboutFragment : AbstractFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, state: Bundle?): View? {
-        return inflater.inflate(layout.frag_about, container, false)
+        b = FragAboutBinding.inflate(layoutInflater)
+        return b.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val version = String.format("Version %s", BuildConfig.VERSION_NAME)
-        aboutVersion.text = version
-        aboutSource.setOnClickListener { browseTo("https://github.com/davemorrissey/sundroid") }
+        b.aboutVersion.text = version
+        b.aboutSource.setOnClickListener { browseTo("https://github.com/davemorrissey/sundroid") }
     }
 }

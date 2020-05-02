@@ -7,30 +7,31 @@ import android.view.ViewGroup
 import android.widget.TextView
 
 import uk.co.sundroid.AbstractFragment
-import uk.co.sundroid.R
+import uk.co.sundroid.databinding.FragInfoGlossaryBinding
 import uk.co.sundroid.util.theme.*
-
-import kotlinx.android.synthetic.main.frag_info_glossary.*
 
 class InfoGlossaryFragment : AbstractFragment() {
 
+    private lateinit var b: FragInfoGlossaryBinding
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, state: Bundle?): View? {
-        return inflater.inflate(R.layout.frag_info_glossary, container, false)
+        b = FragInfoGlossaryBinding.inflate(inflater)
+        return b.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         mapOf(
-                infGlossaryApsisDisclosure to infGlossaryApsisBody,
-                infGlossaryAzimuthDisclosure to infGlossaryAzimuthBody,
-                infGlossaryCivTwiDisclosure to infGlossaryCivTwiBody,
-                infGlossaryNtcTwiDisclosure to infGlossaryNtcTwiBody,
-                infGlossaryAstTwiDisclosure to infGlossaryAstTwiBody,
-                infGlossarySolNoonDisclosure to infGlossarySolNoonBody,
-                infGlossaryGoldenDisclosure to infGlossaryGoldenBody,
-                infGlossarySolsticeDisclosure to infGlossarySolsticeBody,
-                infGlossaryEquinoxDisclosure to infGlossaryEquinoxBody,
-                infGlossarySolEclipseDisclosure to infGlossarySolEclipseBody,
-                infGlossaryLunarEclipseDisclosure to infGlossaryLunarEclipseBody
+                b.infGlossaryApsisDisclosure to b.infGlossaryApsisBody,
+                b.infGlossaryAzimuthDisclosure to b.infGlossaryAzimuthBody,
+                b.infGlossaryCivTwiDisclosure to b.infGlossaryCivTwiBody,
+                b.infGlossaryNtcTwiDisclosure to b.infGlossaryNtcTwiBody,
+                b.infGlossaryAstTwiDisclosure to b.infGlossaryAstTwiBody,
+                b.infGlossarySolNoonDisclosure to b.infGlossarySolNoonBody,
+                b.infGlossaryGoldenDisclosure to b.infGlossaryGoldenBody,
+                b.infGlossarySolsticeDisclosure to b.infGlossarySolsticeBody,
+                b.infGlossaryEquinoxDisclosure to b.infGlossaryEquinoxBody,
+                b.infGlossarySolEclipseDisclosure to b.infGlossarySolEclipseBody,
+                b.infGlossaryLunarEclipseDisclosure to b.infGlossaryLunarEclipseBody
         ).forEach { (d, body) -> d.setOnClickListener { v -> toggle(v, body)} }
     }
 

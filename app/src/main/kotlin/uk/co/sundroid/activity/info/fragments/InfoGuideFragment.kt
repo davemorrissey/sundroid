@@ -7,25 +7,27 @@ import android.view.ViewGroup
 import android.widget.TextView
 
 import uk.co.sundroid.AbstractFragment
-import uk.co.sundroid.R
 import uk.co.sundroid.util.theme.*
 
-import kotlinx.android.synthetic.main.frag_info_guide.*
+import uk.co.sundroid.databinding.FragInfoGuideBinding
 
 class InfoGuideFragment : AbstractFragment() {
 
+    private lateinit var b: FragInfoGuideBinding
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, state: Bundle?): View? {
-        return inflater.inflate(R.layout.frag_info_guide, container, false)
+        b = FragInfoGuideBinding.inflate(inflater)
+        return b.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         mapOf(
-            infGuideDisclaimerDisclosure to infGuideDisclaimerBody,
-            infGuideLocationDisclosure to infGuideLocationBody,
-            infGuideOfflineDisclosure to infGuideOfflineBody,
-            infGuideTimeDisclosure to infGuideTimeBody,
-            infGuideZonesDisclosure to infGuideZonesBody,
-            infGuideTrackerDisclosure to infGuideTrackerBody
+                b.infGuideDisclaimerDisclosure to b.infGuideDisclaimerBody,
+                b.infGuideLocationDisclosure to b.infGuideLocationBody,
+                b.infGuideOfflineDisclosure to b.infGuideOfflineBody,
+                b.infGuideTimeDisclosure to b.infGuideTimeBody,
+                b.infGuideZonesDisclosure to b.infGuideZonesBody,
+                b.infGuideTrackerDisclosure to b.infGuideTrackerBody
         ).forEach { (d, body) -> d.setOnClickListener { v -> toggle(v, body)} }
     }
 
