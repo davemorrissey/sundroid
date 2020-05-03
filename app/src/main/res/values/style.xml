@@ -84,11 +84,11 @@
 	</style>
 
 	<style name="SundroidDarkBlueAlertDialog" parent="Theme.AppCompat.Dialog.Alert">
-		<item name="android:background">?primary_color</item>
+		<item name="android:windowBackground">?primary_color</item>
 	</style>
 
 	<style name="SundroidDarkBlueDialog" parent="Theme.AppCompat.Dialog">
-		<item name="android:background">?primary_color</item>
+		<item name="android:windowBackground">?primary_color</item>
 	</style>
 
 	<style name="SundroidDarkBlueDatePickerDialog" parent="Theme.AppCompat.Dialog">
@@ -101,7 +101,7 @@
 	</style>
 
 	<style name="SundroidDarkBlueTimePickerStyle" parent="android:Widget.Material.TimePicker">
-		<item name="android:background">?primary_color</item>
+		<item name="android:windowBackground">?primary_color</item>
 		<item name="android:headerBackground">?primary_color_dark</item>
 		<item name="android:numbersBackgroundColor">?primary_color_dark</item>
 	</style>

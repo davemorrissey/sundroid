@@ -53,7 +53,7 @@ class DayDetailMoonFragment : AbstractDayDetailFragment() {
                                 inBackground = { MoonPhaseImage.makeImage(resources, R.drawable.moon, day.phaseDouble, location.location.latitude.doubleValue < 0, MoonPhaseImage.SIZE_LARGE) },
                                 onDone = { bitmap ->
                                     if (isSafe) {
-                                        image(view, moonImage, bitmap)
+                                        modifyChild(view, moonImage, bitmap = bitmap)
                                     }
                                 }
                         )

@@ -135,7 +135,7 @@ class LocationSelectFragment : AbstractFragment(), LocaterListener {
 
     override fun locationTimeout() {
         handler.post {
-            if (!isDetached) {
+            if (!isDetached && host != null) {
                 SimpleAlertFragment.show(
                         parentFragmentManager,
                         "Location lookup timeout",

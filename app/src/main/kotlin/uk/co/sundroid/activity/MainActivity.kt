@@ -1,15 +1,12 @@
 package uk.co.sundroid.activity
 
-import android.app.Activity
 import android.app.AlertDialog
-import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
-import android.preference.PreferenceManager
 import android.view.Menu
 import android.view.View
-import android.widget.EditText
 import android.widget.Toast
+import androidx.preference.PreferenceManager
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
@@ -21,6 +18,7 @@ import uk.co.sundroid.NavItem
 import uk.co.sundroid.NavItem.NavItemLocation.HEADER
 import uk.co.sundroid.R
 import uk.co.sundroid.activity.data.fragments.AbstractDataFragment
+import uk.co.sundroid.databinding.DialogSaveBinding
 import uk.co.sundroid.domain.LocationDetails
 import uk.co.sundroid.util.dao.DatabaseHelper
 import uk.co.sundroid.util.isEmpty
@@ -87,14 +85,6 @@ class MainActivity : AbstractActivity(), FragmentManager.OnBackStackChangedListe
             intent.action = null
             initCalendarAndLocation(true)
         }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        // FIXME should be able to remove this once all location activities are fragments
-        d(TAG, "onActivityResult($requestCode, $resultCode)")
-        super.onActivityResult(requestCode, resultCode, data)
-        initCalendarAndLocation(false)
-        (getRootFragment() as? AbstractDataFragment)?.update()
     }
 
     private fun initCalendarAndLocation(forceDateUpdate: Boolean) {
@@ -172,11 +162,6 @@ class MainActivity : AbstractActivity(), FragmentManager.OnBackStackChangedListe
         refreshChrome()
     }
 
-    private fun openActivity(clazz: Class<out Activity>) {
-        val intent = Intent(this, clazz)
-        startActivity(intent)
-    }
-
     fun setToolbarTitle(title: String) {
         toolbar?.title = title
     }
@@ -218,7 +203,57 @@ class MainActivity : AbstractActivity(), FragmentManager.OnBackStackChangedListe
 
     override fun onNavItemSelected(itemPosition: Int) {
         when (itemPosition) {
-            MENU_SAVE_LOCATION -> showDialog(DIALOG_SAVE)
+            MENU_SAVE_LOCATION -> {
+                val location = Prefs.selectedLocation(this)
+                if (location!!.id > 0) {
+                    val dialog = AlertDialog.Builder(this)
+                    dialog.setTitle("Delete saved location?")
+                    dialog.setPositiveButton("OK") { _, _ ->
+                        var db: DatabaseHelper? = null
+                        try {
+                            db = DatabaseHelper(this@MainActivity)
+                            db.deleteSavedLocation(location.id)
+                            location.id = 0
+                            Prefs.saveSelectedLocation(this@MainActivity, location)
+                            refreshChrome()
+                        } finally {
+                            db?.close()
+                        }
+                    }
+                    dialog.setNegativeButton("Cancel", null)
+                    dialog.show()
+                } else {
+                    val dialog = AlertDialog.Builder(this)
+                    dialog.setTitle("Save location")
+                    val view = DialogSaveBinding.inflate(layoutInflater)
+                    if (isNotEmpty(location.name) && isEmpty(view.saveField.text.toString())) {
+                        view.saveField.setText(location.name)
+                    } else {
+                        view.saveField.setText("")
+                    }
+                    dialog.setView(view.root)
+                    dialog.setPositiveButton("OK") { _, _ ->
+                        val saveName = view.saveField.text.toString()
+                        var db: DatabaseHelper? = null
+                        try {
+                            if (isNotEmpty(saveName)) {
+                                location.name = saveName
+                                db = DatabaseHelper(this@MainActivity)
+                                db!!.addSavedLocation(location)
+                                Prefs.saveSelectedLocation(this@MainActivity, location)
+                                refreshChrome()
+                                Toast.makeText(this@MainActivity, "This location has been saved", Toast.LENGTH_SHORT).show()
+                            } else {
+                                Toast.makeText(this@MainActivity, "Please enter a name for this location", Toast.LENGTH_SHORT).show()
+                            }
+                        } finally {
+                            db?.close()
+                        }
+                    }
+                    dialog.setNegativeButton("Cancel", null)
+                    dialog.show()
+                }
+            }
             MENU_VIEW_SETTINGS -> try { viewConfigurationCallback?.invoke() } catch (e: Exception) { }
         }
     }
@@ -279,69 +314,6 @@ class MainActivity : AbstractActivity(), FragmentManager.OnBackStackChangedListe
         }
     }
 
-    override fun onCreateDialog(id: Int): Dialog {
-        when (id) {
-            DIALOG_SAVE -> {
-                val location = Prefs.selectedLocation(this)
-                if (location!!.id > 0) {
-                    val dialog = AlertDialog.Builder(this)
-                    dialog.setTitle("Delete saved location?")
-                    dialog.setPositiveButton("OK") { _, _ ->
-                        var db: DatabaseHelper? = null
-                        try {
-                            db = DatabaseHelper(this@MainActivity)
-                            db.deleteSavedLocation(location.id)
-                            location.id = 0
-                            Prefs.saveSelectedLocation(this@MainActivity, location)
-                            refreshChrome()
-                        } finally {
-                            db?.close()
-                        }
-                        removeDialog(DIALOG_SAVE)
-                    }
-                    dialog.setNegativeButton("Cancel") { _, _ -> removeDialog(DIALOG_SAVE) }
-                    return dialog.create()
-                } else {
-
-                    val dialog = AlertDialog.Builder(this)
-                    dialog.setTitle("Save location")
-
-                    val view = layoutInflater.inflate(R.layout.dialog_save, null)
-                    val saveField = view.findViewById<EditText>(R.id.saveField)
-                    if (isNotEmpty(location.name) && isEmpty(saveField.text.toString())) {
-                        saveField.setText(location.name)
-                    } else {
-                        saveField.setText("")
-                    }
-                    dialog.setView(view)
-
-                    dialog.setPositiveButton("OK") { _, _ ->
-                        val saveName = saveField.text.toString()
-                        var db: DatabaseHelper? = null
-                        try {
-                            if (isNotEmpty(saveName)) {
-                                location.name = saveName
-                                db = DatabaseHelper(this@MainActivity)
-                                db!!.addSavedLocation(location)
-                                Prefs.saveSelectedLocation(this@MainActivity, location)
-                                refreshChrome()
-                                Toast.makeText(this@MainActivity, "This location has been saved", Toast.LENGTH_SHORT).show()
-                            } else {
-                                Toast.makeText(this@MainActivity, "Please enter a name for this location", Toast.LENGTH_SHORT).show()
-                            }
-                        } finally {
-                            db?.close()
-                        }
-                        removeDialog(DIALOG_SAVE)
-                    }
-                    dialog.setNegativeButton("Cancel") { _, _ -> removeDialog(DIALOG_SAVE) }
-                    return dialog.create()
-                }
-            }
-        }
-        return super.onCreateDialog(id)
-    }
-
     private fun getRootFragment(): Fragment? {
         return supportFragmentManager.findFragmentByTag(ROOT)
     }
@@ -358,7 +330,6 @@ class MainActivity : AbstractActivity(), FragmentManager.OnBackStackChangedListe
     }
 
     companion object {
-        private const val DIALOG_SAVE = 746
         private const val STATE_PAGE = "page"
         private const val STATE_DATE_TIMESTAMP = "dateTimestamp"
         private const val STATE_TIME_TIMESTAMP = "timeTimestamp"

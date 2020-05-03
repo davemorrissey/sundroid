@@ -86,7 +86,7 @@ class DayDetailEventsFragment : AbstractDayDetailFragment() {
                                 table.addView(eventRow)
                             }
                         }
-                        show(view, eventsDataBox)
+                        modifyChild(view, eventsDataBox, visibility = View.VISIBLE)
                     }
                 }
         )

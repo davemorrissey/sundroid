@@ -1,5 +1,6 @@
 package uk.co.sundroid.util.prefs
 
+import android.annotation.SuppressLint
 import uk.co.sundroid.activity.data.DataGroup
 import uk.co.sundroid.util.astro.Body
 import uk.co.sundroid.domain.LocationDetails
@@ -9,8 +10,8 @@ import uk.co.sundroid.util.time.TimeZoneResolver
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.preference.PreferenceManager
 import android.text.format.DateFormat
+import androidx.preference.PreferenceManager
 import uk.co.sundroid.activity.data.fragments.CalendarView
 import uk.co.sundroid.domain.MapType
 import uk.co.sundroid.util.theme.THEME_DARKBLUE
@@ -154,6 +155,7 @@ object Prefs {
         return clockType == ClockType.TWENTYFOUR || (clockType == ClockType.DEFAULT && default24)
     }
 
+    @SuppressLint("ApplySharedPref")
     fun setTheme(context: Context, theme: String) {
         prefs(context).edit().putString(THEME_KEY, theme).commit()
     }

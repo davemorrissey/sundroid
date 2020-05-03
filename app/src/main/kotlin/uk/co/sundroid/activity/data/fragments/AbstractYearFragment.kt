@@ -2,8 +2,7 @@ package uk.co.sundroid.activity.data.fragments
 
 import android.os.Bundle
 import android.view.*
-import android.view.View.OnClickListener
-import android.view.View.OnTouchListener
+import android.view.View.*
 import uk.co.sundroid.R
 import uk.co.sundroid.R.drawable
 import uk.co.sundroid.activity.Page
@@ -41,7 +40,6 @@ abstract class AbstractYearFragment : AbstractDataFragment(), OnClickListener, O
     }
 
     override fun initialise() {
-        d(TAG, hashCode().toString() + " initialise")
         if (view != null) {
             safeInit(view)
         }
@@ -145,45 +143,45 @@ abstract class AbstractYearFragment : AbstractDataFragment(), OnClickListener, O
 
     private fun updateYear(location: LocationDetails, calendar: Calendar, view: View) {
         if (Prefs.showTimeZone(requireContext())) {
-            show(view, R.id.zoneButton)
+            modifyChild(view, R.id.zoneButton, visibility = VISIBLE)
             val zone = location.timeZone!!.zone
             val zoneDST = zone.inDaylightTime(Date(calendar.timeInMillis + 12 * 60 * 60 * 1000))
             val zoneName = zone.getDisplayName(zoneDST, TimeZone.LONG)
-            text(view, R.id.zoneName, zoneName)
+            modifyChild(view, R.id.zoneName, visibility = VISIBLE, text = zoneName)
 
             var zoneCities = location.timeZone!!.getOffset(calendar.timeInMillis + 12 * 60 * 60 * 1000) // Get day's main offset.
             if (isNotEmpty(location.timeZone!!.cities)) {
                 zoneCities += " " + location.timeZone!!.cities!!
             }
-            text(view, R.id.zoneCities, zoneCities)
+            modifyChild(view, R.id.zoneCities, visibility = VISIBLE, text = zoneCities)
         } else {
-            remove(view, R.id.zoneButton)
+            modifyChild(view, R.id.zoneButton, visibility = GONE)
         }
 
         yearFormat.timeZone = calendar.timeZone
         val year = yearFormat.format(Date(calendar.timeInMillis))
-        show(view, R.id.year, year)
+        modifyChild(view, R.id.year, visibility = VISIBLE, text = year)
 
         if (calendar.get(YEAR) <= 2000) {
             view.findViewById<View>(R.id.yearPrev).isEnabled = false
-            image(view, R.id.yearPrev, drawable.navigation_previous_item_disabled)
+            modifyChild(view, R.id.yearPrev, image = drawable.navigation_previous_item_disabled)
         } else {
             view.findViewById<View>(R.id.yearPrev).isEnabled = true
-            image(view, R.id.yearPrev, drawable.navigation_previous_item)
+            modifyChild(view, R.id.yearPrev, image = drawable.navigation_previous_item)
         }
         if (calendar.get(YEAR) >= 2025) {
             view.findViewById<View>(R.id.yearNext).isEnabled = false
-            image(view, R.id.yearNext, drawable.navigation_next_item_disabled)
+            modifyChild(view, R.id.yearNext, image = drawable.navigation_next_item_disabled)
         } else {
             view.findViewById<View>(R.id.yearNext).isEnabled = true
-            image(view, R.id.yearNext, drawable.navigation_next_item)
+            modifyChild(view, R.id.yearNext, image = drawable.navigation_next_item)
         }
     }
 
     private fun showYearPicker() {
         val yearPickerFragment = YearPickerFragment.newInstance(getDateCalendar())
         yearPickerFragment.setTargetFragment(this, 0)
-        yearPickerFragment.show(requireFragmentManager(), "yearPicker")
+        yearPickerFragment.show(parentFragmentManager, "yearPicker")
     }
 
     private fun nextYear() {
@@ -206,7 +204,6 @@ abstract class AbstractYearFragment : AbstractDataFragment(), OnClickListener, O
     protected abstract fun update(location: LocationDetails, calendar: Calendar, view: View)
 
     companion object {
-
         private val TAG = AbstractYearFragment::class.java.simpleName
     }
 
