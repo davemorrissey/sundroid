@@ -89,6 +89,7 @@ class DayDetailSunFragment : AbstractDayDetailFragment() {
 
                         if (day.riseSetType === RiseSetType.RISEN || day.riseSetType === RiseSetType.SET) {
                             val eventCell = inflate(R.layout.frag_data_event, eventsRow, false)
+                            eventCell.setTag(R.attr.eventIndex, "sunSpecial")
                             modifyChild(eventCell, evtImg, image = if (day.riseSetType === RiseSetType.RISEN) getRisenAllDay() else getSetAllDay())
                             modifyChild(eventCell, evtTime, html = if (day.riseSetType === RiseSetType.RISEN) "<small>RISEN ALL DAY</small>" else "<small>SET ALL DAY</small>")
                             modifyChild(eventCell, evtAz, visibility = GONE)
@@ -96,8 +97,10 @@ class DayDetailSunFragment : AbstractDayDetailFragment() {
                             eventsRow.addView(eventCell)
                             noUptime = true
                         } else {
-                            day.events.filter { e -> e.event == RISESET }.forEach { event ->
+                            day.events.filter { e -> e.event == RISESET }.forEachIndexed { i, event ->
                                 val eventCell = inflate(R.layout.frag_data_event, eventsRow, false)
+                                eventCell.setTag(R.attr.eventIndex, "sunEvt$i")
+                                eventCell.setTag(R.attr.eventType, event.direction.name)
                                 val az = formatBearing(requireContext(), event.azimuth ?: 0.0, location.location, event.time)
                                 modifyChild(eventCell, evtImg, image = if (event.direction == RISING) getRiseArrow() else getSetArrow())
                                 modifyChild(eventCell, evtTime, html = formatTimeStr(requireContext(), event.time, false, html = true))

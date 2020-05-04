@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.View
 import android.widget.Toast
-import androidx.preference.PreferenceManager
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
@@ -60,10 +59,9 @@ class MainActivity : AbstractActivity(), FragmentManager.OnBackStackChangedListe
 
     public override fun onResume() {
         super.onResume()
-        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
         var newInstall = false
         var newUpdate = false
-        val lastVersion = prefs.getInt("last-version", 0)
+        val lastVersion = Prefs.lastVersion(this)
         if (lastVersion == 0) {
             newInstall = true
         } else if (lastVersion > 0 && lastVersion < BuildConfig.VERSION_CODE) {
@@ -75,7 +73,7 @@ class MainActivity : AbstractActivity(), FragmentManager.OnBackStackChangedListe
             WelcomeDialogFragment().show(supportFragmentManager, "welcome")
         }
 
-        prefs.edit().putInt("last-version", BuildConfig.VERSION_CODE).apply()
+        Prefs.setVersion(this, BuildConfig.VERSION_CODE)
         (getRootFragment() as? AbstractDataFragment)?.update()
     }
 

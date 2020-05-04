@@ -44,4 +44,7 @@
 
     <attr name="disclosure_open" format="reference"/>
     <attr name="disclosure_closed" format="reference"/>
+
+    <attr name="eventIndex" format="string"/>
+    <attr name="eventType" format="string"/>
 </resources>

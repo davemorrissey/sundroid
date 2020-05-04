@@ -58,14 +58,17 @@ class DaySummaryFragment : AbstractDayFragment() {
 
         if (sunDay.riseSetType === RISEN || sunDay.riseSetType === SET) {
             val eventCell = inflate(R.layout.frag_data_event, sunEventsRow, false)
+            eventCell.setTag(R.attr.eventIndex, "sunSpecial")
             modifyChild(eventCell, evtImg, image = if (sunDay.riseSetType === RISEN) getRisenAllDay() else getSetAllDay())
             modifyChild(eventCell, evtTime, html = if (sunDay.riseSetType === RISEN) "<small>RISEN ALL DAY</small>" else "<small>SET ALL DAY</small>")
             modifyChild(eventCell, evtAz, visibility = GONE)
             modifyChild(view, R.id.sunUptime, visibility = GONE)
             sunEventsRow.addView(eventCell)
         } else {
-            sunDay.events.forEach { event ->
+            sunDay.events.forEachIndexed { i, event ->
                 val eventCell = inflate(R.layout.frag_data_event, sunEventsRow, false)
+                eventCell.setTag(R.attr.eventIndex, "sunEvt$i")
+                eventCell.setTag(R.attr.eventType, event.direction.name)
                 val az = formatBearing(requireContext(), event.azimuth ?: 0.0, location.location, event.time)
                 modifyChild(eventCell, evtImg, image = if (event.direction == RISING) getRiseArrow() else getSetArrow())
                 modifyChild(eventCell, evtTime, html = formatTimeStr(requireContext(), event.time, false, html = true))
@@ -87,13 +90,16 @@ class DaySummaryFragment : AbstractDayFragment() {
 
         if (moonDay.riseSetType === RISEN || moonDay.riseSetType === SET) {
             val eventCell = inflate(R.layout.frag_data_event, moonEventsRow, false)
+            eventCell.setTag(R.attr.eventIndex, "mmonSpecial")
             modifyChild(eventCell, evtImg, image = if (moonDay.riseSetType === RISEN) getRisenAllDay() else getSetAllDay())
             modifyChild(eventCell, evtTime, html = if (moonDay.riseSetType === RISEN) "<small>RISEN ALL DAY</small>" else "<small>SET ALL DAY</small>")
             modifyChild(eventCell, evtAz, visibility = GONE)
             moonEventsRow.addView(eventCell)
         } else {
-            moonDay.events.forEach { event ->
+            moonDay.events.forEachIndexed { i, event ->
                 val eventCell = inflate(R.layout.frag_data_event, moonEventsRow, false)
+                eventCell.setTag(R.attr.eventIndex, "moonEvt$i")
+                eventCell.setTag(R.attr.eventType, event.direction.name)
                 val az = formatBearing(requireContext(), event.azimuth ?: 0.0, location.location, event.time)
                 modifyChild(eventCell, evtImg, image = if (event.direction == RISING) getRiseArrow() else getSetArrow())
                 modifyChild(eventCell, evtTime, html = formatTimeStr(requireContext(), event.time, false, html = true))

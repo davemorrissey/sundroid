@@ -56,6 +56,8 @@ object Prefs {
 
     private const val MAP_LOCATION_PERMISSION_DENIED_KEY = "mapLocationPermissionDenied"
 
+    private const val LAST_VERSION_KEY = "last-version"
+
     fun selectedLocation(context: Context): LocationDetails? {
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
         if (prefs.contains(LOC_LAT_KEY) && prefs.contains(LOC_LON_KEY)) {
@@ -140,6 +142,10 @@ object Prefs {
         editor.apply()
         
     }
+
+    fun setShowSeconds(context: Context, showSeconds: Boolean) {
+        prefs(context).edit().putBoolean(SHOW_SECONDS_KEY, showSeconds).apply()
+    }
     
     fun showSeconds(context: Context): Boolean {
         return prefs(context).getBoolean(SHOW_SECONDS_KEY, false)
@@ -147,6 +153,10 @@ object Prefs {
     
     fun reverseGeocode(context: Context): Boolean {
         return prefs(context).getBoolean(REVERSE_GEOCODE_KEY, true)
+    }
+
+    fun setClockType(context: Context, clockType: ClockType) {
+        prefs(context).edit().putString(CLOCK_KEY, clockType.name).apply()
     }
     
     fun clockType24(context: Context): Boolean {
@@ -183,6 +193,10 @@ object Prefs {
     
     fun defaultZoneOverride(context: Context): Boolean {
         return prefs(context).getBoolean(DEFAULT_ZONE_OVERRIDE_KEY, false)
+    }
+
+    fun setShowTimeZone(context: Context, showTimeZone: Boolean): Boolean {
+        return prefs(context).edit().putBoolean(SHOW_ZONE_KEY, showTimeZone).commit()
     }
     
     fun showTimeZone(context: Context): Boolean {
@@ -310,6 +324,14 @@ object Prefs {
 
     fun setMapLocationPermissionDenied(context: Context, denied: Boolean) {
         prefs(context).edit().putBoolean(MAP_LOCATION_PERMISSION_DENIED_KEY, denied).apply()
+    }
+
+    fun lastVersion(context: Context): Int {
+        return prefs(context).getInt(LAST_VERSION_KEY, 0)
+    }
+
+    fun setVersion(context: Context, version: Int) {
+        prefs(context).edit().putInt(LAST_VERSION_KEY, version).apply()
     }
 
 	private fun prefs(context: Context): SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
