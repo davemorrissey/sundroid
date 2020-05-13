@@ -46,7 +46,7 @@ class DaySummaryFragment : AbstractDayFragment() {
 
         Thread(Runnable {
             context?.let {
-                val bitmap: Bitmap = MoonPhaseImage.makeImage(resources, R.drawable.moon, moonDay.phaseDouble, moonDay.orientationAngles, MoonPhaseImage.SIZE_MEDIUM)
+                val bitmap: Bitmap = MoonPhaseImage.makeImage(resources, R.drawable.moon, moonDay.phaseDouble, moonDay.orientationAngles)
                 handler.post {
                     moonImage.scaleType = ImageView.ScaleType.MATRIX
                     val size = ((requireContext().resources.displayMetrics.densityDpi/160.0) * 100).toInt().toFloat()

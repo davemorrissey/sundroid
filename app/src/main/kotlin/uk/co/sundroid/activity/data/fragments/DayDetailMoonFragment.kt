@@ -56,7 +56,7 @@ class DayDetailMoonFragment : AbstractDayDetailFragment() {
 
                         // TODO Make a MoonImageView that handles generation, rotation and resizes
                         async(
-                                inBackground = { MoonPhaseImage.makeImage(resources, R.drawable.moon, day.phaseDouble, day.orientationAngles, MoonPhaseImage.SIZE_LARGE) },
+                                inBackground = { MoonPhaseImage.makeImage(resources, R.drawable.moon, day.phaseDouble, day.orientationAngles) },
                                 onDone = { bitmap ->
                                     if (isSafe) {
                                         val moonImageView = view.findViewById(moonImage) as ImageView
