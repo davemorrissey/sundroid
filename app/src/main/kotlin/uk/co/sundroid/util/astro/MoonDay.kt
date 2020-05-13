@@ -13,6 +13,9 @@ class MoonDay : BodyDay() {
     /** Exact phase at noon as a double (0 = new, 0.5 = full).  */
     var phaseDouble: Double = 0.0
 
+    /** Angles used to render moon. */
+    var orientationAngles: OrientationAngles = OrientationAngles()
+
     /** Illumination percentage.  */
     var illumination: Int = 0
 

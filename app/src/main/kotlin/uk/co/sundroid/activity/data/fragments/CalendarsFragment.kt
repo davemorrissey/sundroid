@@ -1,29 +1,35 @@
 package uk.co.sundroid.activity.data.fragments
 
+import android.graphics.Matrix
+import android.util.TypedValue
 import android.view.View
 import android.view.View.*
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.ArrayAdapter
+import android.widget.ImageView
+import android.widget.TableRow
+import android.widget.TextView
+import kotlinx.android.synthetic.main.frag_data_calendars.*
 import uk.co.sundroid.R
-import uk.co.sundroid.util.astro.*
-import uk.co.sundroid.util.astro.math.BodyPositionCalculator
-import uk.co.sundroid.util.astro.math.SunCalculator
-import uk.co.sundroid.util.astro.BodyDayEvent.Event.*
-import uk.co.sundroid.util.astro.BodyDayEvent.Direction.*
-import uk.co.sundroid.util.geometry.formatBearing
-import uk.co.sundroid.util.theme.*
-import uk.co.sundroid.util.time.formatDiff
-import uk.co.sundroid.util.time.formatDuration
-import uk.co.sundroid.util.html
-import java.math.BigDecimal
-import java.util.*
 import uk.co.sundroid.R.id.*
 import uk.co.sundroid.activity.MainActivity
 import uk.co.sundroid.activity.data.fragments.dialogs.settings.CalendarSelectorFragment
-import uk.co.sundroid.util.prefs.Prefs
-import kotlinx.android.synthetic.main.frag_data_calendars.*
+import uk.co.sundroid.util.astro.*
+import uk.co.sundroid.util.astro.BodyDayEvent.Direction.DESCENDING
+import uk.co.sundroid.util.astro.BodyDayEvent.Direction.RISING
+import uk.co.sundroid.util.astro.BodyDayEvent.Event.*
+import uk.co.sundroid.util.astro.math.BodyPositionCalculator
+import uk.co.sundroid.util.astro.math.SunCalculator
 import uk.co.sundroid.util.async.async
+import uk.co.sundroid.util.geometry.formatBearing
+import uk.co.sundroid.util.html
+import uk.co.sundroid.util.prefs.Prefs
+import uk.co.sundroid.util.theme.*
+import uk.co.sundroid.util.time.formatDiff
+import uk.co.sundroid.util.time.formatDuration
 import uk.co.sundroid.util.time.formatTimeStr
+import java.math.BigDecimal
+import java.util.*
 import kotlin.collections.LinkedHashSet
 
 
@@ -190,6 +196,7 @@ class CalendarsFragment : AbstractMonthFragment<ArrayList<CalendarsFragment.DayE
                     }
                     val moonImg = phaseBd.toString().replace("\\.".toRegex(), "")
                     dayEntry.moonImg = resources.getIdentifier("$packageName:drawable/moonoverlay$moonImg", null, null)
+                    dayEntry.moonImgRotate = moonDay.orientationAngles.imageRotationAngle()
                 }
             } else if (type == "daylight") {
                 val sunDay = SunCalculator.calcDay(location.location, loopCalendar, RISESET)
@@ -264,6 +271,7 @@ class CalendarsFragment : AbstractMonthFragment<ArrayList<CalendarsFragment.DayE
         }
 
         run {
+            val moonOverlaySize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 36f, resources.displayMetrics)
             var i = 0
             while (i < 32 && loopCalendar.get(Calendar.MONTH) == month) {
                 val entry = data[i]
@@ -288,6 +296,13 @@ class CalendarsFragment : AbstractMonthFragment<ArrayList<CalendarsFragment.DayE
                     }
                     modifyChild(cell, calendarGridCellMoonOverlay, image = moonImg)
                     modifyChild(cell, calendarGridCellMoon, calendarGridCellMoonOverlay, visibility = VISIBLE)
+
+                    val moonImageView = cell.findViewById(calendarGridCellMoonOverlay) as ImageView
+                    val matrix = Matrix()
+                    moonImageView.scaleType = ImageView.ScaleType.MATRIX
+                    matrix.postRotate(entry.moonImgRotate!!, 45f, 45f)
+                    matrix.postScale(moonOverlaySize/90f, moonOverlaySize/90f)
+                    moonImageView.imageMatrix = matrix
                 } ?: run {
                     modifyChild(cell, calendarGridCellMoon, calendarGridCellMoonOverlay, visibility = GONE)
                     modifyChild(dateCell, calendarGridTitlePhase, visibility = GONE)
@@ -367,6 +382,8 @@ class CalendarsFragment : AbstractMonthFragment<ArrayList<CalendarsFragment.DayE
             modifyChild(row, rowDate, visibility = VISIBLE, text = entry.day.toString())
             modifyChild(row, rowWeekday, visibility = VISIBLE, text = weekday)
 
+            val moonOverlaySize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 36f, resources.displayMetrics)
+
             entry.moonImg?.let { moonImg ->
                 entry.phaseImg?.let { phaseImg ->
                     modifyChild(row, monthCalDatePhase, visibility = VISIBLE, image = phaseImg)
@@ -375,6 +392,13 @@ class CalendarsFragment : AbstractMonthFragment<ArrayList<CalendarsFragment.DayE
                 }
                 modifyChild(row, dayMoonOverlay, image = moonImg)
                 modifyChild(row, dayMoonCell, monthCalDatePhaseCell, visibility = VISIBLE)
+
+                val moonImageView = row.findViewById(dayMoonOverlay) as ImageView
+                val matrix = Matrix()
+                moonImageView.scaleType = ImageView.ScaleType.MATRIX
+                matrix.postRotate(entry.moonImgRotate!!, 45f, 45f)
+                matrix.postScale(moonOverlaySize/90f, moonOverlaySize/90f)
+                moonImageView.imageMatrix = matrix
             } ?: run {
                 modifyChild(row, dayMoonCell, monthCalDatePhaseCell, visibility = GONE)
             }
@@ -407,6 +431,7 @@ class CalendarsFragment : AbstractMonthFragment<ArrayList<CalendarsFragment.DayE
         var events: MutableSet<DayEntryEvent> = LinkedHashSet()
         var phaseImg: Int? = null
         var moonImg: Int? = null
+        var moonImgRotate: Float? = null
         var day: Int = 0
         var dayOfWeek: Int = 0
         var today = false

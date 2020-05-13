@@ -2,11 +2,13 @@ package uk.co.sundroid.activity.data.fragments
 
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
+import android.graphics.Matrix
 import android.os.Handler
 import android.view.View
 import android.view.View.VISIBLE
 import android.view.View.GONE
 import android.view.ViewGroup
+import android.widget.ImageView
 import uk.co.sundroid.R
 import uk.co.sundroid.R.id.*
 import uk.co.sundroid.util.astro.BodyDayEvent.Direction.RISING
@@ -44,10 +46,15 @@ class DaySummaryFragment : AbstractDayFragment() {
 
         Thread(Runnable {
             context?.let {
-                val phase: Double = moonDay.phaseDouble
-                val moonBitmap: Bitmap = MoonPhaseImage.makeImage(resources, R.drawable.moon, phase, location.location.latitude.doubleValue < 0, MoonPhaseImage.SIZE_MEDIUM)
+                val bitmap: Bitmap = MoonPhaseImage.makeImage(resources, R.drawable.moon, moonDay.phaseDouble, moonDay.orientationAngles, MoonPhaseImage.SIZE_MEDIUM)
                 handler.post {
-                    moonImage?.setImageBitmap(moonBitmap)
+                    moonImage.scaleType = ImageView.ScaleType.MATRIX
+                    val size = ((requireContext().resources.displayMetrics.densityDpi/160.0) * 100).toInt().toFloat()
+                    val matrix = Matrix()
+                    matrix.postRotate(moonDay.orientationAngles.imageRotationAngle(), bitmap.width/2f, bitmap.height/2f)
+                    matrix.postScale(size/bitmap.width, size/bitmap.height)
+                    moonImage.imageMatrix = matrix
+                    moonImage?.setImageBitmap(bitmap)
                 }
             }
         }).start()

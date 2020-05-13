@@ -56,7 +56,7 @@
             android:textSize="14sp"
             android:layout_marginTop="15dp"
             android:gravity="center"
-            android:text="Sun position code adapted from original by the\nNational Oceanic and Atmospheric Administration.\nhttp://www.srrb.noaa.gov/highlights/sunrise/sunrise.html\nEclipse Predictions by Fred Espenak, NASA's GSFC" />
+            android:text="Sun position code adapted from original by the\nNational Oceanic and Atmospheric Administration.\nMoon photo by Nasa Goddard Space Flight Center." />
 
     </LinearLayout>
 </ScrollView>

@@ -1,12 +1,10 @@
 package uk.co.sundroid.util.astro.math
 
-import java.util.ArrayList
-import java.util.Calendar
-import java.util.Collections
-import java.util.TimeZone
-
 import uk.co.sundroid.util.astro.MoonPhase
 import uk.co.sundroid.util.astro.MoonPhaseEvent
+import uk.co.sundroid.util.astro.OrientationAngles
+import uk.co.sundroid.util.location.LatitudeLongitude
+import java.util.*
 
 object MoonPhaseCalculator {
 
@@ -274,6 +272,11 @@ object MoonPhaseCalculator {
 
         return phaseBefore + (msNoon - msBefore) / (msAfter - msBefore) * 0.25
 
+    }
+
+    fun getOrientationAngles(dateTime: Calendar, location: LatitudeLongitude): OrientationAngles {
+        val smc = SunMoonCalculator(dateTime.get(Calendar.YEAR), dateTime.get(Calendar.MONTH) + 1, dateTime.get(Calendar.DAY_OF_MONTH), 12, 0, 0, Math.toRadians(location.longitude.doubleValue), Math.toRadians(location.latitude.doubleValue))
+        return smc.moonDiskOrientationAngles()
     }
 
     fun getIlluminatedPercent(phase: Double): Int {

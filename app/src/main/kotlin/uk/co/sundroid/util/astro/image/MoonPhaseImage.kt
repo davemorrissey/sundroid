@@ -1,11 +1,8 @@
 package uk.co.sundroid.util.astro.image
 
 import android.content.res.Resources
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Color
-import android.graphics.Matrix
-import android.graphics.RectF
+import android.graphics.*
+import uk.co.sundroid.util.astro.OrientationAngles
 
 object MoonPhaseImage {
 
@@ -13,11 +10,10 @@ object MoonPhaseImage {
     const val SIZE_LARGE = 2
 
     @Throws(Exception::class)
-    fun makeImage(resources: Resources, drawable: Int, phaseDouble: Double, southernHemisphere: Boolean, size: Int): Bitmap {
+    fun makeImage(resources: Resources, drawable: Int, phase: Double, orientationAngles: OrientationAngles, size: Int): Bitmap {
         val metrics = resources.displayMetrics
         val densityDpi = metrics.densityDpi
         val source = BitmapFactory.decodeResource(resources, drawable)
-        var phase = phaseDouble
 
         var targetSize = if (size == SIZE_MEDIUM) 61 else 121
         when {
@@ -26,22 +22,25 @@ object MoonPhaseImage {
             densityDpi < 160 -> targetSize = if (size == SIZE_MEDIUM) 45 else 91
         }
 
-        val matrix = Matrix()
-        matrix.setRectToRect(
-                RectF(0f, 0f, source.width.toFloat(), source.height.toFloat()),
-                RectF(0f, 0f, targetSize.toFloat(), targetSize.toFloat()),
-                Matrix.ScaleToFit.FILL)
-        matrix.postTranslate(0f, 0f)
+        val rotateMatrix = Matrix()
+        rotateMatrix.postRotate(orientationAngles.brightLimbRotationAngle(), source.width/2f, source.height/2f)
+        rotateMatrix.postScale(targetSize.toFloat() / source.width, targetSize.toFloat() / source.height)
 
-        if (southernHemisphere) {
-            matrix.postRotate(180f)
-            phase = 1 - phase
+        var bitmap = Bitmap.createBitmap(targetSize, targetSize, Bitmap.Config.ARGB_8888)
+
+        if (!bitmap.isMutable) {
+            // createBitmap returns same immutable image for identity matrix so we need to copy it.
+            bitmap = Bitmap.createBitmap(source.width, source.height, Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(bitmap)
+            canvas.drawBitmap(source, 0f, 0f, Paint())
         }
+
+        val canvas = Canvas(bitmap)
+        canvas.drawBitmap(source, rotateMatrix, Paint())
 
         var radius = targetSize / 2
         radius++
 
-        val bitmap = Bitmap.createBitmap(source, 0, 0, source.width, source.height, matrix, true)
 
         val leftEdge = Array(radius + 1) { IntArray(14) }
         val rightEdge = Array(radius + 1) { IntArray(14) }

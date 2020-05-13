@@ -1,9 +1,11 @@
 package uk.co.sundroid.activity.data.fragments
 
+import android.graphics.Matrix
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.widget.ImageView
 import uk.co.sundroid.R
 import uk.co.sundroid.R.id.*
 import uk.co.sundroid.util.astro.*
@@ -16,7 +18,10 @@ import uk.co.sundroid.util.async.async
 import uk.co.sundroid.util.geometry.formatBearing
 import uk.co.sundroid.util.geometry.formatElevation
 import uk.co.sundroid.util.theme.*
-import uk.co.sundroid.util.time.*
+import uk.co.sundroid.util.time.formatDurationHMS
+import uk.co.sundroid.util.time.formatTimeStr
+import uk.co.sundroid.util.time.isSameDay
+import uk.co.sundroid.util.time.shortDateAndMonth
 import java.util.*
 
 class DayDetailMoonFragment : AbstractDayDetailFragment() {
@@ -49,11 +54,19 @@ class DayDetailMoonFragment : AbstractDayDetailFragment() {
                         val phaseEvents = data.phaseEvents
                         val yearEvent = data.yearEvent
 
+                        // TODO Make a MoonImageView that handles generation, rotation and resizes
                         async(
-                                inBackground = { MoonPhaseImage.makeImage(resources, R.drawable.moon, day.phaseDouble, location.location.latitude.doubleValue < 0, MoonPhaseImage.SIZE_LARGE) },
+                                inBackground = { MoonPhaseImage.makeImage(resources, R.drawable.moon, day.phaseDouble, day.orientationAngles, MoonPhaseImage.SIZE_LARGE) },
                                 onDone = { bitmap ->
                                     if (isSafe) {
-                                        modifyChild(view, moonImage, bitmap = bitmap)
+                                        val moonImageView = view.findViewById(moonImage) as ImageView
+                                        moonImageView.scaleType = ImageView.ScaleType.MATRIX
+                                        val size = ((requireContext().resources.displayMetrics.densityDpi/160.0) * 150).toInt().toFloat()
+                                        val matrix = Matrix()
+                                        matrix.postRotate(day.orientationAngles.imageRotationAngle(), bitmap.width/2f, bitmap.height/2f)
+                                        matrix.postScale(size/bitmap.width, size/bitmap.height)
+                                        moonImageView.setImageBitmap(bitmap)
+                                        moonImageView.imageMatrix = matrix
                                     }
                                 }
                         )
