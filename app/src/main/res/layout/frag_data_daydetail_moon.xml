@@ -47,12 +47,12 @@
 
             <ImageView
                 android:id="@+id/moonImage"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="15dp"
-                android:maxWidth="150dp"
-                android:maxHeight="150dp"
+                android:maxWidth="200dp"
+                android:maxHeight="200dp"
                 android:scaleType="fitXY"
                 android:src="@drawable/moon" />
 

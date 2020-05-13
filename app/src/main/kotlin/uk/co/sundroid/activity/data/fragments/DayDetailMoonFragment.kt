@@ -61,7 +61,7 @@ class DayDetailMoonFragment : AbstractDayDetailFragment() {
                                     if (isSafe) {
                                         val moonImageView = view.findViewById(moonImage) as ImageView
                                         moonImageView.scaleType = ImageView.ScaleType.MATRIX
-                                        val size = ((requireContext().resources.displayMetrics.densityDpi/160.0) * 150).toInt().toFloat()
+                                        val size = ((requireContext().resources.displayMetrics.densityDpi/160.0) * 200).toInt().toFloat()
                                         val matrix = Matrix()
                                         matrix.postRotate(day.orientationAngles.imageRotationAngle(), bitmap.width/2f, bitmap.height/2f)
                                         matrix.postScale(size/bitmap.width, size/bitmap.height)
