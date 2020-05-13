@@ -36,7 +36,7 @@ object BodyPositionCalculator {
         if (body === Body.MOON) {
             bodyDay = MoonDay()
             bodyDay.phaseDouble = MoonPhaseCalculator.getNoonPhase(dateMidnight)
-            bodyDay.orientationAngles = MoonPhaseCalculator.getOrientationAngles(dateMidnight, location)
+            bodyDay.orientationAngles = MoonPhaseCalculator.getNoonOrientationAngles(dateMidnight, location)
             bodyDay.illumination = MoonPhaseCalculator.getIlluminatedPercent(bodyDay.phaseDouble)
 
             when {
