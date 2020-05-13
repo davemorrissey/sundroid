@@ -6,6 +6,7 @@ enum class DataGroup {
     DAY_DETAIL,
     TRACKER,
     CALENDARS,
-    YEAR_EVENTS
+    YEAR_EVENTS,
+    EPHEMERIS
 
 }

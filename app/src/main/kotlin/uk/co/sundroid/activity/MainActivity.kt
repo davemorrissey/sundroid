@@ -176,6 +176,9 @@ class MainActivity : AbstractActivity(), FragmentManager.OnBackStackChangedListe
      * Prepare the navigation drawer, adding listeners to all the options and enabling the toggle.
      */
     private fun initNavigationDrawer() {
+        if (!BuildConfig.DEBUG) {
+            navigationView.menu.removeItem(R.id.ephemeris)
+        }
         navigationView.setNavigationItemSelectedListener { menuItem ->
             drawerLayout.closeDrawers()
             when (menuItem.itemId) {
@@ -184,6 +187,7 @@ class MainActivity : AbstractActivity(), FragmentManager.OnBackStackChangedListe
                 R.id.tracker -> setPage(Page.TRACKER)
                 R.id.calendars -> setPage(Page.CALENDARS)
                 R.id.yearEvents -> setPage(Page.YEAR_EVENTS)
+                R.id.ephemeris -> setPage(Page.EPHEMERIS)
                 R.id.help -> setPage(Page.HELP)
                 R.id.about -> setPage(Page.ABOUT)
                 R.id.settings -> setPage(Page.SETTINGS)

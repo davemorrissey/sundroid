@@ -262,11 +262,19 @@ object BodyPositionCalculator {
         // Rotate ecliptic rectangular coordinates to equatorial, then convert to spherical for RA and Dec.
         val geoRectEquat = eclipticToEquatorial(geoRectEclip, obliquityOfEliptic)
         val geoRRADec = rectangularToSpherical(geoRectEquat)
-
         val topoRRADec = geoToTopo(geoRRADec, location, dateTime)
         val topoAzEl = raDecToAzEl(topoRRADec, location, dateTime)
 
-        return Position(dateTime.timeInMillis, topoAzEl[0], refractionCorrection(topoAzEl[1]))
+        val position = Position(dateTime.timeInMillis, topoAzEl[0], refractionCorrection(topoAzEl[1]))
+        position.julianDay = julianDay(dateTime)
+        position.trueElevation = topoAzEl[1]
+        position.topoDistEarthRadii = topoRRADec[0]
+        position.topoRA = topoRRADec[1]
+        position.topoDec = topoRRADec[2]
+        position.geoDistEarthRadii = geoRRADec[0]
+        position.geoRA = geoRRADec[1]
+        position.geoDec = geoRRADec[2]
+        return position
     }
 
     private fun calcPlanetPositionInternal(body: Body, location: LatitudeLongitude, dateTime: Calendar): Position {

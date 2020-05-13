@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <include
+        android:id="@+id/dateBox"
+        layout="@layout/inc_timebar"/>
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@id/dateBox"
+        android:layout_alignParentTop="true">
+
+        <TableLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="15dp">
+
+            <TableRow>
+                <TextView
+                    style="@style/ephemerisTitleCell"
+                    android:text="Location" />
+                <TextView
+                    android:id="@+id/location"
+                    style="@style/ephemerisValueCell" />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    style="@style/ephemerisTitleCell"
+                    android:text="Time" />
+                <TextView
+                    android:id="@+id/time"
+                    style="@style/ephemerisValueCell" />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    style="@style/ephemerisTitleCell"
+                    android:text="Time zone" />
+                <TextView
+                    android:id="@+id/zone"
+                    style="@style/ephemerisValueCell" />
+            </TableRow>
+
+            <TableRow android:layout_marginTop="15dp">
+                <TextView
+                    style="@style/ephemerisTitleCell"
+                    android:textStyle="bold"
+                    android:textSize="20sp"
+                    android:text="SUN" />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    style="@style/ephemerisTitleCell"
+                    android:text="" />
+                <TextView
+                    style="@style/ephemerisValueCell"
+                    android:textStyle="bold"
+                    android:text="Legacy"
+                    />
+                <TextView
+                    style="@style/ephemerisValueCell"
+                    android:textStyle="bold"
+                    android:text="SunMoonCalculator"
+                    />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    style="@style/ephemerisTitleCell"
+                    android:text="JD" />
+                <TextView
+                    android:id="@+id/sunJd1"
+                    style="@style/ephemerisValueCell" />
+                <TextView
+                    android:id="@+id/sunJd2"
+                    style="@style/ephemerisValueCell" />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    style="@style/ephemerisTitleCell"
+                    android:text="Rise" />
+                <TextView
+                    android:id="@+id/sunRise1"
+                    style="@style/ephemerisValueCell" />
+                <TextView
+                    android:id="@+id/sunRise2"
+                    style="@style/ephemerisValueCell" />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    style="@style/ephemerisTitleCell"
+                    android:text="Set" />
+                <TextView
+                    android:id="@+id/sunSet1"
+                    style="@style/ephemerisValueCell" />
+                <TextView
+                    android:id="@+id/sunSet2"
+                    style="@style/ephemerisValueCell" />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    style="@style/ephemerisTitleCell"
+                    android:text="Azimuth" />
+                <TextView
+                    android:id="@+id/sunAz1"
+                    style="@style/ephemerisValueCell" />
+                <TextView
+                    android:id="@+id/sunAz2"
+                    style="@style/ephemerisValueCell" />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    style="@style/ephemerisTitleCell"
+                    android:text="True elevation" />
+                <TextView
+                    android:id="@+id/sunTrueEl1"
+                    style="@style/ephemerisValueCell" />
+                <TextView
+                    android:id="@+id/sunTrueEl2"
+                    style="@style/ephemerisValueCell" />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    style="@style/ephemerisTitleCell"
+                    android:text="Apparent elevation" />
+                <TextView
+                    android:id="@+id/sunAppEl1"
+                    style="@style/ephemerisValueCell" />
+                <TextView
+                    android:id="@+id/sunAppEl2"
+                    style="@style/ephemerisValueCell" />
+            </TableRow>
+
+            <TableRow android:layout_marginTop="15dp">
+                <TextView
+                    style="@style/ephemerisTitleCell"
+                    android:textStyle="bold"
+                    android:textSize="20sp"
+                    android:text="MOON" />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    style="@style/ephemerisTitleCell"
+                    android:text="" />
+                <TextView
+                    style="@style/ephemerisValueCell"
+                    android:textStyle="bold"
+                    android:text="Legacy"
+                    />
+                <TextView
+                    style="@style/ephemerisValueCell"
+                    android:textStyle="bold"
+                    android:text="SunMoonCalculator"
+                    />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    style="@style/ephemerisTitleCell"
+                    android:text="JD" />
+                <TextView
+                    android:id="@+id/moonJd1"
+                    style="@style/ephemerisValueCell" />
+                <TextView
+                    android:id="@+id/moonJd2"
+                    style="@style/ephemerisValueCell" />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    style="@style/ephemerisTitleCell"
+                    android:text="Rise" />
+                <TextView
+                    android:id="@+id/moonRise1"
+                    style="@style/ephemerisValueCell" />
+                <TextView
+                    android:id="@+id/moonRise2"
+                    style="@style/ephemerisValueCell" />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    style="@style/ephemerisTitleCell"
+                    android:text="Set" />
+                <TextView
+                    android:id="@+id/moonSet1"
+                    style="@style/ephemerisValueCell" />
+                <TextView
+                    android:id="@+id/moonSet2"
+                    style="@style/ephemerisValueCell" />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    style="@style/ephemerisTitleCell"
+                    android:text="Azimuth" />
+                <TextView
+                    android:id="@+id/moonAz1"
+                    style="@style/ephemerisValueCell" />
+                <TextView
+                    android:id="@+id/moonAz2"
+                    style="@style/ephemerisValueCell" />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    style="@style/ephemerisTitleCell"
+                    android:text="True elevation" />
+                <TextView
+                    android:id="@+id/moonTrueEl1"
+                    style="@style/ephemerisValueCell" />
+                <TextView
+                    android:id="@+id/moonTrueEl2"
+                    style="@style/ephemerisValueCell" />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    style="@style/ephemerisTitleCell"
+                    android:text="Apparent elevation" />
+                <TextView
+                    android:id="@+id/moonAppEl1"
+                    style="@style/ephemerisValueCell" />
+                <TextView
+                    android:id="@+id/moonAppEl2"
+                    style="@style/ephemerisValueCell" />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    style="@style/ephemerisTitleCell"
+                    android:text="Geo RA" />
+                <TextView
+                    android:id="@+id/moonGeoRA1"
+                    style="@style/ephemerisValueCell" />
+                <TextView
+                    android:id="@+id/moonGeoRA2"
+                    style="@style/ephemerisValueCell" />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    style="@style/ephemerisTitleCell"
+                    android:text="Geo Dec" />
+                <TextView
+                    android:id="@+id/moonGeoDec1"
+                    style="@style/ephemerisValueCell" />
+                <TextView
+                    android:id="@+id/moonGeoDec2"
+                    style="@style/ephemerisValueCell" />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    style="@style/ephemerisTitleCell"
+                    android:text="Geo Dist" />
+                <TextView
+                    android:id="@+id/moonGeoDist1"
+                    style="@style/ephemerisValueCell" />
+                <TextView
+                    android:id="@+id/moonGeoDist2"
+                    style="@style/ephemerisValueCell" />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    style="@style/ephemerisTitleCell"
+                    android:text="Topo RA" />
+                <TextView
+                    android:id="@+id/moonTopoRA1"
+                    style="@style/ephemerisValueCell" />
+                <TextView
+                    android:id="@+id/moonTopoRA2"
+                    style="@style/ephemerisValueCell" />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    style="@style/ephemerisTitleCell"
+                    android:text="Topo Dec" />
+                <TextView
+                    android:id="@+id/moonTopoDec1"
+                    style="@style/ephemerisValueCell" />
+                <TextView
+                    android:id="@+id/moonTopoDec2"
+                    style="@style/ephemerisValueCell" />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    style="@style/ephemerisTitleCell"
+                    android:text="Topo Dist" />
+                <TextView
+                    android:id="@+id/moonTopoDist1"
+                    style="@style/ephemerisValueCell" />
+                <TextView
+                    android:id="@+id/moonTopoDist2"
+                    style="@style/ephemerisValueCell" />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    style="@style/ephemerisTitleCell"
+                    android:text="Phase" />
+                <TextView
+                    android:id="@+id/moonPhase1"
+                    style="@style/ephemerisValueCell" />
+                <TextView
+                    android:id="@+id/moonPhase2"
+                    style="@style/ephemerisValueCell" />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    style="@style/ephemerisTitleCell"
+                    android:text="Illumination" />
+                <TextView
+                    android:id="@+id/moonIllumination1"
+                    style="@style/ephemerisValueCell" />
+                <TextView
+                    android:id="@+id/moonIllumination2"
+                    style="@style/ephemerisValueCell" />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    style="@style/ephemerisTitleCell"
+                    android:text="Next full moon" />
+                <TextView
+                    android:id="@+id/moonNextFull1"
+                    style="@style/ephemerisValueCell" />
+                <TextView
+                    android:id="@+id/moonnextFull2"
+                    style="@style/ephemerisValueCell" />
+            </TableRow>
+
+        </TableLayout>
+    </ScrollView>
+
+
+</RelativeLayout>

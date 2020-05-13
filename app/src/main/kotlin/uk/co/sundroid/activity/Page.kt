@@ -16,6 +16,7 @@ enum class Page constructor(val navItem: Int, val fragmentClass: Class<out Fragm
     TRACKER(0, TrackerFragment::class.java, DataGroup.TRACKER),
     CALENDARS(0, CalendarsFragment::class.java, DataGroup.CALENDARS),
     YEAR_EVENTS(0, YearEventsFragment::class.java, DataGroup.YEAR_EVENTS),
+    EPHEMERIS(0, EphemerisFragment::class.java, DataGroup.EPHEMERIS),
     HELP(R.id.help, InfoFragment::class.java),
     ABOUT(R.id.about, AboutFragment::class.java),
     LOCATION_OPTIONS(0, LocationSelectFragment::class.java),

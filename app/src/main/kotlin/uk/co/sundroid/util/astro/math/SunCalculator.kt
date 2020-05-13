@@ -619,7 +619,9 @@ object SunCalculator {
             azimuth += 360.0
         }
 
-        return Position(dateTime.timeInMillis, azimuth, 90.0 - zenith)
+        val position = Position(dateTime.timeInMillis, azimuth, 90.0 - zenith)
+        position.julianDay = jd
+        return position
     }
 
 }
