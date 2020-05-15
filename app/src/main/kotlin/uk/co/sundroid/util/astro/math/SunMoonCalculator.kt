@@ -1,13 +1,15 @@
 package uk.co.sundroid.util.astro.math
 
 import uk.co.sundroid.util.astro.OrientationAngles
-import java.lang.IllegalArgumentException
+import uk.co.sundroid.util.location.LatitudeLongitude
+import java.util.*
+import java.util.Calendar.*
 import kotlin.math.*
 
 
 /**
- * This is a trimmed kotlin conversion of a free open source class developed by T. Alonso Albi, and
- * available here: http://conga.oan.es/~alonso/doku.php?id=blog:sun_moon_position
+ * This is derived from a free open source class developed by T. Alonso Albi, and available here:
+ * http://conga.oan.es/~alonso/doku.php?id=blog:sun_moon_position
  *
  * Currently this is only used to provide orientation angles for rendering the moon. Later versions
  * of Sundroid will gradually migrate other sun and moon calculations to this class if it equals or
@@ -23,19 +25,43 @@ import kotlin.math.*
  * @version November 6, 2018 (better accuracy for Moon, angular radius in ephemeris, cosmetic improvements)
  * @version July 24, 2018 (new class to hold results, illumination phase, moon phases, equinoxes and solstices)
  * @version May 25, 2017 (fixed nutation correction and moon age, better accuracy in Moon)
- * @param year The year.
- * @param month The month.
- * @param day The day.
- * @param h The hour.
- * @param m Minute.
- * @param s Second.
- * @param obsLon Longitude for the observer, west negative.
- * @param obsLat Latitude for the observer.
- * @throws Exception If the date does not exists.
  */
 @Suppress("unused")
-class SunMoonCalculator(year: Int, month: Int, day: Int, h: Int, m: Int, s: Int, obsLon: Double, obsLat: Double) {
-    
+object SunMoonCalculator {
+
+    /** Radians to degrees.  */
+    private const val RAD_TO_DEG = 180.0 / Math.PI
+
+    /** Degrees to radians.  */
+    private const val DEG_TO_RAD = 1.0 / RAD_TO_DEG
+
+    /** Astronomical Unit in km. As defined by JPL.  */
+    private const val AU = 149597870.691
+
+    /** Earth equatorial radius in km. IERS 2003 Conventions.  */
+    private const val EARTH_RADIUS = 6378.1366
+
+    /** Two times Pi.  */
+    private const val TWO_PI = 2.0 * Math.PI
+
+    /** Pi divided by two.  */
+    private const val PI_OVER_TWO = Math.PI / 2.0
+
+    /** Julian century conversion constant = 100 * days per year.  */
+    private const val JULIAN_DAYS_PER_CENTURY = 36525.0
+
+    /** Seconds in one day.  */
+    private const val SECONDS_PER_DAY = 86400.0
+
+    /** Our default epoch. The Julian Day which represents noon on 2000-01-01.  */
+    private const val J2000 = 2451545.0
+
+    // Formulae here is a simplification of the expansion from
+    // "Planetary Programs and Tables" by Pierre Bretagnon and
+    // Jean-Louis Simon, Willman-Bell, 1986. This source also
+    // have expansions for ephemerides of planets
+    private val SUN_ELEMENTS = arrayOf(doubleArrayOf(403406.0, 0.0, 4.721964, 1.621043), doubleArrayOf(195207.0, -97597.0, 5.937458, 62830.348067), doubleArrayOf(119433.0, -59715.0, 1.115589, 62830.821524), doubleArrayOf(112392.0, -56188.0, 5.781616, 62829.634302), doubleArrayOf(3891.0, -1556.0, 5.5474, 125660.5691), doubleArrayOf(2819.0, -1126.0, 1.512, 125660.9845), doubleArrayOf(1721.0, -861.0, 4.1897, 62832.4766), doubleArrayOf(0.0, 941.0, 1.163, .813), doubleArrayOf(660.0, -264.0, 5.415, 125659.31), doubleArrayOf(350.0, -163.0, 4.315, 57533.85), doubleArrayOf(334.0, 0.0, 4.553, -33.931), doubleArrayOf(314.0, 309.0, 5.198, 777137.715), doubleArrayOf(268.0, -158.0, 5.989, 78604.191), doubleArrayOf(242.0, 0.0, 2.911, 5.412), doubleArrayOf(234.0, -54.0, 1.423, 39302.098), doubleArrayOf(158.0, 0.0, .061, -34.861), doubleArrayOf(132.0, -93.0, 2.317, 115067.698), doubleArrayOf(129.0, -20.0, 3.193, 15774.337), doubleArrayOf(114.0, 0.0, 2.828, 5296.67), doubleArrayOf(99.0, -47.0, .52, 58849.27), doubleArrayOf(93.0, 0.0, 4.65, 5296.11), doubleArrayOf(86.0, 0.0, 4.35, -3980.7), doubleArrayOf(78.0, -33.0, 2.75, 52237.69), doubleArrayOf(72.0, -32.0, 4.5, 55076.47), doubleArrayOf(68.0, 0.0, 3.23, 261.08), doubleArrayOf(64.0, -10.0, 1.22, 15773.85))
+
     /**
      * The set of twilights to calculate (types of rise/set events).
      */
@@ -102,36 +128,69 @@ class SunMoonCalculator(year: Int, month: Int, day: Int, h: Int, m: Int, s: Int,
 
     }
 
-    /** Input values.  */
-    private var jdUt = 0.0
-    private var t = 0.0
-    private var ttMinusUt = 0.0
-    private var obsLat = 0.0
-    private var obsLon = 0.0
-    private val twilight = Twilight.HORIZON_34ARCMIN
+    /**
+     * Input values.
+     */
+    class Params(dateTime: Calendar, val obsLat: Double, val obsLon: Double, val twilight: Twilight) {
+
+        private val ttMinusUt: Double
+        val jd: Double
+
+        fun t(): Double {
+            return t(jd)
+        }
+
+        fun t(jd: Double): Double {
+            return (jd + ttMinusUt / SECONDS_PER_DAY - J2000) / JULIAN_DAYS_PER_CENTURY
+        }
+
+        fun time(): DoubleArray {
+            return time(jd)
+        }
+
+        fun time(jd: Double): DoubleArray {
+            return doubleArrayOf(jd, t(jd))
+        }
+
+        init {
+            val utc = getInstance(TimeZone.getTimeZone("UTC"))
+            utc.timeInMillis = dateTime.timeInMillis
+            val year = utc.get(YEAR)
+            val month = utc.get(MONTH) + 1
+            val day = utc.get(DAY_OF_MONTH)
+            this.jd = toJulianDay(year, month, day, utc.get(HOUR_OF_DAY), utc.get(MINUTE), utc.get(SECOND))
+            if (year > -600 && year < 2200) {
+                val x = year + (month - 1 + day / 30.0) / 12.0
+                val x2 = x * x
+                val x3 = x2 * x
+                val x4 = x3 * x
+                this.ttMinusUt = if (year < 1600) {
+                    10535.328003326353 - 9.995238627481024 * x + 0.003067307630020489 * x2 - 7.76340698361363E-6 * x3 + 3.1331045394223196E-9 * x4 + 8.225530854405553E-12 * x2 * x3 - 7.486164715632051E-15 * x4 * x2 + 1.9362461549678834E-18 * x4 * x3 - 8.489224937827653E-23 * x4 * x4
+                } else {
+                    -1027175.3477559977 + 2523.256625418965 * x - 1.885686849058459 * x2 + 5.869246227888417E-5 * x3 + 3.3379295816475025E-7 * x4 + 1.7758961671447929E-10 * x2 * x3 - 2.7889902806153024E-13 * x2 * x4 + 1.0224295822336825E-16 * x3 * x4 - 1.2528102370680435E-20 * x4 * x4
+                }
+            } else {
+                this.ttMinusUt = 0.0
+            }
+        }
+    }
+
+    class Position(val eclipticLongitude: Double, val eclipticLatitude: Double, val distance: Double, val angularRadius: Double, val moonAge: Double = 0.0)
 
     /**
      * Class to hold the results of ephemerides.
      * @author T. Alonso Albi - OAN (Spain)
      */
-    inner class Ephemeris(
+    class Ephemeris(
             /** Values for azimuth, elevation, rise, set, and transit for the Sun. Angles in radians, rise ...
              * as Julian days in UT. Distance in AU.  */
             var azimuth: Double, var elevation: Double, var rise: Double, var set: Double,
             var transit: Double, var transitElevation: Double, var rightAscension: Double, var declination: Double,
             var distance: Double, var eclipticLongitude: Double, var eclipticLatitude: Double, var angularRadius: Double) {
         var illuminationPhase = 100.0
-
+        var age = 0.0
     }
 
-    /** Ephemeris for the Sun and Moon bodies.  */
-    var sun: Ephemeris? = null
-    var moon: Ephemeris? = null
-
-    /** Moon's age in days as an independent variable.  */
-    private var moonAge = 0.0
-
-    @Throws(Exception::class)
     private fun toJulianDay(year: Int, month: Int, day: Int, h: Int, m: Int, s: Int): Double {
         // The conversion formulas are from Meeus, chapter 7.
         var julian = false // Use Gregorian calendar
@@ -146,68 +205,66 @@ class SunMoonCalculator(year: Int, month: Int, day: Int, h: Int, m: Int, s: Int,
         val ba = if (julian) 0 else 2 - aa + aa / 4
         val dayFraction = (h + (m + s / 60.0) / 60.0) / 24.0
         val jd = dayFraction + (365.25 * (ya + 4716)).toInt() + (30.6001 * (ma + 1)).toInt() + day + ba - 1524.5
-        if (jd < 2299160.0 && jd >= 2299150.0) throw Exception("invalid julian day $jd. This date does not exist.")
+        if (jd < 2299160.0 && jd >= 2299150.0) throw IllegalArgumentException("invalid julian day $jd. This date does not exist.")
         return jd
     }
 
-    private fun setUTDate(jd: Double) {
-        jdUt = jd
-        t = (jd + ttMinusUt / SECONDS_PER_DAY - J2000) / JULIAN_DAYS_PER_CENTURY
-    }
-
-    /** Calculates everything for the Sun and the Moon.  */
-    private fun calcSunAndMoon() {
-        val jd: Double = this.jdUt
-
-        // First the Sun
-        sun = doCalc(getSun(), false)
-        var niter = 3 // Number of iterations to get accurate rise/set/transit times
-        sun!!.rise = obtainAccurateRiseSetTransit(sun!!.rise, Event.RISE, niter, true)
-        sun!!.set = obtainAccurateRiseSetTransit(sun!!.set, Event.SET, niter, true)
-        sun!!.transit = obtainAccurateRiseSetTransit(sun!!.transit, Event.TRANSIT, niter, true)
-        if (sun!!.transit == -1.0) {
-            sun!!.transitElevation = 0.0
+    /**
+     * Calculates everything for the Sun.
+     */
+    private fun calculateSunEphemeris(time: DoubleArray, params: Params): Ephemeris {
+        val sun = calculateEphemeris(time, params, getSunPosition(time[1]), false)
+        val niter = 3 // Number of iterations to get accurate rise/set/transit times
+        sun.rise = obtainAccurateRiseSetTransit(sun.rise, params, Event.RISE, niter, true)
+        sun.set = obtainAccurateRiseSetTransit(sun.set, params, Event.SET, niter, true)
+        sun.transit = obtainAccurateRiseSetTransit(sun.transit, params, Event.TRANSIT, niter, true)
+        if (sun.transit == -1.0) {
+            sun.transitElevation = 0.0
         } else {
             // Update Sun's maximum elevation
-            setUTDate(sun!!.transit)
-            sun!!.transitElevation = doCalc(getSun(), false).transitElevation
+            val transit = params.time(sun.transit)
+            sun.transitElevation = calculateEphemeris(transit, params, getSunPosition(transit[1]), false).transitElevation
         }
-
-        // Now Moon
-        setUTDate(jd)
-        moon = doCalc(getMoon(), false)
-        val ma = moonAge
-        niter = 5 // Number of iterations to get accurate rise/set/transit times
-        moon!!.rise = obtainAccurateRiseSetTransit(moon!!.rise, Event.RISE, niter, false)
-        moon!!.set = obtainAccurateRiseSetTransit(moon!!.set, Event.SET, niter, false)
-        moon!!.transit = obtainAccurateRiseSetTransit(moon!!.transit, Event.TRANSIT, niter, false)
-        if (moon!!.transit == -1.0) {
-            moon!!.transitElevation = 0.0
-        } else {
-            // Update Moon's maximum elevation
-            setUTDate(moon!!.transit)
-            getSun()
-            moon!!.transitElevation = doCalc(getMoon(), false).transitElevation
-        }
-        setUTDate(jd)
-        moonAge = ma
-
-        // Compute illumination phase percentage for the Moon (do not use for other bodies!)
-        val dlon = moon!!.rightAscension - sun!!.rightAscension
-        val elong = acos(sin(sun!!.declination) * sin(moon!!.declination) +
-                cos(sun!!.declination) * cos(moon!!.declination) * cos(dlon))
-        moon!!.illuminationPhase = 100 * (1.0 - cos(elong)) * 0.5
+        return sun
     }
 
-    private fun getSun(): DoubleArray {
+    /**
+     * Calculates everything for the Moon.
+     */
+    private fun calculateMoonEphemeris(time: DoubleArray, params: Params): Ephemeris {
+        val moonPosition = getMoonPosition(time[1], params)
+        val moon = calculateEphemeris(time, params, moonPosition, false)
+        val niter = 5 // Number of iterations to get accurate rise/set/transit times
+        moon.rise = obtainAccurateRiseSetTransit(moon.rise, params, Event.RISE, niter, false)
+        moon.set = obtainAccurateRiseSetTransit(moon.set, params, Event.SET, niter, false)
+        moon.transit = obtainAccurateRiseSetTransit(moon.transit, params, Event.TRANSIT, niter, false)
+        if (moon.transit == -1.0) {
+            moon.transitElevation = 0.0
+        } else {
+            // Update Moon's maximum elevation
+            val transit = params.time(moon.transit)
+            moon.transitElevation = calculateEphemeris(transit, params, getMoonPosition(transit[1], params), false).transitElevation
+        }
+
+        // Compute illumination phase percentage for the Moon (do not use for other bodies!)
+        val sun = calculateSunEphemeris(time, params)
+        val dlon = moon.rightAscension - sun.rightAscension
+        val elong = acos(sin(sun.declination) * sin(moon.declination) +
+                cos(sun.declination) * cos(moon.declination) * cos(dlon))
+        moon.illuminationPhase = 100 * (1.0 - cos(elong)) * 0.5
+        moon.age = moonPosition.moonAge
+        return moon
+    }
+
+    private fun getSunPosition(t: Double): Position {
         var l = 0.0
         var r = 0.0
         val t2 = t * 0.01
-        for (i in sun_elements.indices) {
-            val v = sun_elements[i][2] + sun_elements[i][3] * t2
+        for (i in SUN_ELEMENTS.indices) {
+            val v = SUN_ELEMENTS[i][2] + SUN_ELEMENTS[i][3] * t2
             val u = normalizeRadians(v)
-            l += sun_elements[i][0] * sin(u)
-            r += sun_elements[i][1] * cos(u)
+            l += SUN_ELEMENTS[i][0] * sin(u)
+            r += SUN_ELEMENTS[i][1] * cos(u)
         }
         var lon = normalizeRadians(4.9353929 + normalizeRadians(62833.196168 * t2) + l / 10000000.0) * RAD_TO_DEG
         val sdistance = 1.0001026 + r / 10000000.0
@@ -216,10 +273,10 @@ class SunMoonCalculator(year: Int, month: Int, day: Int, h: Int, m: Int, s: Int,
         lon += -.00569
         val slongitude = lon // apparent longitude (error<0.001 deg)
         val slatitude = 0.0 // Sun's ecliptic latitude is always negligible
-        return doubleArrayOf(slongitude, slatitude, sdistance, atan(696000 / (AU * sdistance)))
+        return Position(slongitude, slatitude, sdistance, atan(696000 / (AU * sdistance)))
     }
 
-    private fun getMoon(): DoubleArray {
+    private fun getMoonPosition(t: Double, params: Params): Position {
         // MOON PARAMETERS (Formulae from "Calendrical Calculations")
         val phase = normalizeRadians((297.8502042 + 445267.1115168 * t - 0.00163 * t * t + t * t * t / 538841 - t * t * t * t / 65194000) * DEG_TO_RAD)
 
@@ -257,7 +314,8 @@ class SunMoonCalculator(year: Int, month: Int, day: Int, h: Int, m: Int, s: Int,
 
         // Get accurate Moon age
         val psin = 29.530588853
-        moonAge = normalizeRadians(longitude * DEG_TO_RAD - sun!!.eclipticLongitude) * psin / TWO_PI
+        val sunEphemeris = calculateSunEphemeris(params.time(), params)
+        val moonAge = normalizeRadians(longitude * DEG_TO_RAD - sunEphemeris.eclipticLongitude) * psin / TWO_PI
 
         // Now Moon parallax
         var parallax = .950724 + .051818 * cos(anomaly) + .009531 * cos(2 * phase - anomaly)
@@ -281,17 +339,26 @@ class SunMoonCalculator(year: Int, month: Int, day: Int, h: Int, m: Int, s: Int,
         l += e * 2.222E-3 * sin(2 * phase + node - sanomaly)
         l += e * 2.072E-3 * sin(2 * phase - node - sanomaly - anomaly)
         val latitude = l
-        return doubleArrayOf(longitude, latitude, distance * EARTH_RADIUS / AU, atan(1737.4 / (distance * EARTH_RADIUS)))
+        return Position(longitude, latitude, distance * EARTH_RADIUS / AU, atan(1737.4 / (distance * EARTH_RADIUS)), moonAge = moonAge)
     }
 
-    private fun doCalc(pos: DoubleArray, geocentric: Boolean): Ephemeris {
+    private fun calculateEphemeris(time: DoubleArray, params: Params, pos: Position, geocentric: Boolean): Ephemeris {
+        val jd = time[0]
+        val t = time[1]
+        val obsLat = params.obsLat
+        val obsLon = params.obsLon
+        var eclipLon = pos.eclipticLongitude
+        var eclipLat = pos.eclipticLatitude
+        val distance = pos.distance
+        val angularRadius = pos.angularRadius
+
         // Correct for nutation in longitude and obliquity
         val m1 = (124.90 - 1934.134 * t + 0.002063 * t * t) * DEG_TO_RAD
         val m2 = (201.11 + 72001.5377 * t + 0.00057 * t * t) * DEG_TO_RAD
         val dLon = -.0047785 * sin(m1) - .0003667 * sin(m2)
         val dLat = .002558 * cos(m1) - .00015339 * cos(m2)
-        pos[0] += dLon
-        pos[1] += dLat
+        eclipLon += dLon
+        eclipLat += dLat
 
         // Ecliptic to equatorial coordinates
         val t2 = t / 100.0
@@ -300,22 +367,22 @@ class SunMoonCalculator(year: Int, month: Int, day: Int, h: Int, m: Int, s: Int,
         tmp = t2 * (-1.55 + t2 * (1999.25 + t2 * (-51.38 + tmp)))
         tmp = t2 * (-4680.93 + tmp) / 3600.0
         val angle = (23.4392911111111 + tmp) * DEG_TO_RAD // mean obliquity
-        pos[0] *= DEG_TO_RAD
-        pos[1] *= DEG_TO_RAD
-        val cl = cos(pos[1])
-        val x = pos[2] * cos(pos[0]) * cl
-        var y = pos[2] * sin(pos[0]) * cl
-        var z = pos[2] * sin(pos[1])
+        eclipLon *= DEG_TO_RAD
+        eclipLat *= DEG_TO_RAD
+        val cl = cos(eclipLat)
+        val x = distance * cos(eclipLon) * cl
+        var y = distance * sin(eclipLon) * cl
+        var z = distance * sin(eclipLat)
         tmp = y * cos(angle) - z * sin(angle)
         z = y * sin(angle) + z * cos(angle)
         y = tmp
         if (geocentric) return Ephemeris(0.0, 0.0, -1.0, -1.0, -1.0, -1.0, normalizeRadians(atan2(y, x)),
-                atan2(z / sqrt(x * x + y * y), 1.0), sqrt(x * x + y * y + z * z), pos[0], pos[1], pos[3])
+                atan2(z / sqrt(x * x + y * y), 1.0), sqrt(x * x + y * y + z * z), eclipLon, eclipLat, angularRadius)
 
         // Obtain local apparent sidereal time
-        val jd0 = floor(jdUt - 0.5) + 0.5
+        val jd0 = floor(jd - 0.5) + 0.5
         val t0 = (jd0 - J2000) / JULIAN_DAYS_PER_CENTURY
-        val secs = (jdUt - jd0) * SECONDS_PER_DAY
+        val secs = (jd - jd0) * SECONDS_PER_DAY
         var gmst = ((-6.2e-6 * t0 + 9.3104e-2) * t0 + 8640184.812866) * t0 + 24110.54841
         val msday = 1.0 + ((-1.86e-5 * t0 + 0.186208) * t0 + 8640184.812866) / (SECONDS_PER_DAY * JULIAN_DAYS_PER_CENTURY)
         gmst = (gmst + msday * secs) * (15.0 / 3600.0) * DEG_TO_RAD
@@ -361,12 +428,12 @@ class SunMoonCalculator(year: Int, month: Int, day: Int, h: Int, m: Int, s: Int,
             val refr = r * (0.28 * 1010 / (10 + 273.0)) // Assuming pressure of 1010 mb and T = 10 C
             alt = min(alt + refr, PI_OVER_TWO) // This is not accurate, but acceptable
         }
-        tmp = when (twilight) {
+        tmp = when (params.twilight) {
             Twilight.HORIZON_34ARCMIN ->                 // Rise, set, transit times, taking into account Sun/Moon angular radius (pos[3]).
                 // The 34' factor is the standard refraction at horizon.
                 // Removing angular radius will do calculations for the center of the disk instead
                 // of the upper limb.
-                -(34.0 / 60.0) * DEG_TO_RAD - pos[3]
+                -(34.0 / 60.0) * DEG_TO_RAD - pos.angularRadius
             Twilight.TWILIGHT_CIVIL -> -6 * DEG_TO_RAD
             Twilight.TWILIGHT_NAUTICAL -> -12 * DEG_TO_RAD
             Twilight.TWILIGHT_ASTRONOMICAL -> -18 * DEG_TO_RAD
@@ -390,12 +457,12 @@ class SunMoonCalculator(year: Int, month: Int, day: Int, h: Int, m: Int, s: Int,
 
         // Obtain the current event in time
         var transitTime = transitTime1
-        val jdToday = floor(jdUt - 0.5) + 0.5
-        val transitToday2 = floor(jdUt + transitTime2 - 0.5) + 0.5
+        val jdToday = floor(jd - 0.5) + 0.5
+        val transitToday2 = floor(jd + transitTime2 - 0.5) + 0.5
         // Obtain the transit time. Preference should be given to the closest event
         // in time to the current calculation time
         if (jdToday == transitToday2 && abs(transitTime2) < abs(transitTime1)) transitTime = transitTime2
-        val transit = jdUt + transitTime
+        val transit = jd + transitTime
 
         // Make calculations for rise and set
         var rise = -1.0
@@ -410,16 +477,16 @@ class SunMoonCalculator(year: Int, month: Int, day: Int, h: Int, m: Int, s: Int,
             // Obtain the current events in time. Preference should be given to the closest event
             // in time to the current calculation time (so that iteration in other method will converge)
             var riseTime = riseTime1
-            val riseToday2 = floor(jdUt + riseTime2 - 0.5) + 0.5
+            val riseToday2 = floor(jd + riseTime2 - 0.5) + 0.5
             if (jdToday == riseToday2 && abs(riseTime2) < abs(riseTime1)) riseTime = riseTime2
             var setTime = setTime1
-            val setToday2 = floor(jdUt + setTime2 - 0.5) + 0.5
+            val setToday2 = floor(jd + setTime2 - 0.5) + 0.5
             if (jdToday == setToday2 && abs(setTime2) < abs(setTime1)) setTime = setTime2
-            rise = jdUt + riseTime
-            set = jdUt + setTime
+            rise = jd + riseTime
+            set = jd + setTime
         }
         return Ephemeris(azi, alt, rise, set, transit, transitAlt,
-                normalizeRadians(ra), dec, dist, pos[0], pos[1], pos[3])
+                normalizeRadians(ra), dec, dist, eclipLon, eclipLat, angularRadius)
     }
 
     /**
@@ -457,18 +524,17 @@ class SunMoonCalculator(year: Int, month: Int, day: Int, h: Int, m: Int, s: Int,
         return intArrayOf(year, month, day, hour, minute, second)
     }
 
-    private fun obtainAccurateRiseSetTransit(riseSetJD: Double, index: Event, niter: Int, sun: Boolean): Double {
-        var riseSet = riseSetJD
+    private fun obtainAccurateRiseSetTransit(riseSetJd: Double, params: Params, index: Event, niter: Int, sun: Boolean): Double {
         var step = -1.0
+        var riseSet = riseSetJd
         for (i in 0 until niter) {
             if (riseSet == -1.0) return riseSet // -1 means no rise/set from that location
-            setUTDate(riseSet)
+            val time = params.time(riseSet)
             var out: Ephemeris?
             out = if (sun) {
-                doCalc(getSun(), false)
+                calculateEphemeris(time, params, getSunPosition(time[1]), false)
             } else {
-                getSun()
-                doCalc(getMoon(), false)
+                calculateEphemeris(time, params, getMoonPosition(time[1], params), false)
             }
             var v = out.rise
             if (index === Event.SET) v = out.set
@@ -484,173 +550,37 @@ class SunMoonCalculator(year: Int, month: Int, day: Int, h: Int, m: Int, s: Int,
      * @param phase The phase.
      * @return The instant of that phase, accuracy around 1 minute or better.
      */
-    fun getMoonPhaseTime(phase: MoonPhase): Double {
+    fun getMoonPhaseTime(params: Params, phase: MoonPhase): Double {
         val accuracy = 10 / (30 * SECONDS_PER_DAY) // 10s / lunar cycle length in s => 10s accuracy
         val refPhase: Double = phase.phase
-        val oldJD: Double = jdUt
-        val oldMoonAge = moonAge
+        var jd = params.jd
         while (true) {
-            val sunLon = getSun()[0] // Compute Sun before always !
-            var age = normalizeRadians((getMoon()[0] - sunLon) * DEG_TO_RAD) / TWO_PI - refPhase
+            val sunLon = getSunPosition(params.t(jd)).eclipticLongitude // Compute Sun before always !
+            var age = normalizeRadians((getMoonPosition(params.t(jd), params).eclipticLongitude - sunLon) * DEG_TO_RAD) / TWO_PI - refPhase
             if (age < 0) age += 1.0
             if (age < accuracy || age > 1 - accuracy) break
             if (age < 0.5) {
-                jdUt -= age
+                jd -= age
             } else {
-                jdUt += 1 - age
-            }
-            setUTDate(jdUt)
-        }
-        val out: Double = jdUt
-        setUTDate(oldJD)
-        moonAge = oldMoonAge
-        return out
-    }
-
-    /**
-     * Returns the dates of the Spring and Autumn equinoxes.
-     * Note the algorithm is not speed-optimized.
-     * @return Dates of equinoxes, accuracy around 1 minute.
-     * @throws Exception If an error occurs.
-     */
-    fun getEquinoxes(): DoubleArray? {
-        val jdOld: Double = jdUt
-        val out = DoubleArray(2)
-        val year: Int = getDate(jdUt)[0]
-        val precTime = 30 / 86400.0 // 30s
-        for (i in 0..1) {
-            var month = 3
-            val day = 18
-            if (i == 1) month = 9
-            var jd = toJulianDay(year, month, day, 0, 0, 0)
-            setUTDate(jd)
-            var min = -1.0
-            var minT = -1.0
-            while (true) {
-                val dec = doCalc(getSun(), true).declination
-                if (abs(dec) < min || min == -1.0) {
-                    min = abs(dec)
-                    minT = jd
-                }
-                if (abs(dec) > min && min >= 0) {
-                    out[i] = minT
-                    break
-                }
-                jd += precTime
-                setUTDate(jd)
+                jd += 1 - age
             }
         }
-        setUTDate(jdOld)
-        doCalc(getSun(), false)
-        return out
-    }
-
-    /**
-     * Returns the dates of the Summer and Winter solstices.
-     * Note the algorithm is not speed-optimized.
-     * @return Dates of solstices, accuracy around 1 minute.
-     * @throws Exception If an error occurs.
-     */
-    fun getSolstices(): DoubleArray? {
-        val jdOld: Double = jdUt
-        val out = DoubleArray(2)
-        val year: Int = getDate(jdUt)[0]
-        val precTime = 30 / 86400.0 // 30s
-        for (i in 0..1) {
-            var month = 6
-            val day = 18
-            if (i == 1) month = 12
-            var jd = toJulianDay(year, month, day, 0, 0, 0)
-            setUTDate(jd)
-            var max = -1.0
-            var maxT = -1.0
-            while (true) {
-                val dec = doCalc(getSun(), true).declination
-                if (abs(dec) > max || max == -1.0) {
-                    max = abs(dec)
-                    maxT = jd
-                }
-                if (abs(dec) < max && max >= 0) {
-                    out[i] = maxT
-                    break
-                }
-                jd += precTime
-                setUTDate(jd)
-            }
-        }
-        setUTDate(jdOld)
-        doCalc(getSun(), false)
-        return out
-    }
-
-    /**
-     * Returns the maximum/minimum elevation time for the Sun or the Moon.
-     * @param forSun True for the Sun, false for the Moon.
-     * @param inferior True to get the minimum elevation time.
-     * @return The Julian day of the culmination instant, which is
-     * only slightly different than the transit.
-     */
-    fun getCulminationTime(forSun: Boolean, inferior: Boolean): Double {
-        val jdOld: Double = jdUt
-        var jd = if (forSun) sun!!.transit else moon!!.transit
-        if (inferior) jd += 0.5 * if (jd > jdOld) -1 else 1
-        var startPrecSec = 20.0 / SECONDS_PER_DAY
-        val endPrecSec = 0.25 / SECONDS_PER_DAY
-        setUTDate(jd)
-        calcSunAndMoon()
-        var refAlt = if (forSun) sun!!.elevation else moon!!.elevation
-        while (abs(startPrecSec) > endPrecSec) {
-            jd += startPrecSec
-            setUTDate(jd)
-            val ephem = if (forSun) doCalc(getSun(), false) else doCalc(getMoon(), false)
-            if (ephem.elevation < refAlt && !inferior) startPrecSec *= -0.25
-            if (ephem.elevation > refAlt && inferior) startPrecSec *= -0.25
-            refAlt = ephem.elevation
-        }
-        setUTDate(jdOld)
-        calcSunAndMoon()
-        return jd
-    }
-
-    /**
-     * Returns the instant when the Sun or the Moon reaches a given azimuth.
-     * @param forSun True for the Sun, false for the Moon.
-     * @param azimuth The azimuth value to search for.
-     * @return The Julian day of the azimuth instant.
-     */
-    fun getAzimuthTime(forSun: Boolean, azimuth: Double): Double {
-        val jdOld: Double = jdUt
-        var jd = if (forSun) sun!!.transit else moon!!.transit
-        var startPrecSec = 500.0 / SECONDS_PER_DAY
-        val endPrecSec = 0.25 / SECONDS_PER_DAY
-        setUTDate(jd)
-        calcSunAndMoon()
-        var refDif = abs((if (forSun) sun!!.azimuth else moon!!.azimuth) - azimuth)
-        while (abs(startPrecSec) > endPrecSec) {
-            jd += startPrecSec
-            setUTDate(jd)
-            val ephem = if (forSun) doCalc(getSun(), false) else doCalc(getMoon(), false)
-            val dif = abs(ephem.azimuth - azimuth)
-            if (dif == 0.0) break
-            if (dif > refDif) startPrecSec *= -0.25
-            refDif = dif
-        }
-        setUTDate(jdOld)
-        calcSunAndMoon()
         return jd
     }
 
     // Moon's argument of latitude
-    fun moonDiskOrientationAngles(): OrientationAngles {
-        sun = doCalc(getSun(), false)
-        val moonPos = getMoon()
-        moon = doCalc(moonPos, false)
-        val moonLon = moonPos[0]
-        val moonLat = moonPos[1]
-        val moonRA = moon!!.rightAscension
-        val moonDEC = moon!!.declination
-        val sunRA = sun!!.rightAscension
-        val sunDEC = sun!!.declination
+    fun moonDiskOrientationAngles(dateTime: Calendar, location: LatitudeLongitude): OrientationAngles {
+        val params = Params(dateTime, location.latitude.doubleValue * DEG_TO_RAD, location.longitude.doubleValue * DEG_TO_RAD, Twilight.HORIZON_34ARCMIN)
+        val t = params.t()
+        val jd = params.jd
+        val sun = calculateEphemeris(params.time(), params, getSunPosition(t), false)
+        val moon = calculateEphemeris(params.time(), params, getMoonPosition(t, params), false)
+        val moonLon = moon.eclipticLongitude
+        val moonLat = moon.eclipticLatitude
+        val moonRA = moon.rightAscension
+        val moonDEC = moon.declination
+        val sunRA = sun.rightAscension
+        val sunDEC = sun.declination
 
         // Moon's argument of latitude
         val f = (93.2720993 + 483202.0175273 * t - 0.0034029 * t * t - t * t * t / 3526000.0 + t * t * t * t / 863310000.0) * DEG_TO_RAD
@@ -684,15 +614,15 @@ class SunMoonCalculator(year: Int, month: Int, day: Int, h: Int, m: Int, s: Int,
                 sin(sunDEC) * cos(moonDEC))
 
         // Paralactic angle par (first obtain local apparent sidereal time)
-        val jd0 = floor(jdUt - 0.5) + 0.5
+        val jd0 = floor(jd - 0.5) + 0.5
         val t0 = (jd0 - J2000) / JULIAN_DAYS_PER_CENTURY
-        val secs = (jdUt - jd0) * SECONDS_PER_DAY
+        val secs = (jd - jd0) * SECONDS_PER_DAY
         var gmst = ((-6.2e-6 * t0 + 9.3104e-2) * t0 + 8640184.812866) * t0 + 24110.54841
         val msday = 1.0 + ((-1.86e-5 * t0 + 0.186208) * t0 + 8640184.812866) / (SECONDS_PER_DAY * JULIAN_DAYS_PER_CENTURY)
         gmst = (gmst + msday * secs) * (15.0 / 3600.0) * DEG_TO_RAD
-        val lst = gmst + obsLon
+        val lst = gmst + params.obsLon
         posY = sin(lst - moonRA)
-        posX = tan(obsLat) * cos(moonDEC) - sin(moonDEC) * cos(lst - moonRA)
+        posX = tan(params.obsLat) * cos(moonDEC) - sin(moonDEC) * cos(lst - moonRA)
         val par: Double
         par = if (posX != 0.0) {
             atan2(posY, posX)
@@ -709,76 +639,19 @@ class SunMoonCalculator(year: Int, month: Int, day: Int, h: Int, m: Int, s: Int,
         return result
     }
 
-    companion object {
-        /** Radians to degrees.  */
-        const val RAD_TO_DEG = 180.0 / Math.PI
-
-        /** Degrees to radians.  */
-        const val DEG_TO_RAD = 1.0 / RAD_TO_DEG
-
-        /** Astronomical Unit in km. As defined by JPL.  */
-        const val AU = 149597870.691
-
-        /** Earth equatorial radius in km. IERS 2003 Conventions.  */
-        const val EARTH_RADIUS = 6378.1366
-
-        /** Two times Pi.  */
-        const val TWO_PI = 2.0 * Math.PI
-
-        /** Pi divided by two.  */
-        const val PI_OVER_TWO = Math.PI / 2.0
-
-        /** Julian century conversion constant = 100 * days per year.  */
-        const val JULIAN_DAYS_PER_CENTURY = 36525.0
-
-        /** Seconds in one day.  */
-        const val SECONDS_PER_DAY = 86400.0
-
-        /** Our default epoch. The Julian Day which represents noon on 2000-01-01.  */
-        const val J2000 = 2451545.0
-
-        // Formulae here is a simplification of the expansion from
-        // "Planetary Programs and Tables" by Pierre Bretagnon and
-        // Jean-Louis Simon, Willman-Bell, 1986. This source also
-        // have expansions for ephemerides of planets
-        private val sun_elements = arrayOf(doubleArrayOf(403406.0, 0.0, 4.721964, 1.621043), doubleArrayOf(195207.0, -97597.0, 5.937458, 62830.348067), doubleArrayOf(119433.0, -59715.0, 1.115589, 62830.821524), doubleArrayOf(112392.0, -56188.0, 5.781616, 62829.634302), doubleArrayOf(3891.0, -1556.0, 5.5474, 125660.5691), doubleArrayOf(2819.0, -1126.0, 1.512, 125660.9845), doubleArrayOf(1721.0, -861.0, 4.1897, 62832.4766), doubleArrayOf(0.0, 941.0, 1.163, .813), doubleArrayOf(660.0, -264.0, 5.415, 125659.31), doubleArrayOf(350.0, -163.0, 4.315, 57533.85), doubleArrayOf(334.0, 0.0, 4.553, -33.931), doubleArrayOf(314.0, 309.0, 5.198, 777137.715), doubleArrayOf(268.0, -158.0, 5.989, 78604.191), doubleArrayOf(242.0, 0.0, 2.911, 5.412), doubleArrayOf(234.0, -54.0, 1.423, 39302.098), doubleArrayOf(158.0, 0.0, .061, -34.861), doubleArrayOf(132.0, -93.0, 2.317, 115067.698), doubleArrayOf(129.0, -20.0, 3.193, 15774.337), doubleArrayOf(114.0, 0.0, 2.828, 5296.67), doubleArrayOf(99.0, -47.0, .52, 58849.27), doubleArrayOf(93.0, 0.0, 4.65, 5296.11), doubleArrayOf(86.0, 0.0, 4.35, -3980.7), doubleArrayOf(78.0, -33.0, 2.75, 52237.69), doubleArrayOf(72.0, -32.0, 4.5, 55076.47), doubleArrayOf(68.0, 0.0, 3.23, 261.08), doubleArrayOf(64.0, -10.0, 1.22, 15773.85))
-
-        /**
-         * Reduce an angle in radians to the range (0 - 2 Pi).
-         * @param rArg Value in radians.
-         * @return The reduced radians value.
-         */
-        fun normalizeRadians(rArg: Double): Double {
-            var r = rArg
-            if (r < 0 && r >= -TWO_PI) return r + TWO_PI
-            if (r >= TWO_PI && r < 2 * TWO_PI) return r - TWO_PI
-            if (r >= 0 && r < TWO_PI) return r
-            r -= TWO_PI * floor(r / TWO_PI)
-            if (r < 0.0) r += TWO_PI
-            return r
-        }
-    }
-
     /**
-     * Main constructor for Sun/Moon calculations. Time should be given in
-     * Universal Time (UT), observer angles in radians.
+     * Reduce an angle in radians to the range (0 - 2 Pi).
+     * @param rArg Value in radians.
+     * @return The reduced radians value.
      */
-    init {
-        val jd = toJulianDay(year, month, day, h, m, s)
-        ttMinusUt = 0.0
-        if (year > -600 && year < 2200) {
-            val x = year + (month - 1 + day / 30.0) / 12.0
-            val x2 = x * x
-            val x3 = x2 * x
-            val x4 = x3 * x
-            ttMinusUt = if (year < 1600) {
-                10535.328003326353 - 9.995238627481024 * x + 0.003067307630020489 * x2 - 7.76340698361363E-6 * x3 + 3.1331045394223196E-9 * x4 + 8.225530854405553E-12 * x2 * x3 - 7.486164715632051E-15 * x4 * x2 + 1.9362461549678834E-18 * x4 * x3 - 8.489224937827653E-23 * x4 * x4
-            } else {
-                -1027175.3477559977 + 2523.256625418965 * x - 1.885686849058459 * x2 + 5.869246227888417E-5 * x3 + 3.3379295816475025E-7 * x4 + 1.7758961671447929E-10 * x2 * x3 - 2.7889902806153024E-13 * x2 * x4 + 1.0224295822336825E-16 * x3 * x4 - 1.2528102370680435E-20 * x4 * x4
-            }
-        }
-        this.obsLat = obsLat
-        this.obsLon = obsLon
-        setUTDate(jd)
+    private fun normalizeRadians(rArg: Double): Double {
+        var r = rArg
+        if (r < 0 && r >= -TWO_PI) return r + TWO_PI
+        if (r >= TWO_PI && r < 2 * TWO_PI) return r - TWO_PI
+        if (r >= 0 && r < TWO_PI) return r
+        r -= TWO_PI * floor(r / TWO_PI)
+        if (r < 0.0) r += TWO_PI
+        return r
     }
+
 }

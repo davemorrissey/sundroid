@@ -290,12 +290,7 @@ object MoonPhaseCalculator {
     }
 
     fun getOrientationAngles(dateTime: Calendar, location: LatitudeLongitude): OrientationAngles {
-        val dateTimeUtc = getInstance(TimeZone.getTimeZone("UTC"))
-        dateTimeUtc.timeInMillis = dateTime.timeInMillis
-        val smc = SunMoonCalculator(dateTimeUtc.get(YEAR), dateTimeUtc.get(MONTH) + 1, dateTimeUtc.get(DAY_OF_MONTH),
-                dateTimeUtc.get(HOUR_OF_DAY), dateTimeUtc.get(MINUTE), dateTimeUtc.get(SECOND),
-                Math.toRadians(location.longitude.doubleValue), Math.toRadians(location.latitude.doubleValue))
-        return smc.moonDiskOrientationAngles()
+        return SunMoonCalculator.moonDiskOrientationAngles(dateTime, location)
     }
 
     fun getIlluminatedPercent(phase: Double): Int {
