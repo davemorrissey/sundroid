@@ -6,7 +6,6 @@ import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatImageView
 import uk.co.sundroid.R
 import uk.co.sundroid.util.astro.OrientationAngles
-import uk.co.sundroid.util.log.d
 
 class MoonPhaseImageView(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : AppCompatImageView(context, attrs, defStyleAttr) {
 
@@ -15,6 +14,7 @@ class MoonPhaseImageView(context: Context?, attrs: AttributeSet?, defStyleAttr: 
     private var paint = Paint()
     private var sourceRect = Rect()
     private var destRect = RectF()
+    private var moon = R.drawable.moon
 
     constructor(context: Context?, attrs: AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context?) : this(context, null)
@@ -23,19 +23,11 @@ class MoonPhaseImageView(context: Context?, attrs: AttributeSet?, defStyleAttr: 
         if (width == 0 || height == 0) {
             return
         }
-        if (bitmap == null) {
-            d(TAG, "Draw fresh image")
-        } else {
-            d(TAG, "Draw existing image")
-        }
-        val start = System.currentTimeMillis()
-        val image = bitmap ?: MoonPhaseImage.makeImage(context.resources, R.drawable.moon, orientationAngles)
+        val image = bitmap ?: MoonPhaseImage.makeImage(context.resources, moon, orientationAngles)
         sourceRect.set(0, 0, image.width, image.height)
         destRect.set(0f, 0f, width.toFloat(), height.toFloat())
         canvas.rotate(orientationAngles.imageRotationAngle(), width / 2F, height / 2F)
         canvas.drawBitmap(image, sourceRect, destRect, paint)
-        val end = System.currentTimeMillis()
-        d(TAG, "Took " + (end - start))
         super.onDraw(canvas)
     }
 
@@ -45,8 +37,10 @@ class MoonPhaseImageView(context: Context?, attrs: AttributeSet?, defStyleAttr: 
         this.postInvalidate()
     }
 
-    companion object {
-        val TAG = MoonPhaseImageView::class.java.simpleName
+    fun setMoonImage(moonImage: Int) {
+        this.moon = moonImage
+        this.bitmap = null
+        this.postInvalidate()
     }
 
 }

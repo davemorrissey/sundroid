@@ -45,15 +45,12 @@
         android:id="@+id/dayMoonCell"
         style="@style/monthCalMoonCell">
 
-        <ImageView
+        <uk.co.sundroid.util.astro.image.MoonPhaseImageView
+            android:id="@+id/dayMoon"
             style="@style/calendarMoonImage"
             android:scaleType="fitXY"
             android:src="@drawable/moonsmall" />
 
-        <ImageView
-            android:id="@+id/dayMoonOverlay"
-            style="@style/calendarMoonImage"
-            android:src="@drawable/moonoverlay000" />
     </RelativeLayout>
 
     <TableLayout

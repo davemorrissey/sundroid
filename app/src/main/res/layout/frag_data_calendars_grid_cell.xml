@@ -4,27 +4,18 @@
     style="@style/calendarGridCell"
     tools:layout_width="50dp">
 
-    <ImageView
+    <uk.co.sundroid.util.astro.image.MoonPhaseImageView
         android:id="@+id/calendarGridCellMoon"
         style="@style/calendarMoonImage"
         android:layout_alignParentTop="true"
         android:scaleType="fitXY"
-        android:src="@drawable/moonsmall"
-        android:visibility="gone" />
-
-    <ImageView
-        android:id="@+id/calendarGridCellMoonOverlay"
-        style="@style/calendarMoonImage"
-        android:layout_alignParentTop="true"
-        android:layout_marginBottom="5dp"
-        android:src="@drawable/moonoverlay000"
         android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/calendarGridCellEventsContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/calendarGridCellMoonOverlay"
+        android:layout_below="@id/calendarGridCellMoon"
         android:gravity="center_vertical"
         android:minHeight="70dp"
         android:orientation="vertical" />
