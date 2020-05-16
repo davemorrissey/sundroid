@@ -1,6 +1,9 @@
 package uk.co.sundroid.util.astro.math
 
+import uk.co.sundroid.util.astro.MoonDay
 import uk.co.sundroid.util.astro.OrientationAngles
+import uk.co.sundroid.util.astro.Position
+import uk.co.sundroid.util.astro.SunDay
 import uk.co.sundroid.util.location.LatitudeLongitude
 import java.util.*
 import java.util.Calendar.*
@@ -175,7 +178,7 @@ object SunMoonCalculator {
         }
     }
 
-    class Position(val eclipticLongitude: Double, val eclipticLatitude: Double, val distance: Double, val angularRadius: Double, val moonAge: Double = 0.0)
+    class Position(val eclipticLongitude: Double, val eclipticLatitude: Double, val distance: Double, val angularRadius: Double, val moonAge: Double = 0.0, val moonPhase: Double = 0.0)
 
     /**
      * Class to hold the results of ephemerides.
@@ -187,8 +190,9 @@ object SunMoonCalculator {
             var azimuth: Double, var elevation: Double, var rise: Double, var set: Double,
             var transit: Double, var transitElevation: Double, var rightAscension: Double, var declination: Double,
             var distance: Double, var eclipticLongitude: Double, var eclipticLatitude: Double, var angularRadius: Double) {
-        var illuminationPhase = 100.0
-        var age = 0.0
+        var moonIllumination = 100.0
+        var moonAge = 0.0
+        var moonPhase = 0.0
     }
 
     private fun toJulianDay(year: Int, month: Int, day: Int, h: Int, m: Int, s: Int): Double {
@@ -210,6 +214,40 @@ object SunMoonCalculator {
     }
 
     /**
+     * Returns the sun's position for a given time and location.
+     */
+    fun getSunPosition(dateTime: Calendar, location: LatitudeLongitude): uk.co.sundroid.util.astro.Position {
+        val params = Params(dateTime, location.latitude.doubleValue * DEG_TO_RAD, location.longitude.doubleValue * DEG_TO_RAD, Twilight.HORIZON_34ARCMIN)
+        val sunPosition = getSunPosition(params.t())
+        val sunTopo = calculateSunEphemeris(params.time(), params)
+        val sunGeo = calculateEphemeris(params.time(), params, sunPosition, true)
+
+        val position = Position(dateTime.timeInMillis, sunTopo.azimuth * RAD_TO_DEG, sunTopo.elevation * RAD_TO_DEG)
+        position.julianDay = params.jd
+        position.topoRA = sunTopo.rightAscension * RAD_TO_DEG
+        position.topoDec = sunTopo.declination * RAD_TO_DEG
+        position.topoDistKm = sunTopo.distance * AU
+        position.topoDistEarthRadii = sunTopo.distance * AU / EARTH_RADIUS
+        position.geoRA = sunGeo.rightAscension * RAD_TO_DEG
+        position.geoDec = sunGeo.declination * RAD_TO_DEG
+        position.geoDistKm = sunGeo.distance * AU
+        position.geoDistEarthRadii = sunGeo.distance * AU / EARTH_RADIUS
+        return position
+    }
+
+    /**
+     * Returns the sun ephemeris for a given date and location.
+     */
+    fun getSunDay(dateMidnight: Calendar, location: LatitudeLongitude): SunDay {
+        val params = Params(dateMidnight, location.latitude.doubleValue * DEG_TO_RAD, location.longitude.doubleValue * DEG_TO_RAD, Twilight.HORIZON_34ARCMIN)
+        val ephemeris = calculateSunEphemeris(params.time(), params)
+        val day = SunDay()
+        day.rise = getCalendar(ephemeris.rise, dateMidnight.timeZone)
+        day.set = getCalendar(ephemeris.set, dateMidnight.timeZone)
+        return day
+    }
+
+    /**
      * Calculates everything for the Sun.
      */
     private fun calculateSunEphemeris(time: DoubleArray, params: Params): Ephemeris {
@@ -226,6 +264,43 @@ object SunMoonCalculator {
             sun.transitElevation = calculateEphemeris(transit, params, getSunPosition(transit[1]), false).transitElevation
         }
         return sun
+    }
+
+    /**
+     * Returns the moon's position for a given time and location.
+     */
+    fun getMoonPosition(dateTime: Calendar, location: LatitudeLongitude): uk.co.sundroid.util.astro.Position {
+        val params = Params(dateTime, location.latitude.doubleValue * DEG_TO_RAD, location.longitude.doubleValue * DEG_TO_RAD, Twilight.HORIZON_34ARCMIN)
+        val moonPosition = getMoonPosition(params.t(), params)
+        val moonTopo = calculateMoonEphemeris(params.time(), params)
+        val moonGeo = calculateEphemeris(params.time(), params, moonPosition, true)
+
+        val position = Position(dateTime.timeInMillis, moonTopo.azimuth * RAD_TO_DEG, moonTopo.elevation * RAD_TO_DEG)
+        position.julianDay = params.jd
+        position.topoRA = moonTopo.rightAscension * RAD_TO_DEG
+        position.topoDec = moonTopo.declination * RAD_TO_DEG
+        position.topoDistKm = moonTopo.distance * AU
+        position.topoDistEarthRadii = moonTopo.distance * AU / EARTH_RADIUS
+        position.geoRA = moonGeo.rightAscension * RAD_TO_DEG
+        position.geoDec = moonGeo.declination * RAD_TO_DEG
+        position.geoDistKm = moonGeo.distance * AU
+        position.geoDistEarthRadii = moonGeo.distance * AU / EARTH_RADIUS
+        position.moonAge = moonTopo.moonAge
+        position.moonPhase = moonTopo.moonPhase / TWO_PI
+        position.moonIllumination = moonTopo.moonIllumination
+        return position
+    }
+
+    /**
+     * Returns the moon ephemeris for a given date and location.
+     */
+    fun getMoonDay(dateMidnight: Calendar, location: LatitudeLongitude): MoonDay {
+        val params = Params(dateMidnight, location.latitude.doubleValue * DEG_TO_RAD, location.longitude.doubleValue * DEG_TO_RAD, Twilight.HORIZON_34ARCMIN)
+        val ephemeris = calculateMoonEphemeris(params.time(), params)
+        val day = MoonDay()
+        day.rise = getCalendar(ephemeris.rise, dateMidnight.timeZone)
+        day.set = getCalendar(ephemeris.set, dateMidnight.timeZone)
+        return day
     }
 
     /**
@@ -251,8 +326,9 @@ object SunMoonCalculator {
         val dlon = moon.rightAscension - sun.rightAscension
         val elong = acos(sin(sun.declination) * sin(moon.declination) +
                 cos(sun.declination) * cos(moon.declination) * cos(dlon))
-        moon.illuminationPhase = 100 * (1.0 - cos(elong)) * 0.5
-        moon.age = moonPosition.moonAge
+        moon.moonIllumination = 100 * (1.0 - cos(elong)) * 0.5
+        moon.moonAge = moonPosition.moonAge
+        moon.moonPhase = moonPosition.moonPhase
         return moon
     }
 
@@ -339,7 +415,7 @@ object SunMoonCalculator {
         l += e * 2.222E-3 * sin(2 * phase + node - sanomaly)
         l += e * 2.072E-3 * sin(2 * phase - node - sanomaly - anomaly)
         val latitude = l
-        return Position(longitude, latitude, distance * EARTH_RADIUS / AU, atan(1737.4 / (distance * EARTH_RADIUS)), moonAge = moonAge)
+        return Position(longitude, latitude, distance * EARTH_RADIUS / AU, atan(1737.4 / (distance * EARTH_RADIUS)), moonAge = moonAge, moonPhase = phase)
     }
 
     private fun calculateEphemeris(time: DoubleArray, params: Params, pos: Position, geocentric: Boolean): Ephemeris {
@@ -495,7 +571,7 @@ object SunMoonCalculator {
      * @return A set of integers: year, month, day, hour, minute, second.
      * @throws Exception If the input date does not exists.
      */
-    private fun getDate(jd: Double): IntArray {
+    private fun getCalendar(jd: Double, tz: TimeZone): Calendar {
         if (jd < 2299160.0 && jd >= 2299150.0) throw IllegalArgumentException("invalid julian day $jd. This date does not exist.")
 
         // The conversion formulas are from Meeus,
@@ -521,7 +597,11 @@ object SunMoonCalculator {
         val m = (h - hour) * 60.0
         val minute = m.toInt()
         val second = ((m - minute) * 60.0).toInt()
-        return intArrayOf(year, month, day, hour, minute, second)
+        val calendar = getInstance(TimeZone.getTimeZone("UTC"))
+        calendar.set(year, month - 1, day, hour, minute, second)
+        calendar.timeZone = tz
+        calendar.timeInMillis
+        return calendar
     }
 
     private fun obtainAccurateRiseSetTransit(riseSetJd: Double, params: Params, index: Event, niter: Int, sun: Boolean): Double {

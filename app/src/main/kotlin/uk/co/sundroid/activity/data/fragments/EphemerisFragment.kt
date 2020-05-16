@@ -13,6 +13,7 @@ import uk.co.sundroid.util.astro.MoonPhase
 import uk.co.sundroid.util.astro.math.BodyPositionCalculator
 import uk.co.sundroid.util.astro.math.MoonPhaseCalculator
 import uk.co.sundroid.util.astro.math.SunCalculator
+import uk.co.sundroid.util.astro.math.SunMoonCalculator
 import uk.co.sundroid.util.geometry.*
 import uk.co.sundroid.util.time.formatTimeStr
 import uk.co.sundroid.util.time.shortDateAndMonth
@@ -52,9 +53,13 @@ class EphemerisFragment : AbstractTimeFragment() {
 
 
         val sunDay = SunCalculator.calcDay(location.location, dateCalendar)
+        val smcSunDay = SunMoonCalculator.getSunDay(timeCalendar, location.location)
         val sunPosition = SunCalculator.calcPosition(location.location, timeCalendar)
+        val smcSunPosition = SunMoonCalculator.getSunPosition(timeCalendar, location.location)
         val moonDay = BodyPositionCalculator.calcDay(Body.MOON, location.location, dateCalendar, true)
+        val smcMoonDay = SunMoonCalculator.getMoonDay(timeCalendar, location.location)
         val moonPosition = BodyPositionCalculator.calcPosition(Body.MOON, location.location, timeCalendar)
+        val smcMoonPosition = SunMoonCalculator.getMoonPosition(timeCalendar, location.location)
         val noonPhase = MoonPhaseCalculator.getNoonPhase(dateCalendar)
         val noonIllumination = MoonPhaseCalculator.getIlluminatedPercent(noonPhase)
 
@@ -69,48 +74,89 @@ class EphemerisFragment : AbstractTimeFragment() {
         }
 
         sunDay.rise?.let {
-            b.sunRise1.text = time(it) + " - " + formatBearing(requireContext(), sunDay.riseAzimuth, location.location, timeCalendar)
+            b.sunRise1.text = shortDateAndMonth(it) + " " + time(it) + " - " + formatBearing(requireContext(), sunDay.riseAzimuth, location.location, timeCalendar)
         } ?: run {
             b.sunRise1.text = "-"
         }
         sunDay.set?.let {
-            b.sunSet1.text = time(it) + " - " + formatBearing(requireContext(), sunDay.setAzimuth, location.location, timeCalendar)
+            b.sunSet1.text = shortDateAndMonth(it) + " " + time(it) + " - " + formatBearing(requireContext(), sunDay.setAzimuth, location.location, timeCalendar)
         } ?: run {
             b.sunSet1.text = "-"
         }
+        smcSunDay.rise?.let {
+            b.sunRise2.text = shortDateAndMonth(it) + " " + time(it) + " - " + formatBearing(requireContext(), smcSunDay.riseAzimuth, location.location, timeCalendar)
+        } ?: run {
+            b.sunRise2.text = "-"
+        }
+        smcSunDay.set?.let {
+            b.sunSet2.text = shortDateAndMonth(it) + " " + time(it) + " - " + formatBearing(requireContext(), smcSunDay.setAzimuth, location.location, timeCalendar)
+        } ?: run {
+            b.sunSet2.text = "-"
+        }
 
         b.sunJd1.text = "" + sunPosition.julianDay
+        b.sunJd2.text = "" + smcSunPosition.julianDay
         b.sunAppEl1.text = trimDouble(sunPosition.appElevation)
+        b.sunAppEl2.text = trimDouble(smcSunPosition.appElevation)
         b.sunAz1.text = trimDouble(sunPosition.azimuth)
+        b.sunAz2.text = trimDouble(smcSunPosition.azimuth)
 
         moonDay.rise?.let {
-            b.moonRise1.text = time(it) + " - " + formatBearing(requireContext(), moonDay.riseAzimuth, location.location, timeCalendar)
+            b.moonRise1.text = shortDateAndMonth(it) + " " + time(it) + " - " + formatBearing(requireContext(), moonDay.riseAzimuth, location.location, timeCalendar)
         } ?: run {
             b.moonRise1.text = "-"
         }
         moonDay.set?.let {
-            b.moonSet1.text = time(it) + " - " + formatBearing(requireContext(), moonDay.setAzimuth, location.location, timeCalendar)
+            b.moonSet1.text = shortDateAndMonth(it) + " " + time(it) + " - " + formatBearing(requireContext(), moonDay.setAzimuth, location.location, timeCalendar)
         } ?: run {
             b.moonSet1.text = "-"
         }
+        smcMoonDay.rise?.let {
+            b.moonRise2.text = shortDateAndMonth(it) + " " + time(it) + " - " + formatBearing(requireContext(), smcMoonDay.riseAzimuth, location.location, timeCalendar)
+        } ?: run {
+            b.moonRise2.text = "-"
+        }
+        smcMoonDay.set?.let {
+            b.moonSet2.text = shortDateAndMonth(it) + " " + time(it) + " - " + formatBearing(requireContext(), smcMoonDay.setAzimuth, location.location, timeCalendar)
+        } ?: run {
+            b.moonSet2.text = "-"
+        }
 
         b.moonJd1.text = "" + moonPosition.julianDay
+        b.moonJd2.text = "" + smcMoonPosition.julianDay
         b.moonAppEl1.text = trimDouble(moonPosition.appElevation)
+        b.moonAppEl2.text = trimDouble(smcMoonPosition.appElevation)
         b.moonTrueEl1.text = trimDouble(moonPosition.trueElevation)
+        b.moonTrueEl2.text = trimDouble(smcMoonPosition.trueElevation)
         b.moonAz1.text = trimDouble(moonPosition.azimuth)
+        b.moonAz2.text = trimDouble(smcMoonPosition.azimuth)
         b.moonGeoRA1.text = trimDouble(moonPosition.geoRA) + "\n" +
                 "Hours = " + trimDouble(moonPosition.geoRA / 15.0) + "\n" +
                 "HMS = " + arc(moonPosition.geoRA/15.0)
+        b.moonGeoRA2.text = trimDouble(smcMoonPosition.geoRA) + "\n" +
+                "Hours = " + trimDouble(smcMoonPosition.geoRA / 15.0) + "\n" +
+                "HMS = " + arc(smcMoonPosition.geoRA/15.0)
         b.moonGeoDec1.text = trimDouble(moonPosition.geoDec) + "\n" +
                 "HMS = " + arc(moonPosition.geoDec)
-        b.moonGeoDist1.text = trimDouble(moonPosition.geoDistEarthRadii)
+        b.moonGeoDec2.text = trimDouble(smcMoonPosition.geoDec) + "\n" +
+                "HMS = " + arc(smcMoonPosition.geoDec)
+        b.moonGeoDist1.text = trimDouble(moonPosition.geoDistEarthRadii) + "ER\n" + trimDouble(moonPosition.geoDistKm) + "Km"
+        b.moonGeoDist2.text = trimDouble(smcMoonPosition.geoDistEarthRadii) + "ER\n" + trimDouble(smcMoonPosition.geoDistKm) + "Km"
         b.moonTopoRA1.text = trimDouble(moonPosition.topoRA)+ "\n" +
                 "HMS = " + arc(moonPosition.topoRA/15.0)
+        b.moonTopoRA2.text = trimDouble(smcMoonPosition.topoRA)+ "\n" +
+                "HMS = " + arc(smcMoonPosition.topoRA/15.0)
         b.moonTopoDec1.text = trimDouble(moonPosition.topoDec) + "\n" +
                 "HMS = " + arc(moonPosition.topoDec)
-        b.moonTopoDist1.text = trimDouble(moonPosition.topoDistEarthRadii)
+        b.moonTopoDec2.text = trimDouble(smcMoonPosition.topoDec) + "\n" +
+                "HMS = " + arc(smcMoonPosition.topoDec)
+        b.moonTopoDist1.text = trimDouble(moonPosition.topoDistEarthRadii) + "ER\n" + trimDouble(moonPosition.topoDistKm) + "Km"
+        b.moonTopoDist2.text = trimDouble(smcMoonPosition.topoDistEarthRadii) + "ER\n" + trimDouble(smcMoonPosition.topoDistKm) + "Km"
+        b.moonAge2.text = trimDouble(smcMoonPosition.moonAge)
         b.moonPhase1.text = trimDouble(noonPhase) + " (Noon)"
+        b.moonPhase2.text = trimDouble(smcMoonPosition.moonPhase)
         b.moonIllumination1.text = "${noonIllumination}% (Noon)"
+        b.moonIllumination2.text = trimDouble(smcMoonPosition.moonIllumination)
         b.moonNextFull1.text = shortDateAndMonth(phaseEvents.first().time) + " " + time(phaseEvents.first().time)
 
     }

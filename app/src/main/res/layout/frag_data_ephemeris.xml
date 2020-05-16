@@ -312,6 +312,18 @@
             <TableRow>
                 <TextView
                     style="@style/ephemerisTitleCell"
+                    android:text="Age" />
+                <TextView
+                    android:id="@+id/moonAge1"
+                    style="@style/ephemerisValueCell" />
+                <TextView
+                    android:id="@+id/moonAge2"
+                    style="@style/ephemerisValueCell" />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    style="@style/ephemerisTitleCell"
                     android:text="Phase" />
                 <TextView
                     android:id="@+id/moonPhase1"
