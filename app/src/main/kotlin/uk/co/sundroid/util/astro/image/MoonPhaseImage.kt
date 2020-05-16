@@ -31,7 +31,7 @@ object MoonPhaseImage {
         val path = Path()
         val paint = Paint()
         paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.MULTIPLY)
-        paint.color = Color.argb(150, 75, 75, 75)
+        paint.color = Color.argb(255, 100, 100, 100)
         paint.style = Paint.Style.FILL
         paint.isAntiAlias = true
 
