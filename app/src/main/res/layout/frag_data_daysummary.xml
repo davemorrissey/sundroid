@@ -76,7 +76,7 @@
                 style="@style/listMenuDivider"
                 android:layout_marginBottom="25dp" />
 
-            <ImageView
+            <uk.co.sundroid.util.astro.image.MoonPhaseImageView
                 android:id="@+id/moonImage"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
@@ -84,8 +84,7 @@
                 android:layout_marginBottom="15dp"
                 android:maxWidth="100dp"
                 android:maxHeight="100dp"
-                android:scaleType="fitXY"
-                android:src="@drawable/moon" />
+                android:scaleType="fitXY"/>
 
             <TextView
                 android:id="@+id/moonSpecial"

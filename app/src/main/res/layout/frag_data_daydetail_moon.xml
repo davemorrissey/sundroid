@@ -45,16 +45,15 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <ImageView
+            <uk.co.sundroid.util.astro.image.MoonPhaseImageView
                 android:id="@+id/moonImage"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
+                android:layout_width="250dp"
+                android:layout_height="250dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="15dp"
-                android:maxWidth="200dp"
-                android:maxHeight="200dp"
-                android:scaleType="fitXY"
-                android:src="@drawable/moon" />
+                android:maxWidth="250dp"
+                android:maxHeight="250dp"
+                android:scaleType="fitXY"/>
 
             <TableLayout
                 android:layout_width="fill_parent"

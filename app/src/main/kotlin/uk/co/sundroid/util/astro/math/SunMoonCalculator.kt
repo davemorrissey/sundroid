@@ -653,8 +653,9 @@ object SunMoonCalculator {
         val params = Params(dateTime, location.latitude.doubleValue * DEG_TO_RAD, location.longitude.doubleValue * DEG_TO_RAD, Twilight.HORIZON_34ARCMIN)
         val t = params.t()
         val jd = params.jd
+        val moonPosition = getMoonPosition(t, params)
         val sun = calculateEphemeris(params.time(), params, getSunPosition(t), false)
-        val moon = calculateEphemeris(params.time(), params, getMoonPosition(t, params), false)
+        val moon = calculateEphemeris(params.time(), params, moonPosition, false)
         val moonLon = moon.eclipticLongitude
         val moonLat = moon.eclipticLatitude
         val moonRA = moon.rightAscension
@@ -710,6 +711,7 @@ object SunMoonCalculator {
             posY / abs(posY) * PI_OVER_TWO
         }
         val result = OrientationAngles()
+        result.phase = moonPosition.moonPhase / TWO_PI
         result.brightLimb = Math.toDegrees(bl)
         result.parallactic = Math.toDegrees(par)
         result.axis = Math.toDegrees(p)

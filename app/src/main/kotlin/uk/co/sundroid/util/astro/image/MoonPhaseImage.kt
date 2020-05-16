@@ -15,10 +15,11 @@ object MoonPhaseImage {
      * more efficient to rotate it back in an image view than to create another bitmap.
      */
     @Throws(Exception::class)
-    fun makeImage(resources: Resources, drawable: Int, phase: Double, orientationAngles: OrientationAngles): Bitmap {
+    fun makeImage(resources: Resources, drawable: Int, orientationAngles: OrientationAngles): Bitmap {
         val source = BitmapFactory.decodeResource(resources, drawable)
         val size = source.width
         val sizeF = size.toFloat()
+        val phase = orientationAngles.phase
 
         val rotateMatrix = Matrix()
         rotateMatrix.postRotate(orientationAngles.brightLimbRotationAngle(), size / 2f, size / 2f)
@@ -29,7 +30,7 @@ object MoonPhaseImage {
 
         val path = Path()
         val paint = Paint()
-        paint.blendMode = BlendMode.MODULATE
+        paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.MULTIPLY)
         paint.color = Color.argb(150, 75, 75, 75)
         paint.style = Paint.Style.FILL
         paint.isAntiAlias = true

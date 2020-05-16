@@ -6,6 +6,7 @@ package uk.co.sundroid.util.astro
  */
 class OrientationAngles {
 
+    var phase = 0.0
     var axis = 0.0
     var brightLimb = 0.0
     var parallactic = 0.0
