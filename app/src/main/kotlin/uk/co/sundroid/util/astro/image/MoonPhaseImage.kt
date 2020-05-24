@@ -15,23 +15,44 @@ object MoonPhaseImage {
      * more efficient to rotate it back in an image view than to create another bitmap.
      */
     @Throws(Exception::class)
-    fun makeImage(resources: Resources, drawable: Int, orientationAngles: OrientationAngles): Bitmap {
+    fun makeImage(resources: Resources, drawable: Int, orientationAngles: OrientationAngles, shadowSizePercent: Float = 0f, shadowOpacity: Int = 0): Bitmap {
         val source = BitmapFactory.decodeResource(resources, drawable)
         val size = source.width
         val sizeF = size.toFloat()
-        val phase = orientationAngles.phase
+        var phase = orientationAngles.phase
+        if (phase >= 0.98 || phase < 0.02) {
+            phase = 0.0
+        }
+        val shadowSize = ((shadowSizePercent/100f) * size).toInt()
+
+        var brightLimbRotate = orientationAngles.brightLimb - 90
+        if (orientationAngles.brightLimb > 180) {
+            brightLimbRotate = orientationAngles.brightLimb - 270
+        }
+        brightLimbRotate -= orientationAngles.axis
+        val preRotate = orientationAngles.parallactic - orientationAngles.axis
+        val postRotate = brightLimbRotate + preRotate
 
         val rotateMatrix = Matrix()
-        rotateMatrix.postRotate(orientationAngles.brightLimbRotationAngle(), size / 2f, size / 2f)
+        rotateMatrix.postRotate(preRotate.toFloat(), size / 2f, size / 2f)
+        rotateMatrix.postScale(size / (size + (4f * shadowSize)), size / (size + (4f * shadowSize)), size / 2f, size / 2f)
 
         val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
+
+        if (shadowSize > 0 && shadowOpacity > 0) {
+            val blur = Paint()
+            blur.color = Color.argb(shadowOpacity, 0, 0, 0)
+            blur.maskFilter = BlurMaskFilter(shadowSize.toFloat(), BlurMaskFilter.Blur.NORMAL)
+            canvas.drawOval(shadowSize.toFloat(), shadowSize.toFloat(), sizeF - shadowSize, sizeF - shadowSize, blur)
+        }
+
         canvas.drawBitmap(source, rotateMatrix, Paint())
 
         val path = Path()
         val paint = Paint()
         paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.MULTIPLY)
-        paint.color = Color.argb(255, 100, 100, 100)
+        paint.color = Color.argb(255, 75, 75, 75)
         paint.style = Paint.Style.FILL
         paint.isAntiAlias = true
 
@@ -61,6 +82,8 @@ object MoonPhaseImage {
             path.lineTo(0f, sizeF)
             path.lineTo(0f, 0f)
         }
+        canvas.scale(size / (size + (4f * shadowSize)), size / (size + (4f * shadowSize)), size / 2f, size / 2f)
+        canvas.rotate(postRotate.toFloat(), radius.toFloat(), radius.toFloat())
         canvas.drawPath(path, paint)
         return bitmap
     }

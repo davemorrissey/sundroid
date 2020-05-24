@@ -26,7 +26,6 @@ class MoonPhaseImageView(context: Context?, attrs: AttributeSet?, defStyleAttr: 
         val image = bitmap ?: MoonPhaseImage.makeImage(context.resources, moon, orientationAngles)
         sourceRect.set(0, 0, image.width, image.height)
         destRect.set(0f, 0f, width.toFloat(), height.toFloat())
-        canvas.rotate(orientationAngles.imageRotationAngle(), width / 2F, height / 2F)
         canvas.drawBitmap(image, sourceRect, destRect, paint)
         super.onDraw(canvas)
     }

@@ -1,44 +1,61 @@
 package uk.co.sundroid.activity
 
-import uk.co.sundroid.util.location.Geocoder
-import uk.co.sundroid.util.location.LatitudeLongitude
-import uk.co.sundroid.util.prefs.Prefs
-import uk.co.sundroid.util.log.*
 import android.content.Context
-import android.content.Context.*
+import android.content.Context.LOCATION_SERVICE
 import android.location.Criteria
-import android.location.Criteria.*
+import android.location.Criteria.ACCURACY_FINE
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
+import uk.co.sundroid.util.location.Geocoder
+import uk.co.sundroid.util.location.LatitudeLongitude
+import uk.co.sundroid.util.log.d
+import uk.co.sundroid.util.prefs.Prefs
+import uk.co.sundroid.activity.LocaterStatus.*
 
 class Locater(private val listener: LocaterListener, private val context: Context) : LocationListener {
 
-    private var locationManager: LocationManager? = null
     private var finished = false
     private var timeoutThread: TimeoutThread? = null // TODO Handler with delayed post?
 
-    fun start(): Boolean {
+    fun start(accuracy: Int = ACCURACY_FINE): LocaterStatus {
         timeoutThread?.stop()
         timeoutThread = null
 
         val criteria = Criteria()
-        criteria.accuracy = ACCURACY_FINE
+        criteria.accuracy = accuracy
 
-        val locationManager = listener.getSystemService(LOCATION_SERVICE) as LocationManager? ?: return false
+        val locationManager = listener.getSystemService(LOCATION_SERVICE) as LocationManager? ?: return UNAVAILABLE
         try {
             locationManager.requestSingleUpdate(criteria, this, listener.getMainLooper())
         } catch (e: SecurityException) {
-            return false
+            return DENIED
+        } catch (e: Exception) {
+            return UNAVAILABLE
         }
 
         val timeoutThread = TimeoutThread()
         timeoutThread.start()
 
-        this.locationManager = locationManager
         this.timeoutThread = timeoutThread
-        return true
+        return STARTED
+    }
+
+    fun startLastKnown(): LocaterStatus {
+        val locationManager = listener.getSystemService(LOCATION_SERVICE) as LocationManager? ?: return UNAVAILABLE
+        for (provider in arrayOf(LocationManager.GPS_PROVIDER, LocationManager.NETWORK_PROVIDER)) {
+            try {
+                locationManager.getLastKnownLocation(provider)?.let {
+                    Thread { onLocationChanged(it) }.start()
+                    return STARTED
+                }
+            } catch (e: SecurityException) {
+                return DENIED
+            } catch (e: Exception) {
+            }
+        }
+        return UNAVAILABLE
     }
 
     fun cancel() {
@@ -46,7 +63,7 @@ class Locater(private val listener: LocaterListener, private val context: Contex
             timeoutThread?.stop()
             timeoutThread = null
             finished = true
-            locationManager?.removeUpdates(this)
+            (listener.getSystemService(LOCATION_SERVICE) as LocationManager?)?.removeUpdates(this)
             d(TAG, "Cancelled")
         }
     }
@@ -64,14 +81,28 @@ class Locater(private val listener: LocaterListener, private val context: Contex
     fun onTimeout() {
         if (!finished) {
             cancel()
-            listener.locationTimeout()
+            listener.locationError(TIMEOUT)
+        }
+    }
+
+    /**
+     * A disabled message from the fused provider indicates location services are disabled. Errors
+     * from other provider names aren't necessarily fatal and location will continue until timeout.
+     */
+    override fun onProviderDisabled(provider: String?) {
+        if (!finished) {
+            d(TAG, "Provider disabled: $provider")
+            cancel()
+            listener.locationError(DISABLED)
         }
     }
 
     override fun onProviderEnabled(provider: String) {
-        if (!finished) {
-            d(TAG, "Provider enabled: $provider")
-        }
+        // Not required
+    }
+
+    override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
+        // Never called
     }
 
     inner class TimeoutThread : Runnable {
@@ -106,14 +137,6 @@ class Locater(private val listener: LocaterListener, private val context: Contex
             }
         }
 
-    }
-
-    override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
-        // We don't know whether another provider will give a location. Continue until the timeout.
-    }
-
-    override fun onProviderDisabled(provider: String?) {
-        // We don't know whether another provider will give a location. Continue until the timeout.
     }
 
     companion object {

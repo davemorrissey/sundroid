@@ -83,6 +83,14 @@
 		<item name="list_divider">@drawable/db_list_divider</item>
 	</style>
 
+	<style name="SundroidTransparent" parent="Theme.AppCompat.NoActionBar">
+		<item name="android:background">#00000000</item>
+		<item name="android:windowNoTitle">true</item>
+		<item name="android:windowBackground">@android:color/transparent</item>
+		<item name="android:colorBackgroundCacheHint">@null</item>
+		<item name="android:windowIsTranslucent">true</item>
+	</style>
+
 	<style name="SundroidDarkBlueAlertDialog" parent="Theme.AppCompat.Dialog.Alert">
 		<item name="android:windowBackground">?primary_color</item>
 	</style>
@@ -101,7 +109,7 @@
 	</style>
 
 	<style name="SundroidDarkBlueTimePickerStyle" parent="android:Widget.Material.TimePicker">
-		<item name="android:windowBackground">?primary_color</item>
+		<item name="android:background">?primary_color</item>
 		<item name="android:headerBackground">?primary_color_dark</item>
 		<item name="android:numbersBackgroundColor">?primary_color_dark</item>
 	</style>

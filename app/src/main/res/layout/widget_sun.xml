@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:layout_centerInParent="true"
+    android:background="#aa000000"
+    android:clickable="true"
+    android:focusable="true"
+    android:paddingRight="5dp"
+    tools:ignore="ContentDescription,RtlHardcoded,RtlSymmetry,SpUsage,HardcodedText">
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="54dp"
+        android:layout_height="54dp"
+        android:layout_alignParentLeft="true"
+        android:layout_centerInParent="true"
+        android:layout_margin="3dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/sun" />
+
+    <RelativeLayout
+        android:id="@+id/data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="5dp"
+        android:layout_toRightOf="@id/icon">
+
+        <TextView
+            android:id="@+id/message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
+            android:text="STARTING ..."
+            android:textColor="#fff"
+            android:textSize="12dp"
+            tools:visibility="gone" />
+
+        <TextView
+            android:id="@+id/location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textColor="#fff"
+            android:textSize="11dp"
+            android:visibility="gone"
+            tools:text="LLANFAIRPWLLGWYNGYLLGOGERYCHWYRNDROBWLLLLANTYSILIOGOGOGOCH"
+            tools:visibility="visible" />
+
+        <TextView
+            android:id="@+id/special"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/location"
+            android:layout_marginLeft="2dp"
+            android:textColor="#fff"
+            android:textSize="14dp"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/rise"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/location"
+            android:layout_marginLeft="2dp"
+            android:layout_marginTop="-2dp"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <ImageView
+                android:layout_width="10dp"
+                android:layout_height="18dp"
+                android:layout_marginTop="2dp"
+                android:paddingTop="3dp"
+                android:paddingBottom="3dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/d_rise" />
+
+            <TextView
+                android:id="@+id/riseTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:textColor="#fff"
+                android:textSize="16dp"
+                tools:text="12:56" />
+
+            <TextView
+                android:id="@+id/riseZone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="1dp"
+                android:textColor="#fff"
+                android:textSize="12dp"
+                tools:text="PM" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/set"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/rise"
+            android:layout_marginLeft="2dp"
+            android:layout_marginTop="-4dp"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <ImageView
+                android:layout_width="10dp"
+                android:layout_height="18dp"
+                android:layout_marginTop="2dp"
+                android:paddingTop="3dp"
+                android:paddingBottom="3dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/d_set" />
+
+            <TextView
+                android:id="@+id/setTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:textColor="#fff"
+                android:textSize="16dp"
+                tools:text="12:56" />
+
+            <TextView
+                android:id="@+id/setZone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="1dp"
+                android:textColor="#fff"
+                android:textSize="12dp"
+                tools:text="PM" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>
+

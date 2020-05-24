@@ -19,10 +19,8 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import uk.co.sundroid.AbstractFragment
-import uk.co.sundroid.activity.Locater
-import uk.co.sundroid.activity.LocaterListener
-import uk.co.sundroid.activity.MainActivity
-import uk.co.sundroid.activity.Page
+import uk.co.sundroid.activity.*
+import uk.co.sundroid.activity.LocaterStatus.*
 import uk.co.sundroid.databinding.LocOptionsBinding
 import uk.co.sundroid.domain.LocationDetails
 import uk.co.sundroid.util.view.SimpleAlertFragment
@@ -74,10 +72,11 @@ class LocationSelectFragment : AbstractFragment(), LocaterListener {
     private fun startLocater() {
         locater?.cancel()
         locater = Locater(this, requireContext()).apply {
-            if (this.start()) {
+            val result = this.start()
+            if (result == STARTED) {
                 SimpleProgressFragment.show(parentFragmentManager, "Finding your location...")
             } else {
-                locationError()
+                locationError(result)
             }
         }
     }
@@ -125,22 +124,16 @@ class LocationSelectFragment : AbstractFragment(), LocaterListener {
         return requireActivity().getSystemService(id)
     }
 
-    override fun locationError() {
-        SimpleAlertFragment.show(
-                parentFragmentManager,
-                "Location lookup failed",
-                "Location services are disabled. Enable wireless networks or GPS in your location settings."
-        )
-    }
-
-    override fun locationTimeout() {
-        handler.post {
-            if (!isDetached && host != null) {
-                SimpleAlertFragment.show(
-                        parentFragmentManager,
-                        "Location lookup timeout",
-                        "Couldn't find your location. Make sure you have a good signal or a clear view of the sky."
-                )
+    override fun locationError(status: LocaterStatus) {
+        when (status) {
+            TIMEOUT -> {
+                showAlert("Location timeout", "Couldn't find your location. Make sure you have a good signal or a clear view of the sky.")
+            }
+            DENIED -> {
+                showAlert("Permission denied", "Sundroid cannot get your location. To fix this, you can grant this app location permission from Android settings.")
+            }
+            else -> {
+                showAlert("Location lookup failed", "Location services are disabled. Enable location in your settings.")
             }
         }
     }
@@ -148,6 +141,14 @@ class LocationSelectFragment : AbstractFragment(), LocaterListener {
     override fun locationReceived(locationDetails: LocationDetails) {
         SimpleProgressFragment.close(parentFragmentManager)
         onLocationSelected(locationDetails)
+    }
+
+    private fun showAlert(title: String, message: String) {
+        handler.post {
+            if (!isDetached && host != null) {
+                SimpleAlertFragment.show(parentFragmentManager, title, message)
+            }
+        }
     }
 
     companion object {

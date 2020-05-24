@@ -1,20 +1,20 @@
 package uk.co.sundroid.util.prefs
 
 import android.annotation.SuppressLint
-import uk.co.sundroid.activity.data.DataGroup
-import uk.co.sundroid.util.astro.Body
-import uk.co.sundroid.domain.LocationDetails
-import uk.co.sundroid.domain.TimeZoneDetail
-import uk.co.sundroid.util.location.LatitudeLongitude
-import uk.co.sundroid.util.time.TimeZoneResolver
-
 import android.content.Context
 import android.content.SharedPreferences
 import android.text.format.DateFormat
 import androidx.preference.PreferenceManager
+import uk.co.sundroid.activity.data.DataGroup
 import uk.co.sundroid.activity.data.fragments.CalendarView
+import uk.co.sundroid.domain.LocationDetails
 import uk.co.sundroid.domain.MapType
+import uk.co.sundroid.domain.TimeZoneDetail
+import uk.co.sundroid.util.astro.Body
+import uk.co.sundroid.util.location.LatitudeLongitude
 import uk.co.sundroid.util.theme.THEME_DARKBLUE
+import uk.co.sundroid.util.time.TimeZoneResolver
+import java.text.ParseException
 
 object Prefs {
 
@@ -57,6 +57,22 @@ object Prefs {
     private const val MAP_LOCATION_PERMISSION_DENIED_KEY = "mapLocationPermissionDenied"
 
     private const val LAST_VERSION_KEY = "last-version"
+
+    private const val WIDGET_LOC_LAT_KEY = "widget-location-lat"
+    private const val WIDGET_LOC_LON_KEY = "widget-location-lon"
+    private const val WIDGET_LOC_NAME_KEY = "widget-location-name"
+    private const val WIDGET_LOC_COUNTRY_KEY = "widget-location-country"
+    private const val WIDGET_LOC_STATE_KEY = "widget-location-state"
+    private const val WIDGET_LOC_ZONE_KEY = "widget-location-zone"
+    private const val WIDGET_LOC_TIMESTAMP = "widget-location-timestamp"
+
+    private const val WIDGET_LOCATION_KEY = "widget-location-"
+
+    private const val WIDGET_PHASE_SHADOW_OPACITY_KEY = "widget-shadow-opacity-"
+    private const val WIDGET_PHASE_SHADOW_SIZE_KEY = "widget-shadow-size-"
+    private const val WIDGET_PHASE_PHASENAME_KEY = "widget-phasename-"
+
+    private const val WIDGET_BOX_OPACITY_KEY = "widget-box-opacity-"
 
     fun selectedLocation(context: Context): LocationDetails? {
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
@@ -332,6 +348,75 @@ object Prefs {
 
     fun setVersion(context: Context, version: Int) {
         prefs(context).edit().putInt(LAST_VERSION_KEY, version).apply()
+    }
+
+    fun getWidgetLocation(context: Context): LocationDetails? {
+        val prefs = prefs(context)
+        val locLat = prefs.getFloat(WIDGET_LOC_LAT_KEY, Float.MIN_VALUE)
+        val locLon = prefs.getFloat(WIDGET_LOC_LON_KEY, Float.MIN_VALUE)
+        if (locLat != Float.MIN_VALUE && locLon != Float.MIN_VALUE) {
+            try {
+                val locationDetails = LocationDetails(LatitudeLongitude(locLat.toDouble(), locLon.toDouble()))
+                locationDetails.name = prefs.getString(WIDGET_LOC_NAME_KEY, null)
+                locationDetails.country = prefs.getString(WIDGET_LOC_COUNTRY_KEY, null)
+                locationDetails.state = prefs.getString(WIDGET_LOC_STATE_KEY, null)
+                locationDetails.timeZone = TimeZoneResolver.getTimeZone(prefs.getString(WIDGET_LOC_ZONE_KEY, null))
+                return locationDetails
+            } catch (e: ParseException) {
+                // Should never save invalid coordinates.
+            }
+        }
+        return null
+    }
+
+    fun getWidgetLocationTimestamp(context: Context): Long {
+        return prefs(context).getLong(WIDGET_LOC_TIMESTAMP, 0)
+    }
+
+    fun saveWidgetLocation(context: Context, locationDetails: LocationDetails) {
+        prefs(context).edit()
+                .putFloat(WIDGET_LOC_LAT_KEY, locationDetails.location.latitude.doubleValue.toFloat())
+                .putFloat(WIDGET_LOC_LON_KEY, locationDetails.location.longitude.doubleValue.toFloat())
+                .putString(WIDGET_LOC_NAME_KEY, locationDetails.name)
+                .putString(WIDGET_LOC_COUNTRY_KEY, locationDetails.country)
+                .putString(WIDGET_LOC_STATE_KEY, locationDetails.state)
+                .putString(WIDGET_LOC_ZONE_KEY, if (locationDetails.timeZone == null) null else locationDetails.timeZone!!.id)
+                .putLong(WIDGET_LOC_TIMESTAMP, System.currentTimeMillis())
+                .apply()
+    }
+
+    fun widgetBoxShadowOpacity(context: Context, widgetId: Int): Int {
+        return prefs(context).getInt(WIDGET_BOX_OPACITY_KEY + widgetId, 200)
+    }
+
+    fun setWidgetBoxShadowOpacity(context: Context, widgetId: Int, shadow: Int) {
+        prefs(context).edit().putInt(WIDGET_BOX_OPACITY_KEY + widgetId, shadow).apply()
+    }
+
+    fun widgetPhaseShadowOpacity(context: Context, widgetId: Int): Int {
+        return prefs(context).getInt(WIDGET_PHASE_SHADOW_OPACITY_KEY + widgetId, 0)
+    }
+
+    fun setWidgetPhaseShadowOpacity(context: Context, widgetId: Int, shadow: Int) {
+        prefs(context).edit().putInt(WIDGET_PHASE_SHADOW_OPACITY_KEY + widgetId, shadow).apply()
+    }
+
+    fun widgetPhaseShadowSize(context: Context, widgetId: Int): Int {
+        return prefs(context).getInt(WIDGET_PHASE_SHADOW_SIZE_KEY + widgetId, 0)
+    }
+
+    fun setWidgetPhaseShadowSize(context: Context, widgetId: Int, size: Int) {
+        prefs(context).edit().putInt(WIDGET_PHASE_SHADOW_SIZE_KEY + widgetId, size).apply()
+    }
+
+    fun removeWidgetPrefs(context: Context, widgetId: Int) {
+        prefs(context).edit()
+                .remove(WIDGET_LOCATION_KEY + widgetId)
+                .remove(WIDGET_PHASE_SHADOW_OPACITY_KEY + widgetId)
+                .remove(WIDGET_PHASE_SHADOW_SIZE_KEY + widgetId)
+                .remove(WIDGET_PHASE_PHASENAME_KEY + widgetId)
+                .remove(WIDGET_BOX_OPACITY_KEY + widgetId)
+                .apply()
     }
 
 	private fun prefs(context: Context): SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)

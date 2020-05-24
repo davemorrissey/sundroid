@@ -13,23 +13,4 @@ class OrientationAngles {
     var librationLongitude = 0.0
     var librationLatitude = 0.0
 
-    /**
-     * The rotation that should be applied to the moon image before rendering the bright limb.
-     */
-    fun brightLimbRotationAngle(): Float {
-        var result = brightLimb - 90.0
-        if (brightLimb > 180) {
-            result = brightLimb - 270
-        }
-        return (result - axis).toFloat()
-    }
-
-    /**
-     * The rotation that should be applied to the rendered image, which is generated rotated by the
-     * rotation angle above, to orient it for the observer's location.
-     */
-    fun imageRotationAngle(): Float {
-        return -brightLimbRotationAngle() + parallactic.toFloat() - axis.toFloat()
-    }
-
 }

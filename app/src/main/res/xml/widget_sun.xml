@@ -1,0 +1,8 @@
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:minWidth="130dp"
+    android:minHeight="60dp"
+    android:updatePeriodMillis="7200000"
+    android:initialLayout="@layout/widget_sun"
+    android:previewImage="@drawable/widget_sun"
+    android:configure="uk.co.sundroid.widget.config.SunWidgetConfigActivity">
+</appwidget-provider>

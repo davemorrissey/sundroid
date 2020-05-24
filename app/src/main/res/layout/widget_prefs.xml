@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?app_background_colour">
+
+    <TextView
+        android:id="@+id/header"
+        style="@style/text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?header_background"
+        android:paddingLeft="20dp"
+        android:paddingTop="15dp"
+        android:paddingRight="20dp"
+        android:paddingBottom="15dp"
+        android:textColor="?body_text"
+        android:textSize="20sp" />
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/header">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                android:id="@+id/intro"
+                style="@style/bodyText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="?body_text"
+                android:textSize="16sp" />
+
+            <LinearLayout
+                android:id="@+id/permissionWarning"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:background="#ffcc00"
+                android:padding="3dp">
+
+                <TextView
+                    android:id="@+id/permissionWarningButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ripple_background"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center_horizontal"
+                    android:padding="10dp"
+                    android:text="Background location permission is disabled. Tap to fix."
+                    android:textColor="#ffcc00"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <View
+                style="@style/listMenuDivider"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp" />
+
+            <LinearLayout
+                android:id="@+id/locationButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ripple_background"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/locationLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:text="Location"
+                    android:textColor="?body_text"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/locationValue"
+                    style="@style/bodyText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text=""
+                    android:textColor="?secondary_text"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/shadowSize"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <View
+                    style="@style/listMenuDivider"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="15dp" />
+
+                <TextView
+                    android:id="@+id/shadowSizeLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Shadow size"
+                    android:textColor="?body_text"
+                    android:textSize="16sp" />
+
+                <SeekBar
+                    android:id="@+id/shadowSizeSeek"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:max="40" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/shadowOpacity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <View
+                    style="@style/listMenuDivider"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="15dp" />
+
+                <TextView
+                    android:id="@+id/shadowOpacityLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Shadow opacity"
+                    android:textColor="?body_text"
+                    android:textSize="16sp" />
+
+                <SeekBar
+                    android:id="@+id/shadowOpacitySeek"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:max="255" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/boxOpacity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <View
+                    style="@style/listMenuDivider"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="15dp" />
+
+                <TextView
+                    android:id="@+id/boxOpacityLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Background opacity"
+                    android:textColor="?body_text"
+                    android:textSize="16sp" />
+
+                <SeekBar
+                    android:id="@+id/boxOpacitySeek"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:max="255" />
+
+            </LinearLayout>
+
+            <View
+                style="@style/listMenuDivider"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp" />
+
+            <Button
+                android:id="@+id/done"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/ripple_button"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:text="Done" />
+
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

@@ -7,9 +7,7 @@ interface LocaterListener {
 
     fun getMainLooper(): Looper
 
-    fun locationError()
-
-    fun locationTimeout()
+    fun locationError(status: LocaterStatus)
 
     fun locationReceived(locationDetails: LocationDetails)
 

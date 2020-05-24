@@ -23,3 +23,16 @@ fun zeroPad(number: Int, length: Int): String {
 fun html(html: String): Spanned {
     return Html.fromHtml(html)
 }
+
+fun arrayString(array: IntArray): String? {
+    var first = true
+    var result: String? = ""
+    for (i in array) {
+        if (!first) {
+            result += ", "
+        }
+        result += i
+        first = false
+    }
+    return result
+}
