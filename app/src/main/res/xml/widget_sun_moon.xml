@@ -1,0 +1,11 @@
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:minWidth="130dp"
+    android:minHeight="60dp"
+    android:minResizeWidth="130dp"
+    android:minResizeHeight="60dp"
+    android:resizeMode="vertical|horizontal"
+    android:updatePeriodMillis="7200000"
+    android:initialLayout="@layout/widget_sun_moon"
+    android:previewImage="@drawable/widget_sun_moon"
+    android:configure="uk.co.sundroid.widget.config.SunMoonWidgetConfigActivity">
+</appwidget-provider>

@@ -89,6 +89,23 @@
             android:process=":widgetProcess"
             android:theme="@style/SundroidTransparent"/>
 
+        <activity
+            android:name=".widget.config.SunMoonWidgetConfigActivity"
+            android:excludeFromRecents="true"
+            android:launchMode="singleInstance"
+            android:noHistory="true"
+            android:process=":widgetProcess"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+
+        <activity
+            android:name=".widget.options.SunMoonWidgetOptionsActivity"
+            android:excludeFromRecents="true"
+            android:launchMode="singleInstance"
+            android:noHistory="true"
+            android:process=":widgetProcess"
+            android:theme="@style/SundroidTransparent"/>
+
         <receiver
             android:name=".widget.SunWidget"
             android:label="Sundroid Sun"
@@ -124,6 +141,18 @@
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_moon_phase" />
+        </receiver>
+        <receiver
+            android:name=".widget.SunMoonWidget"
+            android:label="Sundroid Sun &amp; Moon"
+            android:process=":widgetProcess">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_sun_moon" />
         </receiver>
 
         <service

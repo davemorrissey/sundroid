@@ -51,6 +51,7 @@ class SunWidget : AbstractWidget() {
      */
     override fun showError(context: Context, id: Int, message: String) {
         val v = RemoteViews(context.packageName, R.layout.widget_sun)
+        v.setViewVisibility(R.id.special, View.GONE)
         v.setViewVisibility(R.id.rise, View.GONE)
         v.setViewVisibility(R.id.set, View.GONE)
         v.setViewVisibility(R.id.location, View.GONE)

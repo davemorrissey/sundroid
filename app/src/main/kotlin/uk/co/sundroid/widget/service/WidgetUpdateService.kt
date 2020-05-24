@@ -18,10 +18,7 @@ import uk.co.sundroid.util.log.d
 import uk.co.sundroid.util.log.e
 import uk.co.sundroid.util.prefs.Prefs
 import uk.co.sundroid.util.time.TimeZoneResolver
-import uk.co.sundroid.widget.MoonPhaseWidget
-import uk.co.sundroid.widget.MoonWidget
-import uk.co.sundroid.widget.SunWidget
-import uk.co.sundroid.widget.getWidgetInstance
+import uk.co.sundroid.widget.*
 import java.util.*
 
 const val EXTRA_OP = "operation"
@@ -155,6 +152,7 @@ class WidgetUpdateService : JobService() {
         ids.addAll(appWidgetManager.getAppWidgetIds(ComponentName(applicationContext, SunWidget::class.java)).asList())
         ids.addAll(appWidgetManager.getAppWidgetIds(ComponentName(applicationContext, MoonWidget::class.java)).asList())
         ids.addAll(appWidgetManager.getAppWidgetIds(ComponentName(applicationContext, MoonPhaseWidget::class.java)).asList())
+        ids.addAll(appWidgetManager.getAppWidgetIds(ComponentName(applicationContext, SunMoonWidget::class.java)).asList())
         return ids
     }
 

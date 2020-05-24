@@ -54,6 +54,7 @@ class MoonWidget : AbstractWidget() {
      */
     override fun showError(context: Context, id: Int, message: String) {
         val v = RemoteViews(context.packageName, R.layout.widget_moon)
+        v.setViewVisibility(R.id.special, View.GONE)
         v.setViewVisibility(R.id.rise, View.GONE)
         v.setViewVisibility(R.id.set, View.GONE)
         v.setViewVisibility(R.id.location, View.GONE)
