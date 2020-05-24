@@ -5,36 +5,23 @@ import android.app.job.JobService
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetManager.EXTRA_APPWIDGET_ID
 import android.appwidget.AppWidgetManager.INVALID_APPWIDGET_ID
-import android.location.Criteria.ACCURACY_COARSE
 import android.content.ComponentName
-import android.graphics.Bitmap
-import android.graphics.Color
+import android.location.Criteria.ACCURACY_COARSE
 import android.os.Looper
-import android.view.View
-import android.widget.RemoteViews
-import uk.co.sundroid.R
 import uk.co.sundroid.activity.Locater
 import uk.co.sundroid.activity.LocaterListener
 import uk.co.sundroid.activity.LocaterStatus
 import uk.co.sundroid.activity.LocaterStatus.*
 import uk.co.sundroid.domain.LocationDetails
-import uk.co.sundroid.util.astro.*
-import uk.co.sundroid.util.astro.image.MoonPhaseImage
-import uk.co.sundroid.util.astro.math.BodyPositionCalculator
-import uk.co.sundroid.util.astro.math.SunCalculator
-import uk.co.sundroid.util.astro.math.SunMoonCalculator
 import uk.co.sundroid.util.dao.DatabaseHelper
-import uk.co.sundroid.util.isEmpty
-import uk.co.sundroid.util.isNotEmpty
 import uk.co.sundroid.util.log.d
 import uk.co.sundroid.util.log.e
 import uk.co.sundroid.util.prefs.Prefs
-import uk.co.sundroid.util.time.Time
 import uk.co.sundroid.util.time.TimeZoneResolver
-import uk.co.sundroid.util.time.formatTime
 import uk.co.sundroid.widget.MoonPhaseWidget
 import uk.co.sundroid.widget.MoonWidget
 import uk.co.sundroid.widget.SunWidget
+import uk.co.sundroid.widget.getWidgetInstance
 import java.util.*
 
 const val EXTRA_OP = "operation"
@@ -115,44 +102,10 @@ class WidgetUpdateService : JobService() {
      * Displays a locating message in an auto-located widget.
      */
     private fun showLocating(widgetId: Int) {
-        val manager = AppWidgetManager.getInstance(this)
         try {
-            manager.getAppWidgetInfo(widgetId)?.let {
-                it.provider.className
-                when (it.provider.className) {
-                    SunWidget::class.java.name -> {
-                        val v = RemoteViews(this.packageName, R.layout.widget_sun)
-                        v.setViewVisibility(R.id.special, View.GONE)
-                        v.setViewVisibility(R.id.rise, View.GONE)
-                        v.setViewVisibility(R.id.set, View.GONE)
-                        v.setViewVisibility(R.id.location, View.GONE)
-                        v.setViewVisibility(R.id.message, View.VISIBLE)
-                        v.setTextViewText(R.id.message, "LOCATING ...")
-                        SunWidget.staticResetTapAction(v, applicationContext, widgetId)
-                        manager.updateAppWidget(widgetId, v)
-                    }
-                    MoonWidget::class.java.name -> {
-                        val v = RemoteViews(this.packageName, R.layout.widget_moon)
-                        v.setViewVisibility(R.id.special, View.GONE)
-                        v.setViewVisibility(R.id.rise, View.GONE)
-                        v.setViewVisibility(R.id.set, View.GONE)
-                        v.setViewVisibility(R.id.location, View.GONE)
-                        v.setViewVisibility(R.id.message, View.VISIBLE)
-                        v.setTextViewText(R.id.message, "LOCATING ...")
-                        MoonWidget.staticResetTapAction(v, applicationContext, widgetId)
-                        manager.updateAppWidget(widgetId, v)
-                    }
-                    MoonPhaseWidget::class.java.name -> {
-                        val v = RemoteViews(this.packageName, R.layout.widget_moon_phase)
-                        v.setViewVisibility(R.id.message, View.VISIBLE)
-                        v.setTextViewText(R.id.message, "LOCATING ...")
-                        MoonPhaseWidget.staticResetTapAction(v, applicationContext, widgetId)
-                        manager.updateAppWidget(widgetId, v)
-                    }
-                }
-            }
+            getWidgetInstance(this, widgetId)?.showLocating(this, widgetId)
         } catch (e: Exception) {
-            e(TAG, "Failed to update widget $widgetId", e)
+            e(TAG, "Failed to show locating message for widget $widgetId", e)
         }
     }
 
@@ -160,7 +113,6 @@ class WidgetUpdateService : JobService() {
      * Displays an error in an auto-located widget.
      */
     private fun showLocationError(widgetId: Int, error: LocaterStatus) {
-        val manager = AppWidgetManager.getInstance(this)
         val message = when (error) {
             DENIED -> "LOCATION DENIED"
             DISABLED -> "LOCATION DISABLED"
@@ -169,39 +121,9 @@ class WidgetUpdateService : JobService() {
             else -> "LOCATION ERROR"
         }
         try {
-            manager.getAppWidgetInfo(widgetId)?.let {
-                when (it.provider.className) {
-                    SunWidget::class.java.name -> {
-                        val v = RemoteViews(this.packageName, R.layout.widget_sun)
-                        v.setViewVisibility(R.id.rise, View.GONE)
-                        v.setViewVisibility(R.id.set, View.GONE)
-                        v.setViewVisibility(R.id.location, View.GONE)
-                        v.setViewVisibility(R.id.message, View.VISIBLE)
-                        v.setTextViewText(R.id.message, message)
-                        SunWidget.staticResetTapAction(v, applicationContext, widgetId)
-                        manager.updateAppWidget(widgetId, v)
-                    }
-                    MoonWidget::class.java.name -> {
-                        val v = RemoteViews(this.packageName, R.layout.widget_moon)
-                        v.setViewVisibility(R.id.rise, View.GONE)
-                        v.setViewVisibility(R.id.set, View.GONE)
-                        v.setViewVisibility(R.id.location, View.GONE)
-                        v.setViewVisibility(R.id.message, View.VISIBLE)
-                        v.setTextViewText(R.id.message, message)
-                        MoonWidget.staticResetTapAction(v, applicationContext, widgetId)
-                        manager.updateAppWidget(widgetId, v)
-                    }
-                    MoonPhaseWidget::class.java.name -> {
-                        val v = RemoteViews(this.packageName, R.layout.widget_moon_phase)
-                        v.setViewVisibility(R.id.message, View.VISIBLE)
-                        v.setTextViewText(R.id.message, message)
-                        MoonPhaseWidget.staticResetTapAction(v, applicationContext, widgetId)
-                        manager.updateAppWidget(widgetId, v)
-                    }
-                }
-            }
+            getWidgetInstance(this, widgetId)?.showError(this, widgetId, message)
         } catch (e: Exception) {
-            e(TAG, "Failed to update widget $widgetId", e)
+            e(TAG, "Failed to show error message for widget $widgetId", e)
         }
     }
 
@@ -217,147 +139,10 @@ class WidgetUpdateService : JobService() {
         calendar[localCalendar[Calendar.YEAR], localCalendar[Calendar.MONTH], localCalendar[Calendar.DAY_OF_MONTH], 0, 0] = 0
         calendar[Calendar.MILLISECOND] = 0
 
-        val manager = AppWidgetManager.getInstance(this)
         try {
-            manager.getAppWidgetInfo(widgetId)?.let {
-                when (it.provider.className) {
-                    SunWidget::class.java.name -> {
-                        val sunDay: SunDay = SunCalculator.calcDay(location.location, calendar, BodyDayEvent.Event.RISESET)
-                        val v = RemoteViews(this.packageName, R.layout.widget_sun)
-                        val boxOpacity = Prefs.widgetBoxShadowOpacity(applicationContext, widgetId)
-                        v.setInt(R.id.root, "setBackgroundColor", Color.argb(boxOpacity, 0, 0, 0))
-                        var lightDarkType: TwilightType? = null
-                        if (sunDay.riseSetType === RiseSetType.RISEN) {
-                            lightDarkType = TwilightType.LIGHT
-                        } else if (sunDay.riseSetType === RiseSetType.SET) {
-                            lightDarkType = TwilightType.DARK
-                        }
-                        val rise = sunDay.rise
-                        val set = sunDay.set
-                        v.setViewVisibility(R.id.message, View.GONE)
-                        v.setViewVisibility(R.id.location, View.VISIBLE)
-                        if (isEmpty(location.name)) {
-                            v.setTextViewText(R.id.location, "MY LOCATION")
-                        } else {
-                            v.setTextViewText(R.id.location, location.displayName.toUpperCase(Locale.getDefault()))
-                        }
-                        if (lightDarkType != null && lightDarkType === TwilightType.LIGHT || lightDarkType === TwilightType.DARK) {
-                            v.setViewVisibility(R.id.special, View.VISIBLE)
-                            v.setViewVisibility(R.id.rise, View.GONE)
-                            v.setViewVisibility(R.id.set, View.GONE)
-                            v.setTextViewText(R.id.special, if (lightDarkType === TwilightType.LIGHT) "RISEN" else "SET")
-                        } else {
-                            v.setViewVisibility(R.id.special, View.GONE)
-                            v.setViewVisibility(R.id.rise, View.VISIBLE)
-                            v.setViewVisibility(R.id.set, View.VISIBLE)
-                            if (rise == null) {
-                                v.setTextViewText(R.id.riseTime, "NONE")
-                                v.setViewVisibility(R.id.riseZone, View.GONE)
-                            } else {
-                                val time: Time = formatTime(applicationContext, rise, allowSeconds = false, allowRounding = true)
-                                v.setViewVisibility(R.id.riseTime, View.VISIBLE)
-                                v.setTextViewText(R.id.riseTime, time.time)
-                                if (isNotEmpty(time.marker)) {
-                                    v.setViewVisibility(R.id.riseZone, View.VISIBLE)
-                                    v.setTextViewText(R.id.riseZone, time.marker.toUpperCase(Locale.getDefault()))
-                                } else {
-                                    v.setViewVisibility(R.id.riseZone, View.GONE)
-                                }
-                            }
-                            if (set == null) {
-                                v.setTextViewText(R.id.setTime, "NONE")
-                                v.setViewVisibility(R.id.setZone, View.GONE)
-                            } else {
-                                val time: Time = formatTime(applicationContext, set, allowSeconds = false, allowRounding = true)
-                                v.setViewVisibility(R.id.setTime, View.VISIBLE)
-                                v.setTextViewText(R.id.setTime, time.time)
-                                if (isNotEmpty(time.marker)) {
-                                    v.setViewVisibility(R.id.setZone, View.VISIBLE)
-                                    v.setTextViewText(R.id.setZone, time.marker.toUpperCase(Locale.getDefault()))
-                                } else {
-                                    v.setViewVisibility(R.id.setZone, View.GONE)
-                                }
-                            }
-                        }
-                        SunWidget.staticResetTapAction(v, applicationContext, widgetId)
-                        manager.updateAppWidget(widgetId, v)
-                    }
-                    MoonWidget::class.java.name -> {
-                        val moonDay: MoonDay = BodyPositionCalculator.calcDay(Body.MOON, location.location, calendar, false) as MoonDay
-                        val v = RemoteViews(this.packageName, R.layout.widget_moon)
-                        val boxOpacity = Prefs.widgetBoxShadowOpacity(applicationContext, widgetId)
-                        v.setInt(R.id.root, "setBackgroundColor", Color.argb(boxOpacity, 0, 0, 0))
-                        v.setViewVisibility(R.id.message, View.GONE)
-                        v.setViewVisibility(R.id.location, View.VISIBLE)
-                        if (isEmpty(location.name)) {
-                            v.setTextViewText(R.id.location, "MY LOCATION")
-                        } else {
-                            v.setTextViewText(R.id.location, location.displayName.toUpperCase(Locale.getDefault()))
-                        }
-                        if (moonDay.riseSetType === RiseSetType.RISEN || moonDay.riseSetType === RiseSetType.SET) {
-                            v.setViewVisibility(R.id.special, View.VISIBLE)
-                            v.setViewVisibility(R.id.rise, View.GONE)
-                            v.setViewVisibility(R.id.set, View.GONE)
-                            v.setTextViewText(R.id.special, if (moonDay.riseSetType === RiseSetType.RISEN) "RISEN" else "SET")
-                        } else {
-                            v.setViewVisibility(R.id.special, View.GONE)
-                            v.setViewVisibility(R.id.rise, View.VISIBLE)
-                            v.setViewVisibility(R.id.set, View.VISIBLE)
-                            if (moonDay.rise == null) {
-                                v.setTextViewText(R.id.riseTime, "None")
-                                v.setViewVisibility(R.id.riseZone, View.GONE)
-                            } else {
-                                val time: Time = formatTime(applicationContext, moonDay.rise!!, allowSeconds = false, allowRounding = true)
-                                v.setViewVisibility(R.id.riseTime, View.VISIBLE)
-                                v.setTextViewText(R.id.riseTime, time.time)
-                                if (isNotEmpty(time.marker)) {
-                                    v.setViewVisibility(R.id.riseZone, View.VISIBLE)
-                                    v.setTextViewText(R.id.riseZone, time.marker.toUpperCase(Locale.getDefault()))
-                                } else {
-                                    v.setViewVisibility(R.id.riseZone, View.GONE)
-                                }
-                            }
-                            if (moonDay.set == null) {
-                                v.setTextViewText(R.id.setTime, "None")
-                                v.setViewVisibility(R.id.setZone, View.GONE)
-                            } else {
-                                val time: Time = formatTime(applicationContext, moonDay.set!!, allowSeconds = false, allowRounding = true)
-                                v.setViewVisibility(R.id.setTime, View.VISIBLE)
-                                v.setTextViewText(R.id.setTime, time.time)
-                                if (isNotEmpty(time.marker)) {
-                                    v.setViewVisibility(R.id.setZone, View.VISIBLE)
-                                    v.setTextViewText(R.id.setZone, time.marker.toUpperCase(Locale.getDefault()))
-                                } else {
-                                    v.setViewVisibility(R.id.setZone, View.GONE)
-                                }
-                            }
-                        }
-                        val orientationAngles: OrientationAngles = SunMoonCalculator.moonDiskOrientationAngles(Calendar.getInstance(), location.location)
-                        val moonBitmap: Bitmap = MoonPhaseImage.makeImage(resources, R.drawable.moon, orientationAngles)
-                        v.setImageViewBitmap(R.id.icon, moonBitmap)
-                        MoonWidget.staticResetTapAction(v, applicationContext, widgetId)
-                        manager.updateAppWidget(widgetId, v)
-                    }
-                    MoonPhaseWidget::class.java.name -> {
-                        val orientationAngles: OrientationAngles = SunMoonCalculator.moonDiskOrientationAngles(Calendar.getInstance(), location.location)
-                        var shadowOpacity = Prefs.widgetPhaseShadowOpacity(applicationContext, widgetId)
-                        var shadowSize = Prefs.widgetPhaseShadowSize(applicationContext, widgetId) / 4f
-                        if (shadowOpacity * shadowSize == 0f) {
-                            shadowOpacity = 0
-                            shadowSize = 0f
-                        }
-
-                        val moonBitmap: Bitmap = MoonPhaseImage.makeImage(resources, R.drawable.moon, orientationAngles, shadowSizePercent = shadowSize, shadowOpacity = shadowOpacity)
-                        val v = RemoteViews(this.packageName, R.layout.widget_moon_phase)
-                        v.setImageViewBitmap(R.id.moon, moonBitmap)
-                        v.setViewVisibility(R.id.message, View.GONE)
-                        MoonPhaseWidget.staticResetTapAction(v, applicationContext, widgetId)
-                        manager.updateAppWidget(widgetId, v)
-                    }
-                }
-            }
+            getWidgetInstance(this, widgetId)?.showData(this, widgetId, location, calendar)
         } catch (e: Exception) {
-            e(TAG, "Failed to update widget $widgetId", e)
+            e(TAG, "Failed to show data for widget $widgetId", e)
         }
     }
 

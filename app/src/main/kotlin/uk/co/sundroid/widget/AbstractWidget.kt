@@ -1,21 +1,17 @@
 package uk.co.sundroid.widget
 
-import android.app.job.JobInfo
-import android.app.job.JobScheduler
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
-import android.content.ComponentName
 import android.content.Context
 import android.os.Bundle
-import android.os.PersistableBundle
+import uk.co.sundroid.domain.LocationDetails
 import uk.co.sundroid.util.arrayString
 import uk.co.sundroid.util.dao.DatabaseHelper
 import uk.co.sundroid.util.log.d
 import uk.co.sundroid.util.prefs.Prefs
-import uk.co.sundroid.widget.service.WidgetUpdateService
-import uk.co.sundroid.widget.service.EXTRA_OP
 import uk.co.sundroid.widget.service.OP_REFRESH
 import uk.co.sundroid.widget.service.OP_RENDER
+import java.util.*
 
 abstract class AbstractWidget : AppWidgetProvider() {
 
@@ -26,7 +22,7 @@ abstract class AbstractWidget : AppWidgetProvider() {
      */
     override fun onUpdate(context: Context, manager: AppWidgetManager, ids: IntArray) {
         d(TAG, "onUpdate: " + arrayString(ids))
-        ids.forEach { id -> startUpdateService(context, OP_REFRESH, id) }
+        ids.forEach { id -> sendUpdate(context, OP_REFRESH, id) }
     }
 
     /**
@@ -35,7 +31,7 @@ abstract class AbstractWidget : AppWidgetProvider() {
     override fun onAppWidgetOptionsChanged(context: Context?, manager: AppWidgetManager?, id: Int, options: Bundle?) {
         d(TAG, "onAppWidgetOptionsChanged: $id")
         context?.let {
-            startUpdateService(it, OP_RENDER, id)
+            sendUpdate(it, OP_RENDER, id)
         }
     }
 
@@ -54,18 +50,9 @@ abstract class AbstractWidget : AppWidgetProvider() {
         super.onDeleted(context, ids)
     }
 
-    private fun startUpdateService(context: Context, op: String, widgetId: Int) {
-        val extras = PersistableBundle()
-        extras.putString(EXTRA_OP, op)
-        extras.putInt(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId)
-        extras.putString(EXTRA_WIDGET_CLASS_NAME, widgetClass.simpleName)
-        val jobInfo = JobInfo.Builder(op.hashCode() + widgetId, ComponentName(context, WidgetUpdateService::class.java))
-                .setExtras(extras)
-                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
-                .build()
-        val scheduler = context.getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
-        scheduler.schedule(jobInfo)
-    }
+    abstract fun showLocating(context: Context, id: Int)
+    abstract fun showError(context: Context, id: Int, message: String)
+    abstract fun showData(context: Context, id: Int, location: LocationDetails, calendar: Calendar)
 
     companion object {
         private val TAG = AbstractWidget::class.java.simpleName
