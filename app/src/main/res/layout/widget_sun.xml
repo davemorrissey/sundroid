@@ -8,7 +8,6 @@
     android:background="#aa000000"
     android:clickable="true"
     android:focusable="true"
-    android:paddingRight="5dp"
     tools:ignore="ContentDescription,RtlHardcoded,RtlSymmetry,SpUsage,HardcodedText">
 
     <ImageView
@@ -36,7 +35,7 @@
             android:layout_marginLeft="2dp"
             android:text="STARTING ..."
             android:textColor="#fff"
-            android:textSize="12dp"
+            android:textSize="10dp"
             tools:visibility="gone" />
 
         <TextView
@@ -47,7 +46,7 @@
             android:ellipsize="end"
             android:singleLine="true"
             android:textColor="#fff"
-            android:textSize="11dp"
+            android:textSize="10dp"
             android:visibility="gone"
             tools:text="LLANFAIRPWLLGWYNGYLLGOGERYCHWYRNDROBWLLLLANTYSILIOGOGOGOCH"
             tools:visibility="visible" />
@@ -59,7 +58,7 @@
             android:layout_below="@id/location"
             android:layout_marginLeft="2dp"
             android:textColor="#fff"
-            android:textSize="14dp"
+            android:textSize="12dp"
             android:visibility="gone" />
 
         <LinearLayout
@@ -68,13 +67,12 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/location"
             android:layout_marginLeft="2dp"
-            android:layout_marginTop="-2dp"
             android:visibility="gone"
             tools:visibility="visible">
 
             <ImageView
-                android:layout_width="10dp"
-                android:layout_height="18dp"
+                android:layout_width="8dp"
+                android:layout_height="14dp"
                 android:layout_marginTop="2dp"
                 android:paddingTop="3dp"
                 android:paddingBottom="3dp"
@@ -87,7 +85,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="4dp"
                 android:textColor="#fff"
-                android:textSize="16dp"
+                android:textSize="12dp"
                 tools:text="12:56" />
 
             <TextView
@@ -96,7 +94,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="1dp"
                 android:textColor="#fff"
-                android:textSize="12dp"
+                android:textSize="10dp"
                 tools:text="PM" />
 
         </LinearLayout>
@@ -113,8 +111,8 @@
             tools:visibility="visible">
 
             <ImageView
-                android:layout_width="10dp"
-                android:layout_height="18dp"
+                android:layout_width="8dp"
+                android:layout_height="14dp"
                 android:layout_marginTop="2dp"
                 android:paddingTop="3dp"
                 android:paddingBottom="3dp"
@@ -127,7 +125,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="4dp"
                 android:textColor="#fff"
-                android:textSize="16dp"
+                android:textSize="12dp"
                 tools:text="12:56" />
 
             <TextView
@@ -136,7 +134,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="1dp"
                 android:textColor="#fff"
-                android:textSize="12dp"
+                android:textSize="10dp"
                 tools:text="PM" />
 
         </LinearLayout>

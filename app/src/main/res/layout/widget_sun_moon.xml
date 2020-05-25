@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root"
     android:layout_width="match_parent"
-    android:layout_height="105dp"
+    android:layout_height="90dp"
     android:layout_centerInParent="true"
     android:background="#aa000000"
     android:clickable="true"
@@ -15,12 +15,12 @@
         android:id="@+id/location"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
+        android:layout_marginTop="1dp"
         android:ellipsize="end"
         android:gravity="center_horizontal"
         android:singleLine="true"
         android:textColor="#fff"
-        android:textSize="11dp"
+        android:textSize="10dp"
         android:text=" "
         tools:text="LLANFAIRPWLL"/>
 
@@ -38,9 +38,9 @@
             android:orientation="vertical">
 
             <ImageView
-                android:layout_width="54dp"
-                android:layout_height="54dp"
-                android:layout_marginBottom="3dp"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_marginBottom="1dp"
                 android:scaleType="fitXY"
                 android:src="@drawable/sun" />
 
@@ -141,9 +141,9 @@
 
             <ImageView
                 android:id="@+id/moonIcon"
-                android:layout_width="54dp"
-                android:layout_height="54dp"
-                android:layout_marginBottom="3dp"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_marginBottom="1dp"
                 android:padding="4dp"
                 android:scaleType="fitXY"
                 android:src="@drawable/moon" />
