@@ -27,7 +27,8 @@ class InfoGuideFragment : AbstractFragment() {
                 b.infGuideOfflineDisclosure to b.infGuideOfflineBody,
                 b.infGuideTimeDisclosure to b.infGuideTimeBody,
                 b.infGuideZonesDisclosure to b.infGuideZonesBody,
-                b.infGuideTrackerDisclosure to b.infGuideTrackerBody
+                b.infGuideTrackerDisclosure to b.infGuideTrackerBody,
+                b.infGuideWidgetsDisclosure to b.infGuideWidgetsBody
         ).forEach { (d, body) -> d.setOnClickListener { v -> toggle(v, body)} }
     }
 

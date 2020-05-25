@@ -103,6 +103,25 @@
                 android:text="The sun tracker shows the path of the sun during the day. The path is shown as a line on a compass disc where the edge represents the horizon and the center is vertically up. Each circle equals 15\u00b0 of elevation.\n\nThe path line is yellow when the sun is risen and blue when it is set, and a line from the center shows the position at the selected time. Dotted lines from the center show the azimuths of sunrise and sunset.\n\nYou can set the date and time by tapping the buttons to use selectors, or swiping left/right/up/down from the buttons. The time slider lets you quickly move through the current day.\n\nIf you're using this feature for garden planning or photography, you may wish to select a precise location using GPS or the map option, because wireless networks location and search are not accurate enough.\n\nTo set your preferences for this view, tap the settings icon in the header. The options are:\n\nMap view: Shows the compass disc overlaid on a map with your selected location in the middle.\n\nMap type: Choose the type of map to display.\n\nCompass rotation: Available only in standard view, this rotates the compass disc to align with North. Please calibrate your phone's compass using a dedicated compass app before using this feature, and remember that the compass can be completely unreliable, especially in metal buildings.\n\nHour markers: Shows a small marker at each hour. These are not labelled to avoid clutter; please use the time slider to help find times.\n\nLinear elevation: Switches from the default top-down hemisphere sky view to a circular graph, so the spacing of 15\u00b0 elevation lines is equal. This makes elevation changes much clearer while the sun is low in the sky.\n\nShow text: Shows sunrise and sunset for the day, and azimuth and elevation for the selected time.\n\nNote: The app defaults to using true north, suitable for plotting on maps. Go to Menu > Settings > Magnetic bearings if you prefer to use bearings relative to magnetic north, so you can use a compass." />
         </LinearLayout>
 
+        <View
+            style="@style/listMenuDivider"
+            android:id="@+id/infGuideWidgetsDivider"/>
+
+        <TextView
+            style="@style/listMenuDisclosureButton"
+            android:id="@+id/infGuideWidgetsDisclosure"
+            android:text="Widgets"/>
+
+        <LinearLayout
+            style="@style/listMenuDisclosureContent"
+            android:id="@+id/infGuideWidgetsBody"
+            >
+            <TextView
+                style="@style/bodyText"
+                android:text="This app includes four widgets, one for sunrise and sunset, one for moonrise, moonset and phases of the moon, and for sun and moon combined, and one that shows the current moon phase only. To add them to your home screen, press and hold an empty space, then select Widgets and scroll down to Sundroid.\n\nBy default these widgets update to your current location shortly after midnight every day, and you can also tap them at any time to select a saved location or refresh the current location. If you leave your phone in airplane mode or turn off location overnight, the widgets will use the best available saved location, which may be out of date."
+                />
+        </LinearLayout>
+
         <View style="@style/listMenuDivider" />
     </LinearLayout>
 </ScrollView>
