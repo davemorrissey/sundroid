@@ -1,12 +1,22 @@
 package uk.co.sundroid.util.astro.math
 
-import uk.co.sundroid.util.astro.MoonDay
-import uk.co.sundroid.util.astro.OrientationAngles
-import uk.co.sundroid.util.astro.Position
-import uk.co.sundroid.util.astro.SunDay
+import uk.co.sundroid.util.astro.*
 import uk.co.sundroid.util.location.LatitudeLongitude
+import uk.co.sundroid.util.log.d
+import uk.co.sundroid.util.log.displayCalendar
+import uk.co.sundroid.util.astro.BodyDayEvent.Direction.*
+import uk.co.sundroid.util.astro.BodyDayEvent.Direction
+import uk.co.sundroid.util.astro.BodyDayEvent.Event.TRANSIT
+import uk.co.sundroid.util.astro.BodyDayEvent.Event.RISESET
+import uk.co.sundroid.util.astro.BodyDayEvent.Event.GOLDENHOUR
+import uk.co.sundroid.util.astro.BodyDayEvent.Event.CIVIL
+import uk.co.sundroid.util.astro.BodyDayEvent.Event.NAUTICAL
+import uk.co.sundroid.util.astro.BodyDayEvent.Event.ASTRONOMICAL
+import uk.co.sundroid.util.astro.BodyDayEvent.Event
 import java.util.*
 import java.util.Calendar.*
+import kotlin.collections.ArrayList
+import kotlin.collections.LinkedHashSet
 import kotlin.math.*
 
 
@@ -31,6 +41,8 @@ import kotlin.math.*
  */
 @Suppress("unused")
 object SunMoonCalculator {
+
+    private val TAG = SunMoonCalculator::class.java.name
 
     /** Radians to degrees.  */
     private const val RAD_TO_DEG = 180.0 / Math.PI
@@ -66,52 +78,6 @@ object SunMoonCalculator {
     private val SUN_ELEMENTS = arrayOf(doubleArrayOf(403406.0, 0.0, 4.721964, 1.621043), doubleArrayOf(195207.0, -97597.0, 5.937458, 62830.348067), doubleArrayOf(119433.0, -59715.0, 1.115589, 62830.821524), doubleArrayOf(112392.0, -56188.0, 5.781616, 62829.634302), doubleArrayOf(3891.0, -1556.0, 5.5474, 125660.5691), doubleArrayOf(2819.0, -1126.0, 1.512, 125660.9845), doubleArrayOf(1721.0, -861.0, 4.1897, 62832.4766), doubleArrayOf(0.0, 941.0, 1.163, .813), doubleArrayOf(660.0, -264.0, 5.415, 125659.31), doubleArrayOf(350.0, -163.0, 4.315, 57533.85), doubleArrayOf(334.0, 0.0, 4.553, -33.931), doubleArrayOf(314.0, 309.0, 5.198, 777137.715), doubleArrayOf(268.0, -158.0, 5.989, 78604.191), doubleArrayOf(242.0, 0.0, 2.911, 5.412), doubleArrayOf(234.0, -54.0, 1.423, 39302.098), doubleArrayOf(158.0, 0.0, .061, -34.861), doubleArrayOf(132.0, -93.0, 2.317, 115067.698), doubleArrayOf(129.0, -20.0, 3.193, 15774.337), doubleArrayOf(114.0, 0.0, 2.828, 5296.67), doubleArrayOf(99.0, -47.0, .52, 58849.27), doubleArrayOf(93.0, 0.0, 4.65, 5296.11), doubleArrayOf(86.0, 0.0, 4.35, -3980.7), doubleArrayOf(78.0, -33.0, 2.75, 52237.69), doubleArrayOf(72.0, -32.0, 4.5, 55076.47), doubleArrayOf(68.0, 0.0, 3.23, 261.08), doubleArrayOf(64.0, -10.0, 1.22, 15773.85))
 
     /**
-     * The set of twilights to calculate (types of rise/set events).
-     */
-    enum class Twilight {
-
-        /**
-         * Event ID for calculation of rising and setting times for astronomical
-         * twilight. In this case, the calculated time will be the time when the
-         * center of the object is at -18 degrees of geometrical elevation below the
-         * astronomical horizon. At this time astronomical observations are possible
-         * because the sky is dark enough.
-         */
-        TWILIGHT_ASTRONOMICAL,
-
-        /**
-         * Event ID for calculation of rising and setting times for nautical
-         * twilight. In this case, the calculated time will be the time when the
-         * center of the object is at -12 degrees of geometric elevation below the
-         * astronomical horizon.
-         */
-        TWILIGHT_NAUTICAL,
-
-        /**
-         * Event ID for calculation of rising and setting times for civil twilight.
-         * In this case, the calculated time will be the time when the center of the
-         * object is at -6 degrees of geometric elevation below the astronomical
-         * horizon.
-         */
-        TWILIGHT_CIVIL,
-
-        /**
-         * The standard value of 34' for the refraction at the local horizon.
-         */
-        HORIZON_34ARCMIN
-
-    }
-
-    /**
-     * The set of events to calculate (rise/set/transit events).
-     */
-    enum class Event {
-        RISE,
-        SET,
-        TRANSIT
-    }
-
-    /**
      * The set of phases to compute the moon phases.
      * @param phase Phase value where 0 = new and 0.5 = full.
      * */
@@ -134,7 +100,7 @@ object SunMoonCalculator {
     /**
      * Input values.
      */
-    class Params(dateTime: Calendar, val obsLat: Double, val obsLon: Double, val twilight: Twilight) {
+    class Params(dateTime: Calendar, val obsLat: Double, val obsLon: Double, val event: Event) {
 
         private val ttMinusUt: Double
         val jd: Double
@@ -156,11 +122,13 @@ object SunMoonCalculator {
         }
 
         init {
+            d(TAG, "DateTime: " + displayCalendar(dateTime))
             val utc = getInstance(TimeZone.getTimeZone("UTC"))
             utc.timeInMillis = dateTime.timeInMillis
             val year = utc.get(YEAR)
             val month = utc.get(MONTH) + 1
             val day = utc.get(DAY_OF_MONTH)
+            d(TAG, "DateTimeUtc: " + displayCalendar(utc) + " (${utc.get(HOUR_OF_DAY)}:${utc.get(MINUTE)}:${utc.get(SECOND)}")
             this.jd = toJulianDay(year, month, day, utc.get(HOUR_OF_DAY), utc.get(MINUTE), utc.get(SECOND))
             if (year > -600 && year < 2200) {
                 val x = year + (month - 1 + day / 30.0) / 12.0
@@ -187,13 +155,18 @@ object SunMoonCalculator {
     class Ephemeris(
             /** Values for azimuth, elevation, rise, set, and transit for the Sun. Angles in radians, rise ...
              * as Julian days in UT. Distance in AU.  */
-            var azimuth: Double, var elevation: Double, var rise: Double, var set: Double,
-            var transit: Double, var transitElevation: Double, var rightAscension: Double, var declination: Double,
+            var azimuth: Double, var elevation: Double, var rise: EventEphemeris?, var set: EventEphemeris?,
+            var transit: EventEphemeris?, var transitElevation: Double, var rightAscension: Double, var declination: Double,
             var distance: Double, var eclipticLongitude: Double, var eclipticLatitude: Double, var angularRadius: Double) {
         var moonIllumination = 100.0
         var moonAge = 0.0
         var moonPhase = 0.0
     }
+
+    /**
+     * Time, azimuth and elevation for a rise/set/transit event in an ephemeris.
+     */
+    class EventEphemeris(val jd: Double, val azimuth: Double, val elevation: Double)
 
     private fun toJulianDay(year: Int, month: Int, day: Int, h: Int, m: Int, s: Int): Double {
         // The conversion formulas are from Meeus, chapter 7.
@@ -217,7 +190,7 @@ object SunMoonCalculator {
      * Returns the sun's position for a given time and location.
      */
     fun getSunPosition(dateTime: Calendar, location: LatitudeLongitude): uk.co.sundroid.util.astro.Position {
-        val params = Params(dateTime, location.latitude.doubleValue * DEG_TO_RAD, location.longitude.doubleValue * DEG_TO_RAD, Twilight.HORIZON_34ARCMIN)
+        val params = Params(dateTime, location.latitude.doubleValue * DEG_TO_RAD, location.longitude.doubleValue * DEG_TO_RAD, RISESET)
         val sunPosition = getSunPosition(params.t())
         val sunTopo = calculateSunEphemeris(params.time(), params)
         val sunGeo = calculateEphemeris(params.time(), params, sunPosition, true)
@@ -235,15 +208,89 @@ object SunMoonCalculator {
         return position
     }
 
+    class EventList : ArrayList<BodyDayEvent>() {
+
+        fun findEvent(event: Event, direction: Direction): BodyDayEvent? {
+            return firstOrNull { it.event == event && it.direction == direction }
+        }
+
+    }
+
     /**
-     * Returns the sun ephemeris for a given date and location.
+     * Returns the sun ephemeris for a given date and location. Rather than simply finding all events
+     * within a 24 hour window, this searches forward and backward from the transit occurring on the
+     * given day to find surrounding rise/set events, thus returning a "solar day's" events instead
+     * of a calendar day.
      */
     fun getSunDay(dateMidnight: Calendar, location: LatitudeLongitude): SunDay {
-        val params = Params(dateMidnight, location.latitude.doubleValue * DEG_TO_RAD, location.longitude.doubleValue * DEG_TO_RAD, Twilight.HORIZON_34ARCMIN)
-        val ephemeris = calculateSunEphemeris(params.time(), params)
+        val eventList = EventList()
+        var transit: BodyDayEvent? = null
+
+        // Run calculations for zone noon requested day and zone noon previous day, which seems to
+        // reliably give the full day's events for any time zone, plus some for previous/next day,
+        // and without any duplicates.
+        val dateNoon = getInstance(dateMidnight.timeZone)
+        dateNoon.timeInMillis = dateMidnight.timeInMillis
+        dateNoon.add(HOUR_OF_DAY, 12)
+        val datePreviousNoon = getInstance(dateMidnight.timeZone)
+        datePreviousNoon.timeInMillis = dateNoon.timeInMillis
+        datePreviousNoon.add(DAY_OF_MONTH, -1)
+
+        arrayOf(datePreviousNoon, dateNoon).forEach { date ->
+            Event.values().forEach { event ->
+                if (event != TRANSIT) {
+                    val params = Params(date, location.latitude.doubleValue * DEG_TO_RAD, location.longitude.doubleValue * DEG_TO_RAD, event)
+                    val ephemeris = calculateSunEphemeris(params.time(), params)
+                    if (event == RISESET) {
+                        ephemeris.transit?.let {
+                            val thisTransitCalendar = getCalendar(it.jd, date.timeZone)
+                            val thisTransit = BodyDayEvent(TRANSIT, Direction.TRANSIT, thisTransitCalendar, azimuth = it.azimuth * RAD_TO_DEG, elevation = it.elevation * RAD_TO_DEG)
+                            if (thisTransitCalendar.get(DAY_OF_YEAR) == dateMidnight.get(DAY_OF_YEAR)) {
+                                transit = thisTransit
+                            }
+                            eventList.add(thisTransit)
+                        }
+                    }
+                    ephemeris.rise?.let { eventList.add(BodyDayEvent(event, RISING, getCalendar(it.jd, date.timeZone), azimuth = it.azimuth * RAD_TO_DEG, elevation = it.elevation * RAD_TO_DEG)) }
+                    ephemeris.set?.let { eventList.add(BodyDayEvent(event, DESCENDING, getCalendar(it.jd, date.timeZone), azimuth = it.azimuth * RAD_TO_DEG, elevation = it.elevation * RAD_TO_DEG)) }
+                }
+            }
+        }
+        eventList.sort()
+
+        val transitIndex = eventList.indexOf(transit)
+
+        // Remove the next solar day's events.
+        for (i in transitIndex + 1 until eventList.size - 1) {
+            if (eventList[i].direction != DESCENDING) {
+                eventList.subList(i, eventList.size).clear()
+                break
+            }
+        }
+        // Remove the previous solar day's events.
+        for (i in transitIndex - 1 downTo 0) {
+            if (eventList[i].direction != RISING) {
+                eventList.subList(0, i + 1).clear()
+                break
+            }
+        }
+
         val day = SunDay()
-        day.rise = getCalendar(ephemeris.rise, dateMidnight.timeZone)
-        day.set = getCalendar(ephemeris.set, dateMidnight.timeZone)
+        day.events = LinkedHashSet(eventList)
+        day.rise = eventList.findEvent(RISESET, RISING)?.time
+        day.riseAzimuth = (eventList.findEvent(RISESET, RISING)?.azimuth ?: 0.0)
+        day.set = eventList.findEvent(RISESET, DESCENDING)?.time
+        day.setAzimuth = (eventList.findEvent(RISESET, DESCENDING)?.azimuth ?: 0.0)
+        day.astDawn = eventList.findEvent(ASTRONOMICAL, RISING)?.time
+        day.astDusk = eventList.findEvent(ASTRONOMICAL, DESCENDING)?.time
+        day.ntcDawn = eventList.findEvent(NAUTICAL, RISING)?.time
+        day.ntcDusk = eventList.findEvent(NAUTICAL, DESCENDING)?.time
+        day.civDawn = eventList.findEvent(CIVIL, RISING)?.time
+        day.civDusk = eventList.findEvent(CIVIL, DESCENDING)?.time
+        day.ghEnd = eventList.findEvent(GOLDENHOUR, RISING)?.time
+        day.ghStart = eventList.findEvent(GOLDENHOUR, DESCENDING)?.time
+        day.transit = eventList.findEvent(TRANSIT, Direction.TRANSIT)?.time
+        day.transitAppElevation = eventList.findEvent(TRANSIT, Direction.TRANSIT)?.elevation ?: 0.0
         return day
     }
 
@@ -253,16 +300,9 @@ object SunMoonCalculator {
     private fun calculateSunEphemeris(time: DoubleArray, params: Params): Ephemeris {
         val sun = calculateEphemeris(time, params, getSunPosition(time[1]), false)
         val niter = 3 // Number of iterations to get accurate rise/set/transit times
-        sun.rise = obtainAccurateRiseSetTransit(sun.rise, params, Event.RISE, niter, true)
-        sun.set = obtainAccurateRiseSetTransit(sun.set, params, Event.SET, niter, true)
-        sun.transit = obtainAccurateRiseSetTransit(sun.transit, params, Event.TRANSIT, niter, true)
-        if (sun.transit == -1.0) {
-            sun.transitElevation = 0.0
-        } else {
-            // Update Sun's maximum elevation
-            val transit = params.time(sun.transit)
-            sun.transitElevation = calculateEphemeris(transit, params, getSunPosition(transit[1]), false).transitElevation
-        }
+        sun.rise = obtainAccurateRiseSetTransit(sun.rise?.jd ?: -1.0, params, RISING, niter, true)
+        sun.set = obtainAccurateRiseSetTransit(sun.set?.jd ?: -1.0, params, DESCENDING, niter, true)
+        sun.transit = obtainAccurateRiseSetTransit(sun.transit?.jd ?: -1.0, params, Direction.TRANSIT, niter, true)
         return sun
     }
 
@@ -270,7 +310,7 @@ object SunMoonCalculator {
      * Returns the moon's position for a given time and location.
      */
     fun getMoonPosition(dateTime: Calendar, location: LatitudeLongitude): uk.co.sundroid.util.astro.Position {
-        val params = Params(dateTime, location.latitude.doubleValue * DEG_TO_RAD, location.longitude.doubleValue * DEG_TO_RAD, Twilight.HORIZON_34ARCMIN)
+        val params = Params(dateTime, location.latitude.doubleValue * DEG_TO_RAD, location.longitude.doubleValue * DEG_TO_RAD, RISESET)
         val moonPosition = getMoonPosition(params.t(), params)
         val moonTopo = calculateMoonEphemeris(params.time(), params)
         val moonGeo = calculateEphemeris(params.time(), params, moonPosition, true)
@@ -295,11 +335,11 @@ object SunMoonCalculator {
      * Returns the moon ephemeris for a given date and location.
      */
     fun getMoonDay(dateMidnight: Calendar, location: LatitudeLongitude): MoonDay {
-        val params = Params(dateMidnight, location.latitude.doubleValue * DEG_TO_RAD, location.longitude.doubleValue * DEG_TO_RAD, Twilight.HORIZON_34ARCMIN)
+        val params = Params(dateMidnight, location.latitude.doubleValue * DEG_TO_RAD, location.longitude.doubleValue * DEG_TO_RAD, RISESET)
         val ephemeris = calculateMoonEphemeris(params.time(), params)
         val day = MoonDay()
-        day.rise = getCalendar(ephemeris.rise, dateMidnight.timeZone)
-        day.set = getCalendar(ephemeris.set, dateMidnight.timeZone)
+        day.rise = ephemeris.rise?.let { getCalendar(it.jd, dateMidnight.timeZone) }
+        day.set = ephemeris.set?.let { getCalendar(it.jd, dateMidnight.timeZone) }
         return day
     }
 
@@ -310,14 +350,14 @@ object SunMoonCalculator {
         val moonPosition = getMoonPosition(time[1], params)
         val moon = calculateEphemeris(time, params, moonPosition, false)
         val niter = 5 // Number of iterations to get accurate rise/set/transit times
-        moon.rise = obtainAccurateRiseSetTransit(moon.rise, params, Event.RISE, niter, false)
-        moon.set = obtainAccurateRiseSetTransit(moon.set, params, Event.SET, niter, false)
-        moon.transit = obtainAccurateRiseSetTransit(moon.transit, params, Event.TRANSIT, niter, false)
-        if (moon.transit == -1.0) {
+        moon.rise = obtainAccurateRiseSetTransit(moon.rise!!.jd, params, RISING, niter, false)
+        moon.set = obtainAccurateRiseSetTransit(moon.set!!.jd, params, DESCENDING, niter, false)
+        moon.transit = obtainAccurateRiseSetTransit(moon.transit!!.jd, params, Direction.TRANSIT, niter, false)
+        if (moon.transit == null) {
             moon.transitElevation = 0.0
         } else {
             // Update Moon's maximum elevation
-            val transit = params.time(moon.transit)
+            val transit = params.time(moon.transit!!.jd)
             moon.transitElevation = calculateEphemeris(transit, params, getMoonPosition(transit[1], params), false).transitElevation
         }
 
@@ -452,7 +492,7 @@ object SunMoonCalculator {
         tmp = y * cos(angle) - z * sin(angle)
         z = y * sin(angle) + z * cos(angle)
         y = tmp
-        if (geocentric) return Ephemeris(0.0, 0.0, -1.0, -1.0, -1.0, -1.0, normalizeRadians(atan2(y, x)),
+        if (geocentric) return Ephemeris(0.0, 0.0, null, null, null, -1.0, normalizeRadians(atan2(y, x)),
                 atan2(z / sqrt(x * x + y * y), 1.0), sqrt(x * x + y * y + z * z), eclipLon, eclipLat, angularRadius)
 
         // Obtain local apparent sidereal time
@@ -504,15 +544,17 @@ object SunMoonCalculator {
             val refr = r * (0.28 * 1010 / (10 + 273.0)) // Assuming pressure of 1010 mb and T = 10 C
             alt = min(alt + refr, PI_OVER_TWO) // This is not accurate, but acceptable
         }
-        tmp = when (params.twilight) {
-            Twilight.HORIZON_34ARCMIN ->                 // Rise, set, transit times, taking into account Sun/Moon angular radius (pos[3]).
+        tmp = when (params.event) {
+            RISESET ->                 // Rise, set, transit times, taking into account Sun/Moon angular radius (pos[3]).
                 // The 34' factor is the standard refraction at horizon.
                 // Removing angular radius will do calculations for the center of the disk instead
                 // of the upper limb.
                 -(34.0 / 60.0) * DEG_TO_RAD - pos.angularRadius
-            Twilight.TWILIGHT_CIVIL -> -6 * DEG_TO_RAD
-            Twilight.TWILIGHT_NAUTICAL -> -12 * DEG_TO_RAD
-            Twilight.TWILIGHT_ASTRONOMICAL -> -18 * DEG_TO_RAD
+            CIVIL -> -6 * DEG_TO_RAD
+            NAUTICAL -> -12 * DEG_TO_RAD
+            ASTRONOMICAL -> -18 * DEG_TO_RAD
+            GOLDENHOUR -> 6 * DEG_TO_RAD
+            TRANSIT -> throw IllegalArgumentException()
         }
 
         // Compute cosine of hour angle
@@ -561,7 +603,7 @@ object SunMoonCalculator {
             rise = jd + riseTime
             set = jd + setTime
         }
-        return Ephemeris(azi, alt, rise, set, transit, transitAlt,
+        return Ephemeris(azi, alt, EventEphemeris(rise, 0.0, 0.0), EventEphemeris(set, 0.0, 0.0), EventEphemeris(transit, 0.0, 0.0), transitAlt,
                 normalizeRadians(ra), dec, dist, eclipLon, eclipLat, angularRadius)
     }
 
@@ -599,30 +641,31 @@ object SunMoonCalculator {
         val second = ((m - minute) * 60.0).toInt()
         val calendar = getInstance(TimeZone.getTimeZone("UTC"))
         calendar.set(year, month - 1, day, hour, minute, second)
+        calendar.get(HOUR_OF_DAY)
         calendar.timeZone = tz
-        calendar.timeInMillis
+        calendar.get(HOUR_OF_DAY)
         return calendar
     }
 
-    private fun obtainAccurateRiseSetTransit(riseSetJd: Double, params: Params, index: Event, niter: Int, sun: Boolean): Double {
+    private fun obtainAccurateRiseSetTransit(riseSetJd: Double, params: Params, index: Direction, niter: Int, sun: Boolean): EventEphemeris? {
         var step = -1.0
         var riseSet = riseSetJd
+        var out: Ephemeris? = null
         for (i in 0 until niter) {
-            if (riseSet == -1.0) return riseSet // -1 means no rise/set from that location
+            if (riseSet == -1.0) return null // -1 means no rise/set from that location
             val time = params.time(riseSet)
-            var out: Ephemeris?
             out = if (sun) {
                 calculateEphemeris(time, params, getSunPosition(time[1]), false)
             } else {
                 calculateEphemeris(time, params, getMoonPosition(time[1], params), false)
             }
-            var v = out.rise
-            if (index === Event.SET) v = out.set
-            if (index === Event.TRANSIT) v = out.transit
+            var v = out.rise!!.jd
+            if (index === DESCENDING) v = out.set!!.jd
+            if (index === Direction.TRANSIT) v = out.transit!!.jd
             step = abs(riseSet - v)
             riseSet = v
         }
-        return if (step > 1.0 / SECONDS_PER_DAY) (-1).toDouble() else riseSet // did not converge => without rise/set/transit in this date
+        return if (step > 1.0 / SECONDS_PER_DAY) null else EventEphemeris(riseSet, out?.azimuth ?: 0.0, out?.elevation ?: 0.0) // did not converge => without rise/set/transit in this date
     }
 
     /**
@@ -650,7 +693,7 @@ object SunMoonCalculator {
 
     // Moon's argument of latitude
     fun moonDiskOrientationAngles(dateTime: Calendar, location: LatitudeLongitude): OrientationAngles {
-        val params = Params(dateTime, location.latitude.doubleValue * DEG_TO_RAD, location.longitude.doubleValue * DEG_TO_RAD, Twilight.HORIZON_34ARCMIN)
+        val params = Params(dateTime, location.latitude.doubleValue * DEG_TO_RAD, location.longitude.doubleValue * DEG_TO_RAD, RISESET)
         val t = params.t()
         val jd = params.jd
         val moonPosition = getMoonPosition(t, params)

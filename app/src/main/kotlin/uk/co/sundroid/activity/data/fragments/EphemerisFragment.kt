@@ -19,6 +19,7 @@ import uk.co.sundroid.util.time.formatTimeStr
 import uk.co.sundroid.util.time.shortDateAndMonth
 import java.math.BigDecimal
 import java.util.*
+import kotlin.collections.ArrayList
 
 class EphemerisFragment : AbstractTimeFragment() {
 
@@ -53,7 +54,7 @@ class EphemerisFragment : AbstractTimeFragment() {
 
 
         val sunDay = SunCalculator.calcDay(location.location, dateCalendar)
-        val smcSunDay = SunMoonCalculator.getSunDay(timeCalendar, location.location)
+        val smcSunDay = SunMoonCalculator.getSunDay(dateCalendar, location.location)
         val sunPosition = SunCalculator.calcPosition(location.location, timeCalendar)
         val smcSunPosition = SunMoonCalculator.getSunPosition(timeCalendar, location.location)
         val moonDay = BodyPositionCalculator.calcDay(Body.MOON, location.location, dateCalendar, true)
@@ -83,6 +84,11 @@ class EphemerisFragment : AbstractTimeFragment() {
         } ?: run {
             b.sunSet1.text = "-"
         }
+        sunDay.transit?.let {
+            b.sunTransit1.text = shortDateAndMonth(it) + " " + time(it) + " - " + formatBearing(requireContext(), sunDay.transitAppElevation, location.location, timeCalendar)
+        } ?: run {
+            b.sunTransit1.text = "-"
+        }
         smcSunDay.rise?.let {
             b.sunRise2.text = shortDateAndMonth(it) + " " + time(it) + " - " + formatBearing(requireContext(), smcSunDay.riseAzimuth, location.location, timeCalendar)
         } ?: run {
@@ -93,6 +99,39 @@ class EphemerisFragment : AbstractTimeFragment() {
         } ?: run {
             b.sunSet2.text = "-"
         }
+        smcSunDay.transit?.let {
+            b.sunTransit2.text = shortDateAndMonth(it) + " " + time(it) + " - " + formatBearing(requireContext(), smcSunDay.transitAppElevation, location.location, timeCalendar)
+        } ?: run {
+            b.sunTransit2.text = "-"
+        }
+
+        val twilights1 = ArrayList<String>()
+        sunDay.astDawn?.let { twilights1.add("AR " + shortDateAndMonth(it) + " " + time(it)) }
+        sunDay.ntcDawn?.let { twilights1.add("NR " + shortDateAndMonth(it) + " " + time(it)) }
+        sunDay.civDawn?.let { twilights1.add("CR " + shortDateAndMonth(it) + " " + time(it)) }
+        sunDay.rise?.let { twilights1.add("R " + shortDateAndMonth(it) + " " + time(it)) }
+        sunDay.ghEnd?.let { twilights1.add("GHE " + shortDateAndMonth(it) + " " + time(it)) }
+        sunDay.transit?.let { twilights1.add("TX " + shortDateAndMonth(it) + " " + time(it)) }
+        sunDay.ghStart?.let { twilights1.add("GHS " + shortDateAndMonth(it) + " " + time(it)) }
+        sunDay.set?.let { twilights1.add("S " + shortDateAndMonth(it) + " " + time(it)) }
+        sunDay.civDusk?.let { twilights1.add("CS " + shortDateAndMonth(it) + " " + time(it)) }
+        sunDay.ntcDusk?.let { twilights1.add("NS " + shortDateAndMonth(it) + " " + time(it)) }
+        sunDay.astDusk?.let { twilights1.add("AS " + shortDateAndMonth(it) + " " + time(it)) }
+        b.sunTwilights1.text = twilights1.joinToString(separator = "\n")
+
+        val twilights2 = ArrayList<String>()
+        smcSunDay.astDawn?.let { twilights2.add("AR " + shortDateAndMonth(it) + " " + time(it)) }
+        smcSunDay.ntcDawn?.let { twilights2.add("NR " + shortDateAndMonth(it) + " " + time(it)) }
+        smcSunDay.civDawn?.let { twilights2.add("CR " + shortDateAndMonth(it) + " " + time(it)) }
+        smcSunDay.rise?.let { twilights2.add("R " + shortDateAndMonth(it) + " " + time(it)) }
+        smcSunDay.ghEnd?.let { twilights2.add("GHE " + shortDateAndMonth(it) + " " + time(it)) }
+        smcSunDay.transit?.let { twilights2.add("TX " + shortDateAndMonth(it) + " " + time(it)) }
+        smcSunDay.ghStart?.let { twilights2.add("GHS " + shortDateAndMonth(it) + " " + time(it)) }
+        smcSunDay.set?.let { twilights2.add("S " + shortDateAndMonth(it) + " " + time(it)) }
+        smcSunDay.civDusk?.let { twilights2.add("CS " + shortDateAndMonth(it) + " " + time(it)) }
+        smcSunDay.ntcDusk?.let { twilights2.add("NS " + shortDateAndMonth(it) + " " + time(it)) }
+        smcSunDay.astDusk?.let { twilights2.add("AS " + shortDateAndMonth(it) + " " + time(it)) }
+        b.sunTwilights2.text = twilights2.joinToString(separator = "\n")
 
         b.sunJd1.text = "" + sunPosition.julianDay
         b.sunJd2.text = "" + smcSunPosition.julianDay

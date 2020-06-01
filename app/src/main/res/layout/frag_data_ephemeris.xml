@@ -108,6 +108,30 @@
             <TableRow>
                 <TextView
                     style="@style/ephemerisTitleCell"
+                    android:text="Transit" />
+                <TextView
+                    android:id="@+id/sunTransit1"
+                    style="@style/ephemerisValueCell" />
+                <TextView
+                    android:id="@+id/sunTransit2"
+                    style="@style/ephemerisValueCell" />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    style="@style/ephemerisTitleCell"
+                    android:text="Events" />
+                <TextView
+                    android:id="@+id/sunTwilights1"
+                    style="@style/ephemerisValueCell" />
+                <TextView
+                    android:id="@+id/sunTwilights2"
+                    style="@style/ephemerisValueCell" />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    style="@style/ephemerisTitleCell"
                     android:text="Azimuth" />
                 <TextView
                     android:id="@+id/sunAz1"
