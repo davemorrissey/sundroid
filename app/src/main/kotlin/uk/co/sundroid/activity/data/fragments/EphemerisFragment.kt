@@ -10,6 +10,7 @@ import uk.co.sundroid.activity.MainActivity
 import uk.co.sundroid.databinding.FragDataEphemerisBinding
 import uk.co.sundroid.util.astro.Body
 import uk.co.sundroid.util.astro.MoonPhase
+import uk.co.sundroid.util.astro.SunDay
 import uk.co.sundroid.util.astro.math.BodyPositionCalculator
 import uk.co.sundroid.util.astro.math.MoonPhaseCalculator
 import uk.co.sundroid.util.astro.math.SunCalculator
@@ -52,19 +53,18 @@ class EphemerisFragment : AbstractTimeFragment() {
         b.time.text = "" + timeCalendar.timeInMillis + "\n" + shortDateAndMonth(timeCalendar) + " " + formatTimeStr(requireContext(), timeCalendar, allowSeconds = true)
         b.zone.text = dateCalendar.timeZone.id + "\n" + dateCalendar.timeZone.displayName
 
-
         val sunDay = SunCalculator.calcDay(location.location, dateCalendar)
-        val smcSunDay = SunMoonCalculator.getSunDay(dateCalendar, location.location)
+        val smcSunDay = SunMoonCalculator.getDay(Body.SUN, dateCalendar, location.location) as SunDay
         val sunPosition = SunCalculator.calcPosition(location.location, timeCalendar)
         val smcSunPosition = SunMoonCalculator.getPosition(Body.SUN, timeCalendar, location.location)
         val moonDay = BodyPositionCalculator.calcDay(Body.MOON, location.location, dateCalendar, true)
-        val smcMoonDay = SunMoonCalculator.getMoonDay(timeCalendar, location.location)
+        val smcMoonDay = SunMoonCalculator.getDay(Body.MOON, dateCalendar, location.location)
         val moonPosition = BodyPositionCalculator.calcPosition(Body.MOON, location.location, timeCalendar)
         val smcMoonPosition = SunMoonCalculator.getPosition(Body.MOON, timeCalendar, location.location)
         val noonPhase = MoonPhaseCalculator.getNoonPhase(dateCalendar)
         val noonIllumination = MoonPhaseCalculator.getIlluminatedPercent(noonPhase)
         val marsDay = BodyPositionCalculator.calcDay(Body.MARS, location.location, dateCalendar, true)
-        val smcMarsDay = SunMoonCalculator.getBodyDay(Body.MARS, dateCalendar, location.location)
+        val smcMarsDay = SunMoonCalculator.getDay(Body.MARS, dateCalendar, location.location)
         val marsPosition = BodyPositionCalculator.calcPosition(Body.MARS, location.location, timeCalendar)
         val smcMarsPosition = SunMoonCalculator.getPosition(Body.MARS, timeCalendar, location.location)
 
@@ -121,7 +121,7 @@ class EphemerisFragment : AbstractTimeFragment() {
         sunDay.civDusk?.let { twilights1.add("CS " + shortDateAndMonth(it) + " " + time(it)) }
         sunDay.ntcDusk?.let { twilights1.add("NS " + shortDateAndMonth(it) + " " + time(it)) }
         sunDay.astDusk?.let { twilights1.add("AS " + shortDateAndMonth(it) + " " + time(it)) }
-        b.sunTwilights1.text = twilights1.joinToString(separator = "\n")
+        b.sunEvents1.text = twilights1.joinToString(separator = "\n")
 
         val twilights2 = ArrayList<String>()
         smcSunDay.astDawn?.let { twilights2.add("AR " + shortDateAndMonth(it) + " " + time(it)) }
@@ -135,7 +135,7 @@ class EphemerisFragment : AbstractTimeFragment() {
         smcSunDay.civDusk?.let { twilights2.add("CS " + shortDateAndMonth(it) + " " + time(it)) }
         smcSunDay.ntcDusk?.let { twilights2.add("NS " + shortDateAndMonth(it) + " " + time(it)) }
         smcSunDay.astDusk?.let { twilights2.add("AS " + shortDateAndMonth(it) + " " + time(it)) }
-        b.sunTwilights2.text = twilights2.joinToString(separator = "\n")
+        b.sunEvents2.text = twilights2.joinToString(separator = "\n")
 
         b.sunJd1.text = "" + sunPosition.julianDay
         b.sunJd2.text = "" + smcSunPosition.julianDay
@@ -154,6 +154,11 @@ class EphemerisFragment : AbstractTimeFragment() {
         } ?: run {
             b.moonSet1.text = "-"
         }
+        moonDay.transit?.let {
+            b.moonTransit1.text = shortDateAndMonth(it) + " " + time(it) + " - " + formatBearing(requireContext(), moonDay.transitAppElevation, location.location, timeCalendar)
+        } ?: run {
+            b.moonTransit1.text = "-"
+        }
         smcMoonDay.rise?.let {
             b.moonRise2.text = shortDateAndMonth(it) + " " + time(it) + " - " + formatBearing(requireContext(), smcMoonDay.riseAzimuth, location.location, timeCalendar)
         } ?: run {
@@ -164,6 +169,23 @@ class EphemerisFragment : AbstractTimeFragment() {
         } ?: run {
             b.moonSet2.text = "-"
         }
+        smcMoonDay.transit?.let {
+            b.moonTransit2.text = shortDateAndMonth(it) + " " + time(it) + " - " + formatBearing(requireContext(), smcMoonDay.transitAppElevation, location.location, timeCalendar)
+        } ?: run {
+            b.moonTransit2.text = "-"
+        }
+
+        val moonEvents1 = ArrayList<String>()
+        moonDay.events.forEach {
+            moonEvents1.add(it.direction.name.substring(0..1) + " " + shortDateAndMonth(it.time) + " " + time(it.time))
+        }
+        b.moonEvents1.text = moonEvents1.joinToString(separator = "\n")
+
+        val moonEvents2 = ArrayList<String>()
+        smcMoonDay.events.forEach {
+            moonEvents2.add(it.direction.name.substring(0..1) + " " + shortDateAndMonth(it.time) + " " + time(it.time))
+        }
+        b.moonEvents2.text = moonEvents2.joinToString(separator = "\n")
 
         b.moonJd1.text = "" + moonPosition.julianDay
         b.moonJd2.text = "" + smcMoonPosition.julianDay

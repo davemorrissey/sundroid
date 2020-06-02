@@ -6,18 +6,24 @@ import uk.co.sundroid.util.astro.BodyDayEvent.Direction.*
 
 open class BodyDay {
 
+    @Deprecated("Prefer events")
     var rise: Calendar? = null
 
+    @Deprecated("Prefer events")
     var set: Calendar? = null
 
     var events: MutableSet<BodyDayEvent> = TreeSet()
 
+    @Deprecated("Prefer events")
     var transit: Calendar? = null
 
+    @Deprecated("Prefer events")
     var riseAzimuth: Double = 0.0
 
+    @Deprecated("Prefer events")
     var setAzimuth: Double = 0.0
 
+    @Deprecated("Prefer events")
     var transitAppElevation: Double = 0.0
 
     var riseSetType: RiseSetType? = null
