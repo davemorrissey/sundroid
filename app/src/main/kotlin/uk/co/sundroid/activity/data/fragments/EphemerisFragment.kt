@@ -56,13 +56,17 @@ class EphemerisFragment : AbstractTimeFragment() {
         val sunDay = SunCalculator.calcDay(location.location, dateCalendar)
         val smcSunDay = SunMoonCalculator.getSunDay(dateCalendar, location.location)
         val sunPosition = SunCalculator.calcPosition(location.location, timeCalendar)
-        val smcSunPosition = SunMoonCalculator.getSunPosition(timeCalendar, location.location)
+        val smcSunPosition = SunMoonCalculator.getPosition(Body.SUN, timeCalendar, location.location)
         val moonDay = BodyPositionCalculator.calcDay(Body.MOON, location.location, dateCalendar, true)
         val smcMoonDay = SunMoonCalculator.getMoonDay(timeCalendar, location.location)
         val moonPosition = BodyPositionCalculator.calcPosition(Body.MOON, location.location, timeCalendar)
-        val smcMoonPosition = SunMoonCalculator.getMoonPosition(timeCalendar, location.location)
+        val smcMoonPosition = SunMoonCalculator.getPosition(Body.MOON, timeCalendar, location.location)
         val noonPhase = MoonPhaseCalculator.getNoonPhase(dateCalendar)
         val noonIllumination = MoonPhaseCalculator.getIlluminatedPercent(noonPhase)
+        val marsDay = BodyPositionCalculator.calcDay(Body.MARS, location.location, dateCalendar, true)
+        val smcMarsDay = SunMoonCalculator.getBodyDay(Body.MARS, dateCalendar, location.location)
+        val marsPosition = BodyPositionCalculator.calcPosition(Body.MARS, location.location, timeCalendar)
+        val smcMarsPosition = SunMoonCalculator.getPosition(Body.MARS, timeCalendar, location.location)
 
         val phaseEvents = MoonPhaseCalculator.getYearEvents(dateCalendar.get(Calendar.YEAR), dateCalendar.timeZone)
                 .filter { it.time.get(Calendar.DAY_OF_YEAR) >= dateCalendar.get(Calendar.DAY_OF_YEAR) }
@@ -197,6 +201,33 @@ class EphemerisFragment : AbstractTimeFragment() {
         b.moonIllumination1.text = "${noonIllumination}% (Noon)"
         b.moonIllumination2.text = trimDouble(smcMoonPosition.moonIllumination)
         b.moonNextFull1.text = shortDateAndMonth(phaseEvents.first().time) + " " + time(phaseEvents.first().time)
+
+
+        marsDay.rise?.let {
+            b.marsRise1.text = shortDateAndMonth(it) + " " + time(it) + " - " + formatBearing(requireContext(), marsDay.riseAzimuth, location.location, timeCalendar)
+        } ?: run {
+            b.marsRise1.text = "-"
+        }
+        marsDay.set?.let {
+            b.marsSet1.text = shortDateAndMonth(it) + " " + time(it) + " - " + formatBearing(requireContext(), marsDay.setAzimuth, location.location, timeCalendar)
+        } ?: run {
+            b.marsSet1.text = "-"
+        }
+        smcMarsDay.rise?.let {
+            b.marsRise2.text = shortDateAndMonth(it) + " " + time(it) + " - " + formatBearing(requireContext(), smcMarsDay.riseAzimuth, location.location, timeCalendar)
+        } ?: run {
+            b.marsRise2.text = "-"
+        }
+        smcMarsDay.set?.let {
+            b.marsSet2.text = shortDateAndMonth(it) + " " + time(it) + " - " + formatBearing(requireContext(), smcMarsDay.setAzimuth, location.location, timeCalendar)
+        } ?: run {
+            b.marsSet2.text = "-"
+        }
+
+        b.marsAppEl1.text = trimDouble(marsPosition.appElevation)
+        b.marsAppEl2.text = trimDouble(smcMarsPosition.appElevation)
+        b.marsAz1.text = trimDouble(marsPosition.azimuth)
+        b.marsAz2.text = trimDouble(smcMarsPosition.azimuth)
 
     }
 

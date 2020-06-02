@@ -1,9 +1,8 @@
 package uk.co.sundroid.util.astro.math
 
 import uk.co.sundroid.util.astro.*
+import uk.co.sundroid.util.astro.Body.*
 import uk.co.sundroid.util.location.LatitudeLongitude
-import uk.co.sundroid.util.log.d
-import uk.co.sundroid.util.log.displayCalendar
 import uk.co.sundroid.util.astro.BodyDayEvent.Direction.*
 import uk.co.sundroid.util.astro.BodyDayEvent.Direction
 import uk.co.sundroid.util.astro.BodyDayEvent.Event.TRANSIT
@@ -18,6 +17,8 @@ import java.util.Calendar.*
 import kotlin.collections.ArrayList
 import kotlin.collections.LinkedHashSet
 import kotlin.math.*
+import java.lang.Math.toDegrees
+import java.lang.Math.toRadians
 
 
 /**
@@ -122,13 +123,11 @@ object SunMoonCalculator {
         }
 
         init {
-            d(TAG, "DateTime: " + displayCalendar(dateTime))
             val utc = getInstance(TimeZone.getTimeZone("UTC"))
             utc.timeInMillis = dateTime.timeInMillis
             val year = utc.get(YEAR)
             val month = utc.get(MONTH) + 1
             val day = utc.get(DAY_OF_MONTH)
-            d(TAG, "DateTimeUtc: " + displayCalendar(utc) + " (${utc.get(HOUR_OF_DAY)}:${utc.get(MINUTE)}:${utc.get(SECOND)}")
             this.jd = toJulianDay(year, month, day, utc.get(HOUR_OF_DAY), utc.get(MINUTE), utc.get(SECOND))
             if (year > -600 && year < 2200) {
                 val x = year + (month - 1 + day / 30.0) / 12.0
@@ -187,33 +186,27 @@ object SunMoonCalculator {
     }
 
     /**
-     * Returns the sun's position for a given time and location.
+     * Returns Sun, Moon or planet position for a given time and location.
      */
-    fun getSunPosition(dateTime: Calendar, location: LatitudeLongitude): uk.co.sundroid.util.astro.Position {
+    fun getPosition(body: Body, dateTime: Calendar, location: LatitudeLongitude): uk.co.sundroid.util.astro.Position {
         val params = Params(dateTime, location.latitude.doubleValue * DEG_TO_RAD, location.longitude.doubleValue * DEG_TO_RAD, RISESET)
-        val sunPosition = getSunPosition(params.t())
-        val sunTopo = calculateSunEphemeris(params.time(), params)
-        val sunGeo = calculateEphemeris(params.time(), params, sunPosition, true)
-
-        val position = Position(dateTime.timeInMillis, sunTopo.azimuth * RAD_TO_DEG, sunTopo.elevation * RAD_TO_DEG)
-        position.julianDay = params.jd
-        position.topoRA = sunTopo.rightAscension * RAD_TO_DEG
-        position.topoDec = sunTopo.declination * RAD_TO_DEG
-        position.topoDistKm = sunTopo.distance * AU
-        position.topoDistEarthRadii = sunTopo.distance * AU / EARTH_RADIUS
-        position.geoRA = sunGeo.rightAscension * RAD_TO_DEG
-        position.geoDec = sunGeo.declination * RAD_TO_DEG
-        position.geoDistKm = sunGeo.distance * AU
-        position.geoDistEarthRadii = sunGeo.distance * AU / EARTH_RADIUS
-        return position
-    }
-
-    class EventList : ArrayList<BodyDayEvent>() {
-
-        fun findEvent(event: Event, direction: Direction): BodyDayEvent? {
-            return firstOrNull { it.event == event && it.direction == direction }
+        val position = getPosition(body, params.time(), params)
+        val topo = calculateBodyEphemeris(body, params.time(), params)
+        val geo = calculateEphemeris(params.time(), params, position, true)
+        return Position(dateTime.timeInMillis, topo.azimuth * RAD_TO_DEG, topo.elevation * RAD_TO_DEG).apply {
+            julianDay = params.jd
+            topoRA = topo.rightAscension * RAD_TO_DEG
+            topoDec = topo.declination * RAD_TO_DEG
+            topoDistKm = topo.distance * AU
+            topoDistEarthRadii = topo.distance * AU / EARTH_RADIUS
+            geoRA = geo.rightAscension * RAD_TO_DEG
+            geoDec = geo.declination * RAD_TO_DEG
+            geoDistKm = geo.distance * AU
+            geoDistEarthRadii = geo.distance * AU / EARTH_RADIUS
+            moonAge = topo.moonAge
+            moonPhase = topo.moonPhase / TWO_PI
+            moonIllumination = topo.moonIllumination
         }
-
     }
 
     /**
@@ -223,7 +216,11 @@ object SunMoonCalculator {
      * of a calendar day.
      */
     fun getSunDay(dateMidnight: Calendar, location: LatitudeLongitude): SunDay {
-        val eventList = EventList()
+        val eventList = object : ArrayList<BodyDayEvent>() {
+            fun findEvent(event: Event, direction: Direction): BodyDayEvent? {
+                return firstOrNull { it.event == event && it.direction == direction }
+            }
+        }
         var transit: BodyDayEvent? = null
 
         // Run calculations for zone noon requested day and zone noon previous day, which seems to
@@ -240,7 +237,7 @@ object SunMoonCalculator {
             Event.values().forEach { event ->
                 if (event != TRANSIT) {
                     val params = Params(date, location.latitude.doubleValue * DEG_TO_RAD, location.longitude.doubleValue * DEG_TO_RAD, event)
-                    val ephemeris = calculateSunEphemeris(params.time(), params)
+                    val ephemeris = calculateBodyEphemeris(SUN, params.time(), params)
                     if (event == RISESET) {
                         ephemeris.transit?.let {
                             val thisTransitCalendar = getCalendar(it.jd, date.timeZone)
@@ -295,40 +292,27 @@ object SunMoonCalculator {
     }
 
     /**
-     * Calculates everything for the Sun.
+     * Calculates detailed ephemeris for Sun, Moon or a planet.
      */
-    private fun calculateSunEphemeris(time: DoubleArray, params: Params): Ephemeris {
-        val sun = calculateEphemeris(time, params, getSunPosition(time[1]), false)
-        val niter = 3 // Number of iterations to get accurate rise/set/transit times
-        sun.rise = obtainAccurateRiseSetTransit(sun.rise?.jd ?: -1.0, params, RISING, niter, true)
-        sun.set = obtainAccurateRiseSetTransit(sun.set?.jd ?: -1.0, params, DESCENDING, niter, true)
-        sun.transit = obtainAccurateRiseSetTransit(sun.transit?.jd ?: -1.0, params, Direction.TRANSIT, niter, true)
-        return sun
-    }
-
-    /**
-     * Returns the moon's position for a given time and location.
-     */
-    fun getMoonPosition(dateTime: Calendar, location: LatitudeLongitude): uk.co.sundroid.util.astro.Position {
-        val params = Params(dateTime, location.latitude.doubleValue * DEG_TO_RAD, location.longitude.doubleValue * DEG_TO_RAD, RISESET)
-        val moonPosition = getMoonPosition(params.t(), params)
-        val moonTopo = calculateMoonEphemeris(params.time(), params)
-        val moonGeo = calculateEphemeris(params.time(), params, moonPosition, true)
-
-        val position = Position(dateTime.timeInMillis, moonTopo.azimuth * RAD_TO_DEG, moonTopo.elevation * RAD_TO_DEG)
-        position.julianDay = params.jd
-        position.topoRA = moonTopo.rightAscension * RAD_TO_DEG
-        position.topoDec = moonTopo.declination * RAD_TO_DEG
-        position.topoDistKm = moonTopo.distance * AU
-        position.topoDistEarthRadii = moonTopo.distance * AU / EARTH_RADIUS
-        position.geoRA = moonGeo.rightAscension * RAD_TO_DEG
-        position.geoDec = moonGeo.declination * RAD_TO_DEG
-        position.geoDistKm = moonGeo.distance * AU
-        position.geoDistEarthRadii = moonGeo.distance * AU / EARTH_RADIUS
-        position.moonAge = moonTopo.moonAge
-        position.moonPhase = moonTopo.moonPhase / TWO_PI
-        position.moonIllumination = moonTopo.moonIllumination
-        return position
+    private fun calculateBodyEphemeris(body: Body, time: DoubleArray, params: Params): Ephemeris {
+        val position = getPosition(body, time, params)
+        val ephemeris = calculateEphemeris(time, params, position, false)
+        val niter = if (body == MOON) 5 else 3 // Number of iterations to get accurate rise/set/transit times
+        ephemeris.rise = obtainAccurateRiseSetTransit(ephemeris.rise?.jd ?: -1.0, params, RISING, niter, body)
+        ephemeris.set = obtainAccurateRiseSetTransit(ephemeris.set?.jd ?: -1.0, params, DESCENDING, niter, body)
+        ephemeris.transit = obtainAccurateRiseSetTransit(ephemeris.transit?.jd ?: -1.0, params, Direction.TRANSIT, niter, body)
+        
+        if (body == MOON) {
+            // Compute illumination phase percentage for the Moon
+            val sun = calculateBodyEphemeris(SUN, time, params)
+            val dlon = ephemeris.rightAscension - sun.rightAscension
+            val elong = acos(sin(sun.declination) * sin(ephemeris.declination) +
+                    cos(sun.declination) * cos(ephemeris.declination) * cos(dlon))
+            ephemeris.moonIllumination = 100 * (1.0 - cos(elong)) * 0.5
+            ephemeris.moonAge = position.moonAge
+            ephemeris.moonPhase = position.moonPhase
+        }
+        return ephemeris
     }
 
     /**
@@ -336,7 +320,7 @@ object SunMoonCalculator {
      */
     fun getMoonDay(dateMidnight: Calendar, location: LatitudeLongitude): MoonDay {
         val params = Params(dateMidnight, location.latitude.doubleValue * DEG_TO_RAD, location.longitude.doubleValue * DEG_TO_RAD, RISESET)
-        val ephemeris = calculateMoonEphemeris(params.time(), params)
+        val ephemeris = calculateBodyEphemeris(MOON, params.time(), params)
         val day = MoonDay()
         day.rise = ephemeris.rise?.let { getCalendar(it.jd, dateMidnight.timeZone) }
         day.set = ephemeris.set?.let { getCalendar(it.jd, dateMidnight.timeZone) }
@@ -344,32 +328,15 @@ object SunMoonCalculator {
     }
 
     /**
-     * Calculates everything for the Moon.
+     * Returns the planet ephemeris for a given date and location.
      */
-    private fun calculateMoonEphemeris(time: DoubleArray, params: Params): Ephemeris {
-        val moonPosition = getMoonPosition(time[1], params)
-        val moon = calculateEphemeris(time, params, moonPosition, false)
-        val niter = 5 // Number of iterations to get accurate rise/set/transit times
-        moon.rise = obtainAccurateRiseSetTransit(moon.rise!!.jd, params, RISING, niter, false)
-        moon.set = obtainAccurateRiseSetTransit(moon.set!!.jd, params, DESCENDING, niter, false)
-        moon.transit = obtainAccurateRiseSetTransit(moon.transit!!.jd, params, Direction.TRANSIT, niter, false)
-        if (moon.transit == null) {
-            moon.transitElevation = 0.0
-        } else {
-            // Update Moon's maximum elevation
-            val transit = params.time(moon.transit!!.jd)
-            moon.transitElevation = calculateEphemeris(transit, params, getMoonPosition(transit[1], params), false).transitElevation
-        }
-
-        // Compute illumination phase percentage for the Moon (do not use for other bodies!)
-        val sun = calculateSunEphemeris(time, params)
-        val dlon = moon.rightAscension - sun.rightAscension
-        val elong = acos(sin(sun.declination) * sin(moon.declination) +
-                cos(sun.declination) * cos(moon.declination) * cos(dlon))
-        moon.moonIllumination = 100 * (1.0 - cos(elong)) * 0.5
-        moon.moonAge = moonPosition.moonAge
-        moon.moonPhase = moonPosition.moonPhase
-        return moon
+    fun getBodyDay(body: Body, dateMidnight: Calendar, location: LatitudeLongitude): BodyDay {
+        val params = Params(dateMidnight, location.latitude.doubleValue * DEG_TO_RAD, location.longitude.doubleValue * DEG_TO_RAD, RISESET)
+        val ephemeris = calculateBodyEphemeris(body, params.time(), params)
+        val day = BodyDay()
+        day.rise = ephemeris.rise?.let { getCalendar(it.jd, dateMidnight.timeZone) }
+        day.set = ephemeris.set?.let { getCalendar(it.jd, dateMidnight.timeZone) }
+        return day
     }
 
     private fun getSunPosition(t: Double): Position {
@@ -430,7 +397,7 @@ object SunMoonCalculator {
 
         // Get accurate Moon age
         val psin = 29.530588853
-        val sunEphemeris = calculateSunEphemeris(params.time(), params)
+        val sunEphemeris = calculateBodyEphemeris(SUN, params.time(), params)
         val moonAge = normalizeRadians(longitude * DEG_TO_RAD - sunEphemeris.eclipticLongitude) * psin / TWO_PI
 
         // Now Moon parallax
@@ -456,6 +423,137 @@ object SunMoonCalculator {
         l += e * 2.072E-3 * sin(2 * phase - node - sanomaly - anomaly)
         val latitude = l
         return Position(longitude, latitude, distance * EARTH_RADIUS / AU, atan(1737.4 / (distance * EARTH_RADIUS)), moonAge = moonAge, moonPhase = phase)
+    }
+
+    private fun getPosition(body: Body, time: DoubleArray, params: Params): Position {
+        if (body == SUN) {
+            return getSunPosition(time[1])
+        } else if (body == MOON) {
+            return getMoonPosition(time[1], params)
+        }
+
+        val day = time[0] - 2451543.5
+
+        val n: Double
+        val i: Double
+        val w: Double
+        val a: Double
+        val e: Double
+        val m: Double
+
+        // Calculate heliocentric orbital components.
+        when (body) {
+            MERCURY -> {
+                n = normalizeDegrees(48.3313 + 3.24587E-5 * day)
+                i = normalizeDegrees(7.0047 + 5.00E-8 * day)
+                w = normalizeDegrees(29.1241 + 1.01444E-5 * day)
+                a = 0.387098
+                e = 0.205635 + 5.59E-10 * day
+                m = normalizeDegrees(168.6562 + 4.0923344368 * day)
+            }
+            VENUS -> {
+                n = normalizeDegrees(76.6799 + 2.46590E-5 * day)
+                i = normalizeDegrees(3.3946 + 2.75E-8 * day)
+                w = normalizeDegrees(54.8910 + 1.38374E-5 * day)
+                a = 0.723330
+                e = 0.006773 - 1.302E-9 * day
+                m = normalizeDegrees(48.0052 + 1.6021302244 * day)
+            }
+            MARS -> {
+                n = normalizeDegrees(49.5574 + 2.11081E-5 * day)
+                i = normalizeDegrees(1.8497 - 1.78E-8 * day)
+                w = normalizeDegrees(286.5016 + 2.92961E-5 * day)
+                a = 1.523688
+                e = 0.093405 + 2.516E-9 * day
+                m = normalizeDegrees(18.6021 + 0.5240207766 * day)
+            }
+            JUPITER -> {
+                n = normalizeDegrees(100.4542 + 2.76854E-5 * day)
+                i = normalizeDegrees(1.3030 - 1.557E-7 * day)
+                w = normalizeDegrees(273.8777 + 1.64505E-5 * day)
+                a = 5.20256
+                e = 0.048498 + 4.469E-9 * day
+                m = normalizeDegrees(19.8950 + 0.0830853001 * day)
+            }
+            SATURN -> {
+                n = normalizeDegrees(113.6634 + 2.38980E-5 * day)
+                i = normalizeDegrees(2.4886 - 1.081E-7 * day)
+                w = normalizeDegrees(339.3939 + 2.97661E-5 * day)
+                a = 9.55475
+                e = 0.055546 - 9.499E-9 * day
+                m = normalizeDegrees(316.9670 + 0.0334442282 * day)
+            }
+            URANUS -> {
+                n = normalizeDegrees(74.0005 + 1.3978E-5 * day)
+                i = normalizeDegrees(0.7733 + 1.9E-8 * day)
+                w = normalizeDegrees(96.6612 + 3.0565E-5 * day)
+                a = 19.18171 - 1.55E-8 * day
+                e = 0.047318 + 7.45E-9 * day
+                m = normalizeDegrees(142.5905 + 0.011725806 * day)
+            }
+            NEPTUNE -> {
+                n = normalizeDegrees(131.7806 + 3.0173E-5 * day)
+                i = normalizeDegrees(1.7700 - 2.55E-7 * day)
+                w = normalizeDegrees(272.8461 - 6.027E-6 * day)
+                a = 30.05826 + 3.313E-8 * day
+                e = 0.008606 + 2.15E-9 * day
+                m = normalizeDegrees(260.2471 + 0.005995147 * day)
+            }
+            else -> throw IllegalArgumentException("Unrecognised body: $body")
+        }
+
+        // Calculate eccentric anomaly using iteration to produce accurate value.
+        val e0 = m + 180 / PI * e * sin(toRadians(m)) * (1 + e * cos(toRadians(m)))
+        var e1 = java.lang.Double.MAX_VALUE
+        var loopCount = 0
+        while (abs(e1 - e0) > 0.005 && loopCount < 10) {
+            e1 = e0 - (e0 - 180 / PI * e * sin(toRadians(e0)) - m) / (1 - e * cos(toRadians(e0)))
+            loopCount++
+        }
+
+        // Rectangular (x,y) coordinates in the plane of the orbit
+        val planarX = a * (cos(toRadians(e1)) - e)
+        val planarY = a * sqrt(1 - e * e) * sin(toRadians(e1))
+
+        // Convert rectangular coordinates to distance and true anomaly.
+        val helioR = sqrt(planarX * planarX + planarY * planarY) // (Earth radii)
+        val trueAnomaly = normalizeDegrees(toDegrees(atan2(toRadians(planarY), toRadians(planarX)))) // (Degrees)
+
+        // Ecliptic heliocentric rectangular coordinates
+        var helioRectEclip = doubleArrayOf(helioR * (cos(toRadians(n)) * cos(toRadians(trueAnomaly + w)) - sin(toRadians(n)) * sin(toRadians(trueAnomaly + w)) * cos(toRadians(i))), helioR * (sin(toRadians(n)) * cos(toRadians(trueAnomaly + w)) + cos(toRadians(n)) * sin(toRadians(trueAnomaly + w)) * cos(toRadians(i))), helioR * sin(toRadians(trueAnomaly + w)) * sin(toRadians(i)))
+
+        val helioRLonLatEclip = rectangularToSpherical(helioRectEclip)
+
+        // Apply the planet's perturbations.
+        val mju = normalizeDegrees(19.8950 + 0.0830853001 * day)
+        val msa = normalizeDegrees(316.9670 + 0.0334442282 * day)
+        val mur = normalizeDegrees(142.5905 + 0.011725806 * day)
+        when (body) {
+            JUPITER -> helioRLonLatEclip[1] = ((helioRLonLatEclip[1]
+                    - 0.332 * sin(toRadians(2 * mju - 5 * msa - 67.6))
+                    - 0.056 * sin(toRadians(2 * mju - 2 * msa + 21))) + 0.042 * sin(toRadians(3 * mju - 5 * msa + 21)) - 0.036 * sin(toRadians(mju - 2 * msa))
+                    + 0.022 * cos(toRadians(mju - msa))
+                    + 0.023 * sin(toRadians(2 * mju - 3 * msa + 52))) - 0.016 * sin(toRadians(mju - 5 * msa - 69.0))
+            SATURN -> {
+                helioRLonLatEclip[1] = (helioRLonLatEclip[1] + 0.812 * sin(toRadians(2 * mju - 5 * msa - 67.6)) - 0.229 * cos(toRadians(2 * mju - 4 * msa - 2.0))
+                        + 0.119 * sin(toRadians(mju - 2 * msa - 3.0))
+                        + 0.046 * sin(toRadians(2 * mju - 6 * msa - 69.0))
+                        + 0.014 * sin(toRadians(mju - 3 * msa + 32)))
+                helioRLonLatEclip[2] = helioRLonLatEclip[2] - 0.020 * cos(toRadians(2 * mju - 4 * msa - 2.0)) + 0.018 * sin(toRadians(2 * mju - 6 * msa - 49.0))
+            }
+            URANUS -> helioRLonLatEclip[1] = (helioRLonLatEclip[1]
+                    + 0.040 * sin(toRadians(msa - 2 * mur + 6))
+                    + 0.035 * sin(toRadians(msa - 3 * mur + 33))) - 0.015 * sin(toRadians(mju - mur + 20))
+            else -> { }
+        }
+
+        // Convert perturbed ecliptic lat and lon back into helio ecliptic rectangular coords.
+        helioRectEclip = sphericalToRectangular(helioRLonLatEclip)
+
+        val geoRectEclip = helioToGeo(helioRectEclip, day)
+        val geoRLatLonEclip = rectangularToSpherical(geoRectEclip)
+
+        return Position(geoRLatLonEclip[1], geoRLatLonEclip[2], geoRLatLonEclip[0], 0.0)
     }
 
     private fun calculateEphemeris(time: DoubleArray, params: Params, pos: Position, geocentric: Boolean): Ephemeris {
@@ -647,18 +745,14 @@ object SunMoonCalculator {
         return calendar
     }
 
-    private fun obtainAccurateRiseSetTransit(riseSetJd: Double, params: Params, index: Direction, niter: Int, sun: Boolean): EventEphemeris? {
+    private fun obtainAccurateRiseSetTransit(riseSetJd: Double, params: Params, index: Direction, niter: Int, body: Body): EventEphemeris? {
         var step = -1.0
         var riseSet = riseSetJd
         var out: Ephemeris? = null
         for (i in 0 until niter) {
             if (riseSet == -1.0) return null // -1 means no rise/set from that location
             val time = params.time(riseSet)
-            out = if (sun) {
-                calculateEphemeris(time, params, getSunPosition(time[1]), false)
-            } else {
-                calculateEphemeris(time, params, getMoonPosition(time[1], params), false)
-            }
+            out = calculateEphemeris(time, params, getPosition(body, time, params), false)
             var v = out.rise!!.jd
             if (index === DESCENDING) v = out.set!!.jd
             if (index === Direction.TRANSIT) v = out.transit!!.jd
@@ -755,28 +849,74 @@ object SunMoonCalculator {
         }
         val result = OrientationAngles()
         result.phase = moonPosition.moonPhase / TWO_PI
-        result.brightLimb = Math.toDegrees(bl)
-        result.parallactic = Math.toDegrees(par)
-        result.axis = Math.toDegrees(p)
+        result.brightLimb = toDegrees(bl)
+        result.parallactic = toDegrees(par)
+        result.axis = toDegrees(p)
         // TODO Confirm which is which if these are ever used
         result.librationLatitude = lp
         result.librationLongitude = bp
         return result
     }
 
+    private fun rectangularToSpherical(xyz: DoubleArray): DoubleArray {
+        val r = sqrt(xyz[0] * xyz[0] + xyz[1] * xyz[1] + xyz[2] * xyz[2])
+        val lon = normalizeDegrees(toDegrees(atan2(toRadians(xyz[1]), toRadians(xyz[0]))))
+        val lat = toDegrees(atan2(toRadians(xyz[2]), toRadians(sqrt(xyz[0] * xyz[0] + xyz[1] * xyz[1]))))
+        return doubleArrayOf(r, lon, lat)
+    }
+
+    private fun sphericalToRectangular(rLonLat: DoubleArray): DoubleArray {
+        val x = rLonLat[0] * cos(toRadians(rLonLat[1])) * cos(toRadians(rLonLat[2]))
+        val y = rLonLat[0] * sin(toRadians(rLonLat[1])) * cos(toRadians(rLonLat[2]))
+        val z = rLonLat[0] * sin(toRadians(rLonLat[2]))
+        return doubleArrayOf(x, y, z)
+    }
+
+    private fun helioToGeo(helioRectEclip: DoubleArray, day: Double): DoubleArray {
+        val w = normalizeDegrees(282.9404 + 4.70935E-5 * day) // (longitude of perihelion)
+        val e = 0.016709 - 1.151E-9 * day // (eccentricity)
+        val m = normalizeDegrees(356.0470 + 0.9856002585 * day) // (mean anomaly)
+        val d = m + 180 / PI * e * sin(toRadians(m)) * (1 + e * cos(toRadians(m)))
+        var x = cos(toRadians(d)) - e
+        var y = sin(toRadians(d)) * sqrt(1 - e * e)
+        val r = sqrt(x * x + y * y)
+        val v = toDegrees(atan2(y, x))
+        val lon = normalizeDegrees(v + w)
+        x = r * cos(toRadians(lon))
+        y = r * sin(toRadians(lon))
+        val z = 0.0
+        return doubleArrayOf(helioRectEclip[0] + x, helioRectEclip[1] + y, helioRectEclip[2] + z)
+    }
+
     /**
      * Reduce an angle in radians to the range (0 - 2 Pi).
-     * @param rArg Value in radians.
+     * @param radians Value in radians.
      * @return The reduced radians value.
      */
-    private fun normalizeRadians(rArg: Double): Double {
-        var r = rArg
+    private fun normalizeRadians(radians: Double): Double {
+        var r = radians
         if (r < 0 && r >= -TWO_PI) return r + TWO_PI
         if (r >= TWO_PI && r < 2 * TWO_PI) return r - TWO_PI
         if (r >= 0 && r < TWO_PI) return r
         r -= TWO_PI * floor(r / TWO_PI)
         if (r < 0.0) r += TWO_PI
         return r
+    }
+
+    /**
+     * Reduce an angle in degrees to the range (0 - 360).
+     * @param degrees Value in degrees.
+     * @return The reduced degrees value.
+     */
+    private fun normalizeDegrees(degrees: Double): Double {
+        var d = degrees
+        while (d < 0.0) {
+            d += 360.0
+        }
+        while (d > 360.0) {
+            d -= 360.0
+        }
+        return d
     }
 
 }

@@ -381,6 +381,78 @@
                     style="@style/ephemerisValueCell" />
             </TableRow>
 
+            <TableRow android:layout_marginTop="15dp">
+                <TextView
+                    style="@style/ephemerisTitleCell"
+                    android:textStyle="bold"
+                    android:textSize="20sp"
+                    android:text="MARS" />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    style="@style/ephemerisTitleCell"
+                    android:text="" />
+                <TextView
+                    style="@style/ephemerisValueCell"
+                    android:textStyle="bold"
+                    android:text="Legacy"
+                    />
+                <TextView
+                    style="@style/ephemerisValueCell"
+                    android:textStyle="bold"
+                    android:text="SunMoonCalculator"
+                    />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    style="@style/ephemerisTitleCell"
+                    android:text="Rise" />
+                <TextView
+                    android:id="@+id/marsRise1"
+                    style="@style/ephemerisValueCell" />
+                <TextView
+                    android:id="@+id/marsRise2"
+                    style="@style/ephemerisValueCell" />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    style="@style/ephemerisTitleCell"
+                    android:text="Set" />
+                <TextView
+                    android:id="@+id/marsSet1"
+                    style="@style/ephemerisValueCell" />
+                <TextView
+                    android:id="@+id/marsSet2"
+                    style="@style/ephemerisValueCell" />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    style="@style/ephemerisTitleCell"
+                    android:text="Azimuth" />
+                <TextView
+                    android:id="@+id/marsAz1"
+                    style="@style/ephemerisValueCell" />
+                <TextView
+                    android:id="@+id/marsAz2"
+                    style="@style/ephemerisValueCell" />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    style="@style/ephemerisTitleCell"
+                    android:text="Apparent elevation" />
+                <TextView
+                    android:id="@+id/marsAppEl1"
+                    style="@style/ephemerisValueCell" />
+                <TextView
+                    android:id="@+id/marsAppEl2"
+                    style="@style/ephemerisValueCell" />
+            </TableRow>
+
         </TableLayout>
     </ScrollView>
 
