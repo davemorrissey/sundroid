@@ -29,12 +29,16 @@ class SunDay : BodyDay() {
 
     var ghType: TwilightType? = null
 
+    @Deprecated("Unused")
     var civHours: Double = 0.0
 
+    @Deprecated("Unused")
     var ntcHours: Double = 0.0
 
+    @Deprecated("Unused")
     var astHours: Double = 0.0
 
+    @Deprecated("Unused")
     var ghHours: Double = 0.0
 
 }

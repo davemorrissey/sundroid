@@ -84,6 +84,18 @@
             <TableRow>
                 <TextView
                     style="@style/ephemerisTitleCell"
+                    android:text="Type" />
+                <TextView
+                    android:id="@+id/sunType1"
+                    style="@style/ephemerisValueCell" />
+                <TextView
+                    android:id="@+id/sunType2"
+                    style="@style/ephemerisValueCell" />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    style="@style/ephemerisTitleCell"
                     android:text="Rise" />
                 <TextView
                     android:id="@+id/sunRise1"
@@ -114,6 +126,18 @@
                     style="@style/ephemerisValueCell" />
                 <TextView
                     android:id="@+id/sunTransit2"
+                    style="@style/ephemerisValueCell" />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    style="@style/ephemerisTitleCell"
+                    android:text="Length" />
+                <TextView
+                    android:id="@+id/sunLength1"
+                    style="@style/ephemerisValueCell" />
+                <TextView
+                    android:id="@+id/sunLength2"
                     style="@style/ephemerisValueCell" />
             </TableRow>
 
@@ -204,6 +228,18 @@
             <TableRow>
                 <TextView
                     style="@style/ephemerisTitleCell"
+                    android:text="Type" />
+                <TextView
+                    android:id="@+id/moonType1"
+                    style="@style/ephemerisValueCell" />
+                <TextView
+                    android:id="@+id/moonType2"
+                    style="@style/ephemerisValueCell" />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    style="@style/ephemerisTitleCell"
                     android:text="Rise" />
                 <TextView
                     android:id="@+id/moonRise1"
@@ -234,6 +270,18 @@
                     style="@style/ephemerisValueCell" />
                 <TextView
                     android:id="@+id/moonTransit2"
+                    style="@style/ephemerisValueCell" />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    style="@style/ephemerisTitleCell"
+                    android:text="Length" />
+                <TextView
+                    android:id="@+id/moonLength1"
+                    style="@style/ephemerisValueCell" />
+                <TextView
+                    android:id="@+id/moonLength2"
                     style="@style/ephemerisValueCell" />
             </TableRow>
 

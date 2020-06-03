@@ -261,7 +261,7 @@ object SunMoonCalculator {
         val transitIndex = eventList.indexOf(transit)
 
         // Remove the next solar day's events.
-        for (i in transitIndex + 1 until eventList.size - 1) {
+        for (i in transitIndex + 1 until eventList.size) {
             if (eventList[i].direction != DESCENDING) {
                 eventList.subList(i, eventList.size).clear()
                 break
@@ -301,18 +301,22 @@ object SunMoonCalculator {
      */
     private fun getBodyDay(body: Body, dateMidnight: Calendar, location: LatitudeLongitude): BodyDay {
         var eventSet = TreeSet<BodyDayEvent>()
-        arrayOf(previousNoon(dateMidnight), noon(dateMidnight)).forEach { date ->
+        arrayOf(dateMidnight, noon(dateMidnight), nextMidnight(dateMidnight), nextNoon(dateMidnight)).forEach { date ->
             val params = Params(date, rad(location.latitude.doubleValue), rad(location.longitude.doubleValue), RISESET)
             val ephemeris = calculateBodyEphemeris(body, params.time(), params)
             ephemeris.transit?.let { eventSet.add(BodyDayEvent(TRANSIT, Direction.TRANSIT, getCalendar(it.jd, date.timeZone), azimuth = deg(it.azimuth), elevation = deg(it.elevation))) }
             ephemeris.rise?.let { eventSet.add(BodyDayEvent(RISESET, RISING, getCalendar(it.jd, date.timeZone), azimuth = deg(it.azimuth), elevation = deg(it.elevation))) }
             ephemeris.set?.let { eventSet.add(BodyDayEvent(RISESET, DESCENDING, getCalendar(it.jd, date.timeZone), azimuth = deg(it.azimuth), elevation = deg(it.elevation))) }
         }
+
+        // Determine uptime by finding the first rise event on the day and the following set event.
+        val firstRise = eventSet.firstOrNull { e -> e.direction == RISING && e.time.get(DAY_OF_YEAR) == dateMidnight.get(DAY_OF_YEAR) }
+        val followingSet = firstRise?.let { eventSet.firstOrNull { e -> e.direction == DESCENDING && e.time.timeInMillis > it.time.timeInMillis } }
+
         eventSet = TreeSet(eventSet.filter { e -> e.time.get(DAY_OF_YEAR) == dateMidnight.get(DAY_OF_YEAR) })
 
         // TODO replace rise, set transit fields with BodyDayEvent to avoid translation
         val day = BodyDay()
-        eventSet.forEach { day.addEvent(it) }
         eventSet.firstOrNull { e -> e.direction == RISING }?.let {
             day.rise = it.time
             day.riseAzimuth = it.azimuth ?: 0.0
@@ -325,6 +329,15 @@ object SunMoonCalculator {
             day.transit = it.time
             day.transitAppElevation = it.elevation ?: 0.0
         }
+        eventSet.filter { it.direction != Direction.TRANSIT }.forEach { day.addEvent(it) }
+
+        if (firstRise != null && followingSet != null) {
+            day.uptimeHours = (followingSet.time.timeInMillis - firstRise.time.timeInMillis) / (1000.0 * 60.0 * 60.0)
+        } else if (day.transitAppElevation > 0.0) {
+            day.riseSetType = RiseSetType.RISEN
+        } else {
+            day.riseSetType = RiseSetType.SET
+        }
         return day
     }
 
@@ -334,7 +347,7 @@ object SunMoonCalculator {
     private fun calculateBodyEphemeris(body: Body, time: DoubleArray, params: Params): Ephemeris {
         val position = getPosition(body, time, params)
         val ephemeris = calculateEphemeris(time, params, position, false)
-        val niter = if (body == MOON) 5 else 3 // Number of iterations to get accurate rise/set/transit times
+        val niter = if (body == MOON) 10 else 15 // Max number of iterations to get accurate rise/set/transit times
         ephemeris.rise = obtainAccurateRiseSetTransit(ephemeris.rise?.jd ?: -1.0, params, RISING, niter, body)
         ephemeris.set = obtainAccurateRiseSetTransit(ephemeris.set?.jd ?: -1.0, params, DESCENDING, niter, body)
         ephemeris.transit = obtainAccurateRiseSetTransit(ephemeris.transit?.jd ?: -1.0, params, Direction.TRANSIT, niter, body)
@@ -706,11 +719,9 @@ object SunMoonCalculator {
             // Obtain the current events in time. Preference should be given to the closest event
             // in time to the current calculation time (so that iteration in other method will converge)
             var riseTime = riseTime1
-            val riseToday2 = floor(jd + riseTime2 - 0.5) + 0.5
-            if (jdToday == riseToday2 && abs(riseTime2) < abs(riseTime1)) riseTime = riseTime2
+            if (abs(riseTime2) < abs(riseTime1)) riseTime = riseTime2
             var setTime = setTime1
-            val setToday2 = floor(jd + setTime2 - 0.5) + 0.5
-            if (jdToday == setToday2 && abs(setTime2) < abs(setTime1)) setTime = setTime2
+            if (abs(setTime2) < abs(setTime1)) setTime = setTime2
             rise = jd + riseTime
             set = jd + setTime
         }
@@ -766,11 +777,14 @@ object SunMoonCalculator {
             if (riseSet == -1.0) return null // -1 means no rise/set from that location
             val time = params.time(riseSet)
             out = calculateEphemeris(time, params, getPosition(body, time, params), false)
-            var v = out.rise!!.jd
-            if (index === DESCENDING) v = out.set!!.jd
-            if (index === Direction.TRANSIT) v = out.transit!!.jd
+            val v = when(index) {
+                RISING -> out.rise!!.jd
+                DESCENDING -> out.set!!.jd
+                Direction.TRANSIT -> out.transit!!.jd
+            }
             step = abs(riseSet - v)
             riseSet = v
+            if (step <= 1.0 / SECONDS_PER_DAY) break
         }
         return if (step > 1.0 / SECONDS_PER_DAY) null else EventEphemeris(riseSet, out?.azimuth ?: 0.0, out?.elevation ?: 0.0) // did not converge => without rise/set/transit in this date
     }
@@ -945,6 +959,21 @@ object SunMoonCalculator {
         previousNoon.add(HOUR_OF_DAY, 12)
         previousNoon.add(DAY_OF_MONTH, -1)
         return previousNoon
+    }
+
+    private fun nextMidnight(dateMidnight: Calendar): Calendar {
+        val nextNoon = getInstance(dateMidnight.timeZone)
+        nextNoon.timeInMillis = dateMidnight.timeInMillis
+        nextNoon.add(DAY_OF_MONTH, 1)
+        return nextNoon
+    }
+
+    private fun nextNoon(dateMidnight: Calendar): Calendar {
+        val nextNoon = getInstance(dateMidnight.timeZone)
+        nextNoon.timeInMillis = dateMidnight.timeInMillis
+        nextNoon.add(HOUR_OF_DAY, 12)
+        nextNoon.add(DAY_OF_MONTH, 1)
+        return nextNoon
     }
 
 }

@@ -9,6 +9,7 @@ import uk.co.sundroid.R
 import uk.co.sundroid.activity.MainActivity
 import uk.co.sundroid.databinding.FragDataEphemerisBinding
 import uk.co.sundroid.util.astro.Body
+import uk.co.sundroid.util.astro.BodyDayEvent
 import uk.co.sundroid.util.astro.MoonPhase
 import uk.co.sundroid.util.astro.SunDay
 import uk.co.sundroid.util.astro.math.BodyPositionCalculator
@@ -137,6 +138,10 @@ class EphemerisFragment : AbstractTimeFragment() {
         smcSunDay.astDusk?.let { twilights2.add("AS " + shortDateAndMonth(it) + " " + time(it)) }
         b.sunEvents2.text = twilights2.joinToString(separator = "\n")
 
+        b.sunType1.text = sunDay.riseSetType?.name ?: "null"
+        b.sunType2.text = smcSunDay.type(BodyDayEvent.Event.RISESET)?.name ?: "null"
+        b.sunLength1.text = sunDay.uptimeHours.toString()
+        b.sunLength2.text = smcSunDay.length().toString()
         b.sunJd1.text = "" + sunPosition.julianDay
         b.sunJd2.text = "" + smcSunPosition.julianDay
         b.sunAppEl1.text = trimDouble(sunPosition.appElevation)
@@ -187,6 +192,10 @@ class EphemerisFragment : AbstractTimeFragment() {
         }
         b.moonEvents2.text = moonEvents2.joinToString(separator = "\n")
 
+        b.moonType1.text = moonDay.riseSetType?.name ?: "null"
+        b.moonType2.text = smcMoonDay.riseSetType?.name ?: "null"
+        b.moonLength1.text = moonDay.uptimeHours.toString()
+        b.moonLength2.text = smcMoonDay.uptimeHours.toString()
         b.moonJd1.text = "" + moonPosition.julianDay
         b.moonJd2.text = "" + smcMoonPosition.julianDay
         b.moonAppEl1.text = trimDouble(moonPosition.appElevation)
