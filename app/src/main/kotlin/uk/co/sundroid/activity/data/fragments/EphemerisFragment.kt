@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import uk.co.sundroid.R
 import uk.co.sundroid.activity.MainActivity
 import uk.co.sundroid.databinding.FragDataEphemerisBinding
+import uk.co.sundroid.databinding.FragDataEphemerisBodyBinding
 import uk.co.sundroid.util.astro.Body
 import uk.co.sundroid.util.astro.BodyDayEvent
 import uk.co.sundroid.util.astro.MoonPhase
@@ -64,10 +65,6 @@ class EphemerisFragment : AbstractTimeFragment() {
         val smcMoonPosition = SunMoonCalculator.getPosition(Body.MOON, timeCalendar, location.location)
         val noonPhase = MoonPhaseCalculator.getNoonPhase(dateCalendar)
         val noonIllumination = MoonPhaseCalculator.getIlluminatedPercent(noonPhase)
-        val marsDay = BodyPositionCalculator.calcDay(Body.MARS, location.location, dateCalendar, true)
-        val smcMarsDay = SunMoonCalculator.getDay(Body.MARS, dateCalendar, location.location)
-        val marsPosition = BodyPositionCalculator.calcPosition(Body.MARS, location.location, timeCalendar)
-        val smcMarsPosition = SunMoonCalculator.getPosition(Body.MARS, timeCalendar, location.location)
 
         val phaseEvents = MoonPhaseCalculator.getYearEvents(dateCalendar.get(Calendar.YEAR), dateCalendar.timeZone)
                 .filter { it.time.get(Calendar.DAY_OF_YEAR) >= dateCalendar.get(Calendar.DAY_OF_YEAR) }
@@ -140,8 +137,8 @@ class EphemerisFragment : AbstractTimeFragment() {
 
         b.sunType1.text = sunDay.riseSetType?.name ?: "null"
         b.sunType2.text = smcSunDay.type(BodyDayEvent.Event.RISESET)?.name ?: "null"
-        b.sunLength1.text = sunDay.uptimeHours.toString()
-        b.sunLength2.text = smcSunDay.length().toString()
+        b.sunLength1.text = trimDouble(sunDay.uptimeHours)
+        b.sunLength2.text = trimDouble(smcSunDay.length())
         b.sunJd1.text = "" + sunPosition.julianDay
         b.sunJd2.text = "" + smcSunPosition.julianDay
         b.sunAppEl1.text = trimDouble(sunPosition.appElevation)
@@ -194,8 +191,8 @@ class EphemerisFragment : AbstractTimeFragment() {
 
         b.moonType1.text = moonDay.riseSetType?.name ?: "null"
         b.moonType2.text = smcMoonDay.riseSetType?.name ?: "null"
-        b.moonLength1.text = moonDay.uptimeHours.toString()
-        b.moonLength2.text = smcMoonDay.uptimeHours.toString()
+        b.moonLength1.text = trimDouble(moonDay.uptimeHours)
+        b.moonLength2.text = trimDouble(smcMoonDay.uptimeHours)
         b.moonJd1.text = "" + moonPosition.julianDay
         b.moonJd2.text = "" + smcMoonPosition.julianDay
         b.moonAppEl1.text = trimDouble(moonPosition.appElevation)
@@ -233,32 +230,67 @@ class EphemerisFragment : AbstractTimeFragment() {
         b.moonIllumination2.text = trimDouble(smcMoonPosition.moonIllumination)
         b.moonNextFull1.text = shortDateAndMonth(phaseEvents.first().time) + " " + time(phaseEvents.first().time)
 
+        b.planets.removeAllViews()
+        Body.values().filter { it != Body.SUN && it != Body.MOON }.forEach { body ->
+            val bodyDay = BodyPositionCalculator.calcDay(body, location.location, dateCalendar, true)
+            val smcBodyDay = SunMoonCalculator.getDay(body, dateCalendar, location.location)
+            val bodyPosition = BodyPositionCalculator.calcPosition(body, location.location, timeCalendar)
+            val smcBodyPosition = SunMoonCalculator.getPosition(body, timeCalendar, location.location)
+            val bb = FragDataEphemerisBodyBinding.inflate(layoutInflater)
+            bb.bodyName.text = body.name
+            bodyDay.rise?.let {
+                bb.bodyRise1.text = shortDateAndMonth(it) + " " + time(it) + " - " + formatBearing(requireContext(), bodyDay.riseAzimuth, location.location, timeCalendar)
+            } ?: run {
+                bb.bodyRise1.text = "-"
+            }
+            bodyDay.set?.let {
+                bb.bodySet1.text = shortDateAndMonth(it) + " " + time(it) + " - " + formatBearing(requireContext(), bodyDay.setAzimuth, location.location, timeCalendar)
+            } ?: run {
+                bb.bodySet1.text = "-"
+            }
+            bodyDay.transit?.let {
+                bb.bodyTransit1.text = shortDateAndMonth(it) + " " + time(it) + " - " + formatBearing(requireContext(), bodyDay.transitAppElevation, location.location, timeCalendar)
+            } ?: run {
+                bb.bodyTransit1.text = "-"
+            }
+            smcBodyDay.rise?.let {
+                bb.bodyRise2.text = shortDateAndMonth(it) + " " + time(it) + " - " + formatBearing(requireContext(), smcBodyDay.riseAzimuth, location.location, timeCalendar)
+            } ?: run {
+                bb.bodyRise2.text = "-"
+            }
+            smcBodyDay.set?.let {
+                bb.bodySet2.text = shortDateAndMonth(it) + " " + time(it) + " - " + formatBearing(requireContext(), smcBodyDay.setAzimuth, location.location, timeCalendar)
+            } ?: run {
+                bb.bodySet2.text = "-"
+            }
+            smcBodyDay.transit?.let {
+                bb.bodyTransit2.text = shortDateAndMonth(it) + " " + time(it) + " - " + formatBearing(requireContext(), smcBodyDay.transitAppElevation, location.location, timeCalendar)
+            } ?: run {
+                bb.bodyTransit2.text = "-"
+            }
 
-        marsDay.rise?.let {
-            b.marsRise1.text = shortDateAndMonth(it) + " " + time(it) + " - " + formatBearing(requireContext(), marsDay.riseAzimuth, location.location, timeCalendar)
-        } ?: run {
-            b.marsRise1.text = "-"
-        }
-        marsDay.set?.let {
-            b.marsSet1.text = shortDateAndMonth(it) + " " + time(it) + " - " + formatBearing(requireContext(), marsDay.setAzimuth, location.location, timeCalendar)
-        } ?: run {
-            b.marsSet1.text = "-"
-        }
-        smcMarsDay.rise?.let {
-            b.marsRise2.text = shortDateAndMonth(it) + " " + time(it) + " - " + formatBearing(requireContext(), smcMarsDay.riseAzimuth, location.location, timeCalendar)
-        } ?: run {
-            b.marsRise2.text = "-"
-        }
-        smcMarsDay.set?.let {
-            b.marsSet2.text = shortDateAndMonth(it) + " " + time(it) + " - " + formatBearing(requireContext(), smcMarsDay.setAzimuth, location.location, timeCalendar)
-        } ?: run {
-            b.marsSet2.text = "-"
-        }
+            val bodyEvents1 = ArrayList<String>()
+            bodyDay.events.forEach {
+                bodyEvents1.add(it.direction.name.substring(0..1) + " " + shortDateAndMonth(it.time) + " " + time(it.time))
+            }
+            bb.bodyEvents1.text = bodyEvents1.joinToString(separator = "\n")
 
-        b.marsAppEl1.text = trimDouble(marsPosition.appElevation)
-        b.marsAppEl2.text = trimDouble(smcMarsPosition.appElevation)
-        b.marsAz1.text = trimDouble(marsPosition.azimuth)
-        b.marsAz2.text = trimDouble(smcMarsPosition.azimuth)
+            val bodyEvents2 = ArrayList<String>()
+            smcBodyDay.events.forEach {
+                bodyEvents2.add(it.direction.name.substring(0..1) + " " + shortDateAndMonth(it.time) + " " + time(it.time))
+            }
+            bb.bodyEvents2.text = bodyEvents2.joinToString(separator = "\n")
+
+            bb.bodyType1.text = bodyDay.riseSetType?.name ?: "null"
+            bb.bodyType2.text = smcBodyDay.riseSetType?.name ?: "null"
+            bb.bodyLength1.text = trimDouble(bodyDay.uptimeHours)
+            bb.bodyLength2.text = trimDouble(smcBodyDay.uptimeHours)
+            bb.bodyAppEl1.text = trimDouble(bodyPosition.appElevation)
+            bb.bodyAppEl2.text = trimDouble(smcBodyPosition.appElevation)
+            bb.bodyAz1.text = trimDouble(bodyPosition.azimuth)
+            bb.bodyAz2.text = trimDouble(smcBodyPosition.azimuth)
+            b.planets.addView(bb.root)
+        }
 
     }
 

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:padding="15dp">
+
+    <TableRow android:layout_marginTop="15dp">
+        <TextView
+            android:id="@+id/bodyName"
+            style="@style/ephemerisTitleCell"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:text="MARS" />
+    </TableRow>
+
+    <TableRow>
+        <TextView
+            style="@style/ephemerisTitleCell"
+            android:text="" />
+        <TextView
+            style="@style/ephemerisValueCell"
+            android:textStyle="bold"
+            android:text="Legacy"
+            />
+        <TextView
+            style="@style/ephemerisValueCell"
+            android:textStyle="bold"
+            android:text="SunMoonCalculator"
+            />
+    </TableRow>
+
+    <TableRow>
+        <TextView
+            style="@style/ephemerisTitleCell"
+            android:text="Type" />
+        <TextView
+            android:id="@+id/bodyType1"
+            style="@style/ephemerisValueCell" />
+        <TextView
+            android:id="@+id/bodyType2"
+            style="@style/ephemerisValueCell" />
+    </TableRow>
+
+    <TableRow>
+        <TextView
+            style="@style/ephemerisTitleCell"
+            android:text="Rise" />
+        <TextView
+            android:id="@+id/bodyRise1"
+            style="@style/ephemerisValueCell" />
+        <TextView
+            android:id="@+id/bodyRise2"
+            style="@style/ephemerisValueCell" />
+    </TableRow>
+
+    <TableRow>
+        <TextView
+            style="@style/ephemerisTitleCell"
+            android:text="Set" />
+        <TextView
+            android:id="@+id/bodySet1"
+            style="@style/ephemerisValueCell" />
+        <TextView
+            android:id="@+id/bodySet2"
+            style="@style/ephemerisValueCell" />
+    </TableRow>
+
+    <TableRow>
+        <TextView
+            style="@style/ephemerisTitleCell"
+            android:text="Transit" />
+        <TextView
+            android:id="@+id/bodyTransit1"
+            style="@style/ephemerisValueCell" />
+        <TextView
+            android:id="@+id/bodyTransit2"
+            style="@style/ephemerisValueCell" />
+    </TableRow>
+
+    <TableRow>
+        <TextView
+            style="@style/ephemerisTitleCell"
+            android:text="Length" />
+        <TextView
+            android:id="@+id/bodyLength1"
+            style="@style/ephemerisValueCell" />
+        <TextView
+            android:id="@+id/bodyLength2"
+            style="@style/ephemerisValueCell" />
+    </TableRow>
+
+    <TableRow>
+        <TextView
+            style="@style/ephemerisTitleCell"
+            android:text="Events" />
+        <TextView
+            android:id="@+id/bodyEvents1"
+            style="@style/ephemerisValueCell" />
+        <TextView
+            android:id="@+id/bodyEvents2"
+            style="@style/ephemerisValueCell" />
+    </TableRow>
+
+    <TableRow>
+        <TextView
+            style="@style/ephemerisTitleCell"
+            android:text="Azimuth" />
+        <TextView
+            android:id="@+id/bodyAz1"
+            style="@style/ephemerisValueCell" />
+        <TextView
+            android:id="@+id/bodyAz2"
+            style="@style/ephemerisValueCell" />
+    </TableRow>
+
+    <TableRow>
+        <TextView
+            style="@style/ephemerisTitleCell"
+            android:text="Apparent elevation" />
+        <TextView
+            android:id="@+id/bodyAppEl1"
+            style="@style/ephemerisValueCell" />
+        <TextView
+            android:id="@+id/bodyAppEl2"
+            style="@style/ephemerisValueCell" />
+    </TableRow>
+
+</TableLayout>
