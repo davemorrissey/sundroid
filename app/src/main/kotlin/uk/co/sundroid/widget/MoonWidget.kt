@@ -20,7 +20,7 @@ import uk.co.sundroid.util.astro.OrientationAngles
 import uk.co.sundroid.util.astro.RiseSetType
 import uk.co.sundroid.util.astro.image.MoonPhaseImage
 import uk.co.sundroid.util.astro.math.BodyPositionCalculator
-import uk.co.sundroid.util.astro.math.SunMoonCalculator
+import uk.co.sundroid.util.astro.smc.SunMoonCalculator
 import uk.co.sundroid.util.isEmpty
 import uk.co.sundroid.util.isNotEmpty
 import uk.co.sundroid.util.prefs.Prefs

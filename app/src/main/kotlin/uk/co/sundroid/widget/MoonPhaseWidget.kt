@@ -15,7 +15,7 @@ import uk.co.sundroid.R
 import uk.co.sundroid.domain.LocationDetails
 import uk.co.sundroid.util.astro.OrientationAngles
 import uk.co.sundroid.util.astro.image.MoonPhaseImage
-import uk.co.sundroid.util.astro.math.SunMoonCalculator
+import uk.co.sundroid.util.astro.smc.SunMoonCalculator
 import uk.co.sundroid.util.prefs.Prefs
 import uk.co.sundroid.widget.options.MoonPhaseWidgetOptionsActivity
 import java.util.*

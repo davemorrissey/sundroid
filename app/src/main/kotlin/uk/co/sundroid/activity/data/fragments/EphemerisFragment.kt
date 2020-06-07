@@ -16,7 +16,7 @@ import uk.co.sundroid.util.astro.SunDay
 import uk.co.sundroid.util.astro.math.BodyPositionCalculator
 import uk.co.sundroid.util.astro.math.MoonPhaseCalculator
 import uk.co.sundroid.util.astro.math.SunCalculator
-import uk.co.sundroid.util.astro.math.SunMoonCalculator
+import uk.co.sundroid.util.astro.smc.Calculator
 import uk.co.sundroid.util.geometry.*
 import uk.co.sundroid.util.time.formatTimeStr
 import uk.co.sundroid.util.time.shortDateAndMonth
@@ -56,13 +56,13 @@ class EphemerisFragment : AbstractTimeFragment() {
         b.zone.text = dateCalendar.timeZone.id + "\n" + dateCalendar.timeZone.displayName
 
         val sunDay = SunCalculator.calcDay(location.location, dateCalendar)
-        val smcSunDay = SunMoonCalculator.getDay(Body.SUN, dateCalendar, location.location) as SunDay
+        val smcSunDay = Calculator.getDay(Body.SUN, dateCalendar, location.location) as SunDay
         val sunPosition = SunCalculator.calcPosition(location.location, timeCalendar)
-        val smcSunPosition = SunMoonCalculator.getPosition(Body.SUN, timeCalendar, location.location)
+        val smcSunPosition = Calculator.getPosition(Body.SUN, timeCalendar, location.location)
         val moonDay = BodyPositionCalculator.calcDay(Body.MOON, location.location, dateCalendar, true)
-        val smcMoonDay = SunMoonCalculator.getDay(Body.MOON, dateCalendar, location.location)
+        val smcMoonDay = Calculator.getDay(Body.MOON, dateCalendar, location.location)
         val moonPosition = BodyPositionCalculator.calcPosition(Body.MOON, location.location, timeCalendar)
-        val smcMoonPosition = SunMoonCalculator.getPosition(Body.MOON, timeCalendar, location.location)
+        val smcMoonPosition = Calculator.getPosition(Body.MOON, timeCalendar, location.location)
         val noonPhase = MoonPhaseCalculator.getNoonPhase(dateCalendar)
         val noonIllumination = MoonPhaseCalculator.getIlluminatedPercent(noonPhase)
 
@@ -233,9 +233,9 @@ class EphemerisFragment : AbstractTimeFragment() {
         b.planets.removeAllViews()
         Body.values().filter { it != Body.SUN && it != Body.MOON }.forEach { body ->
             val bodyDay = BodyPositionCalculator.calcDay(body, location.location, dateCalendar, true)
-            val smcBodyDay = SunMoonCalculator.getDay(body, dateCalendar, location.location)
+            val smcBodyDay = Calculator.getDay(body, dateCalendar, location.location)
             val bodyPosition = BodyPositionCalculator.calcPosition(body, location.location, timeCalendar)
-            val smcBodyPosition = SunMoonCalculator.getPosition(body, timeCalendar, location.location)
+            val smcBodyPosition = Calculator.getPosition(body, timeCalendar, location.location)
             val bb = FragDataEphemerisBodyBinding.inflate(layoutInflater)
             bb.bodyName.text = body.name
             bodyDay.rise?.let {

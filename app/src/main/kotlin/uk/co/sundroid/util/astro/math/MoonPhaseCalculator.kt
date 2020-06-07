@@ -3,6 +3,7 @@ package uk.co.sundroid.util.astro.math
 import uk.co.sundroid.util.astro.MoonPhase
 import uk.co.sundroid.util.astro.MoonPhaseEvent
 import uk.co.sundroid.util.astro.OrientationAngles
+import uk.co.sundroid.util.astro.smc.SunMoonCalculator
 import uk.co.sundroid.util.location.LatitudeLongitude
 import java.util.*
 import java.util.Calendar.*
