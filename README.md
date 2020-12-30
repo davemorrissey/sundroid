@@ -7,11 +7,9 @@ This app was originally published on Google Play in 2010 as a paid app with a fr
 necessary to remove it from Google Play in 2015 for a variety of reasons. In 2020 I rebuilt the app
 and republished it as a free and open source project.
 
-Some of the features originally included in Sundroid Pro have not been rebuilt yet.
-
-* Notifications: Coming soon if supported by modern phones
-* Alarms: Not working on modern phones, investigation required
-* Widgets: Will not be restored
+Alarms and notifications, originally included in Sundroid Pro, cannot be restored. Limits on background
+tasks, changes to methods of waking the screen, and a block on receiving time, date and time zone changes
+will prevent alarms and notifications firing at the right time.
 
 Screenshots
 -----------
@@ -35,6 +33,7 @@ Features
 * View any date and any location
 * Locate by GPS, map, and name search
 * Save locations
+* Four widgets
 
 Recent changes
 --------------
