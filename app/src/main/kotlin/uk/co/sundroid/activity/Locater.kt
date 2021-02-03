@@ -68,14 +68,12 @@ class Locater(private val listener: LocaterListener, private val context: Contex
         }
     }
 
-    override fun onLocationChanged(coords: Location?) {
-        if (coords != null) {
-            cancel()
-            d(TAG, "Location received: " + coords.provider + ", " + coords.latitude + " " + coords.longitude)
-            val location = LatitudeLongitude(coords.latitude, coords.longitude)
-            val locationDetails = Geocoder.getLocationDetails(location, context)
-            listener.locationReceived(locationDetails)
-        }
+    override fun onLocationChanged(coords: Location) {
+        cancel()
+        d(TAG, "Location received: " + coords.provider + ", " + coords.latitude + " " + coords.longitude)
+        val location = LatitudeLongitude(coords.latitude, coords.longitude)
+        val locationDetails = Geocoder.getLocationDetails(location, context)
+        listener.locationReceived(locationDetails)
     }
 
     fun onTimeout() {
@@ -89,7 +87,7 @@ class Locater(private val listener: LocaterListener, private val context: Contex
      * A disabled message from the fused provider indicates location services are disabled. Errors
      * from other provider names aren't necessarily fatal and location will continue until timeout.
      */
-    override fun onProviderDisabled(provider: String?) {
+    override fun onProviderDisabled(provider: String) {
         if (!finished) {
             d(TAG, "Provider disabled: $provider")
             cancel()

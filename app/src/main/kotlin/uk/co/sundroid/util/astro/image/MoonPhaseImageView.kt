@@ -7,7 +7,7 @@ import androidx.appcompat.widget.AppCompatImageView
 import uk.co.sundroid.R
 import uk.co.sundroid.util.astro.OrientationAngles
 
-class MoonPhaseImageView(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : AppCompatImageView(context, attrs, defStyleAttr) {
+class MoonPhaseImageView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : AppCompatImageView(context, attrs, defStyleAttr) {
 
     private var orientationAngles = OrientationAngles()
     private var bitmap: Bitmap? = null
@@ -16,8 +16,8 @@ class MoonPhaseImageView(context: Context?, attrs: AttributeSet?, defStyleAttr: 
     private var destRect = RectF()
     private var moon = R.drawable.moon
 
-    constructor(context: Context?, attrs: AttributeSet?) : this(context, attrs, 0)
-    constructor(context: Context?) : this(context, null)
+    constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
+    constructor(context: Context) : this(context, null)
 
     public override fun onDraw(canvas: Canvas) {
         if (width == 0 || height == 0) {

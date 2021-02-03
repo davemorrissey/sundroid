@@ -6,14 +6,14 @@ import android.graphics.Point
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatImageView
 
-class TrackerImageView(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : AppCompatImageView(context, attrs, defStyleAttr) {
+class TrackerImageView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : AppCompatImageView(context, attrs, defStyleAttr) {
 
     private var direction = 0f
     private var trackerImage: TrackerImage? = null
     private val center: Point = Point(Int.MIN_VALUE, Int.MIN_VALUE)
 
-    constructor(context: Context?, attrs: AttributeSet?) : this(context, attrs, 0)
-    constructor(context: Context?) : this(context, null)
+    constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
+    constructor(context: Context) : this(context, null)
 
     public override fun onDraw(canvas: Canvas) {
         val image = trackerImage ?: return
