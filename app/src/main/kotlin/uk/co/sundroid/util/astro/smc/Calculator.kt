@@ -18,6 +18,7 @@ import uk.co.sundroid.util.astro.BodyDayEvent.Event.NAUTICAL
 import uk.co.sundroid.util.astro.BodyDayEvent.Event.ASTRONOMICAL
 import uk.co.sundroid.util.astro.BodyDayEvent.Event
 import uk.co.sundroid.util.astro.smc.SmcDateUtils.jdToCalendar
+import kotlin.collections.ArrayList
 
 object Calculator {
 
@@ -63,18 +64,14 @@ object Calculator {
      * of a calendar day.
      */
     private fun getSunDay(dateMidnight: Calendar, location: LatitudeLongitude): SunDay {
-        val eventList = object : ArrayList<BodyDayEvent>() {
-            fun findEvent(event: Event, direction: Direction): BodyDayEvent? {
-                return firstOrNull { it.event == event && it.direction == direction }
-            }
-        }
+        val eventSet = TreeSet<BodyDayEvent>()
         var transit: BodyDayEvent? = null
 
         // Run calculations for zone noon requested day and zone noon previous day, which seems to
         // reliably give the full day's events for any time zone, plus some for previous/next day,
         // and without any duplicates.
-        arrayOf(previousNoon(dateMidnight), noon(dateMidnight)).forEach { date ->
-            BodyDayEvent.Event.values().forEach { event ->
+        arrayOf(sixAm(dateMidnight), sixPm(dateMidnight)).forEach { date ->
+            Event.values().forEach { event ->
                 if (event != TRANSIT) {
                     val params = SmcParams(date, toRadians(location.latitude.doubleValue), toRadians(location.longitude.doubleValue), event)
                     val ephemeris = SunMoonCalculator.calculateBodyEphemeris(Body.SUN, params.time(), params)
@@ -82,18 +79,23 @@ object Calculator {
                         ephemeris.transit?.let {
                             val thisTransitCalendar = jdToCalendar(it.jd, date.timeZone)
                             val thisTransit = BodyDayEvent(TRANSIT, Direction.TRANSIT, thisTransitCalendar, azimuth = toDegrees(it.azimuth), elevation = toDegrees(it.elevation))
-                            if (thisTransitCalendar.get(Calendar.DAY_OF_YEAR) == dateMidnight.get(Calendar.DAY_OF_YEAR)) {
+                            val added = eventSet.add(thisTransit)
+                            if (added && thisTransitCalendar.get(Calendar.DAY_OF_YEAR) == dateMidnight.get(Calendar.DAY_OF_YEAR)) {
                                 transit = thisTransit
                             }
-                            eventList.add(thisTransit)
                         }
                     }
-                    ephemeris.rise?.let { eventList.add(BodyDayEvent(event, RISING, jdToCalendar(it.jd, date.timeZone), azimuth = toDegrees(it.azimuth), elevation = toDegrees(it.elevation))) }
-                    ephemeris.set?.let { eventList.add(BodyDayEvent(event, DESCENDING, jdToCalendar(it.jd, date.timeZone), azimuth = toDegrees(it.azimuth), elevation = toDegrees(it.elevation))) }
+                    ephemeris.rise?.let { eventSet.add(BodyDayEvent(event, RISING, jdToCalendar(it.jd, date.timeZone), azimuth = toDegrees(it.azimuth), elevation = toDegrees(it.elevation))) }
+                    ephemeris.set?.let { eventSet.add(BodyDayEvent(event, DESCENDING, jdToCalendar(it.jd, date.timeZone), azimuth = toDegrees(it.azimuth), elevation = toDegrees(it.elevation))) }
                 }
             }
         }
-        eventList.sort()
+
+        val eventList = object : ArrayList<BodyDayEvent>(eventSet) {
+            fun findEvent(event: Event, direction: Direction): BodyDayEvent? {
+                return firstOrNull { it.event == event && it.direction == direction }
+            }
+        }
 
         val transitIndex = eventList.indexOf(transit)
 
@@ -178,19 +180,25 @@ object Calculator {
         return day
     }
 
+    private fun sixAm(dateMidnight: Calendar): Calendar {
+        val previousNoon = Calendar.getInstance(dateMidnight.timeZone)
+        previousNoon.timeInMillis = dateMidnight.timeInMillis
+        previousNoon.add(Calendar.HOUR_OF_DAY, 6)
+        return previousNoon
+    }
+
+    private fun sixPm(dateMidnight: Calendar): Calendar {
+        val previousNoon = Calendar.getInstance(dateMidnight.timeZone)
+        previousNoon.timeInMillis = dateMidnight.timeInMillis
+        previousNoon.add(Calendar.HOUR_OF_DAY, 18)
+        return previousNoon
+    }
+
     private fun noon(dateMidnight: Calendar): Calendar {
         val noon = Calendar.getInstance(dateMidnight.timeZone)
         noon.timeInMillis = dateMidnight.timeInMillis
         noon.add(Calendar.HOUR_OF_DAY, 12)
         return noon
-    }
-
-    private fun previousNoon(dateMidnight: Calendar): Calendar {
-        val previousNoon = Calendar.getInstance(dateMidnight.timeZone)
-        previousNoon.timeInMillis = dateMidnight.timeInMillis
-        previousNoon.add(Calendar.HOUR_OF_DAY, 12)
-        previousNoon.add(Calendar.DAY_OF_MONTH, -1)
-        return previousNoon
     }
 
     private fun nextMidnight(dateMidnight: Calendar): Calendar {
