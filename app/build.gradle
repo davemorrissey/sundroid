@@ -8,14 +8,14 @@ def keystoreProperties = new Properties()
 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 29
     buildToolsVersion "29.0.2"
     defaultConfig {
         applicationId "uk.co.sundroid.free"
         minSdkVersion 21
-        targetSdkVersion 30
-        versionCode 5400000
-        versionName "5.4.0"
+        targetSdkVersion 29
+        versionCode 5500000
+        versionName "5.5.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

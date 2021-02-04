@@ -41,15 +41,35 @@ object SunCalculator {
      * @return the Julian day corresponding to the start of the day. Fractional days should be added later.
      */
     private fun calcJD(year: Int, month: Int, day: Int): Double {
-        var y = year
-        var m = month
-        if (m <= 2) {
-            y -= 1
-            m += 12
+//        var y = year
+//        var m = month
+//        if (m <= 2) {
+//            y -= 1
+//            m += 12
+//        }
+//        val a = floor(y/100.0)
+//        val b = 2 - a + floor(a/4)
+//        return floor(365.25*(year + 4716)) + floor(30.6001*(month+1)) + day + b - 1524.5
+
+        val h = 0
+        val m = 0
+        val s = 0
+
+        // The conversion formulas are from Meeus, chapter 7.
+        var julian = false // Use Gregorian calendar
+        if (year < 1582 || year == 1582 && month <= 10 || year == 1582 && month == 10 && day < 15) julian = true
+        var ma = month
+        var ya = year
+        if (ma < 3) {
+            ya--
+            ma += 12
         }
-        val a = floor(y/100.0)
-        val b = 2 - a + floor(a/4)
-        return floor(365.25*(year + 4716)) + floor(30.6001*(month+1)) + day + b - 1524.5
+        val aa = ya / 100
+        val ba = if (julian) 0 else 2 - aa + aa / 4
+        val dayFraction = (h + (m + s / 60.0) / 60.0) / 24.0
+        val jd = dayFraction + (365.25 * (ya + 4716)).toInt() + (30.6001 * (ma + 1)).toInt() + day + ba - 1524.5
+        if (jd < 2299160.0 && jd >= 2299150.0) throw IllegalArgumentException("invalid julian day $jd. This date does not exist.")
+        return jd
     }
 
     /**
