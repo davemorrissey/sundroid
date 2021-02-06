@@ -5,7 +5,7 @@ This is the privacy policy for [Sundroid's listing in the Google Play Store](htt
 
 Sundroid is a free and open source app. You can browse the source [on GitHub](https://github.com/davemorrissey/sundroid).
 
-Sundroid does not include any adverts, tracking code, or analytics libraries. It does not any
+Sundroid does not include any adverts, tracking code, or analytics libraries. It does not send any
 information of any kind to the developer or any third party.
 
 Google and your phone manufacturer may collect information about your use of the app for their own
