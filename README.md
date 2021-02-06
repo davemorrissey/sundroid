@@ -67,5 +67,5 @@ Future changes
 License
 -------
 
-Copyright 2010-2020 Dave Morrissey
+Copyright 2010-2021 Dave Morrissey
 Licensed under GNU Affero General Public License v3.0. Portions licensed under Apache License 2.0.
