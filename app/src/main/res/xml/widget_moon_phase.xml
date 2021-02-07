@@ -6,6 +6,5 @@
     android:resizeMode="vertical|horizontal"
     android:updatePeriodMillis="7200000"
     android:initialLayout="@layout/widget_moon_phase"
-    android:previewImage="@drawable/widget_moon_phase"
-    android:configure="uk.co.sundroid.widget.config.MoonPhaseWidgetConfigActivity">
+    android:previewImage="@drawable/widget_moon_phase">
 </appwidget-provider>

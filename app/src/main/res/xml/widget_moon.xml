@@ -3,6 +3,5 @@
     android:minHeight="60dp"
     android:updatePeriodMillis="7200000"
     android:initialLayout="@layout/widget_moon"
-    android:previewImage="@drawable/widget_moon"
-    android:configure="uk.co.sundroid.widget.config.MoonWidgetConfigActivity">
+    android:previewImage="@drawable/widget_moon">
 </appwidget-provider>

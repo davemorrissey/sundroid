@@ -1,17 +1,21 @@
 package uk.co.sundroid.widget.config
 
+import android.Manifest
+import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.app.Activity
 import android.app.AlertDialog
 import android.appwidget.AppWidgetManager.EXTRA_APPWIDGET_ID
 import android.appwidget.AppWidgetManager.INVALID_APPWIDGET_ID
 import android.content.Intent
 import android.content.pm.PackageManager.PERMISSION_DENIED
+import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.net.Uri
 import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
 import android.provider.Settings
 import android.view.View
 import android.widget.SeekBar
+import androidx.annotation.RequiresApi
 import uk.co.sundroid.databinding.WidgetPrefsBinding
 import uk.co.sundroid.domain.LocationDetails
 import uk.co.sundroid.domain.TimeZoneDetail
@@ -20,6 +24,8 @@ import uk.co.sundroid.util.isEmpty
 import uk.co.sundroid.util.log.d
 import uk.co.sundroid.util.permission.backgroundLocationGranted
 import uk.co.sundroid.util.permission.backgroundLocationPermission
+import uk.co.sundroid.util.permission.fineLocationGranted
+import uk.co.sundroid.util.permission.permissionDeniedMessage
 import uk.co.sundroid.util.prefs.Prefs
 import uk.co.sundroid.util.time.TimeZoneResolver
 import uk.co.sundroid.widget.sendUpdate
@@ -55,7 +61,15 @@ abstract class AbstractWidgetConfigurationActivity : Activity(), SeekBar.OnSeekB
         val savedLocations = db.savedLocations
         b = WidgetPrefsBinding.inflate(layoutInflater)
         b.permissionWarningButton.setOnClickListener {
-            if (SDK_INT > 23) {
+            if (SDK_INT >= 30) {
+                // Multi stage permission request. First we have to get fine location permission if
+                // it's not already granted. If it is, skip straight to background location.
+                if (!fineLocationGranted(this)) {
+                    sdk30FineLocationDialog()
+                } else {
+                    sdk30BackgroundLocationDialog(false)
+                }
+            } else if (SDK_INT > 23) {
                 requestPermissions(backgroundLocationPermission(), REQUEST_LOCATION)
             }
         }
@@ -85,9 +99,16 @@ abstract class AbstractWidgetConfigurationActivity : Activity(), SeekBar.OnSeekB
     override fun onStopTrackingTouch(seekBar: SeekBar) { }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        // If request is cancelled, the result arrays are empty.
-        if (requestCode == REQUEST_LOCATION && grantResults.isNotEmpty() && grantResults[0] == PERMISSION_DENIED) {
+        // If request is cancelled, the result arrays are empty. Denial can come from permission
+        // having been denied in settings, or from the user choosing Deny.
+        if (requestCode in arrayOf(REQUEST_LOCATION, REQUEST_FINE_LOCATION_BEFORE_BACKGROUND) &&
+                grantResults.firstOrNull() == PERMISSION_DENIED) {
             permissionDeniedDialog()
+        } else if (requestCode == REQUEST_FINE_LOCATION_BEFORE_BACKGROUND &&
+                SDK_INT >= 30 &&
+                permissions.firstOrNull() == ACCESS_FINE_LOCATION &&
+                grantResults.firstOrNull() == PERMISSION_GRANTED) {
+            sdk30BackgroundLocationDialog(true)
         }
         updateLocationOption()
     }
@@ -141,15 +162,49 @@ abstract class AbstractWidgetConfigurationActivity : Activity(), SeekBar.OnSeekB
     private fun permissionDeniedDialog() {
         AlertDialog.Builder(this).apply {
             setTitle("Permission denied")
-            setMessage("Apparent orientation will not work without this permission. To fix this, you can grant this app background location permission from Android settings.")
+            setMessage(permissionDeniedMessage(context))
             setPositiveButton(android.R.string.ok, null)
-            setNeutralButton("Permissions") { _, _ ->
+            setNeutralButton("Settings") { _, _ ->
                 val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
                 val uri: Uri = Uri.fromParts("package", packageName, null)
                 intent.data = uri
                 startActivity(intent)
             }
         }.show()
+    }
+
+    @RequiresApi(30)
+    private fun sdk30FineLocationDialog() {
+        AlertDialog.Builder(this).apply {
+            setTitle("Location permission (1 of 2)")
+            setMessage("Sundroid needs permission to get your location when the app is closed, to update widgets to your location every 6 hours.\n\n" +
+                    "First please grant location permission. Select the \"While using the app\" option.\n\n" +
+                    "Alternatively you can cancel this and choose a saved location.")
+            setPositiveButton("Continue") { _, _ -> requestPermissions(arrayOf(ACCESS_FINE_LOCATION), REQUEST_FINE_LOCATION_BEFORE_BACKGROUND) }
+            setNegativeButton("Cancel") { _, _ -> }
+        }.show()
+    }
+
+    @RequiresApi(30)
+    private fun sdk30BackgroundLocationDialog(fineLocationAlreadyGranted: Boolean) {
+        if (fineLocationAlreadyGranted) {
+            AlertDialog.Builder(this).apply {
+                setTitle("Location permission (2 of 2)")
+                setMessage("Almost done! On the next screen, please select \"${packageManager.backgroundPermissionOptionLabel}.\"\n\n" +
+                        "This screen will close. Please tap the widget to refresh it when you're done.")
+                setPositiveButton("Continue") { _, _ -> requestPermissions(arrayOf(Manifest.permission.ACCESS_BACKGROUND_LOCATION), REQUEST_LOCATION) }
+                setNegativeButton("Cancel") { _, _ -> }
+            }.show()
+        } else {
+            AlertDialog.Builder(this).apply {
+                setTitle("Location permission")
+                setMessage("Sundroid needs to permission to get your location when the app is closed, to update widgets to your location every 6 hours.\n\n" +
+                        "On the next screen, please select \"${packageManager.backgroundPermissionOptionLabel}\"\n\n" +
+                        "Alternatively you can cancel this and choose a saved location.")
+                setPositiveButton("Continue") { _, _ -> requestPermissions(arrayOf(Manifest.permission.ACCESS_BACKGROUND_LOCATION), REQUEST_LOCATION) }
+                setNegativeButton("Cancel") { _, _ -> }
+            }.show()
+        }
     }
 
     private fun noSavedLocationsDialog() {
@@ -202,6 +257,7 @@ abstract class AbstractWidgetConfigurationActivity : Activity(), SeekBar.OnSeekB
     companion object {
         private val TAG = AbstractWidgetConfigurationActivity::class.java.simpleName
         const val REQUEST_LOCATION = 1110
+        const val REQUEST_FINE_LOCATION_BEFORE_BACKGROUND = 1111
     }
 
 }

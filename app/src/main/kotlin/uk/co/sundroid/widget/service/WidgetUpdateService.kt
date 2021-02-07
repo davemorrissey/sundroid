@@ -7,6 +7,7 @@ import android.appwidget.AppWidgetManager.EXTRA_APPWIDGET_ID
 import android.appwidget.AppWidgetManager.INVALID_APPWIDGET_ID
 import android.content.ComponentName
 import android.location.Criteria.ACCURACY_COARSE
+import android.os.Build
 import android.os.Looper
 import uk.co.sundroid.activity.Locater
 import uk.co.sundroid.activity.LocaterListener
@@ -16,6 +17,7 @@ import uk.co.sundroid.domain.LocationDetails
 import uk.co.sundroid.util.dao.DatabaseHelper
 import uk.co.sundroid.util.log.d
 import uk.co.sundroid.util.log.e
+import uk.co.sundroid.util.permission.backgroundLocationGranted
 import uk.co.sundroid.util.prefs.Prefs
 import uk.co.sundroid.util.time.TimeZoneResolver
 import uk.co.sundroid.widget.*
@@ -41,8 +43,27 @@ class WidgetUpdateService : JobService() {
             val operation = params.extras.getString(EXTRA_OP) ?: OP_RENDER
             d(TAG, "onStartJob $widgetId $operation")
 
-            var widgetLocations = getWidgetLocations(widgetId, operation)
-            if (widgetLocations.containsValue(null)) {
+            // Get a map of widget ID to the saved location for that widget if present
+            var widgetLocations = getWidgetLocations(widgetId)
+            val cachedLocation = getCachedAutoLocation(operation)
+            val autoLocateWidgetIds = widgetLocations.entries.filter { e -> e.value == null }.map { e -> e.key }
+
+            if (!widgetLocations.containsValue(null)) {
+                // Fixed location for all widgets allows synchronous update
+                d(TAG, "Fixed location for all widgets being updated")
+                updateWidgets(widgetLocations, null)
+            } else if (!backgroundLocationGranted(applicationContext) && Build.VERSION.SDK_INT > 23) {
+                // No background location permission, show error message on autolocated widgets
+                // This is done without using cached location so new widgets show error immediately
+                d(TAG, "Background location permission denied")
+                updateWidgets(widgetLocations, DENIED)
+            } else if (cachedLocation != null) {
+                // Use cached location if one is available
+                d(TAG, "Fixed or cached location available for all widgets being updated")
+                widgetLocations = widgetLocations.mapValues { entry -> entry.value ?: cachedLocation }
+                updateWidgets(widgetLocations, null)
+                recordAutoLocateSuccess(autoLocateWidgetIds)
+            } else {
                 // Block for location required.
                 d(TAG, "Block for location required")
                 widgetLocations.entries.forEach { entry ->
@@ -56,16 +77,12 @@ class WidgetUpdateService : JobService() {
                         val locationResult = locater.getLocation(operation)
                         widgetLocations = widgetLocations.mapValues { entry -> entry.value ?: locationResult.locationDetails }
                         updateWidgets(widgetLocations, locationResult.error)
+                        recordAutoLocateSuccess(autoLocateWidgetIds)
                     } finally {
                         jobFinished(params, false)
                     }
                 }.start()
                 return true
-            } else {
-                // Known location for all widgets allows synchronous update.
-                d(TAG, "Locations known for all widgets being updated")
-                updateWidgets(widgetLocations, null)
-                return false
             }
         }
         return false
@@ -111,7 +128,7 @@ class WidgetUpdateService : JobService() {
      */
     private fun showLocationError(widgetId: Int, error: LocaterStatus) {
         val message = when (error) {
-            DENIED -> "LOCATION DENIED"
+            DENIED -> if (Prefs.widgetLocationReceived(this, widgetId)) "LOCATION DENIED" else "TAP TO SET UP"
             DISABLED -> "LOCATION DISABLED"
             UNAVAILABLE -> "LOCATION UNAVAILABLE"
             TIMEOUT -> "LOCATION TIMEOUT"
@@ -160,11 +177,10 @@ class WidgetUpdateService : JobService() {
      * Returns map of widget ID to location - either fixed or cached. Returns all widget IDs if the
      * passed ID is 0. Will not return cached auto location for forced refresh.
      */
-    private fun getWidgetLocations(widgetId: Int, operation: String): Map<Int, LocationDetails?> {
+    private fun getWidgetLocations(widgetId: Int): Map<Int, LocationDetails?> {
         DatabaseHelper(applicationContext).use { db ->
-            val autoLocation = getCachedAutoLocation(operation)
             val ids = if (widgetId == INVALID_APPWIDGET_ID) getAllWidgetIds() else listOf(widgetId)
-            return ids.associateWith { id -> db.getWidgetLocation(id) ?: autoLocation }
+            return ids.associateWith { id -> db.getWidgetLocation(id) }
         }
     }
 
@@ -185,6 +201,15 @@ class WidgetUpdateService : JobService() {
             return location
         }
         return null
+    }
+
+    /**
+     * Record location received for auto located widgets. This allows the widgets to show "Tap to
+     * set up" until permission is first granted, and "Location denied" if permission is revoked
+     * later.
+     */
+    private fun recordAutoLocateSuccess(widgetIds: List<Int>) {
+        widgetIds.forEach { id -> Prefs.setWidgetLocationReceived(this, id, true) }
     }
 
     private inner class WidgetLocaterResult(val locationDetails: LocationDetails?, val error: LocaterStatus?)
@@ -320,7 +345,5 @@ class WidgetUpdateService : JobService() {
 
     companion object {
         private val TAG = WidgetUpdateService::class.java.simpleName
-
-
     }
 }

@@ -9,8 +9,10 @@ import android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.os.Bundle
 import uk.co.sundroid.activity.MainActivity
+import uk.co.sundroid.util.dao.DatabaseHelper
 import uk.co.sundroid.widget.sendUpdate
 import uk.co.sundroid.widget.service.OP_TAP_REFRESH
+import uk.co.sundroid.util.permission.backgroundLocationGranted
 import java.util.*
 
 abstract class AbstractWidgetOptionsActivity : Activity() {
@@ -35,16 +37,23 @@ abstract class AbstractWidgetOptionsActivity : Activity() {
             rnc.widgetId = intent.getIntExtra(EXTRA_APPWIDGET_ID, INVALID_APPWIDGET_ID)
         }
 
+        // If this is an auto-locate widget and background location permission is denied, skip the
+        // dialog and open config activity directly.
+        if (isAutoLocateWidget(rnc.widgetId) && !backgroundLocationGranted(this)) {
+            openConfig()
+            return
+        }
+
         val items: MutableList<CharSequence> = ArrayList()
+        items.add("Settings")
         items.add("Refresh")
-        items.add("Options")
         items.add("Open Sundroid")
         val builder = AlertDialog.Builder(this)
         builder.setTitle(name)
         builder.setItems(items.toTypedArray()) { _, item ->
             when (item) {
-                0 -> sendUpdate(this, OP_TAP_REFRESH, rnc.widgetId)
-                1 -> openConfig()
+                0 -> openConfig()
+                1 -> sendUpdate(this, OP_TAP_REFRESH, rnc.widgetId)
                 else -> openApp()
             }
             finish()
@@ -72,6 +81,12 @@ abstract class AbstractWidgetOptionsActivity : Activity() {
         intent.addFlags(FLAG_ACTIVITY_NEW_TASK)
         intent.addFlags(FLAG_ACTIVITY_CLEAR_TOP)
         startActivity(intent)
+    }
+
+    private fun isAutoLocateWidget(widgetId: Int): Boolean {
+        DatabaseHelper(this).use { db ->
+            return db.getWidgetLocation(widgetId) == null
+        }
     }
 
 }

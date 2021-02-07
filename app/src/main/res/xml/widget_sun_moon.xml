@@ -6,6 +6,5 @@
     android:resizeMode="vertical|horizontal"
     android:updatePeriodMillis="7200000"
     android:initialLayout="@layout/widget_sun_moon"
-    android:previewImage="@drawable/widget_sun_moon"
-    android:configure="uk.co.sundroid.widget.config.SunMoonWidgetConfigActivity">
+    android:previewImage="@drawable/widget_sun_moon">
 </appwidget-provider>

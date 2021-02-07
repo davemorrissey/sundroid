@@ -68,6 +68,8 @@ object Prefs {
 
     private const val WIDGET_LOCATION_KEY = "widget-location-"
 
+    private const val WIDGET_LOCATION_RECEIVED_KEY = "widget-location-received-"
+
     private const val WIDGET_PHASE_SHADOW_OPACITY_KEY = "widget-shadow-opacity-"
     private const val WIDGET_PHASE_SHADOW_SIZE_KEY = "widget-shadow-size-"
     private const val WIDGET_PHASE_PHASENAME_KEY = "widget-phasename-"
@@ -385,6 +387,14 @@ object Prefs {
                 .apply()
     }
 
+    fun widgetLocationReceived(context: Context, widgetId: Int): Boolean {
+        return prefs(context).getBoolean(WIDGET_LOCATION_RECEIVED_KEY + widgetId, false)
+    }
+
+    fun setWidgetLocationReceived(context: Context, widgetId: Int, received: Boolean) {
+        prefs(context).edit().putBoolean(WIDGET_LOCATION_RECEIVED_KEY + widgetId, received).apply()
+    }
+
     fun widgetBoxShadowOpacity(context: Context, widgetId: Int): Int {
         return prefs(context).getInt(WIDGET_BOX_OPACITY_KEY + widgetId, 200)
     }
@@ -416,6 +426,7 @@ object Prefs {
                 .remove(WIDGET_PHASE_SHADOW_SIZE_KEY + widgetId)
                 .remove(WIDGET_PHASE_PHASENAME_KEY + widgetId)
                 .remove(WIDGET_BOX_OPACITY_KEY + widgetId)
+                .remove(WIDGET_LOCATION_RECEIVED_KEY + widgetId)
                 .apply()
     }
 
