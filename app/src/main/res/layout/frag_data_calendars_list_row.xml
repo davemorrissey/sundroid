@@ -48,8 +48,7 @@
         <uk.co.sundroid.util.astro.image.MoonPhaseImageView
             android:id="@+id/dayMoon"
             style="@style/calendarMoonImage"
-            android:scaleType="fitXY"
-            android:src="@drawable/moonsmall" />
+            android:scaleType="fitXY" />
 
     </RelativeLayout>
 
