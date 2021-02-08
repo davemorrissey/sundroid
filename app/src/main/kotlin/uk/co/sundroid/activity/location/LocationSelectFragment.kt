@@ -125,6 +125,7 @@ class LocationSelectFragment : AbstractFragment(), LocaterListener {
     }
 
     override fun locationError(status: LocaterStatus) {
+        SimpleProgressFragment.close(parentFragmentManager)
         when (status) {
             TIMEOUT -> {
                 showAlert("Location timeout", "Couldn't find your location. Make sure you have a good signal or a clear view of the sky.")

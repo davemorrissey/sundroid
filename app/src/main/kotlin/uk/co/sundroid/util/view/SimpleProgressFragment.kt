@@ -39,8 +39,10 @@ class SimpleProgressFragment : DialogFragment() {
         }
 
         fun close(fragmentManager: FragmentManager) {
-            fragmentManager.findFragmentByTag(TAG)?.let {
-                fragmentManager.beginTransaction().remove(it).commit()
+            if (!fragmentManager.isStateSaved) {
+                fragmentManager.findFragmentByTag(TAG)?.let {
+                    fragmentManager.beginTransaction().remove(it).commit()
+                }
             }
         }
 
