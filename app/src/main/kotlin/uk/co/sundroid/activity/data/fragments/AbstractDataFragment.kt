@@ -9,6 +9,7 @@ import uk.co.sundroid.domain.LocationDetails
 import uk.co.sundroid.util.log.e
 import uk.co.sundroid.util.prefs.Prefs
 import uk.co.sundroid.util.time.TimeZoneResolver
+import uk.co.sundroid.util.time.clone
 import java.util.*
 import java.util.Calendar.*
 
@@ -31,6 +32,10 @@ abstract class AbstractDataFragment : AbstractFragment(), OnViewPrefsChangedList
 
     fun getDateCalendar(): Calendar {
         return (activity as MainActivity).dateCalendar
+    }
+
+    fun getDateCalendarClone(): Calendar {
+        return clone(getDateCalendar())
     }
 
     fun getTimeCalendar(): Calendar {

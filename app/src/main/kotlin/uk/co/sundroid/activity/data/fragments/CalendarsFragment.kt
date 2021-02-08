@@ -26,7 +26,12 @@ import uk.co.sundroid.util.theme.*
 import uk.co.sundroid.util.time.formatDiff
 import uk.co.sundroid.util.time.formatDuration
 import uk.co.sundroid.util.time.formatTimeStr
+import uk.co.sundroid.util.time.isSameDay
+import uk.co.sundroid.util.time.isSameMonth
 import java.util.*
+import java.util.Calendar.MONTH
+import java.util.Calendar.DAY_OF_MONTH
+import kotlin.collections.ArrayList
 import kotlin.collections.LinkedHashSet
 
 
@@ -66,15 +71,17 @@ class CalendarsFragment : AbstractMonthFragment<ArrayList<CalendarsFragment.DayE
         } else {
             modify(calendarGrid, visibility = GONE)
         }
+        val monthCalendar = getDateCalendarClone()
+        monthCalendar.set(DAY_OF_MONTH, 1)
         async(
             inBackground = {
-                calculateMonth(!calendarView.grid)
+                calculateMonth(monthCalendar, !calendarView.grid)
             },
             onDone = { data: ArrayList<DayEntry> ->
-                if (isSafe) {
+                if (isSafe && isSameMonth(monthCalendar, getDateCalendar())) {
                     if (calendarView.grid) {
                         modify(calendarGrid, visibility = VISIBLE)
-                        updateGrid(data)
+                        updateGrid(monthCalendar, data)
                     } else {
                         modify(calendarList, visibility = VISIBLE)
                         updateList(data)
@@ -110,36 +117,32 @@ class CalendarsFragment : AbstractMonthFragment<ArrayList<CalendarsFragment.DayE
         dayEntry.events.add(DayEntryEvent(timeHtml, null))
     }
 
-    private fun calculateMonth(allowSeconds: Boolean): ArrayList<DayEntry> {
+    private fun calculateMonth(monthCalendar: Calendar, allowSeconds: Boolean): ArrayList<DayEntry> {
         val location = getLocation()
-        val calendar = getDateCalendar()
         val calendarView = Prefs.lastCalendar(requireContext())
         val type = calendarView.type
         val body = calendarView.body
 
-        val todayCalendar = Calendar.getInstance(calendar.timeZone)
+        val todayCalendar = Calendar.getInstance(monthCalendar.timeZone)
 
         val loopCalendar = Calendar.getInstance()
-        loopCalendar.timeZone = calendar.timeZone
-        loopCalendar.timeInMillis = calendar.timeInMillis
-        loopCalendar.set(Calendar.DAY_OF_MONTH, 1)
-        val month = loopCalendar.get(Calendar.MONTH)
+        loopCalendar.timeZone = monthCalendar.timeZone
+        loopCalendar.timeInMillis = monthCalendar.timeInMillis
+        loopCalendar.set(DAY_OF_MONTH, 1)
 
         // Calculate full details of previous day for diffs.
         val prevCalendar = Calendar.getInstance()
-        prevCalendar.timeZone = calendar.timeZone
-        prevCalendar.timeInMillis = calendar.timeInMillis
-        prevCalendar.set(Calendar.DAY_OF_MONTH, 1)
-        prevCalendar.add(Calendar.DAY_OF_MONTH, -1)
+        prevCalendar.timeZone = monthCalendar.timeZone
+        prevCalendar.timeInMillis = monthCalendar.timeInMillis
+        prevCalendar.set(DAY_OF_MONTH, 1)
+        prevCalendar.add(DAY_OF_MONTH, -1)
         var previousSunDay: SunDay? = SunCalculator.calcDay(location.location, prevCalendar)
 
         val entries = ArrayList<DayEntry>()
 
         var day = 1
-        while (day < 32 && loopCalendar.get(Calendar.MONTH) == month) {
-            val today = todayCalendar.get(Calendar.YEAR) == loopCalendar.get(Calendar.YEAR) &&
-                    todayCalendar.get(Calendar.MONTH) == loopCalendar.get(Calendar.MONTH) &&
-                    todayCalendar.get(Calendar.DAY_OF_MONTH) == loopCalendar.get(Calendar.DAY_OF_MONTH)
+        while (day < 32 && isSameMonth(loopCalendar, monthCalendar)) {
+            val today = isSameDay(loopCalendar, todayCalendar)
 
             val dayEntry = DayEntry()
             dayEntry.day = day
@@ -196,7 +199,7 @@ class CalendarsFragment : AbstractMonthFragment<ArrayList<CalendarsFragment.DayE
             }
 
             entries.add(dayEntry)
-            loopCalendar.add(Calendar.DAY_OF_MONTH, 1)
+            loopCalendar.add(DAY_OF_MONTH, 1)
             day++
         }
         return entries
@@ -206,8 +209,7 @@ class CalendarsFragment : AbstractMonthFragment<ArrayList<CalendarsFragment.DayE
         calendarList.adapter = DayEntryAdapter(data)
     }
 
-    private fun updateGrid(data: ArrayList<DayEntry>) {
-        val calendar = getDateCalendar()
+    private fun updateGrid(monthCalendar: Calendar, data: ArrayList<DayEntry>) {
 
         // Set column headers according to weekday preference.
 
@@ -237,10 +239,10 @@ class CalendarsFragment : AbstractMonthFragment<ArrayList<CalendarsFragment.DayE
         }
 
         val loopCalendar = Calendar.getInstance()
-        loopCalendar.timeZone = calendar.timeZone
-        loopCalendar.timeInMillis = calendar.timeInMillis
-        loopCalendar.set(Calendar.DAY_OF_MONTH, 1)
-        val month = loopCalendar.get(Calendar.MONTH)
+        loopCalendar.timeZone = monthCalendar.timeZone
+        loopCalendar.timeInMillis = monthCalendar.timeInMillis
+        loopCalendar.set(DAY_OF_MONTH, 1)
+        val month = loopCalendar.get(MONTH)
         var row = 1
 
         // Add empty cells to the first row.
@@ -259,7 +261,7 @@ class CalendarsFragment : AbstractMonthFragment<ArrayList<CalendarsFragment.DayE
 
         run {
             var i = 0
-            while (i < 32 && loopCalendar.get(Calendar.MONTH) == month) {
+            while (i < 32 && loopCalendar.get(MONTH) == month) {
                 val entry = data[i]
                 var col = loopCalendar.get(Calendar.DAY_OF_WEEK) + (7 - Prefs.firstWeekday(requireContext())) + 1
                 if (col > 7) {
@@ -270,7 +272,7 @@ class CalendarsFragment : AbstractMonthFragment<ArrayList<CalendarsFragment.DayE
                 val cellsRow = calendarGrid.findViewById<TableRow>(id("calendarGridCells$row"))
 
                 val dateCell = inflate(R.layout.frag_data_calendars_grid_date, datesRow, false)
-                modifyChild(dateCell, calendarGridTitleText, text = loopCalendar.get(Calendar.DAY_OF_MONTH).toString())
+                modifyChild(dateCell, calendarGridTitleText, text = loopCalendar.get(DAY_OF_MONTH).toString())
 
                 val cell = inflate(R.layout.frag_data_calendars_grid_cell, datesRow, false)
 
@@ -307,8 +309,8 @@ class CalendarsFragment : AbstractMonthFragment<ArrayList<CalendarsFragment.DayE
                 datesRow.addView(dateCell)
                 cellsRow.addView(cell)
 
-                loopCalendar.add(Calendar.DAY_OF_MONTH, 1)
-                if (loopCalendar.get(Calendar.MONTH) == month && col == 7) {
+                loopCalendar.add(DAY_OF_MONTH, 1)
+                if (loopCalendar.get(MONTH) == month && col == 7) {
                     row++
                 }
                 i++
@@ -316,7 +318,7 @@ class CalendarsFragment : AbstractMonthFragment<ArrayList<CalendarsFragment.DayE
         }
 
         // Fill out any remaining cells in the last row.
-        loopCalendar.add(Calendar.DAY_OF_MONTH, -1)
+        loopCalendar.add(DAY_OF_MONTH, -1)
         var lastCol = loopCalendar.get(Calendar.DAY_OF_WEEK) + (7 - Prefs.firstWeekday(requireContext())) + 1
         if (lastCol > 7) {
             lastCol -= 7

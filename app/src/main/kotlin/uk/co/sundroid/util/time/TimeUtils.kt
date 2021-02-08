@@ -41,6 +41,11 @@ fun isSameDay(calendar1: Calendar, calendar2: Calendar): Boolean {
             && calendar1.get(DAY_OF_MONTH) == calendar2.get(DAY_OF_MONTH)
 }
 
+fun isSameMonth(calendar1: Calendar, calendar2: Calendar): Boolean {
+    return calendar1.get(YEAR) == calendar2.get(YEAR)
+            && calendar1.get(MONTH) == calendar2.get(MONTH)
+}
+
 fun formatTime(context: Context, calendar: Calendar, allowSeconds: Boolean, allowRounding: Boolean, html: Boolean = false): Time {
     val clone = getInstance(calendar.timeZone)
     clone.timeInMillis = calendar.timeInMillis
