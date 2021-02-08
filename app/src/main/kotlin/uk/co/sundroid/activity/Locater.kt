@@ -27,8 +27,9 @@ class Locater(private val listener: LocaterListener, private val context: Contex
         criteria.accuracy = accuracy
 
         val locationManager = listener.getSystemService(LOCATION_SERVICE) as LocationManager? ?: return UNAVAILABLE
+        val looper = listener.getMainLooper() ?: return UNAVAILABLE
         try {
-            locationManager.requestSingleUpdate(criteria, this, listener.getMainLooper())
+            locationManager.requestSingleUpdate(criteria, this, looper)
         } catch (e: SecurityException) {
             return DENIED
         } catch (e: Exception) {

@@ -116,12 +116,12 @@ class LocationSelectFragment : AbstractFragment(), LocaterListener {
         }
     }
 
-    override fun getMainLooper(): Looper {
-        return requireActivity().mainLooper
+    override fun getMainLooper(): Looper? {
+        return activity?.mainLooper
     }
 
     override fun getSystemService(id: String): Any? {
-        return requireActivity().getSystemService(id)
+        return activity?.getSystemService(id)
     }
 
     override fun locationError(status: LocaterStatus) {
