@@ -31,11 +31,15 @@ class SimpleAlertFragment : DialogFragment() {
         }
 
         fun show(fragmentManager: FragmentManager, title: String, message: String) {
-            newInstance(title, message).show(fragmentManager, TAG)
+            if (!fragmentManager.isStateSaved) {
+                newInstance(title, message).show(fragmentManager, TAG)
+            }
         }
 
         fun show(context: Context, fragmentManager: FragmentManager, title: Int, message: Int) {
-            newInstance(context.resources.getString(title), context.resources.getString(message)).show(fragmentManager, TAG)
+            if (!fragmentManager.isStateSaved) {
+                newInstance(context.resources.getString(title), context.resources.getString(message)).show(fragmentManager, TAG)
+            }
         }
 
     }
