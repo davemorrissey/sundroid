@@ -69,13 +69,13 @@ class LocationSearchFragment : AbstractFragment() {
         }
 
         b.searchListWrapper.visibility = GONE
-        showProgress(parentFragmentManager, "Searching...")
+        showProgress(this, "Searching...")
 
         Async(
                 inBackground = { Geocoder.search(searchValue, requireContext()) },
                 onFail = { showAlert(requireContext(), parentFragmentManager, loc_search_error_title, loc_search_error_msg) },
                 onDone = { results -> run {
-                    closeProgress(parentFragmentManager)
+                    closeProgress(this)
                     if (results.isEmpty()) {
                         showAlert(requireContext(), parentFragmentManager, loc_search_none_title, loc_search_none_msg)
                     } else {

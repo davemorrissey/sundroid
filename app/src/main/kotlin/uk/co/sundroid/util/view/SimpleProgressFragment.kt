@@ -5,6 +5,7 @@ import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 
@@ -34,16 +35,28 @@ class SimpleProgressFragment : DialogFragment() {
             return frag
         }
 
-        fun show(fragmentManager: FragmentManager, message: String) {
-            newInstance(message).show(fragmentManager, TAG)
+        fun show(callerFragment: Fragment, message: String) {
+            safeGetFragmentManager(callerFragment)?.let { fm ->
+                newInstance(message).show(fm, TAG)
+            }
         }
 
-        fun close(fragmentManager: FragmentManager) {
-            if (!fragmentManager.isStateSaved) {
-                fragmentManager.findFragmentByTag(TAG)?.let {
-                    fragmentManager.beginTransaction().remove(it).commit()
+        fun close(callerFragment: Fragment) {
+            safeGetFragmentManager(callerFragment)?.let { fm ->
+                fm.findFragmentByTag(TAG)?.let {
+                    fm.beginTransaction().remove(it).commit()
                 }
             }
+        }
+
+        private fun safeGetFragmentManager(callerFragment: Fragment): FragmentManager? {
+            if (callerFragment.isAdded) {
+                val fragmentManager = callerFragment.parentFragmentManager
+                if (!fragmentManager.isStateSaved) {
+                    return fragmentManager
+                }
+            }
+            return null
         }
 
     }

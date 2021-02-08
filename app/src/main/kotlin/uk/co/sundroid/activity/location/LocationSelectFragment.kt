@@ -74,7 +74,7 @@ class LocationSelectFragment : AbstractFragment(), LocaterListener {
         locater = Locater(this, requireContext()).apply {
             val result = this.start()
             if (result == STARTED) {
-                SimpleProgressFragment.show(parentFragmentManager, "Finding your location...")
+                SimpleProgressFragment.show(this@LocationSelectFragment, "Finding your location...")
             } else {
                 locationError(result)
             }
@@ -125,7 +125,7 @@ class LocationSelectFragment : AbstractFragment(), LocaterListener {
     }
 
     override fun locationError(status: LocaterStatus) {
-        SimpleProgressFragment.close(parentFragmentManager)
+        SimpleProgressFragment.close(this)
         when (status) {
             TIMEOUT -> {
                 showAlert("Location timeout", "Couldn't find your location. Make sure you have a good signal or a clear view of the sky.")
@@ -140,7 +140,7 @@ class LocationSelectFragment : AbstractFragment(), LocaterListener {
     }
 
     override fun locationReceived(locationDetails: LocationDetails) {
-        SimpleProgressFragment.close(parentFragmentManager)
+        SimpleProgressFragment.close(this)
         onLocationSelected(locationDetails)
     }
 
