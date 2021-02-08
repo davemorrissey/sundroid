@@ -1,5 +1,6 @@
 package uk.co.sundroid
 
+import android.content.ActivityNotFoundException
 import androidx.fragment.app.Fragment
 import android.content.Intent
 import android.graphics.Bitmap
@@ -99,7 +100,11 @@ abstract class AbstractFragment : Fragment() {
         url?.let {
             val intent = Intent(Intent.ACTION_VIEW)
             intent.data = Uri.parse(it)
-            startActivity(intent)
+            try {
+                startActivity(intent)
+            } catch (e: ActivityNotFoundException) {
+                // Ignore
+            }
         }
     }
 
