@@ -140,7 +140,7 @@ class MainActivity : AbstractActivity(), FragmentManager.OnBackStackChangedListe
             this.page = page
             this.viewConfigurationCallback = null
             val rootFragment = getRootFragment()
-            if (rootFragment?.javaClass != page.fragmentClass || force) {
+            if (!supportFragmentManager.isStateSaved && (rootFragment?.javaClass != page.fragmentClass || force)) {
                 val tx = supportFragmentManager
                         .beginTransaction()
                         .replace(R.id.content, page.fragmentClass.newInstance(), ROOT)
