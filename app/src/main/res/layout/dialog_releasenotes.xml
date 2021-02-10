@@ -9,6 +9,35 @@
 
     <TextView
         style="@style/text"
+        android:text="5.6.1"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_width="7sp"
+            android:layout_height="7sp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="7dp"
+            android:src="@drawable/d_phase_full"/>
+        <TextView
+            style="@style/text"
+            android:text="Crash fixes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+    </LinearLayout>
+    <TextView
+        style="@style/text"
         android:text="5.6.0"
         android:textSize="18sp"
         android:textStyle="bold"

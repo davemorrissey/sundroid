@@ -14,8 +14,8 @@ android {
         applicationId "uk.co.sundroid.free"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 5600000
-        versionName "5.6.0"
+        versionCode 5610000
+        versionName "5.6.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
