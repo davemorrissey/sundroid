@@ -25,8 +25,8 @@ class TrackerMapFragment(location: LocationDetails, mapCenterListener: MapCenter
         retainInstance = true
     }
 
-    override fun onCreateView(layoutInflater: LayoutInflater, viewGroup: ViewGroup?, bundle: Bundle?): View? {
-        val view = super.onCreateView(layoutInflater, viewGroup, bundle)
+    override fun onCreateView(layoutInflater: LayoutInflater, viewGroup: ViewGroup?, bundle: Bundle?): View {
+        val view = super.onCreateView(layoutInflater, viewGroup, bundle)!!
 
         getMapAsync { map ->
             if (map != null) {

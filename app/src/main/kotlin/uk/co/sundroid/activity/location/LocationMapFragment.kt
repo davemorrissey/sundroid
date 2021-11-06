@@ -161,9 +161,9 @@ class LocationMapFragment : AbstractFragment(), OnMapClickListener, OnInfoWindow
             setOnMapClickListener(this@LocationMapFragment)
             clear()
 
-            if (mapCentre != null) {
-                moveCamera(newLatLngZoom(mapCentre, mapZoom))
-            } else if (location != null) {
+            mapCentre?.let {
+                moveCamera(newLatLngZoom(it, mapZoom))
+            } ?: location?.let {
                 moveCamera(newLatLngZoom(location.location.toLatLng(), 6f))
             }
         }

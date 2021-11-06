@@ -31,6 +31,7 @@
             android:finishOnTaskLaunch="true"
             android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden"
+            android:exported="true"
             tools:ignore="LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -109,6 +110,7 @@
         <receiver
             android:name=".widget.SunWidget"
             android:label="Sundroid Sun"
+            android:exported="false"
             android:process=":widgetProcess">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -121,6 +123,7 @@
         <receiver
             android:name=".widget.MoonWidget"
             android:label="Sundroid Moon"
+            android:exported="false"
             android:process=":widgetProcess">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -133,6 +136,7 @@
         <receiver
             android:name=".widget.MoonPhaseWidget"
             android:label="Sundroid Moon Phase"
+            android:exported="false"
             android:process=":widgetProcess">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -145,6 +149,7 @@
         <receiver
             android:name=".widget.SunMoonWidget"
             android:label="Sundroid Sun &amp; Moon"
+            android:exported="false"
             android:process=":widgetProcess">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
