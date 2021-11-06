@@ -3,6 +3,7 @@ package uk.co.sundroid.domain
 import uk.co.sundroid.util.*
 import java.io.Serializable
 import java.util.TimeZone
+import kotlin.math.abs
 
 class TimeZoneDetail(val zone: TimeZone, val cities: String?) : Comparable<TimeZoneDetail>, Serializable {
 
@@ -21,7 +22,7 @@ class TimeZoneDetail(val zone: TimeZone, val cities: String?) : Comparable<TimeZ
             return "GMT"
         }
 
-        var absOffset = Math.abs(offset)
+        var absOffset = abs(offset)
         val hours = absOffset / (1000 * 60 * 60)
         absOffset -= hours * (1000 * 60 * 60)
         val minutes = absOffset / (1000 * 60)

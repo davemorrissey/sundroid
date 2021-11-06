@@ -15,7 +15,7 @@ class InfoGuideFragment : AbstractFragment() {
 
     private lateinit var b: FragInfoGuideBinding
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, state: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, state: Bundle?): View {
         b = FragInfoGuideBinding.inflate(inflater)
         return b.root
     }

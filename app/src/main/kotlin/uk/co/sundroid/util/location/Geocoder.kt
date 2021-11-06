@@ -73,7 +73,7 @@ object Geocoder {
                     }
                 }
             } catch (e: Exception) {
-                e(TAG, "Geocode failed: " + e.toString(), e)
+                e(TAG, "Geocode failed: $e", e)
             }
 
         }

@@ -23,7 +23,7 @@ class InfoFragment : AbstractFragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, state: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, state: Bundle?): View {
         b = FragInfoBinding.inflate(inflater)
         return b.root
     }

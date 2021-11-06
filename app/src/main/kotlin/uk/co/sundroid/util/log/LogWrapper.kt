@@ -21,7 +21,7 @@ fun e(tag: String, message: String, tr: Throwable) {
     }
 }
 
-fun displayCalendar(calendar: Calendar?): String? {
+fun displayCalendar(calendar: Calendar?): String {
     if (!BuildConfig.DEBUG) {
         return "Disabled"
     }

@@ -31,7 +31,7 @@ class TimeZonePickerFragment : AbstractFragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, state: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, state: Bundle?): View {
         b = ZoneBinding.inflate(inflater)
         return b.root
     }

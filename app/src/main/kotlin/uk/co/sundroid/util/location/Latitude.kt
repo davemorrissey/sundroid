@@ -60,8 +60,7 @@ class Latitude : Angle {
      * Sets the value from a string in arc components format.
      */
     private fun parseArcValue(string: String) {
-        val signString = string.substring(string.length - 1)
-        val sign = when (signString) {
+        val sign = when (string.substring(string.length - 1)) {
             "N" -> NORTH
             "S" -> SOUTH
             else -> throw IllegalArgumentException("Couldn't parse \"$string\" as an abbreviated latitude value.")

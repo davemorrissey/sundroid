@@ -31,7 +31,7 @@ class EphemerisFragment : AbstractTimeFragment() {
     override val layout: Int
         get() = R.layout.frag_data_ephemeris
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, state: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, state: Bundle?): View {
         b = FragDataEphemerisBinding.inflate(inflater)
         return b.root
     }

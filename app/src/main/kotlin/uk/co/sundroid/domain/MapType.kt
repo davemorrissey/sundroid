@@ -11,7 +11,7 @@ enum class MapType(val displayName: String, val googleId: Int) {
 
     companion object {
         fun displayNames(): List<String> {
-            return MapType.values().map { it.displayName }
+            return values().map { it.displayName }
         }
     }
 

@@ -3,6 +3,7 @@ package uk.co.sundroid.util.view
 import android.content.Context
 import android.view.GestureDetector.SimpleOnGestureListener
 import android.view.MotionEvent
+import kotlin.math.abs
 
 /**
  * Detects drag actions on year/month/date buttons so the date can be changed with a swipe.
@@ -25,8 +26,8 @@ class ButtonDragGestureDetector(private val listener: ButtonDragGestureDetectorL
     override fun onFling(e1: MotionEvent, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
         val dx = e1.x - e2.x
         val dy = e1.y - e2.y
-        val vx = Math.abs(velocityX)
-        val vy = Math.abs(velocityY)
+        val vx = abs(velocityX)
+        val vy = abs(velocityY)
 
         if (dx > thresholdDist && vx > vy && vx > thresholdVel) {
             listener.onButtonDragLeft()

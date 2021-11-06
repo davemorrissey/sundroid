@@ -1,6 +1,8 @@
 package uk.co.sundroid.util.time
 
 import uk.co.sundroid.util.zeroPad
+import kotlin.math.floor
+import kotlin.math.roundToInt
 
 class Clock(hours: Double, private val showSeconds: Boolean) {
 
@@ -28,11 +30,11 @@ class Clock(hours: Double, private val showSeconds: Boolean) {
     }
 
     init {
-        var h = Math.floor(hours).toInt()
-        var m = Math.floor((hours - h) * 60.0).toInt()
+        var h = floor(hours).toInt()
+        var m = floor((hours - h) * 60.0).toInt()
         var s = 0
         if (showSeconds) {
-            s = Math.round((hours - h - (m / 60.0)) * 3600.0).toInt()
+            s = ((hours - h - (m / 60.0)) * 3600.0).roundToInt()
             if (s >= 60) {
                 s -= 60
                 m++

@@ -79,7 +79,7 @@ class LocationMapFragment : AbstractFragment(), OnMapClickListener, OnInfoWindow
         (activity as MainActivity).setViewConfigurationCallback(null)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, state: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, state: Bundle?): View {
         return LocMapBinding.inflate(inflater).root
     }
 
